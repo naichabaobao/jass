@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { DataEnterManager } from './data-enter-manager';
 import { ErrorCollection, SimpleError, SimpleWarning, CheckValidationError } from '../vjass/error';
+import { Subject, debounceTime } from '../extern/rxjs';
 
 /**
  * 诊断配置接口（与 data-enter-manager.ts 中的 DiagnosticsConfig 保持一致）
@@ -26,12 +27,18 @@ interface DiagnosticsConfig {
  * 诊断提供者类
  * 负责收集和报告语法错误、警告等信息
  */
+interface RenameEvent {
+    oldUri: vscode.Uri;
+    newUri: vscode.Uri;
+}
+
 export class DiagnosticProvider {
     private diagnosticCollection: vscode.DiagnosticCollection;
     private dataEnterManager: DataEnterManager;
     private disposables: vscode.Disposable[] = [];
     private isEnabled: boolean = true;
     private diagnosticsConfig: DiagnosticsConfig = {};
+    private renameEventSubject: Subject<RenameEvent> = new Subject();
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
@@ -75,14 +82,73 @@ export class DiagnosticProvider {
             })
         );
 
-        // 延迟初始更新，等待 DataEnterManager 初始化完成
-        setTimeout(() => {
-            vscode.workspace.textDocuments.forEach((doc) => {
-                if (this.isEnabled && this.isSupportedFile(doc.uri.fsPath)) {
-                    this.updateDiagnostics(doc);
+        // 监听文件删除
+        this.disposables.push(
+            vscode.workspace.onDidDeleteFiles((event) => {
+                event.files.forEach((file) => {
+                    if (this.isSupportedFile(file.fsPath)) {
+                        // 清除已删除文件的诊断
+                        this.diagnosticCollection.delete(file);
+                    }
+                });
+            })
+        );
+
+        // 订阅文件重命名事件流（使用 rxjs debounceTime 延迟处理）
+        const renameSubscription = this.renameEventSubject
+            .pipe(debounceTime(200)) // 延迟200ms，确保 DataEnterManager 处理完重命名事件
+            .subscribe((renameEvent) => {
+                const { oldUri, newUri } = renameEvent;
+                
+                // 更新新文件的诊断
+                if (this.isEnabled && this.isSupportedFile(newUri.fsPath)) {
+                    const newDocument = vscode.workspace.textDocuments.find(
+                        (doc) => doc.uri.toString() === newUri.toString()
+                    );
+                    if (newDocument) {
+                        this.updateDiagnostics(newDocument);
+                    }
                 }
             });
-        }, 1000); // 延迟1秒，确保 DataEnterManager 初始化完成
+        this.disposables.push({ dispose: () => renameSubscription.unsubscribe() });
+
+        // 监听文件重命名
+        this.disposables.push(
+            vscode.workspace.onDidRenameFiles((event) => {
+                event.files.forEach((file) => {
+                    const oldUri = file.oldUri;
+                    const newUri = file.newUri;
+                    
+                    // 清除旧文件的诊断
+                    if (this.isSupportedFile(oldUri.fsPath)) {
+                        this.diagnosticCollection.delete(oldUri);
+                    }
+                    
+                    // 通过 Subject 发送重命名事件（会经过 debounceTime 延迟处理）
+                    if (this.isEnabled && this.isSupportedFile(newUri.fsPath)) {
+                        this.renameEventSubject.next({ oldUri, newUri });
+                    }
+                });
+            })
+        );
+
+        // 延迟初始更新，等待 DataEnterManager 初始化完成
+        // 使用 rxjs debounceTime 替代 setTimeout
+        const initialUpdateSubject = new Subject<void>();
+        const initialSubscription = initialUpdateSubject
+            .pipe(debounceTime(1000)) // 延迟1秒，确保 DataEnterManager 初始化完成
+            .subscribe(() => {
+                vscode.workspace.textDocuments.forEach((doc) => {
+                    if (this.isEnabled && this.isSupportedFile(doc.uri.fsPath)) {
+                        this.updateDiagnostics(doc);
+                    }
+                });
+            });
+        initialUpdateSubject.next(); // 触发初始更新
+        this.disposables.push({ dispose: () => {
+            initialSubscription.unsubscribe();
+            initialUpdateSubject.complete();
+        }});
     }
 
     /**
@@ -371,7 +437,14 @@ export class DiagnosticProvider {
      * 清理资源
      */
     public dispose(): void {
+        // 完成 Subject，停止发送事件
+        this.renameEventSubject.complete();
+        
+        // 清理所有 disposables
         this.disposables.forEach(d => d.dispose());
+        this.disposables = [];
+        
+        // 清理诊断集合
         this.diagnosticCollection.dispose();
     }
 }

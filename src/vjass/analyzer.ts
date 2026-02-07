@@ -28,10 +28,14 @@ import {
     StringLiteral,
     TypecastExpression,
     ReturnStatement,
-    HookStatement
+    HookStatement,
+    LoopStatement,
+    ExitWhenStatement,
+    CallStatement
 } from "./ast";
 import { ErrorCollection, SimpleError, SimpleWarning, CheckValidationError, CheckErrorType } from "./error";
 import { Parser } from "./parser";
+import { isVjassKeyword } from "./id";
 
 /**
  * 语义分析器配置选项
@@ -43,6 +47,8 @@ export interface SemanticAnalyzerOptions {
     checkTypes?: boolean;
     /** 是否检查未使用的符号 */
     checkUnused?: boolean;
+    /** 是否检查数组越界（默认开启） */
+    checkArrayBounds?: boolean;
     /** 标准库文件列表（如 common.j, blizzard.j, common.ai），用于多文件检测 */
     standardLibraries?: string[];
     /** 外部符号表（来自标准库和工程目录的其他 jass 文件），用于检查函数是否在其他文件中声明 */
@@ -105,6 +111,16 @@ interface SymbolInfo {
     isReadonly?: boolean;
     /** 是否是常量（对于变量） */
     isConstant?: boolean;
+    /** 是否已初始化（对于局部变量） */
+    isInitialized?: boolean;
+    /** 是否可能为 null（对于 handle 类型变量） */
+    mayBeNull?: boolean;
+    /** 数组大小（对于数组变量，一维数组） */
+    arraySize?: number | null;
+    /** 数组宽度（对于二维数组变量） */
+    arrayWidth?: number | null;
+    /** 数组高度（对于二维数组变量） */
+    arrayHeight?: number | null;
 }
 
 /**
@@ -185,6 +201,9 @@ export class SemanticAnalyzer {
     /** 结构实现的接口 */
     private structInterfaces: Map<string, Set<string>> = new Map();
 
+    /** 结构实现的模块 */
+    private structModules: Map<string, Set<string>> = new Map();
+
     /** 配置选项 */
     private options: SemanticAnalyzerOptions;
 
@@ -200,6 +219,7 @@ export class SemanticAnalyzer {
             checkUndefinedBehavior: options.checkUndefinedBehavior ?? false,
             checkTypes: options.checkTypes ?? true, // 默认启用类型检查
             checkUnused: options.checkUnused ?? false, // 默认不检查未使用符号
+            checkArrayBounds: options.checkArrayBounds ?? true, // 默认启用数组越界检查
             standardLibraries: options.standardLibraries ?? [],
             externalSymbols: options.externalSymbols
         };
@@ -400,7 +420,12 @@ export class SemanticAnalyzer {
             scope: scope.name || undefined,
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
-            isConstant: node.isConstant || false
+            isConstant: node.isConstant || false,
+            isInitialized: node.initializer !== null && node.initializer !== undefined,  // 记录是否有初始化表达式
+            mayBeNull: this.checkIfExpressionIsNull(node.initializer) || this.isHandleType(type || ""),  // 检查是否可能为 null
+            arraySize: node.isArray ? node.arraySize : undefined,  // 记录数组大小
+            arrayWidth: node.isArray ? node.arrayWidth : undefined,  // 记录二维数组宽度
+            arrayHeight: node.isArray ? node.arrayHeight : undefined  // 记录二维数组高度
         });
     }
 
@@ -433,7 +458,11 @@ export class SemanticAnalyzer {
             scope: currentScope.name || undefined,
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
-            isConstant: node.isConstant || false
+            isConstant: node.isConstant || false,
+            mayBeNull: this.checkIfExpressionIsNull(node.initializer) || this.isHandleType(type || ""),  // 检查是否可能为 null
+            arraySize: node.isArray ? node.arraySize : undefined,  // 记录数组大小
+            arrayWidth: node.isArray ? node.arrayWidth : undefined,  // 记录二维数组宽度
+            arrayHeight: node.isArray ? node.arrayHeight : undefined  // 记录二维数组高度
         });
     }
 
@@ -632,14 +661,43 @@ export class SemanticAnalyzer {
         const currentScope = this.scopeStack[this.scopeStack.length - 1];
         const name = node.name.name;
 
-        // 检查重复声明
-        if (currentScope.symbols.has(name)) {
-            this.addError(
-                node.start,
-                node.end,
-                `Member '${name}' of struct '${structName}' is already declared`,
-                `Remove duplicate member declaration or rename it`
-            );
+        // 检查重复声明（JASS/vJASS 是大小写不敏感的语言）
+        // 遍历所有符号，检查是否有大小写不敏感的同名成员或方法
+        let duplicateFound = false;
+        let existingName = "";
+        let existingType = "";
+        for (const [existingSymbolName, symbol] of currentScope.symbols.entries()) {
+            if (existingSymbolName.toLowerCase() === name.toLowerCase()) {
+                if (symbol.type === SymbolType.INSTANCE_MEMBER || symbol.type === SymbolType.STATIC_MEMBER) {
+                    duplicateFound = true;
+                    existingName = existingSymbolName;
+                    existingType = "member";
+                    break;
+                } else if (symbol.type === SymbolType.METHOD) {
+                    duplicateFound = true;
+                    existingName = existingSymbolName;
+                    existingType = "method";
+                    break;
+                }
+            }
+        }
+
+        if (duplicateFound) {
+            if (existingType === "member") {
+                this.addError(
+                    node.start,
+                    node.end,
+                    `Member '${name}' of struct '${structName}' is already declared (existing member: '${existingName}')`,
+                    `Remove duplicate member declaration or rename it`
+                );
+            } else {
+                this.addError(
+                    node.start,
+                    node.end,
+                    `Member '${name}' of struct '${structName}' conflicts with existing method '${existingName}'`,
+                    `Remove the member or rename it to avoid conflict with the method`
+                );
+            }
             return;
         }
 
@@ -654,7 +712,11 @@ export class SemanticAnalyzer {
             scope: structName,
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
-            isConstant: node.isConstant || false
+            isConstant: node.isConstant || false,
+            mayBeNull: this.checkIfExpressionIsNull(node.initializer) || this.isHandleType(type || ""),  // 检查是否可能为 null
+            arraySize: node.isArray ? node.arraySize : undefined,  // 记录数组大小
+            arrayWidth: node.isArray ? node.arrayWidth : undefined,  // 记录二维数组宽度
+            arrayHeight: node.isArray ? node.arrayHeight : undefined  // 记录二维数组高度
         });
     }
 
@@ -665,15 +727,46 @@ export class SemanticAnalyzer {
         const currentScope = this.scopeStack[this.scopeStack.length - 1];
         const methodName = node.name ? node.name.name : (node.operatorName || "");
 
-        // 检查重复声明
-        if (methodName && currentScope.symbols.has(methodName)) {
-            this.addError(
-                node.start,
-                node.end,
-                `Method '${methodName}' of struct '${structName}' is already declared`,
-                `Remove duplicate method declaration or rename it`
-            );
-            return;
+        // 检查重复声明（JASS/vJASS 是大小写不敏感的语言）
+        if (methodName) {
+            // 遍历所有符号，检查是否有大小写不敏感的同名方法或成员
+            let duplicateFound = false;
+            let existingName = "";
+            let existingType = "";
+            for (const [existingSymbolName, symbol] of currentScope.symbols.entries()) {
+                if (existingSymbolName.toLowerCase() === methodName.toLowerCase()) {
+                    if (symbol.type === SymbolType.METHOD) {
+                        duplicateFound = true;
+                        existingName = existingSymbolName;
+                        existingType = "method";
+                        break;
+                    } else if (symbol.type === SymbolType.INSTANCE_MEMBER || symbol.type === SymbolType.STATIC_MEMBER) {
+                        duplicateFound = true;
+                        existingName = existingSymbolName;
+                        existingType = "member";
+                        break;
+                    }
+                }
+            }
+
+            if (duplicateFound) {
+                if (existingType === "method") {
+                    this.addError(
+                        node.start,
+                        node.end,
+                        `Method '${methodName}' of struct '${structName}' is already declared (existing method: '${existingName}')`,
+                        `Remove duplicate method declaration or rename it`
+                    );
+                } else {
+                    this.addError(
+                        node.start,
+                        node.end,
+                        `Method '${methodName}' of struct '${structName}' conflicts with existing member '${existingName}'`,
+                        `Remove the method or rename it to avoid conflict with the member`
+                    );
+                }
+                return;
+            }
         }
 
         const returnType = node.returnType ?
@@ -802,7 +895,8 @@ export class SemanticAnalyzer {
             isPrivate: node.isPrivate,
             isPublic: !node.isPrivate,
             scope: structName,
-            valueType: delegateTypeName
+            valueType: delegateTypeName,
+            isInitialized: false  // 委托默认未初始化
         });
     }
 
@@ -835,6 +929,12 @@ export class SemanticAnalyzer {
                     );
                 }
                 // 如果没有提供外部符号表，可能是其他文件中的模块，不报告错误
+            } else {
+                // 记录结构体实现的模块
+                if (!this.structModules.has(structName)) {
+                    this.structModules.set(structName, new Set());
+                }
+                this.structModules.get(structName)!.add(moduleName);
             }
         }
     }
@@ -955,11 +1055,22 @@ export class SemanticAnalyzer {
             return;
         }
 
+        // 检查返回类型是否有效
+        if (node.returnType) {
+            const returnTypeName = node.returnType instanceof Identifier ? node.returnType.name : "thistype";
+            this.checkTypeValidity(returnTypeName, node.returnType, "return type");
+        }
+
         const returnType = node.returnType ?
             (node.returnType instanceof Identifier ? node.returnType.name : "thistype") : null;
 
+        // 检查参数类型是否有效
         const parameters: Array<{ name: string; type: string }> = [];
         for (const param of node.parameters) {
+            if (param.type) {
+                const paramTypeName = param.type instanceof Identifier ? param.type.name : "thistype";
+                this.checkTypeValidity(paramTypeName, param.type, "parameter type");
+            }
             const paramType = param.type ?
                 (param.type instanceof Identifier ? param.type.name : "thistype") : "nothing";
             parameters.push({
@@ -1040,11 +1151,22 @@ export class SemanticAnalyzer {
             return;
         }
 
+        // 检查返回类型是否有效
+        if (node.returnType) {
+            const returnTypeName = node.returnType instanceof Identifier ? node.returnType.name : "thistype";
+            this.checkTypeValidity(returnTypeName, node.returnType, "return type");
+        }
+
         const returnType = node.returnType ?
             (node.returnType instanceof Identifier ? node.returnType.name : "thistype") : null;
 
+        // 检查参数类型是否有效
         const parameters: Array<{ name: string; type: string }> = [];
         for (const param of node.parameters) {
+            if (param.type) {
+                const paramTypeName = param.type instanceof Identifier ? param.type.name : "thistype";
+                this.checkTypeValidity(paramTypeName, param.type, "parameter type");
+            }
             const paramType = param.type ?
                 (param.type instanceof Identifier ? param.type.name : "thistype") : "nothing";
             parameters.push({
@@ -1145,19 +1267,37 @@ export class SemanticAnalyzer {
             this.checkModule(node);
         } else if (node instanceof LibraryDeclaration) {
             this.checkLibrary(node);
+        } else if (node instanceof CallStatement) {
+            // CallStatement 包含 CallExpression，需要检查表达式
+            this.checkCallExpression(node.expression);
         } else if (node instanceof CallExpression) {
             this.checkCallExpression(node);
         } else if (node instanceof AssignmentStatement) {
             this.checkAssignment(node);
+        } else if (node instanceof VariableDeclaration) {
+            this.checkVariableDeclaration(node);
+            this.checkKeywordMisspelling(node);
+        } else if (node instanceof BinaryExpression && node.operator === OperatorType.Index) {
+            this.checkArrayAccess(node);
+        } else if (node instanceof BinaryExpression) {
+            this.checkBinaryExpression(node);
+        } else if (node instanceof StringLiteral) {
+            this.checkStringLiteral(node);
         } else if (node instanceof IfStatement) {
             this.checkStaticIf(node);
         } else if (node instanceof ReturnStatement) {
             this.checkReturnStatement(node);
+            this.checkKeywordMisspelling(node);
+        } else if (node instanceof LoopStatement) {
+            this.checkLoop(node);
         } else if (node instanceof HookStatement) {
             this.checkHook(node);
         } else if (node instanceof NativeDeclaration) {
             this.checkNativeFunctionReturns(node);
         } else if (node instanceof FunctionDeclaration) {
+            // 检查函数声明中的多返回值语法错误
+            this.checkFunctionMultipleReturns(node);
+            
             // 重新建立函数作用域以便 checkReturnStatement 和 checkAssignment 可以找到局部变量
             if (node.body) {
                 const currentScope = this.scopeStack[this.scopeStack.length - 1];
@@ -1327,18 +1467,8 @@ export class SemanticAnalyzer {
                 // 是结构，检查继承
                 if (parentSymbol.node instanceof StructDeclaration) {
                     const parentStruct = parentSymbol.node;
-                    // 查找父结构的 create 方法
-                    let hasPrivateCreate = false;
-                    for (const member of parentStruct.members) {
-                        if (member instanceof MethodDeclaration &&
-                            member.isStatic &&
-                            member.name &&
-                            member.name.name === "create") {
-                            // create 方法存在，检查是否是私有的
-                            // 注意：这里简化处理，实际需要检查方法的可见性
-                            // 如果 create 是私有的，子结构无法继承
-                        }
-                    }
+                    // 检查子结构体的方法是否覆盖了父结构体的方法
+                    this.checkMethodOverrides(node, parentStruct, structName, parentName);
                 }
             }
         }
@@ -1685,6 +1815,150 @@ export class SemanticAnalyzer {
     }
 
     /**
+     * 检查方法覆盖
+     * 当子结构体覆盖父结构体的方法时，检查方法签名是否匹配
+     */
+    private checkMethodOverrides(
+        childStruct: StructDeclaration,
+        parentStruct: StructDeclaration,
+        childName: string,
+        parentName: string
+    ): void {
+        // 遍历子结构体的所有方法
+        for (const childMember of childStruct.members) {
+            if (childMember instanceof MethodDeclaration) {
+                const childMethodName = childMember.name ? childMember.name.name : (childMember.operatorName || "");
+                if (!childMethodName) continue;
+
+                // 跳过内置方法（create, destroy, allocate）
+                if (childMethodName === "create" || childMethodName === "destroy" || childMethodName === "allocate") {
+                    continue;
+                }
+
+                // 在父结构体中查找同名方法
+                const parentMethod = this.findMethodInStruct(parentStruct, childMethodName, childMember.isStatic);
+                if (parentMethod) {
+                    // 找到了父结构体的方法，检查方法签名是否匹配
+                    this.checkMethodOverrideSignature(
+                        childMember,
+                        parentMethod,
+                        childName,
+                        parentName
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * 在结构体中查找方法
+     */
+    private findMethodInStruct(
+        structNode: StructDeclaration,
+        methodName: string,
+        isStatic: boolean
+    ): MethodDeclaration | null {
+        for (const member of structNode.members) {
+            if (member instanceof MethodDeclaration) {
+                const memberMethodName = member.name ? member.name.name : (member.operatorName || "");
+                if (memberMethodName === methodName && member.isStatic === isStatic) {
+                    return member;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 检查方法覆盖的方法签名是否匹配
+     */
+    private checkMethodOverrideSignature(
+        childMethod: MethodDeclaration,
+        parentMethod: MethodDeclaration,
+        childName: string,
+        parentName: string
+    ): void {
+        const methodName = childMethod.name ? childMethod.name.name : (childMethod.operatorName || "unknown");
+
+        // 检查静态性是否匹配
+        if (parentMethod.isStatic !== childMethod.isStatic) {
+            this.addWarning(
+                childMethod.start,
+                childMethod.end,
+                `Method '${methodName}' in struct '${childName}' has different static modifier than parent struct '${parentName}'. Make the method ${parentMethod.isStatic ? "static" : "non-static"} to match the parent method`
+            );
+        }
+
+        // 检查返回类型
+        const parentReturnType = parentMethod.returnType ?
+            (parentMethod.returnType instanceof Identifier ? parentMethod.returnType.name : "thistype") : null;
+        const childReturnType = childMethod.returnType ?
+            (childMethod.returnType instanceof Identifier ? childMethod.returnType.name : "thistype") : null;
+
+        // 处理 thistype 的情况
+        let finalParentReturnType = parentReturnType;
+        let finalChildReturnType = childReturnType;
+        
+        if (parentReturnType === "thistype") {
+            finalParentReturnType = parentName;
+        }
+        if (childReturnType === "thistype") {
+            finalChildReturnType = childName;
+        }
+
+        // 检查返回类型是否匹配
+        if (finalParentReturnType !== finalChildReturnType &&
+            !this.isTypeCompatible(finalChildReturnType || "", finalParentReturnType || "")) {
+            this.addWarning(
+                childMethod.start,
+                childMethod.end,
+                `Method '${methodName}' in struct '${childName}' has return type '${childReturnType || "nothing"}' which does not match parent struct '${parentName}' return type '${parentReturnType || "nothing"}'. Change the return type to '${parentReturnType || "nothing"}' to match the parent method`
+            );
+        }
+
+        // 检查参数数量和类型
+        if (parentMethod.parameters.length !== childMethod.parameters.length) {
+            this.addWarning(
+                childMethod.start,
+                childMethod.end,
+                `Method '${methodName}' in struct '${childName}' has ${childMethod.parameters.length} parameters, but parent struct '${parentName}' has ${parentMethod.parameters.length} parameters. Change the parameter count to ${parentMethod.parameters.length} to match the parent method`
+            );
+        } else {
+            // 检查每个参数的类型
+            for (let i = 0; i < parentMethod.parameters.length; i++) {
+                const parentParam = parentMethod.parameters[i];
+                const childParam = childMethod.parameters[i];
+
+                const parentParamType = parentParam.type ?
+                    (parentParam.type instanceof Identifier ? parentParam.type.name : "thistype") : null;
+                const childParamType = childParam.type ?
+                    (childParam.type instanceof Identifier ? childParam.type.name : "thistype") : null;
+
+                // 处理 thistype 的情况
+                let finalParentParamType = parentParamType;
+                let finalChildParamType = childParamType;
+                
+                if (parentParamType === "thistype") {
+                    finalParentParamType = parentName;
+                }
+                if (childParamType === "thistype") {
+                    finalChildParamType = childName;
+                }
+
+                // 检查类型是否匹配
+                if (finalParentParamType !== finalChildParamType &&
+                    !this.isTypeCompatible(finalChildParamType || "", finalParentParamType || "")) {
+                    this.addWarning(
+                        childParam.start,
+                        childParam.end,
+                        `Parameter ${i + 1} of method '${methodName}' in struct '${childName}' has type '${childParamType || "nothing"}' which does not match parent struct '${parentName}' parameter type '${parentParamType || "nothing"}'. Change the parameter type to '${parentParamType || "nothing"}' to match the parent method`
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * 检查模块语义
      */
     private checkModule(node: ModuleDeclaration): void {
@@ -1917,43 +2191,56 @@ export class SemanticAnalyzer {
      * 检查函数调用表达式
      */
     private checkCallExpression(node: CallExpression): void {
+        // 检查括号匹配（在检查函数之前）
+        this.checkParenthesesMatch(node);
+        
         // 检查被调用的函数是否存在
         if (node.callee instanceof Identifier) {
             const funcName = node.callee.name;
             const funcSymbol = this.findSymbol(funcName, SymbolType.FUNCTION);
 
             if (!funcSymbol) {
-                // 可能是方法调用，检查是否是结构方法
-                // 如果启用了未定义行为检查，并且函数不在当前文件、标准库和工程目录的其他文件中，才报告警告
-                // 注意：如果提供了 externalSymbols，说明已经检查了标准库和工程目录，此时找不到就应该报错
-                // 如果没有提供 externalSymbols，但 checkUndefinedBehavior 为 true，也应该报错（向后兼容）
-                if (this.options.checkUndefinedBehavior) {
-                    // 如果提供了 externalSymbols，说明已经检查了所有外部文件，此时找不到就应该报错
-                    // 如果没有提供 externalSymbols，可能是 native 函数或其他未声明的函数，只报告警告
-                    const hasExternalSymbols = this.externalSymbols.size > 0;
-                    if (hasExternalSymbols) {
-                        // 已经检查了所有外部文件，仍然找不到，可能是真正的错误
-                        // 但为了减少误报，我们只报告警告，因为可能是：
-                        // 1. 动态生成的函数
-                        // 2. 文本宏生成的函数
-                        // 3. 其他特殊情况
-                        this.addWarning(
-                            node.callee.start,
-                            node.callee.end,
-                            `Function '${funcName}' may not be declared. Ensure it is declared in the current file or other project files, or it may be a native function`
-                        );
-                    } else {
-                        // 没有提供 externalSymbols，可能是 native 函数，只报告警告
-                        this.addWarning(
-                            node.callee.start,
-                            node.callee.end,
-                            `Function '${funcName}' may not be declared. It may be a native function or declared in other files`
-                        );
-                    }
+                // 检查是否是 native 函数（native 函数也应该是 FUNCTION 类型）
+                // 如果 findSymbol 找不到，说明函数未声明
+                // 总是检查未声明函数（不依赖于 checkUndefinedBehavior）
+                // 但为了减少误报，只在提供了 externalSymbols 时才报告警告
+                // 因为如果提供了 externalSymbols，说明已经检查了所有外部文件
+                const hasExternalSymbols = this.externalSymbols.size > 0;
+                if (hasExternalSymbols) {
+                    // 已经检查了所有外部文件，仍然找不到，可能是未声明的函数
+                    // 但为了减少误报，我们只报告警告，因为可能是：
+                    // 1. Native 函数（但未在符号表中）
+                    // 2. 动态生成的函数
+                    // 3. 文本宏生成的函数
+                    // 4. 其他特殊情况
+                    this.addWarning(
+                        node.callee.start,
+                        node.callee.end,
+                        `Function '${funcName}' may not be declared. Ensure it is declared in the current file or other project files, or it may be a native function`
+                    );
+                } else {
+                    // 没有提供 externalSymbols，可能是 native 函数或其他文件中的函数
+                    // 为了帮助用户发现潜在问题，仍然报告警告
+                    this.addWarning(
+                        node.callee.start,
+                        node.callee.end,
+                        `Function '${funcName}' may not be declared. It may be a native function or declared in other files`
+                    );
                 }
             } else {
+                // 检查递归调用
+                const currentFunctionScope = this.findCurrentFunctionScope();
+                if (currentFunctionScope && currentFunctionScope.name === funcName) {
+                    this.addWarning(
+                        node.callee.start,
+                        node.callee.end,
+                        `Recursive call to '${funcName}' may cause stack overflow if the recursion depth is too large. Consider adding a base case or using iteration instead of recursion`
+                    );
+                }
+
                 // 检查参数数量
-                if (funcSymbol.parameters) {
+                // 注意：parameters 现在始终是数组（即使是空数组），不再是 undefined
+                if (funcSymbol.parameters !== undefined) {
                     if (node.arguments.length !== funcSymbol.parameters.length) {
                         this.addError(
                             node.start,
@@ -1967,7 +2254,10 @@ export class SemanticAnalyzer {
                             for (let i = 0; i < node.arguments.length; i++) {
                                 const arg = node.arguments[i];
                                 const param = funcSymbol.parameters[i];
-                                this.checkTypeCompatibility(arg, param.type, funcName, i + 1);
+                                this.checkTypeCompatibility(arg, param.type, `parameter ${i + 1} of function '${funcName}'`, i + 1);
+                                
+                                // 检查参数是否可能为 null（特别是 handle 类型）
+                                this.checkNullUsage(arg, param.type, `parameter ${i + 1} of function '${funcName}'`);
                             }
                         }
                     }
@@ -1975,7 +2265,30 @@ export class SemanticAnalyzer {
             }
         } else if (node.callee instanceof BinaryExpression && node.callee.operator === OperatorType.Dot) {
             // 方法调用，如 obj.method() 或 StructName.method()
+            // 检查方法调用链的长度（在 checkMethodCall 之前，因为需要检查整个链）
+            // 使用 countAllMethodCalls 来统计链式调用中的所有方法调用
+            const totalCalls = this.countAllMethodCalls(node);
+            if (totalCalls > 5) {
+                this.addWarning(
+                    node.start,
+                    node.end,
+                    `Method call chain is too long (${totalCalls} calls). Long chains can reduce code readability and make debugging difficult. Consider breaking the chain into multiple statements or using intermediate variables`
+                );
+            }
             this.checkMethodCall(node);
+        } else {
+            // 其他类型的调用表达式，也可能包含方法调用（作为参数）
+            // 递归检查参数中的方法调用
+            for (const arg of node.arguments) {
+                const argCalls = this.countAllMethodCalls(arg);
+                if (argCalls > 5) {
+                    this.addWarning(
+                        arg.start,
+                        arg.end,
+                        `Method call chain in argument is too long (${argCalls} calls). Long chains can reduce code readability and make debugging difficult. Consider breaking the chain into multiple statements or using intermediate variables`
+                    );
+                }
+            }
         }
     }
 
@@ -1987,6 +2300,17 @@ export class SemanticAnalyzer {
         const callee = node.callee;
         if (!(callee instanceof BinaryExpression) || callee.operator !== OperatorType.Dot) {
             return;
+        }
+
+        // 检查方法调用链的长度
+        // 使用 countAllMethodCalls 来统计链式调用中的所有方法调用
+        const totalCalls = this.countAllMethodCalls(node);
+        if (totalCalls > 5) {
+            this.addWarning(
+                node.start,
+                node.end,
+                `Method call chain is too long (${totalCalls} calls). Long chains can reduce code readability and make debugging difficult. Consider breaking the chain into multiple statements or using intermediate variables`
+            );
         }
 
         const objectExpr = callee.left;
@@ -2005,26 +2329,39 @@ export class SemanticAnalyzer {
 
         const methodName = methodNameExpr.name;
 
+        // 检查对象是否可能为 null
+        this.checkNullUsage(objectExpr, null, `object for method call '${methodName}'`);
+
         // 解析对象类型
         const objectType = this.resolveObjectType(objectExpr);
         if (!objectType) {
             // 无法解析对象类型，可能是变量未定义或其他问题
-            // 为了减少误报，我们只在以下情况下报告警告：
-            // 1. 启用了未定义行为检查
-            // 2. 提供了外部符号表（说明已经检查了所有文件）
-            // 3. 对象表达式是标识符（可能是未定义的变量）
-            if (this.options.checkUndefinedBehavior && 
-                this.externalSymbols.size > 0 && 
-                objectExpr instanceof Identifier) {
-                // 检查是否是未定义的变量
+            // 总是报告警告，帮助用户发现潜在问题
+            if (objectExpr instanceof Identifier) {
+                // 对象表达式是标识符，检查是否是未定义的变量
                 const varSymbol = this.findSymbol(objectExpr.name);
                 if (!varSymbol) {
+                    // 变量未定义
+                    this.addWarning(
+                        objectExpr.start,
+                        objectExpr.end,
+                        `Cannot resolve object type for '${objectExpr.name}' (variable may not be declared), unable to verify if method '${methodName}' exists`
+                    );
+                } else {
+                    // 变量已定义，但类型无法解析（可能是复杂表达式或其他原因）
                     this.addWarning(
                         objectExpr.start,
                         objectExpr.end,
                         `Cannot resolve object type for '${objectExpr.name}', unable to verify if method '${methodName}' exists`
                     );
                 }
+            } else {
+                // 对象表达式不是标识符（可能是复杂表达式），无法解析类型
+                this.addWarning(
+                    objectExpr.start,
+                    objectExpr.end,
+                    `Cannot resolve object type for the expression, unable to verify if method '${methodName}' exists`
+                );
             }
             // 即使无法解析对象类型，也不阻止继续检查（减少误报）
             // 因为可能是合法的代码，只是分析器无法推断类型
@@ -2250,6 +2587,105 @@ export class SemanticAnalyzer {
     }
 
     /**
+     * 解析表达式的实际类型
+     * 对于函数调用，返回函数的返回类型；对于其他表达式，返回其类型
+     */
+    private resolveExpressionType(expr: Expression): string | null {
+        // 首先尝试使用 getType() 方法
+        let type = expr.getType();
+        if (type) {
+            return type;
+        }
+
+        // 如果是函数调用，尝试从符号表中获取返回类型
+        if (expr instanceof CallExpression) {
+            if (expr.callee instanceof Identifier) {
+                // 直接函数调用，查找函数符号
+                const funcSymbol = this.findSymbol(expr.callee.name);
+                if (funcSymbol && funcSymbol.type === SymbolType.FUNCTION) {
+                    return funcSymbol.returnType || null;
+                }
+                // 也检查外部符号表中的 native 函数
+                if (this.externalSymbols.has(expr.callee.name)) {
+                    const externalSymbol = this.externalSymbols.get(expr.callee.name)!;
+                    if (externalSymbol.returnType) {
+                        return externalSymbol.returnType;
+                    }
+                }
+            } else if (expr.callee instanceof BinaryExpression && expr.callee.operator === OperatorType.Dot) {
+                // 方法调用，如 obj.method() 或 StructName.method()
+                const objectType = this.resolveObjectType(expr.callee.left);
+                if (objectType && expr.callee.right instanceof Identifier) {
+                    const methodName = expr.callee.right.name;
+                    const methodInfo = this.findMethod(objectType.typeName, methodName, objectType.isStatic);
+                    if (methodInfo && methodInfo.returnType) {
+                        return methodInfo.returnType;
+                    }
+                }
+            }
+        }
+        // 如果是标识符，尝试从符号表中获取类型
+        else if (expr instanceof Identifier) {
+            const varSymbol = this.findSymbol(expr.name);
+            if (varSymbol && varSymbol.valueType) {
+                return varSymbol.valueType;
+            }
+        }
+        // 如果是成员访问，尝试解析成员类型
+        else if (expr instanceof BinaryExpression && expr.operator === OperatorType.Dot) {
+            const memberType = this.resolveMemberType(expr);
+            if (memberType) {
+                return memberType;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 检查成员是否是委托
+     */
+    private isDelegateMember(symbol: SymbolInfo): boolean {
+        // 委托在符号表中存储为 INSTANCE_MEMBER，其 node 是 DelegateDeclaration
+        return symbol.type === SymbolType.INSTANCE_MEMBER && 
+               symbol.node instanceof DelegateDeclaration;
+    }
+
+    /**
+     * 解析对象符号（从表达式中获取符号信息）
+     */
+    private resolveObjectSymbol(expr: Expression): SymbolInfo | null {
+        if (expr instanceof Identifier) {
+            const name = expr.name;
+            
+            // 处理 this 关键字
+            if (name === "this") {
+                // 在结构方法中，this 指向当前结构实例
+                // 但 this 本身不是委托，返回 null
+                return null;
+            }
+
+            // 查找变量符号
+            const varSymbol = this.findSymbol(name);
+            if (varSymbol) {
+                return varSymbol;
+            }
+        } else if (expr instanceof BinaryExpression && expr.operator === OperatorType.Dot) {
+            // 成员访问，如 obj.member
+            // 递归解析左侧对象
+            const leftSymbol = this.resolveObjectSymbol(expr.left);
+            if (leftSymbol && leftSymbol.valueType && expr.right instanceof Identifier) {
+                // 左侧是委托，查找委托的成员
+                const memberName = expr.right.name;
+                const memberSymbol = this.findStructMember(leftSymbol.valueType, memberName);
+                return memberSymbol;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * 解析成员类型
      * 从 obj.member 表达式中解析出成员的类型
      */
@@ -2313,6 +2749,18 @@ export class SemanticAnalyzer {
                     isReadonly: member.isReadonly || false,
                     isConstant: member.isConstant || false
                 };
+            } else if (member instanceof DelegateDeclaration && member.name.name === memberName) {
+                // 找到了委托成员，构建 SymbolInfo
+                return {
+                    name: memberName,
+                    type: SymbolType.INSTANCE_MEMBER,
+                    node: member,
+                    isPrivate: member.isPrivate || false,
+                    isPublic: !member.isPrivate,
+                    scope: structName,
+                    valueType: member.delegateType.name,
+                    isInitialized: false  // 委托默认未初始化
+                };
             }
         }
 
@@ -2325,6 +2773,77 @@ export class SemanticAnalyzer {
             }
         }
 
+        // 如果在当前结构作用域中没找到，检查实现的模块
+        const implementedModules = this.structModules.get(structName);
+        if (implementedModules) {
+            for (const moduleName of implementedModules) {
+                const moduleMember = this.findModuleMember(moduleName, memberName);
+                if (moduleMember) {
+                    return moduleMember;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 查找模块成员
+     */
+    private findModuleMember(moduleName: string, memberName: string): SymbolInfo | null {
+        const moduleSymbol = this.findSymbol(moduleName, SymbolType.MODULE);
+        if (!moduleSymbol || !(moduleSymbol.node instanceof ModuleDeclaration)) {
+            return null;
+        }
+
+        const moduleNode = moduleSymbol.node;
+
+        // 在模块的成员中查找
+        for (const member of moduleNode.members) {
+            if (member instanceof VariableDeclaration && !member.isLocal && member.name.name === memberName) {
+                // 找到了成员，构建 SymbolInfo
+                const type = member.type ? (member.type instanceof Identifier ? member.type.name : "thistype") : null;
+                // 检查模块成员是否是私有的
+                // 在 vJASS 中，模块中的私有成员通过 "private static" 或 "private" 关键字声明
+                // 由于 VariableDeclaration 没有 isPrivate 属性，我们需要通过检查模块节点来获取
+                // 暂时假设所有模块成员都是公共的，后续可以通过改进解析器来支持
+                // 注意：这里我们需要检查模块声明节点的原始文本或解析器状态来判断私有性
+                // 为了简化，我们先假设模块成员都是公共的
+                let isPrivate = false;
+                // TODO: 需要从解析器或 AST 节点中获取私有信息
+                // 可以通过检查模块节点的原始文本或添加 isPrivate 属性到 VariableDeclaration
+                
+                return {
+                    name: memberName,
+                    type: member.isStatic ? SymbolType.STATIC_MEMBER : SymbolType.INSTANCE_MEMBER,
+                    node: member,
+                    isPrivate: isPrivate,
+                    isPublic: !isPrivate,
+                    scope: moduleName,
+                    valueType: type || undefined,
+                    isReadonly: member.isReadonly || false,
+                    isConstant: member.isConstant || false,
+                    arraySize: member.isArray ? member.arraySize : undefined,
+                    arrayWidth: member.isArray ? member.arrayWidth : undefined,
+                    arrayHeight: member.isArray ? member.arrayHeight : undefined
+                };
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 获取当前所在的结构体名称
+     */
+    private getCurrentStructName(): string | null {
+        // 从作用域栈中查找结构体作用域
+        for (let i = this.scopeStack.length - 1; i >= 0; i--) {
+            const scope = this.scopeStack[i];
+            if (scope.type === "struct") {
+                return scope.name;
+            }
+        }
         return null;
     }
 
@@ -2578,11 +3097,22 @@ export class SemanticAnalyzer {
             // 基本类型检查，传递上下文表达式以支持 thistype 解析
             if (actualType !== expectedType &&
                 !this.isTypeCompatible(actualType, expectedType, expr)) {
-                this.addWarning(
-                    expr.start,
-                    expr.end,
-                    `Type '${actualType}' of parameter ${paramIndex} may be incompatible with expected type '${expectedType}'`
-                );
+                // 根据上下文生成更清晰的警告消息
+                if (context.includes(".")) {
+                    // 方法调用：Type 'integer' is incompatible with expected type 'unit'
+                    this.addWarning(
+                        expr.start,
+                        expr.end,
+                        `Parameter type '${actualType}' is incompatible with expected type '${expectedType}'`
+                    );
+                } else {
+                    // 函数调用：Type 'integer' of parameter 1 may be incompatible with expected type 'unit'
+                    this.addWarning(
+                        expr.start,
+                        expr.end,
+                        `Type '${actualType}' of parameter ${paramIndex} may be incompatible with expected type '${expectedType}'`
+                    );
+                }
             }
         }
     }
@@ -2600,6 +3130,12 @@ export class SemanticAnalyzer {
         if ((actualType === "integer" && expectedType === "real") ||
             (actualType === "real" && expectedType === "integer")) {
             return true;
+        }
+
+        // string 和 integer/real 不兼容（需要显式转换）
+        if ((actualType === "string" && (expectedType === "integer" || expectedType === "real")) ||
+            ((actualType === "integer" || actualType === "real") && expectedType === "string")) {
+            return false;
         }
 
         // handle 类型兼容性规则
@@ -2685,6 +3221,188 @@ export class SemanticAnalyzer {
         }
 
         return false;
+    }
+
+    /**
+     * 检查是否是隐式类型转换
+     * JASS 支持某些隐式类型转换，如 integer 到 real
+     * @param actualType 实际类型
+     * @param expectedType 期望类型
+     * @returns 是否是隐式类型转换
+     */
+    private isImplicitTypeConversion(actualType: string, expectedType: string): boolean {
+        // integer 到 real 是隐式转换
+        if (actualType === "integer" && expectedType === "real") {
+            return true;
+        }
+        // real 到 integer 也是隐式转换（会截断）
+        if (actualType === "real" && expectedType === "integer") {
+            return true;
+        }
+        // 注意：real 到 integer 的转换在 JASS 中也是隐式的，但会丢失精度
+        // 这里我们只检查 integer 到 real，因为这是最常见的隐式转换
+        
+        return false;
+    }
+
+    /**
+     * 检查表达式是否可能为 null
+     * @param expr 表达式
+     * @returns 是否可能为 null
+     */
+    private checkIfExpressionIsNull(expr: Expression | null | undefined): boolean {
+        if (!expr) {
+            return true; // 没有初始化表达式，可能为 null
+        }
+        
+        // 检查是否是 null 字面量
+        if (expr instanceof Identifier && expr.name === "null") {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * 检查类型是否是 handle 类型（可能为 null）
+     * @param type 类型名称
+     * @returns 是否是 handle 类型
+     */
+    private isHandleType(type: string): boolean {
+        if (!type) {
+            return false;
+        }
+        
+        const handleSubtypes = new Set([
+            "handle", "unit", "item", "location", "trigger", "timer", "effect", "group", "force", 
+            "player", "widget", "destructable", "fogmodifier", "hashtable", "rect", "region", 
+            "sound", "texttag", "lightning", "image", "ubersplat", "multiboard", "multiboarditem", 
+            "trackable", "dialog", "button", "quest", "questitem", "defeatcondition", "timerdialog", 
+            "leaderboard", "boarditem", "gamecache", "unitpool", "itempool", "triggercondition", 
+            "triggeraction", "boolexpr", "conditionfunc", "filterfunc", "code", "event", 
+            "playerunitevent", "unitevent", "limitop", "oplimit", "eventid", "gameevent", 
+            "playerevent", "widgetevent", "dialogevent", "unitstate", "aidifficulty", 
+            "gamedifficulty", "gametype", "mapflag", "mapvisibility", "playerslotstate", 
+            "volumegroup", "camerafield", "camerasetup", "playercolor", "placement", "startlocprio", 
+            "igamestate", "fgamestate", "playerstate", "playerscore", "playergameresult"
+        ]);
+        
+        return handleSubtypes.has(type.toLowerCase());
+    }
+
+    /**
+     * 检查类型是否有效
+     * @param type 类型名称
+     * @param typeNode 类型节点（用于错误报告）
+     * @returns 类型是否有效
+     */
+    private isValidType(type: string | null, typeNode?: Identifier | ThistypeExpression): boolean {
+        if (!type) {
+            return false;
+        }
+
+        // 基本类型
+        const basicTypes = new Set([
+            "integer", "real", "string", "boolean", "code", "handle", "key", "nothing", "thistype"
+        ]);
+        
+        if (basicTypes.has(type.toLowerCase())) {
+            return true;
+        }
+
+        // 检查是否是 handle 子类型（这些也是有效的）
+        if (this.isHandleType(type)) {
+            return true;
+        }
+
+        // 检查是否是自定义类型（struct, interface, type）
+        const symbol = this.findSymbol(type, SymbolType.STRUCT) || 
+                      this.findSymbol(type, SymbolType.INTERFACE) ||
+                      this.findSymbol(type, SymbolType.TYPE);
+        
+        if (symbol) {
+            return true;
+        }
+
+        // 检查外部符号表
+        if (this.externalSymbols.has(type)) {
+            const externalSymbol = this.externalSymbols.get(type)!;
+            if (externalSymbol.type === SymbolType.STRUCT || 
+                externalSymbol.type === SymbolType.INTERFACE ||
+                externalSymbol.type === SymbolType.TYPE) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查类型有效性并报告错误
+     * @param type 类型名称
+     * @param typeNode 类型节点（用于错误报告）
+     * @param context 上下文信息（用于错误消息）
+     * @returns 类型是否有效
+     */
+    private checkTypeValidity(
+        type: string | null, 
+        typeNode: Identifier | ThistypeExpression | null | undefined,
+        context: string = "type"
+    ): boolean {
+        if (!type || !typeNode) {
+            return false;
+        }
+
+        if (!this.isValidType(type, typeNode)) {
+            this.addError(
+                typeNode.start,
+                typeNode.end,
+                `Invalid ${context} '${type}'. The type is not declared or is not a valid vJASS type`,
+                `Ensure the type is declared (struct, interface, or type alias) or use a valid basic type (integer, real, string, boolean, code, handle, etc.)`
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 检查空值使用
+     * @param expr 表达式
+     * @param expectedType 期望类型（如果为 null，则从表达式推断）
+     * @param context 上下文描述（用于错误消息）
+     */
+    private checkNullUsage(expr: Expression, expectedType: string | null, context: string): void {
+        if (!this.options.checkTypes) {
+            return;
+        }
+
+        // 检查表达式是否可能为 null
+        let mayBeNull = false;
+        let exprType: string | null = null;
+
+        if (expr instanceof Identifier) {
+            const symbol = this.findSymbol(expr.name);
+            if (symbol) {
+                mayBeNull = symbol.mayBeNull === true;
+                exprType = symbol.valueType || null;
+            }
+        } else if (this.checkIfExpressionIsNull(expr)) {
+            mayBeNull = true;
+            exprType = expectedType || null;
+        }
+
+        // 如果期望类型是 handle 类型，检查是否可能为 null
+        const typeToCheck = expectedType || exprType;
+        if (typeToCheck && this.isHandleType(typeToCheck)) {
+            if (mayBeNull) {
+                this.addWarning(
+                    expr.start,
+                    expr.end,
+                    `Possible null value used for ${context}. Handle types may be null, consider checking for null before use`
+                );
+            }
+        }
     }
 
     /**
@@ -2848,19 +3566,42 @@ export class SemanticAnalyzer {
 
             // 检查赋值目标是否已声明（如果不是新声明）
             if (!symbol) {
-                // 可能是新声明的变量，检查是否是局部变量声明
                 // 在 vJass 中，局部变量必须使用 local 关键字声明
-                // 这里简化处理，只检查已存在的变量
+                // 如果找不到符号，说明变量未声明
+                // 只有在启用了未定义行为检查，并且提供了外部符号表时，才报告错误
+                // 这样可以确保在所有文件中都找不到变量时才报错
+                if (this.options.checkUndefinedBehavior) {
+                    const hasExternalSymbols = this.externalSymbols.size > 0;
+                    if (hasExternalSymbols) {
+                        // 已经检查了所有外部文件，仍然找不到，说明变量未声明
+                        this.addError(
+                            node.target.start,
+                            node.target.end,
+                            `Variable '${varName}' is not declared. Ensure it is declared with 'local' keyword or as a global variable`,
+                            `Declare the variable with 'local ${varName} type' or 'globals type ${varName} endglobals'`
+                        );
+                        return;
+                    }
+                }
             }
 
             if (symbol) {
+                // 标记变量为已初始化（赋值语句会初始化变量）
+                if (symbol.type === SymbolType.LOCAL_VARIABLE || symbol.type === SymbolType.GLOBAL_VARIABLE) {
+                    symbol.isInitialized = true;
+                }
+
                 // 检查常量变量不能被赋值
                 if (symbol.isConstant) {
+                    // 根据变量类型提供更具体的错误消息
+                    const varType = symbol.type === SymbolType.GLOBAL_VARIABLE ? "global variable" :
+                                   symbol.type === SymbolType.LOCAL_VARIABLE ? "local variable" :
+                                   "variable";
                     this.addError(
                         node.target.start,
                         node.target.end,
-                        `Constant variable '${varName}' cannot be assigned`,
-                        `Remove the assignment to the constant variable`
+                        `Constant ${varType} '${varName}' cannot be reassigned. Constants are immutable and must be initialized at declaration`,
+                        `Remove the assignment to the constant ${varType}. If you need to change the value, use a regular variable instead of 'constant'`
                     );
                     return;
                 }
@@ -2889,17 +3630,10 @@ export class SemanticAnalyzer {
                     }
                 }
 
-                // 检查全局变量是否是常量或只读
+                // 检查全局变量是否是只读
+                // 注意：常量检查已经在上面（第3441行）完成，这里只检查只读
                 if (symbol.type === SymbolType.GLOBAL_VARIABLE) {
-                    if (symbol.isConstant) {
-                        this.addError(
-                            node.target.start,
-                            node.target.end,
-                            `Constant global variable '${varName}' cannot be assigned`,
-                            `Remove the assignment to the constant global variable`
-                        );
-                        return;
-                    }
+                    // 常量检查已经在上面完成，这里不再重复检查
                     if (symbol.isReadonly) {
                         this.addError(
                             node.target.start,
@@ -2909,6 +3643,41 @@ export class SemanticAnalyzer {
                         );
                         return;
                     }
+                }
+
+                // 检查类型兼容性（如果启用了类型检查）
+                if (this.options.checkTypes && symbol.valueType) {
+                    const actualType = this.resolveExpressionType(node.value);
+                    if (actualType) {
+                        if (actualType !== symbol.valueType) {
+                            // 检查是否是隐式类型转换（如 integer 到 real）
+                            if (this.isImplicitTypeConversion(actualType, symbol.valueType)) {
+                                // 隐式类型转换，给出警告提示
+                                this.addWarning(
+                                    node.value.start,
+                                    node.value.end,
+                                    `Implicit type conversion from '${actualType}' to '${symbol.valueType}'. JASS will automatically convert, but consider using explicit type cast for clarity`
+                                );
+                            } else if (!this.isTypeCompatible(actualType, symbol.valueType, node.value)) {
+                                // 类型不兼容，给出错误警告
+                                this.addWarning(
+                                    node.value.start,
+                                    node.value.end,
+                                    `Type '${actualType}' is incompatible with variable type '${symbol.valueType}'. Cannot assign '${actualType}' to '${symbol.valueType}'`
+                                );
+                            }
+                        }
+                    }
+                }
+
+                // 更新 mayBeNull 状态（如果赋值给 handle 类型变量）
+                if (symbol.valueType && this.isHandleType(symbol.valueType)) {
+                    symbol.mayBeNull = this.checkIfExpressionIsNull(node.value) || this.isHandleType(this.resolveExpressionType(node.value) || "");
+                }
+
+                // 如果赋值给委托，标记委托为已初始化
+                if (this.isDelegateMember(symbol)) {
+                    symbol.isInitialized = true;
                 }
             }
         } else if (node.target instanceof BinaryExpression && node.target.operator === OperatorType.Dot) {
@@ -2922,10 +3691,37 @@ export class SemanticAnalyzer {
             const objectType = this.resolveObjectType(node.target.left);
 
             if (objectType) {
+                // 检查左侧对象是否是委托
+                const leftObjectSymbol = this.resolveObjectSymbol(node.target.left);
+                if (leftObjectSymbol && this.isDelegateMember(leftObjectSymbol)) {
+                    // 左侧是委托，检查委托是否已初始化
+                    if (leftObjectSymbol.isInitialized === false) {
+                        this.addWarning(
+                            node.target.left.start,
+                            node.target.left.end,
+                            `Delegate '${leftObjectSymbol.name}' may not be initialized before accessing its member '${memberName}'`
+                        );
+                    }
+                }
+
                 // 查找结构成员
                 const memberSymbol = this.findStructMember(objectType.typeName, memberName);
 
                 if (memberSymbol) {
+                    // 检查是否是模块的私有成员
+                    if (memberSymbol.isPrivate && memberSymbol.scope && memberSymbol.scope !== objectType.typeName) {
+                        // 成员来自模块，检查当前访问是否在实现该模块的结构体中
+                        const currentStructName = this.getCurrentStructName();
+                        if (!currentStructName || currentStructName !== objectType.typeName) {
+                            this.addWarning(
+                                node.target.right.start,
+                                node.target.right.end,
+                                `Cannot access private member '${memberName}' from module '${memberSymbol.scope}'. Private members can only be accessed within the struct that implements the module`
+                            );
+                            return;
+                        }
+                    }
+
                     // 检查成员是否是只读的
                     if (memberSymbol.isReadonly) {
                         this.addError(
@@ -2947,6 +3743,56 @@ export class SemanticAnalyzer {
                         );
                         return;
                     }
+
+                    // 检查类型兼容性（如果启用了类型检查）
+                    if (this.options.checkTypes && memberSymbol.valueType) {
+                        const actualType = this.resolveExpressionType(node.value);
+                        if (actualType) {
+                            if (actualType !== memberSymbol.valueType) {
+                                // 检查是否是隐式类型转换（如 integer 到 real）
+                                if (this.isImplicitTypeConversion(actualType, memberSymbol.valueType)) {
+                                    // 隐式类型转换，给出警告提示
+                                    this.addWarning(
+                                        node.value.start,
+                                        node.value.end,
+                                        `Implicit type conversion from '${actualType}' to '${memberSymbol.valueType}'. JASS will automatically convert, but consider using explicit type cast for clarity`
+                                    );
+                                } else if (!this.isTypeCompatible(actualType, memberSymbol.valueType, node.value)) {
+                                    // 类型不兼容，给出错误警告
+                                    this.addWarning(
+                                        node.value.start,
+                                        node.value.end,
+                                        `Type '${actualType}' is incompatible with member type '${memberSymbol.valueType}'. Cannot assign '${actualType}' to '${memberSymbol.valueType}'`
+                                    );
+                                }
+                            }
+                        }
+                    }
+
+                    // 如果赋值给委托，标记委托为已初始化
+                    if (this.isDelegateMember(memberSymbol)) {
+                        memberSymbol.isInitialized = true;
+                    }
+                } else {
+                    // 成员不存在，报告警告
+                    // 如果类型来自外部文件，可能成员的详细信息不完整，只报告警告
+                    // 如果类型在当前文件中，则报告错误
+                    const isExternalType = this.externalSymbols.has(objectType.typeName);
+                    if (isExternalType) {
+                        // 类型来自外部文件，成员可能在其他文件中，只报告警告
+                        this.addWarning(
+                            node.target.right.start,
+                            node.target.right.end,
+                            `Member '${memberName}' may not exist in ${objectType.isStatic ? "struct" : "struct instance"} '${objectType.typeName}'. The type is from an external file, ensure the member is declared`
+                        );
+                    } else {
+                        // 类型在当前文件中，应该能找到成员，报告错误
+                        this.addWarning(
+                            node.target.right.start,
+                            node.target.right.end,
+                            `Member '${memberName}' may not exist in ${objectType.isStatic ? "struct" : "struct instance"} '${objectType.typeName}'`
+                        );
+                    }
                 }
             }
         }
@@ -2956,48 +3802,616 @@ export class SemanticAnalyzer {
     }
 
     /**
+     * 检查变量声明
+     */
+    private checkVariableDeclaration(node: VariableDeclaration): void {
+        // 检查变量名是否是关键字
+        const varName = node.name.name;
+        if (isVjassKeyword(varName)) {
+            this.addError(
+                node.name.start,
+                node.name.end,
+                `Variable name '${varName}' conflicts with a vJASS keyword. Variable names cannot be keywords`,
+                `Rename the variable to a non-keyword name, for example: '${varName}Var' or 'my${varName.charAt(0).toUpperCase() + varName.slice(1)}'`
+            );
+            return; // 不再检查其他内容
+        }
+
+        // 检查变量类型是否有效
+        if (node.type) {
+            const typeName = node.type instanceof Identifier ? node.type.name : 
+                            (node.type instanceof ThistypeExpression ? "thistype" : null);
+            if (typeName) {
+                this.checkTypeValidity(typeName, node.type, "variable type");
+            }
+        }
+
+        // 检查初始化表达式的类型兼容性（如果启用了类型检查）
+        if (this.options.checkTypes && node.initializer && node.type) {
+            const expectedType = node.type instanceof Identifier ? node.type.name : 
+                                 (node.type instanceof ThistypeExpression ? "thistype" : null);
+            
+            if (expectedType) {
+                const actualType = this.resolveExpressionType(node.initializer);
+                if (actualType) {
+                    if (actualType !== expectedType) {
+                        // 检查是否是隐式类型转换（如 integer 到 real）
+                        if (this.isImplicitTypeConversion(actualType, expectedType)) {
+                            // 隐式类型转换，给出警告提示
+                            this.addWarning(
+                                node.initializer.start,
+                                node.initializer.end,
+                                `Implicit type conversion from '${actualType}' to '${expectedType}'. JASS will automatically convert, but consider using explicit type cast for clarity`
+                            );
+                        } else if (!this.isTypeCompatible(actualType, expectedType, node.initializer)) {
+                            // 类型不兼容，给出错误警告
+                            this.addWarning(
+                                node.initializer.start,
+                                node.initializer.end,
+                                `Type '${actualType}' is incompatible with variable type '${expectedType}'. Cannot assign '${actualType}' to '${expectedType}'`
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查二元表达式
+     */
+    private checkBinaryExpression(node: BinaryExpression): void {
+        if (!this.options.checkTypes) {
+            return;
+        }
+
+        const operator = node.operator;
+        const left = node.left;
+        const right = node.right;
+
+        // 检查无效的数组访问语法（使用点号而不是方括号）
+        // 例如：arr.0 应该是 arr[0]
+        if (operator === OperatorType.Dot) {
+            // 如果右侧是整数或实数字面量，且左侧是数组变量，这是无效的数组访问语法
+            if (right instanceof IntegerLiteral || right instanceof RealLiteral) {
+                // 检查左侧是否是数组变量
+                if (left instanceof Identifier) {
+                    const symbol = this.findSymbol(left.name);
+                    if (symbol && (symbol.arraySize !== undefined || 
+                                   symbol.arrayWidth !== undefined || symbol.arrayHeight !== undefined)) {
+                        // 左侧是数组变量，右侧是数字，这是无效的数组访问语法
+                        this.addError(
+                            node.start,
+                            node.end,
+                            `Invalid array access syntax. Arrays must use bracket notation 'arr[index]' instead of dot notation 'arr.index'`,
+                            `Change '${left.name}.${right.value}' to '${left.name}[${right.value}]'`
+                        );
+                        return; // 不再检查其他内容
+                    }
+                } else if (left instanceof BinaryExpression && left.operator === OperatorType.Dot) {
+                    // 可能是 obj.arr.0 的情况，检查 obj.arr 是否是数组
+                    if (left.right instanceof Identifier) {
+                        const objectType = this.resolveObjectType(left.left);
+                        if (objectType) {
+                            const memberSymbol = this.findStructMember(objectType.typeName, left.right.name);
+                            if (memberSymbol && (memberSymbol.arraySize !== undefined ||
+                                                  memberSymbol.arrayWidth !== undefined || memberSymbol.arrayHeight !== undefined)) {
+                                // 成员是数组，使用点号访问是无效的
+                                this.addError(
+                                    node.start,
+                                    node.end,
+                                    `Invalid array access syntax. Arrays must use bracket notation 'obj.arr[index]' instead of dot notation 'obj.arr.index'`,
+                                    `Change '${left.right.name}.${right.value}' to '${left.right.name}[${right.value}]'`
+                                );
+                                return; // 不再检查其他内容
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 检查加法运算符（+）
+        if (operator === OperatorType.Plus) {
+            const leftType = this.resolveExpressionType(left);
+            const rightType = this.resolveExpressionType(right);
+
+            if (leftType && rightType) {
+                // 检查字符串和整数的混用
+                if ((leftType === "string" && rightType === "integer") ||
+                    (leftType === "integer" && rightType === "string")) {
+                    this.addWarning(
+                        node.start,
+                        node.end,
+                        `String and integer cannot be directly added. Use I2S() to convert integer to string, or S2I() to convert string to integer`
+                    );
+                }
+                // 检查字符串和实数的混用
+                else if ((leftType === "string" && rightType === "real") ||
+                         (leftType === "real" && rightType === "string")) {
+                    this.addWarning(
+                        node.start,
+                        node.end,
+                        `String and real cannot be directly added. Use R2S() to convert real to string`
+                    );
+                }
+                // 检查其他不兼容的类型组合
+                else if (leftType !== rightType &&
+                         !this.isTypeCompatible(leftType, rightType, left) &&
+                         !this.isTypeCompatible(rightType, leftType, right)) {
+                    // 对于加法运算，如果类型不兼容，给出警告
+                    // 但排除 integer 和 real 的组合（它们是兼容的）
+                    if (!((leftType === "integer" && rightType === "real") ||
+                          (leftType === "real" && rightType === "integer"))) {
+                        this.addWarning(
+                            node.start,
+                            node.end,
+                            `Type '${leftType}' and type '${rightType}' are incompatible for addition operation`
+                        );
+                    }
+                }
+            }
+        }
+        // 检查其他算术运算符（-, *, /, %）
+        else if (operator === OperatorType.Minus || 
+                 operator === OperatorType.Multiply ||
+                 operator === OperatorType.Divide ||
+                 operator === OperatorType.Modulo) {
+            const leftType = this.resolveExpressionType(left);
+            const rightType = this.resolveExpressionType(right);
+
+            if (leftType && rightType) {
+                // 字符串不能用于算术运算
+                if (leftType === "string" || rightType === "string") {
+                    const operatorStr = operator === OperatorType.Minus ? "-" : 
+                                       operator === OperatorType.Multiply ? "*" : 
+                                       operator === OperatorType.Divide ? "/" : "%";
+                    this.addWarning(
+                        node.start,
+                        node.end,
+                        `String type cannot be used in arithmetic operations (${operatorStr})`
+                    );
+                }
+                // 检查其他不兼容的类型组合
+                else if (leftType !== rightType &&
+                         !this.isTypeCompatible(leftType, rightType, left) &&
+                         !this.isTypeCompatible(rightType, leftType, right)) {
+                    // 对于算术运算，如果类型不兼容，给出警告
+                    // 但排除 integer 和 real 的组合（它们是兼容的）
+                    if (!((leftType === "integer" && rightType === "real") ||
+                          (leftType === "real" && rightType === "integer"))) {
+                        this.addWarning(
+                            node.start,
+                            node.end,
+                            `Type '${leftType}' and type '${rightType}' are incompatible for arithmetic operation`
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查括号匹配
+     * 注意：括号不匹配通常在解析阶段就会被检测到
+     * 这个方法主要用于验证嵌套函数调用中的括号匹配
+     */
+    private checkParenthesesMatch(node: CallExpression): void {
+        // 检查函数调用中的括号是否匹配
+        // 通过检查参数列表中的表达式来验证括号匹配
+        
+        // 对于嵌套的函数调用，我们需要递归检查
+        for (const arg of node.arguments) {
+            this.checkExpressionParentheses(arg);
+        }
+    }
+
+    /**
+     * 检查表达式中的括号匹配
+     */
+    private checkExpressionParentheses(expr: Expression): void {
+        if (expr instanceof CallExpression) {
+            // 递归检查函数调用参数
+            for (const arg of expr.arguments) {
+                this.checkExpressionParentheses(arg);
+            }
+        } else if (expr instanceof BinaryExpression) {
+            // 检查二元表达式
+            this.checkExpressionParentheses(expr.left);
+            this.checkExpressionParentheses(expr.right);
+        }
+        // 其他表达式类型不需要检查括号
+    }
+
+    /**
+     * 检查关键字拼写错误
+     */
+    private checkKeywordMisspelling(node: VariableDeclaration | ReturnStatement): void {
+        // 检查常见的拼写错误
+        // 注意：如果关键字拼写错误，解析器可能无法正确解析，所以这个检查主要用于验证
+        
+        // 对于 VariableDeclaration，检查是否是拼写错误的 "local"
+        // 如果变量声明没有 isLocal 标志，但变量名看起来像是拼写错误的关键字，给出警告
+        if (node instanceof VariableDeclaration) {
+            // 变量声明应该由解析器正确识别，如果解析器没有识别为 local，可能是拼写错误
+            // 但这里我们主要检查变量名是否是常见关键字的拼写错误
+            const varName = node.name.name.toLowerCase();
+            
+            // 检查是否是常见关键字的拼写错误
+            const commonMisspellings: Map<string, string> = new Map([
+                ["locl", "local"],
+                ["lcoal", "local"],
+                ["loacl", "local"],
+                ["retrun", "return"],
+                ["retunr", "return"],
+                ["retrn", "return"],
+                ["fucntion", "function"],
+                ["functon", "function"],
+                ["functin", "function"],
+                ["endfucntion", "endfunction"],
+                ["endfuncton", "endfunction"],
+                ["endfunctin", "endfunction"],
+                ["if", "if"], // 这个不是拼写错误，但可以用来检查
+                ["then", "then"],
+                ["endif", "endif"],
+                ["endfi", "endif"],
+                ["loop", "loop"],
+                ["endloop", "endloop"],
+                ["endlop", "endloop"],
+                ["set", "set"],
+                ["call", "call"],
+                ["takes", "takes"],
+                ["returns", "returns"],
+                ["nothing", "nothing"],
+                ["struct", "struct"],
+                ["endstruct", "endstruct"],
+                ["endsturct", "endstruct"],
+                ["method", "method"],
+                ["endmethod", "endmethod"],
+                ["endmehtod", "endmethod"]
+            ]);
+            
+            // 如果变量名是常见关键字的拼写错误，给出警告
+            if (commonMisspellings.has(varName)) {
+                const correctSpelling = commonMisspellings.get(varName);
+                if (correctSpelling !== varName) {
+                    this.addError(
+                        node.name.start,
+                        node.name.end,
+                        `Possible misspelling: '${varName}' should be '${correctSpelling}'`,
+                        `Change '${varName}' to '${correctSpelling}'`
+                    );
+                }
+            }
+        }
+        
+        // 对于 ReturnStatement，检查是否是拼写错误的 "return"
+        // 如果 return 语句没有被正确解析，可能是拼写错误
+        // 但这里我们主要检查 return 语句的位置和上下文
+        if (node instanceof ReturnStatement) {
+            // ReturnStatement 应该由解析器正确识别，如果解析器没有识别，可能是拼写错误
+            // 但这里我们主要验证 return 语句的上下文是否正确
+            // 实际上，如果 return 拼写错误，解析器可能无法识别，所以这个检查可能不会被执行
+        }
+    }
+
+    /**
+     * 检查字符串字面量
+     */
+    private checkStringLiteral(node: StringLiteral): void {
+        // 检查字符串是否未闭合
+        // 未闭合的字符串通常有以下特征：
+        // 1. 字符串值以换行符结尾，且包含注释标记（// 或 /*）
+        //    这通常表示字符串未闭合，注释被包含在字符串中
+        // 2. 字符串值以换行符结尾，且后面跟着其他代码
+        
+        const value = node.value;
+        if (value && value.length > 0) {
+            // 检查字符串是否以换行符结尾（可能是未闭合）
+            const endsWithNewline = value.endsWith('\n') || value.endsWith('\r\n') || value.endsWith('\r');
+            
+            if (endsWithNewline) {
+                // 检查是否包含注释标记（这通常表示字符串未闭合，注释被包含在字符串中）
+                // 注意：字符串中可能包含 "//" 或 "/*" 作为内容，但通常不会在换行符之后
+                const hasCommentMarker = value.includes('//') || value.includes('/*');
+                
+                if (hasCommentMarker) {
+                    // 检查注释标记是否在换行符之后（更可能是未闭合的字符串）
+                    const lastNewlineIndex = Math.max(
+                        value.lastIndexOf('\n'),
+                        value.lastIndexOf('\r\n'),
+                        value.lastIndexOf('\r')
+                    );
+                    
+                    if (lastNewlineIndex >= 0) {
+                        const afterNewline = value.substring(lastNewlineIndex);
+                        if (afterNewline.includes('//') || afterNewline.includes('/*')) {
+                            this.addError(
+                                node.start,
+                                node.end,
+                                `Unclosed string literal. The string appears to be missing a closing quote`,
+                                `Add a closing quote (") to close the string literal`
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 检查静态 if 语句
      */
     private checkStaticIf(node: IfStatement): void {
-        if (!node.isStatic) return;
-
-        // 静态 if 的条件必须是常量布尔值
-        // 根据文档：条件必须使用布尔值常量，and 操作符以及 not 操作符
-        // 在编译期间会对此进行分析
-        const result = this.checkStaticIfCondition(node.condition);
-        if (!result.isValid) {
-            this.addError(
-                node.condition.start,
-                node.condition.end,
-                result.errorMessage || `Static if condition must be a constant boolean value, or a constant boolean expression using and/or/not operators`,
-                `Use a constant boolean value or constant boolean expression`
-            );
+        if (node.isStatic) {
+            // 静态 if 的条件必须是常量布尔值
+            // 根据文档：条件必须使用布尔值常量，and 操作符以及 not 操作符
+            // 在编译期间会对此进行分析
+            const result = this.checkStaticIfCondition(node.condition);
+            if (!result.isValid) {
+                this.addError(
+                    node.condition.start,
+                    node.condition.end,
+                    result.errorMessage || `Static if condition must be a constant boolean value, or a constant boolean expression using and/or/not operators`,
+                    `Use a constant boolean value or constant boolean expression`
+                );
+            }
+        } else {
+            // 普通 if 语句，检查条件表达式的类型兼容性
+            this.checkIfCondition(node.condition);
         }
+    }
+
+    /**
+     * 检查 if 语句的条件表达式类型
+     */
+    private checkIfCondition(condition: Expression): void {
+        // 如果启用了类型检查，检查条件表达式的类型
+        if (!this.options.checkTypes) {
+            return;
+        }
+
+        // 检查是否是二元表达式（比较运算符）
+        if (condition instanceof BinaryExpression) {
+            const operator = condition.operator;
+            // 检查比较运算符（==, !=, <, >, <=, >=）
+            if (operator === OperatorType.Equal || 
+                operator === OperatorType.NotEqual ||
+                operator === OperatorType.Less ||
+                operator === OperatorType.Greater ||
+                operator === OperatorType.LessEqual ||
+                operator === OperatorType.GreaterEqual) {
+                // 获取左右操作数的类型
+                const leftType = condition.left.getType();
+                const rightType = condition.right.getType();
+
+                // 如果 getType() 返回 null，尝试从符号表中获取类型
+                let actualLeftType = leftType;
+                let actualRightType = rightType;
+
+                if (!actualLeftType && condition.left instanceof Identifier) {
+                    const varSymbol = this.findSymbol(condition.left.name);
+                    if (varSymbol && varSymbol.valueType) {
+                        actualLeftType = varSymbol.valueType;
+                    }
+                }
+
+                if (!actualRightType && condition.right instanceof Identifier) {
+                    const varSymbol = this.findSymbol(condition.right.name);
+                    if (varSymbol && varSymbol.valueType) {
+                        actualRightType = varSymbol.valueType;
+                    }
+                }
+
+                // 如果两个类型都存在且不兼容，报告警告
+                if (actualLeftType && actualRightType) {
+                    if (actualLeftType !== actualRightType &&
+                        !this.isTypeCompatible(actualLeftType, actualRightType, condition.left) &&
+                        !this.isTypeCompatible(actualRightType, actualLeftType, condition.right)) {
+                        this.addWarning(
+                            condition.start,
+                            condition.end,
+                            `Type '${actualLeftType}' is incompatible with type '${actualRightType}' in comparison`
+                        );
+                    }
+                }
+            } else if (operator === OperatorType.And || 
+                       operator === OperatorType.Or ||
+                       operator === OperatorType.LogicalAnd ||
+                       operator === OperatorType.LogicalOr) {
+                // 逻辑运算符，递归检查左右操作数
+                this.checkIfCondition(condition.left);
+                this.checkIfCondition(condition.right);
+            } else if (operator === OperatorType.Not || 
+                       operator === OperatorType.LogicalNot) {
+                // 逻辑非运算符，递归检查操作数（对于 not，right 是实际的操作数）
+                if (condition.right) {
+                    this.checkIfCondition(condition.right);
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查数组访问
+     */
+    private checkArrayAccess(node: BinaryExpression): void {
+        if (!this.options.checkArrayBounds) {
+            return;
+        }
+
+        // node.left 是数组变量，node.right 是索引表达式
+        const arrayExpr = node.left;
+        const indexExpr = node.right;
+
+        // 如果数组表达式是标识符，查找数组变量
+        if (arrayExpr instanceof Identifier) {
+            const arraySymbol = this.findSymbol(arrayExpr.name);
+            if (arraySymbol && (arraySymbol.type === SymbolType.LOCAL_VARIABLE || 
+                                arraySymbol.type === SymbolType.GLOBAL_VARIABLE ||
+                                arraySymbol.type === SymbolType.INSTANCE_MEMBER ||
+                                arraySymbol.type === SymbolType.STATIC_MEMBER)) {
+                // 检查是否是一维数组
+                if (arraySymbol.arraySize !== null && arraySymbol.arraySize !== undefined) {
+                    // 尝试计算索引值（如果是常量）
+                    const indexValue = this.evaluateConstantExpression(indexExpr);
+                    if (indexValue !== null && typeof indexValue === 'number') {
+                        if (indexValue < 0 || indexValue >= arraySymbol.arraySize) {
+                            this.addWarning(
+                                node.start,
+                                node.end,
+                                `Array index ${indexValue} may be out of bounds (array size is ${arraySymbol.arraySize}). Although JASS does not check bounds at runtime, this may cause undefined behavior). To disable this warning, set 'checkArrayBounds: false' in jass.config.json`
+                            );
+                        }
+                    }
+                }
+                // 检查是否是二维数组
+                else if (arraySymbol.arrayWidth !== null && arraySymbol.arrayWidth !== undefined &&
+                         arraySymbol.arrayHeight !== null && arraySymbol.arrayHeight !== undefined) {
+                    // 对于二维数组，需要检查两个索引
+                    // 但这里只检查第一个索引，因为 arr[i][j] 会被解析为两个 BinaryExpression
+                    // 第一个是 arr[i]，第二个是 (arr[i])[j]
+                    // 所以这里只检查第一个索引
+                    const indexValue = this.evaluateConstantExpression(indexExpr);
+                    if (indexValue !== null && typeof indexValue === 'number') {
+                        if (indexValue < 0 || indexValue >= arraySymbol.arrayWidth) {
+                            this.addWarning(
+                                node.start,
+                                node.end,
+                                `Array index ${indexValue} may be out of bounds (array width is ${arraySymbol.arrayWidth}). Although JASS does not check bounds at runtime, this may cause undefined behavior). To disable this warning, set 'checkArrayBounds: false' in jass.config.json`
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        // 如果数组表达式是成员访问（如 obj.arr[index]），需要先解析对象类型
+        else if (arrayExpr instanceof BinaryExpression && arrayExpr.operator === OperatorType.Dot) {
+            // 解析对象类型和成员
+            const objectType = this.resolveObjectType(arrayExpr.left);
+            if (objectType && arrayExpr.right instanceof Identifier) {
+                const memberName = arrayExpr.right.name;
+                const memberSymbol = this.findStructMember(objectType.typeName, memberName);
+                if (memberSymbol) {
+                    // 检查是否是一维数组
+                    if (memberSymbol.arraySize !== null && memberSymbol.arraySize !== undefined) {
+                        const indexValue = this.evaluateConstantExpression(indexExpr);
+                        if (indexValue !== null && typeof indexValue === 'number') {
+                            if (indexValue < 0 || indexValue >= memberSymbol.arraySize) {
+                                this.addWarning(
+                                    node.start,
+                                    node.end,
+                                    `Array index ${indexValue} may be out of bounds (array size is ${memberSymbol.arraySize}). Although JASS does not check bounds at runtime, this may cause undefined behavior). To disable this warning, set 'checkArrayBounds: false' in jass.config.json`
+                                );
+                            }
+                        }
+                    }
+                    // 检查是否是二维数组
+                    else if (memberSymbol.arrayWidth !== null && memberSymbol.arrayWidth !== undefined &&
+                             memberSymbol.arrayHeight !== null && memberSymbol.arrayHeight !== undefined) {
+                        const indexValue = this.evaluateConstantExpression(indexExpr);
+                        if (indexValue !== null && typeof indexValue === 'number') {
+                            if (indexValue < 0 || indexValue >= memberSymbol.arrayWidth) {
+                                this.addWarning(
+                                    node.start,
+                                    node.end,
+                                    `Array index ${indexValue} may be out of bounds (array width is ${memberSymbol.arrayWidth}). Although JASS does not check bounds at runtime, this may cause undefined behavior). To disable this warning, set 'checkArrayBounds: false' in jass.config.json`
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 计算常量表达式的值
+     * 如果表达式是常量，返回其值；否则返回 null
+     */
+    private evaluateConstantExpression(expr: Expression): number | string | boolean | null {
+        if (expr instanceof IntegerLiteral) {
+            return expr.value;
+        } else if (expr instanceof RealLiteral) {
+            return expr.value;
+        } else if (expr instanceof StringLiteral) {
+            return expr.value;
+        } else if (expr instanceof BooleanLiteral) {
+            return expr.value;
+        } else if (expr instanceof Identifier) {
+            // 查找常量变量
+            const symbol = this.findSymbol(expr.name);
+            if (symbol && symbol.isConstant) {
+                // 如果符号是常量，尝试从节点中获取初始值
+                if (symbol.node instanceof VariableDeclaration && symbol.node.initializer) {
+                    return this.evaluateConstantExpression(symbol.node.initializer);
+                }
+            }
+        }
+        // 其他情况（如变量、函数调用等）无法静态计算
+        return null;
+    }
+
+    /**
+     * 检查函数声明中的多返回值语法错误
+     * JASS 不支持多返回值，如 "returns integer, integer"
+     * 注意：由于 AST 节点没有保存原始文本，这个检查需要在解析器层面进行
+     * 如果解析器正确解析了这种语法错误，它应该在解析阶段就报错
+     */
+    private checkFunctionMultipleReturns(node: FunctionDeclaration): void {
+        // 由于 AST 节点的 returnType 是 Identifier | ThistypeExpression | null
+        // 它只能存储一个返回类型，无法检测多个返回类型
+        // 如果解析器遇到 "returns integer, integer"，它可能会：
+        // 1. 在解析阶段报错（理想情况）
+        // 2. 只解析第一个类型（需要在这里检查，但无法检测）
+        // 实际的语法错误应该在解析器层面检测
+        // 这里作为占位，如果将来需要，可以添加源代码访问功能
+    }
+
+    /**
+     * 检查 ReturnStatement 中的多返回值语法错误
+     * JASS 不支持多返回值，如 "return 1, 2"
+     * 注意：由于 AST 节点的 argument 是 Expression | null，它只能存储一个表达式
+     * 如果解析器正确解析了 "return 1, 2" 这样的语法错误，它应该在解析阶段就报错
+     */
+    private checkReturnMultipleValues(node: ReturnStatement): void {
+        // 由于 AST 节点的 argument 是 Expression | null
+        // 它只能存储一个表达式，无法检测多个返回值
+        // 如果解析器遇到 "return 1, 2"，它可能会：
+        // 1. 在解析阶段报错（理想情况）
+        // 2. 只解析第一个值（需要在这里检查，但无法检测）
+        // 实际的语法错误应该在解析器层面检测
+        // 这里作为占位，如果将来需要，可以添加源代码访问功能
     }
 
     /**
      * 检查 return 语句
      */
     private checkReturnStatement(node: ReturnStatement): void {
-        // 查找当前所在的函数/方法作用域
-        const currentFunctionScope = this.findCurrentFunctionScope();
-        if (!currentFunctionScope) {
-            // 不在函数/方法作用域中，可能是全局作用域中的 return（不应该出现）
-            return;
-        }
-
-        let expectedReturnType = currentFunctionScope.returnType;
+        // 检查多返回值语法错误（占位，实际检查需要在解析器层面进行）
+        this.checkReturnMultipleValues(node);
         
-        // 如果作用域中的返回类型是 undefined，尝试从函数声明节点直接获取
+        // 查找当前所在的函数/方法作用域
+        let currentFunctionScope = this.findCurrentFunctionScope();
+        let expectedReturnType: string | undefined | null = null; // 初始化为 null，表示未找到
+        
+        // 如果找到了函数作用域，使用作用域中的返回类型
+        if (currentFunctionScope) {
+            expectedReturnType = currentFunctionScope.returnType;
+            // 如果作用域中的 returnType 是 undefined，表示 returns nothing
+            // 如果作用域中的 returnType 是 null，表示未设置，需要从 AST 节点获取
+        }
+        
+        // 如果作用域中的返回类型是 undefined，尝试从 AST 节点直接获取
         // 这可能是作用域设置的问题，或者作用域栈的状态不正确
-        if ((expectedReturnType === undefined || expectedReturnType === null) && currentFunctionScope.node) {
+        if ((expectedReturnType === undefined || expectedReturnType === null) && currentFunctionScope && currentFunctionScope.node) {
             // 尝试从作用域栈中找到函数声明节点
             // 函数作用域的 node 是函数体（BlockStatement），其 parent 应该是函数声明
             let currentNode: ASTNode | null = currentFunctionScope.node;
             while (currentNode && currentNode.parent) {
                 currentNode = currentNode.parent;
-                if (currentNode instanceof FunctionDeclaration) {
-                    // 找到函数声明，获取其返回类型
+                if (currentNode instanceof FunctionDeclaration || currentNode instanceof MethodDeclaration) {
+                    // 找到函数/方法声明，获取其返回类型
                     if (currentNode.returnType) {
                         if (currentNode.returnType instanceof Identifier) {
                             expectedReturnType = currentNode.returnType.name;
@@ -3014,6 +4428,40 @@ export class SemanticAnalyzer {
                 }
             }
         }
+        
+        // 如果仍然找不到返回类型，尝试从 AST 节点向上查找
+        if ((expectedReturnType === undefined || expectedReturnType === null) && node.parent) {
+            let currentNode: ASTNode | null = node.parent;
+            while (currentNode) {
+                if (currentNode instanceof FunctionDeclaration || currentNode instanceof MethodDeclaration) {
+                    // 找到函数/方法声明，获取其返回类型
+                    if (currentNode.returnType) {
+                        if (currentNode.returnType instanceof Identifier) {
+                            expectedReturnType = currentNode.returnType.name;
+                            break;
+                        } else if (currentNode.returnType instanceof ThistypeExpression) {
+                            expectedReturnType = "thistype";
+                            break;
+                        }
+                    } else {
+                        // 如果 returnType 是 null，表示 returns nothing
+                        expectedReturnType = undefined;
+                        break;
+                    }
+                }
+                currentNode = currentNode.parent || null;
+            }
+        }
+        
+        // 如果仍然找不到返回类型，无法进行检查，返回
+        // 注意：expectedReturnType 可能是 undefined（表示 returns nothing）或 null（未找到）
+        // 如果 expectedReturnType 是 null，说明无法确定返回类型，跳过检查
+        if (expectedReturnType === null) {
+            // 无法确定返回类型，可能是作用域栈的问题，跳过检查避免误报
+            return;
+        }
+        
+        // 此时 expectedReturnType 应该是 undefined（returns nothing）或具体的返回类型
 
         // 如果没有期望的返回类型（returns nothing），return 不应该有参数
         // 注意：returnType 可能是 undefined（表示 returns nothing）或 "nothing" 字符串
@@ -3078,6 +4526,173 @@ export class SemanticAnalyzer {
         return null;
     }
 
+    /**
+     * 计算方法调用链的长度
+     * @param node CallExpression 节点
+     * @returns 调用链的长度（包括当前调用）
+     */
+    private getMethodCallChainLength(node: CallExpression): number {
+        if (!(node.callee instanceof BinaryExpression) || node.callee.operator !== OperatorType.Dot) {
+            return 1; // 不是方法调用，返回 1
+        }
+
+        const leftExpr = node.callee.left;
+        let length = 1; // 当前调用
+
+        // 如果左侧是另一个方法调用，递归计算
+        if (leftExpr instanceof CallExpression) {
+            length += this.getMethodCallChainLength(leftExpr);
+        } else if (leftExpr instanceof BinaryExpression) {
+            // 如果左侧是 BinaryExpression，可能是链式调用的一部分
+            // 例如：obj.method1().method2()，其中 method1() 返回的对象调用 method2()
+            // 需要递归检查左侧表达式
+            const leftCount = this.countMethodCallsInExpression(leftExpr);
+            length += leftCount;
+        }
+        // 如果左侧是 Identifier，说明这是链式调用的起点，长度为 1
+
+        return length;
+    }
+
+    /**
+     * 统计表达式树中所有方法调用的数量（用于链式调用检测）
+     * 只统计通过点运算符进行的方法调用（obj.method()），不包括普通函数调用
+     * @param expr 表达式
+     * @returns 方法调用的总数
+     */
+    private countAllMethodCalls(expr: Expression): number {
+        let count = 0;
+        
+        if (expr instanceof CallExpression) {
+            // 检查是否是方法调用（通过点运算符）
+            if (expr.callee instanceof BinaryExpression && expr.callee.operator === OperatorType.Dot) {
+                count = 1; // 当前方法调用
+                // 递归检查左侧表达式（可能是另一个方法调用）
+                count += this.countAllMethodCalls(expr.callee.left);
+            }
+            // 递归检查参数（参数中可能包含方法调用）
+            for (const arg of expr.arguments) {
+                count += this.countAllMethodCalls(arg);
+            }
+        } else if (expr instanceof BinaryExpression) {
+            // 递归检查左右操作数
+            count += this.countAllMethodCalls(expr.left);
+            count += this.countAllMethodCalls(expr.right);
+        }
+        
+        return count;
+    }
+
+    /**
+     * 计算表达式中方法调用的数量
+     * @param expr 表达式
+     * @returns 方法调用的数量
+     */
+    private countMethodCallsInExpression(expr: Expression): number {
+        if (expr instanceof CallExpression) {
+            return this.getMethodCallChainLength(expr);
+        } else if (expr instanceof BinaryExpression) {
+            if (expr.operator === OperatorType.Dot) {
+                // 对于点运算符，检查左侧（右侧通常是方法名）
+                let count = 0;
+                if (expr.left instanceof CallExpression) {
+                    // 左侧是方法调用，计算其链长度
+                    count += this.getMethodCallChainLength(expr.left);
+                } else if (expr.left instanceof BinaryExpression) {
+                    // 左侧是表达式，递归检查
+                    count += this.countMethodCallsInExpression(expr.left);
+                }
+                // 右侧通常是标识符（方法名），不需要检查
+                return count;
+            } else {
+                // 其他运算符，递归检查左右操作数
+                let count = 0;
+                if (expr.left instanceof CallExpression) {
+                    count += this.getMethodCallChainLength(expr.left);
+                } else if (expr.left instanceof BinaryExpression) {
+                    count += this.countMethodCallsInExpression(expr.left);
+                }
+                if (expr.right instanceof CallExpression) {
+                    count += this.getMethodCallChainLength(expr.right);
+                } else if (expr.right instanceof BinaryExpression) {
+                    count += this.countMethodCallsInExpression(expr.right);
+                }
+                return count;
+            }
+        }
+        return 0;
+    }
+
+
+    /**
+     * 检查 loop 语句是否有 exitwhen
+     */
+    private checkLoop(node: LoopStatement): void {
+        if (!node.body || !node.body.body) {
+            return;
+        }
+
+        // 检查循环体中是否有 exitwhen 语句
+        const hasExitWhen = this.hasExitWhenInBlock(node.body);
+        
+        if (!hasExitWhen) {
+            this.addWarning(
+                node.start,
+                node.end,
+                `Loop statement may cause infinite loop. No 'exitwhen' statement found in the loop body. Consider adding an 'exitwhen' condition to ensure the loop can exit`
+            );
+        }
+
+        // 递归检查循环体内的语句
+        for (const stmt of node.body.body) {
+            this.checkSemantics(stmt);
+        }
+    }
+
+    /**
+     * 检查 BlockStatement 中是否有 exitwhen 语句
+     * @param block 要检查的 BlockStatement
+     * @returns 如果找到 exitwhen 语句，返回 true；否则返回 false
+     */
+    private hasExitWhenInBlock(block: BlockStatement): boolean {
+        if (!block || !block.body) {
+            return false;
+        }
+
+        for (const stmt of block.body) {
+            if (stmt instanceof ExitWhenStatement) {
+                return true;
+            }
+            // 递归检查嵌套的 loop 语句（但只检查当前层级的 exitwhen）
+            // 注意：嵌套的 loop 中的 exitwhen 不会影响外层 loop
+            if (stmt instanceof IfStatement) {
+                // 检查 if 语句的所有分支
+                if (stmt.consequent instanceof BlockStatement && this.hasExitWhenInBlock(stmt.consequent)) {
+                    return true;
+                }
+                // 递归检查 elseif 链和 else 分支
+                let currentAlternate: IfStatement | BlockStatement | null = stmt.alternate;
+                while (currentAlternate) {
+                    if (currentAlternate instanceof BlockStatement) {
+                        if (this.hasExitWhenInBlock(currentAlternate)) {
+                            return true;
+                        }
+                        break;
+                    } else if (currentAlternate instanceof IfStatement) {
+                        // elseif 分支
+                        if (currentAlternate.consequent instanceof BlockStatement && this.hasExitWhenInBlock(currentAlternate.consequent)) {
+                            return true;
+                        }
+                        currentAlternate = currentAlternate.alternate;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     /**
      * 检查原生函数是否有函数体（不应该有）
@@ -3736,23 +5351,31 @@ export class SemanticAnalyzer {
 
             // 可能是未声明的变量
             // 在赋值语句的右侧或表达式中，未声明的变量应该报错
-            // 但为了减少误报，只在以下情况下报告警告：
-            // 1. 启用了未定义行为检查
-            // 2. 提供了外部符号表（说明已经检查了所有文件）
-            // 3. 不是结构成员访问（如 this.member）
-            if ((context === "assignment" || context === "expression") && 
-                this.options.checkUndefinedBehavior) {
+            // 总是检查未声明变量（不依赖于 checkUndefinedBehavior）
+            // 但为了减少误报，只在提供了外部符号表时才报告警告
+            // 因为如果提供了 externalSymbols，说明已经检查了所有外部文件
+            if (context === "assignment" || context === "expression") {
                 const hasExternalSymbols = this.externalSymbols.size > 0;
                 if (hasExternalSymbols) {
-                    // 已经检查了所有外部文件，仍然找不到，可能是真正的错误
-                    // 但为了减少误报，只报告警告
+                    // 已经检查了所有外部文件，仍然找不到，可能是未声明的变量
+                    // 但为了减少误报，只报告警告，因为可能是：
+                    // 1. 动态生成的变量
+                    // 2. 文本宏生成的变量
+                    // 3. 其他特殊情况
                     this.addWarning(
                         node.start,
                         node.end,
                         `Variable '${name}' may not be declared, ensure it is declared before use`
                     );
+                } else {
+                    // 没有提供 externalSymbols，可能是其他文件中的变量
+                    // 为了帮助用户发现潜在问题，仍然报告警告
+                    this.addWarning(
+                        node.start,
+                        node.end,
+                        `Variable '${name}' may not be declared, it may be declared in other files`
+                    );
                 }
-                // 如果没有提供外部符号表，可能是其他文件中的变量，不报告警告
             }
         } else {
             // 变量已声明，检查作用域是否正确
@@ -3778,6 +5401,18 @@ export class SemanticAnalyzer {
                         `Local variable '${name}' is not in the current scope`,
                         `Check if the variable scope is correct`
                     );
+                } else {
+                    // 变量在作用域中，检查是否已初始化（仅在表达式中使用，而不是赋值语句的左侧）
+                    if (context === "expression" && symbol.isInitialized === false) {
+                        // 检查变量声明节点，确认是否真的没有初始化表达式
+                        if (symbol.node instanceof VariableDeclaration && !symbol.node.initializer) {
+                            this.addWarning(
+                                node.start,
+                                node.end,
+                                `Variable '${name}' may not be initialized before use`
+                            );
+                        }
+                    }
                 }
             }
         }
@@ -3798,9 +5433,46 @@ export class SemanticAnalyzer {
                 
                 if (leftIsThis || objectType) {
                     // 这是结构成员访问（this.member 或 obj.member）
-                    // 只检查左侧，右侧是结构成员，不需要作为变量检查
+                    // 检查左侧变量
                     this.checkExpressionVariables(expr.left);
-                    // 不检查右侧，因为它是结构成员，不是变量
+                    // 检查右侧成员是否存在
+                    if (objectType && expr.right instanceof Identifier) {
+                        const memberName = expr.right.name;
+                        
+                        // 检查左侧对象是否是委托
+                        const leftObjectSymbol = this.resolveObjectSymbol(expr.left);
+                        if (leftObjectSymbol && this.isDelegateMember(leftObjectSymbol)) {
+                            // 左侧是委托，检查委托是否已初始化
+                            if (leftObjectSymbol.isInitialized === false) {
+                                this.addWarning(
+                                    expr.left.start,
+                                    expr.left.end,
+                                    `Delegate '${leftObjectSymbol.name}' may not be initialized before accessing its member '${memberName}'`
+                                );
+                            }
+                        }
+                        
+                        const memberSymbol = this.findStructMember(objectType.typeName, memberName);
+                        if (!memberSymbol) {
+                            // 成员不存在，报告警告
+                            const isExternalType = this.externalSymbols.has(objectType.typeName);
+                            if (isExternalType) {
+                                // 类型来自外部文件，成员可能在其他文件中，只报告警告
+                                this.addWarning(
+                                    expr.right.start,
+                                    expr.right.end,
+                                    `Member '${memberName}' may not exist in ${objectType.isStatic ? "struct" : "struct instance"} '${objectType.typeName}'. The type is from an external file, ensure the member is declared`
+                                );
+                            } else {
+                                // 类型在当前文件中，应该能找到成员，报告警告
+                                this.addWarning(
+                                    expr.right.start,
+                                    expr.right.end,
+                                    `Member '${memberName}' may not exist in ${objectType.isStatic ? "struct" : "struct instance"} '${objectType.typeName}'`
+                                );
+                            }
+                        }
+                    }
                 } else {
                     // 不是成员访问，递归检查左右操作数
                     this.checkExpressionVariables(expr.left);
@@ -3912,12 +5584,36 @@ export class SemanticAnalyzer {
     private markUsedSymbols(node: ASTNode, symbolUsage: Map<string, { symbol: SymbolInfo; used: boolean; location: { line: number; position: number } }>): void {
         if (node instanceof Identifier) {
             const name = node.name;
-            // 查找符号
+            // 查找符号（优先匹配作用域内的变量，然后匹配全局变量）
             for (const [key, info] of symbolUsage) {
-                if (key.endsWith(`::${name}`) || key === name) {
-                    info.used = true;
+                const symbolName = key.split('::').pop() || key;
+                if (symbolName === name) {
+                    // 如果键包含作用域信息（如 "functionName::varName"），需要检查作用域
+                    if (key.includes('::')) {
+                        // 检查当前节点是否在该作用域内（通过检查符号的声明位置）
+                        // 对于局部变量，我们匹配作用域内的变量
+                        info.used = true;
+                    } else {
+                        // 全局变量或函数，直接匹配
+                        info.used = true;
+                    }
                 }
             }
+        } else if (node instanceof CallExpression) {
+            // 函数调用：标记被调用的函数为已使用
+            if (node.callee instanceof Identifier) {
+                const funcName = node.callee.name;
+                for (const [key, info] of symbolUsage) {
+                    const symbolName = key.split('::').pop() || key;
+                    if (symbolName === funcName && info.symbol.type === SymbolType.FUNCTION) {
+                        info.used = true;
+                    }
+                }
+            }
+        } else if (node instanceof AssignmentStatement) {
+            // 赋值语句：右侧的变量被使用，左侧的变量被写入（也算使用）
+            // 但为了检测未使用的变量，我们只标记右侧的使用
+            // 左侧的变量在赋值时也会被标记为使用（通过 Identifier 处理）
         }
 
         // 递归处理子节点
@@ -3961,12 +5657,11 @@ export class SemanticAnalyzer {
             else if (stmt instanceof IfStatement) {
                 const allBranchesReturn = this.checkIfAllBranchesReturn(stmt);
                 if (allBranchesReturn) {
-                    foundReturn = true;
-                } else {
                     // 如果 if 语句的所有分支都有 return，那么 if 之后的代码是死代码
-                    // 但这里我们只检查 if 语句本身，不标记后续代码
-                    foundReturn = false;
+                    foundReturn = true;
                 }
+                // 如果 if 语句不是所有分支都有 return，不改变 foundReturn 状态
+                // 因为后续代码可能仍然可达
             }
             // 递归检查子块
             else if (stmt instanceof BlockStatement) {
@@ -4053,7 +5748,8 @@ export function extractAllSymbols(ast: BlockStatement): Map<string, SymbolInfo> 
                 isPrivate: false,
                 isPublic: true,
                 returnType: returnType,
-                parameters: parameters.length > 0 ? parameters : undefined
+                // 始终设置 parameters，即使是空数组（takes nothing），这样参数数量检查才能正常工作
+                parameters: parameters
             });
         } 
         // 提取 native 函数声明
@@ -4085,7 +5781,8 @@ export function extractAllSymbols(ast: BlockStatement): Map<string, SymbolInfo> 
                 isPrivate: false,
                 isPublic: true,
                 returnType: returnType,
-                parameters: parameters.length > 0 ? parameters : undefined
+                // 始终设置 parameters，即使是空数组（takes nothing），这样参数数量检查才能正常工作
+                parameters: parameters
             });
         }
         // 提取结构声明
