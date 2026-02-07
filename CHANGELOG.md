@@ -1,3 +1,12 @@
+#### 1.9.4
+- 修复struct一个public修饰解析错误问题
+- 完善set hint功能，完善caller嵌套hint功能
+- 支持所有语法情况下的caller hint（return、exitwhen、if、elseif、set、local、数组下标等）
+- 支持函数对象方法调用hint（func.evaluate()、func.execute()）
+- 支持方法对象方法调用hint（method.evaluate()、method.execute()）
+- 完善function、native、globals的全局查找hint支持（包括library和scope中的）
+- 完善嵌套调用的参数提示支持
+
 #### 1.9.3
 - 修复结构体成员识别问题：方法体内的局部变量不再被误识别为结构体成员
 - 修复结构体成员收集逻辑，确保只有非局部变量才被识别为结构体成员

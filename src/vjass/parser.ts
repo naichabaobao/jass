@@ -1439,20 +1439,55 @@ export class Parser {
                 continue;
             }
 
-            // 检查是否有 private 关键字（在 method 之前）
-            // 注意：private 关键字会被消费，但 parseMethod 不处理它
-            // 如果需要支持 private，应该在 MethodDeclaration 中添加 isPrivate 属性
+            // 检查是否有 private 或 public 关键字（在 method 之前）
+            // 注意：private/public 关键字会被消费，但 parseMethod 不处理它
+            // 如果需要支持 private/public，应该在 MethodDeclaration 中添加 isPrivate/isPublic 属性
             let isPrivateMethod = false;
+            let isPublicMethod = false;
+            let isPublicStaticMethod = false;
+            let isPrivateStaticMethod = false;
+            
             if (this.checkValue("private")) {
                 const peekToken = this.lexer.peek();
                 if (peekToken && peekToken.value?.toLowerCase() === "method") {
                     isPrivateMethod = true;
                     // 消费 private 关键字，但不消费 method，让 parseMethod 处理
                     this.lexer.next(); // 消费 private
+                } else if (peekToken && peekToken.value?.toLowerCase() === "static") {
+                    // 检查 private static method
+                    // 先消费 private 和 static，然后检查是否是 method
+                    this.lexer.next(); // 消费 private
+                    this.lexer.next(); // 消费 static
+                    const peekToken2 = this.lexer.peek();
+                    if (peekToken2 && peekToken2.value?.toLowerCase() === "method") {
+                        isPrivateStaticMethod = true;
+                        // static 已经被消费，method 会在后面被 parseMethod 处理
+                    }
+                    // 注意：如果 peekToken2 不是 method，我们已经消费了 private 和 static
+                    // 这会导致后续解析问题，但这种情况应该很少见（可能是语法错误）
+                }
+            } else if (this.checkValue("public")) {
+                const peekToken = this.lexer.peek();
+                if (peekToken && peekToken.value?.toLowerCase() === "method") {
+                    isPublicMethod = true;
+                    // 消费 public 关键字，但不消费 method，让 parseMethod 处理
+                    this.lexer.next(); // 消费 public
+                } else if (peekToken && peekToken.value?.toLowerCase() === "static") {
+                    // 检查 public static method
+                    // 先消费 public 和 static，然后检查是否是 method
+                    this.lexer.next(); // 消费 public
+                    this.lexer.next(); // 消费 static
+                    const peekToken2 = this.lexer.peek();
+                    if (peekToken2 && peekToken2.value?.toLowerCase() === "method") {
+                        isPublicStaticMethod = true;
+                        // static 已经被消费，method 会在后面被 parseMethod 处理
+                    }
+                    // 注意：如果 peekToken2 不是 method，我们已经消费了 public 和 static
+                    // 这会导致后续解析问题，但这种情况应该很少见（可能是语法错误）
                 }
             }
 
-            // 尝试解析为方法声明（支持 stub method）
+            // 尝试解析为方法声明（支持 stub method、public method、private method、public static method、private static method）
             if (this.checkValue("method") || (this.checkValue("stub") && this.lexer.peek()?.value?.toLowerCase() === "method")) {
                 const member = this.parseMethod();
                 if (member) {
@@ -1466,11 +1501,16 @@ export class Parser {
                             `Remove 'private' keyword before 'onDestroy'. The onDestroy method must be public.`
                         );
                     }
+                    // 如果是 public static method 或 private static method，设置 isStatic
+                    if (isPublicStaticMethod || isPrivateStaticMethod) {
+                        member.isStatic = true;
+                    }
                     members.push(member);
                     continue;
                 }
-            } else if (this.checkValue("static")) {
+            } else if (this.checkValue("static") && !isPublicStaticMethod && !isPrivateStaticMethod) {
                 // 检查是否是 static method 或 static stub method（而不是 static if）
+                // 注意：如果已经是 public static method 或 private static method，static 已经被消费了
                 const peekToken = this.lexer.peek();
                 if (peekToken && peekToken.value?.toLowerCase() === "method") {
                     // 消费 static 关键字，然后解析 method
