@@ -63,6 +63,8 @@ export class ImplementationProvider implements vscode.ImplementationProvider {
             for (const cachedFilePath of allCachedFiles) {
                 const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
                 if (!blockStatement) {
+                    // 调试：检查为什么 blockStatement 为 null
+                    console.warn(`[ImplementationProvider] BlockStatement is null for file: ${cachedFilePath}`);
                     continue;
                 }
 
@@ -146,6 +148,8 @@ export class ImplementationProvider implements vscode.ImplementationProvider {
         for (const cachedFilePath of allCachedFiles) {
             const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
             if (!blockStatement) {
+                // 调试：检查为什么 blockStatement 为 null
+                console.warn(`[ImplementationProvider] BlockStatement is null for file: ${cachedFilePath}`);
                 continue;
             }
 
@@ -231,6 +235,8 @@ export class ImplementationProvider implements vscode.ImplementationProvider {
         for (const cachedFilePath of allCachedFiles) {
             const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
             if (!blockStatement) {
+                // 调试：检查为什么 blockStatement 为 null
+                console.warn(`[ImplementationProvider] BlockStatement is null for file: ${cachedFilePath}`);
                 continue;
             }
 
@@ -419,6 +425,8 @@ export class ImplementationProvider implements vscode.ImplementationProvider {
         for (const cachedFilePath of allCachedFiles) {
             const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
             if (!blockStatement) {
+                // 调试：检查为什么 blockStatement 为 null
+                console.warn(`[ImplementationProvider] BlockStatement is null for file: ${cachedFilePath}`);
                 continue;
             }
 
@@ -437,6 +445,8 @@ export class ImplementationProvider implements vscode.ImplementationProvider {
                 for (const cachedFilePath of allCachedFiles) {
                     const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
                     if (!blockStatement) {
+                        // 调试：检查为什么 blockStatement 为 null
+                        console.warn(`[ImplementationProvider] BlockStatement is null for file: ${cachedFilePath}`);
                         continue;
                     }
 

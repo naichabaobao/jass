@@ -45,6 +45,8 @@ export class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
             for (const cachedFilePath of allCachedFiles) {
                 const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
                 if (!blockStatement) {
+                    // 调试：检查为什么 blockStatement 为 null
+                    console.warn(`[TypeDefinitionProvider] BlockStatement is null for file: ${cachedFilePath}`);
                     continue;
                 }
 
@@ -129,9 +131,11 @@ export class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
                 const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
                 for (const cachedFilePath of allCachedFiles) {
                     const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
-                    if (!blockStatement) {
-                        continue;
-                    }
+if (!blockStatement) {
+                    // 调试：检查为什么 blockStatement 为 null
+                    console.warn(`[TypeDefinitionProvider] BlockStatement is null for file: ${cachedFilePath}`);
+                    continue;
+                }
                     this.findTypeDefinitionInBlock(blockStatement, typeName, cachedFilePath, locations);
                 }
             }

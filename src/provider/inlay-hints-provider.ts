@@ -47,6 +47,11 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         const hints: vscode.InlayHint[] = [];
         const filePath = document.uri.fsPath;
 
+        // 检查取消令牌
+        if (token.isCancellationRequested) {
+            return hints;
+        }
+
         // 获取当前文件的 AST
         let blockStatement = this.dataEnterManager.getBlockStatement(filePath);
         
@@ -64,7 +69,8 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         }
 
         // 遍历 AST 中的所有语句，提取表达式并生成类型提示
-        this.extractHintsFromBlock(blockStatement, document, hints, filePath);
+        // 只处理在 range 范围内的语句，以提高性能
+        this.extractHintsFromBlock(blockStatement, document, hints, filePath, range, token);
 
         return hints;
     }
@@ -76,86 +82,111 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         block: BlockStatement,
         document: vscode.TextDocument,
         hints: vscode.InlayHint[],
-        filePath: string
+        filePath: string,
+        range?: vscode.Range,
+        token?: vscode.CancellationToken
     ): void {
+        // 检查取消令牌
+        if (token?.isCancellationRequested) {
+            return;
+        }
+
+        if (!block || !block.body) {
+            return;
+        }
         for (const stmt of block.body) {
+            // 检查取消令牌
+            if (token?.isCancellationRequested) {
+                return;
+            }
+
+            // 如果提供了 range，检查语句是否在范围内
+            if (range && stmt.start && stmt.end) {
+                const stmtStart = new vscode.Position(stmt.start.line, stmt.start.position);
+                const stmtEnd = new vscode.Position(stmt.end.line, stmt.end.position);
+                // 如果语句完全在范围之外，跳过（但允许部分重叠，因为可能包含可见的调用）
+                if (stmtEnd.line < range.start.line || stmtStart.line > range.end.line) {
+                    continue;
+                }
+            }
+
             // 处理 CallStatement（call 语句）
             if (stmt instanceof CallStatement) {
-                this.processCallExpression(stmt.expression, document, hints, filePath);
+                this.processCallExpression(stmt.expression, document, hints, filePath, range);
             }
             // 处理 AssignmentStatement（set 语句）
             else if (stmt instanceof AssignmentStatement) {
-                this.processAssignmentExpression(stmt, document, hints, filePath);
+                this.processAssignmentExpression(stmt, document, hints, filePath, range);
             }
             // 处理 ReturnStatement（return 语句）
             else if (stmt instanceof ReturnStatement) {
                 if (stmt.argument) {
                     // 处理 return 表达式中的调用
-                    this.processExpression(stmt.argument, document, hints, filePath);
+                    this.processExpression(stmt.argument, document, hints, filePath, range);
                 }
             }
             // 处理 ExitWhenStatement（exitwhen 语句）
             else if (stmt instanceof ExitWhenStatement) {
                 // 处理 exitwhen 条件中的调用
-                this.processExpression(stmt.condition, document, hints, filePath);
+                this.processExpression(stmt.condition, document, hints, filePath, range);
             }
             // 处理 IfStatement（if/elseif 语句）
             else if (stmt instanceof IfStatement) {
                 // 处理 if 条件中的调用
-                this.processExpression(stmt.condition, document, hints, filePath);
+                this.processExpression(stmt.condition, document, hints, filePath, range);
                 // 递归处理 then 分支
                 if (stmt.consequent instanceof BlockStatement) {
-                    this.extractHintsFromBlock(stmt.consequent, document, hints, filePath);
+                    this.extractHintsFromBlock(stmt.consequent, document, hints, filePath, range, token);
                 } else {
                     // consequent 可能是单个语句，需要处理其中的表达式
-                    this.processStatement(stmt.consequent, document, hints, filePath);
+                    this.processStatement(stmt.consequent, document, hints, filePath, range, token);
                 }
                 // 递归处理 else/elseif 分支
                 if (stmt.alternate) {
                     if (stmt.alternate instanceof BlockStatement) {
-                        this.extractHintsFromBlock(stmt.alternate, document, hints, filePath);
+                        this.extractHintsFromBlock(stmt.alternate, document, hints, filePath, range, token);
                     } else if (stmt.alternate instanceof IfStatement) {
                         // elseif 分支，递归处理
-                        this.processStatement(stmt.alternate, document, hints, filePath);
+                        this.processStatement(stmt.alternate, document, hints, filePath, range, token);
                     }
                 }
             }
             // 处理 LoopStatement（loop 语句）
             else if (stmt instanceof LoopStatement) {
-                this.extractHintsFromBlock(stmt.body, document, hints, filePath);
+                this.extractHintsFromBlock(stmt.body, document, hints, filePath, range, token);
             }
             // 处理 VariableDeclaration（local 变量声明）
             else if (stmt instanceof VariableDeclaration) {
                 if (stmt.initializer) {
                     // 处理 local 变量初始化表达式中的调用
-                    this.processExpression(stmt.initializer, document, hints, filePath);
+                    this.processExpression(stmt.initializer, document, hints, filePath, range);
                 }
             }
             // 递归处理嵌套的 BlockStatement
             else if (stmt instanceof BlockStatement) {
-                this.extractHintsFromBlock(stmt, document, hints, filePath);
+                this.extractHintsFromBlock(stmt, document, hints, filePath, range, token);
             }
             // 处理函数声明中的表达式
             else if (stmt instanceof FunctionDeclaration) {
-                this.extractHintsFromBlock(stmt.body, document, hints, filePath);
+                this.extractHintsFromBlock(stmt.body, document, hints, filePath, range, token);
             }
             // 处理方法声明中的表达式
             else if (stmt instanceof MethodDeclaration) {
-                this.extractHintsFromBlock(stmt.body, document, hints, filePath);
+                this.extractHintsFromBlock(stmt.body, document, hints, filePath, range, token);
             }
             // 处理结构体声明
             else if (stmt instanceof StructDeclaration) {
                 for (const member of stmt.members) {
                     if (member instanceof BlockStatement) {
-                        this.extractHintsFromBlock(member, document, hints, filePath);
+                        this.extractHintsFromBlock(member, document, hints, filePath, range, token);
                     } else if (member instanceof MethodDeclaration) {
-                        this.extractHintsFromBlock(member.body, document, hints, filePath);
+                        this.extractHintsFromBlock(member.body, document, hints, filePath, range, token);
                     }
                 }
             }
             // 处理其他语句（可能包含表达式）
             else {
-                this.processStatement(stmt, document, hints, filePath);
+                this.processStatement(stmt, document, hints, filePath, range, token);
             }
         }
     }
@@ -167,11 +198,16 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         stmt: Statement,
         document: vscode.TextDocument,
         hints: vscode.InlayHint[],
-        filePath: string
+        filePath: string,
+        range?: vscode.Range,
+        token?: vscode.CancellationToken
     ): void {
+        if (token?.isCancellationRequested) {
+            return;
+        }
         // 递归处理语句中的表达式
         if (stmt instanceof IfStatement) {
-            this.processExpression(stmt.condition, document, hints, filePath);
+            this.processExpression(stmt.condition, document, hints, filePath, range);
             if (stmt.consequent instanceof BlockStatement) {
                 this.extractHintsFromBlock(stmt.consequent, document, hints, filePath);
             } else {
@@ -185,21 +221,21 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 }
             }
         } else if (stmt instanceof ExitWhenStatement) {
-            this.processExpression(stmt.condition, document, hints, filePath);
+            this.processExpression(stmt.condition, document, hints, filePath, range);
         } else if (stmt instanceof ReturnStatement) {
             if (stmt.argument) {
-                this.processExpression(stmt.argument, document, hints, filePath);
+                this.processExpression(stmt.argument, document, hints, filePath, range);
             }
         } else if (stmt instanceof AssignmentStatement) {
-            this.processAssignmentExpression(stmt, document, hints, filePath);
+            this.processAssignmentExpression(stmt, document, hints, filePath, range);
         } else if (stmt instanceof CallStatement) {
-            this.processCallExpression(stmt.expression, document, hints, filePath);
+            this.processCallExpression(stmt.expression, document, hints, filePath, range);
         } else if (stmt instanceof VariableDeclaration) {
             if (stmt.initializer) {
-                this.processExpression(stmt.initializer, document, hints, filePath);
+                this.processExpression(stmt.initializer, document, hints, filePath, range);
             }
         } else if (stmt instanceof LoopStatement) {
-            this.extractHintsFromBlock(stmt.body, document, hints, filePath);
+            this.extractHintsFromBlock(stmt.body, document, hints, filePath, range, token);
         }
     }
 
@@ -210,23 +246,29 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         expr: Expression,
         document: vscode.TextDocument,
         hints: vscode.InlayHint[],
-        filePath: string
+        filePath: string,
+        range?: vscode.Range,
+        token?: vscode.CancellationToken
     ): void {
+        if (token?.isCancellationRequested) {
+            return;
+        }
+
         // 如果是调用表达式，处理它
         if (expr instanceof CallExpression) {
-            this.processCallExpression(expr, document, hints, filePath);
+            this.processCallExpression(expr, document, hints, filePath, range);
         }
         // 如果是二元表达式，递归处理左右操作数
         else if (expr instanceof BinaryExpression) {
             // 处理左操作数
-            this.processExpression(expr.left, document, hints, filePath);
+            this.processExpression(expr.left, document, hints, filePath, range, token);
             // 处理右操作数
-            this.processExpression(expr.right, document, hints, filePath);
+            this.processExpression(expr.right, document, hints, filePath, range, token);
         }
         // 如果是类型转换表达式，递归处理内部表达式
         else if (expr instanceof TypecastExpression) {
             if (expr.expression) {
-                this.processExpression(expr.expression, document, hints, filePath);
+                this.processExpression(expr.expression, document, hints, filePath, range, token);
             }
         }
         // FunctionExpression 只是一个函数名引用，不包含可调用的表达式
@@ -240,8 +282,18 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         callExpr: CallExpression,
         document: vscode.TextDocument,
         hints: vscode.InlayHint[],
-        filePath: string
+        filePath: string,
+        range?: vscode.Range
     ): void {
+        // 如果提供了 range，检查调用是否在范围内
+        if (range && callExpr.start && callExpr.end) {
+            const callStart = new vscode.Position(callExpr.start.line, callExpr.start.position);
+            const callEnd = new vscode.Position(callExpr.end.line, callExpr.end.position);
+            // 如果调用完全在范围之外，跳过
+            if (callEnd.line < range.start.line || callStart.line > range.end.line) {
+                return;
+            }
+        }
         // 获取调用位置，用于查找上下文
         const callPosition = callExpr.start 
             ? new vscode.Position(callExpr.start.line, callExpr.start.position)
@@ -251,7 +303,7 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         if (callExpr.callee instanceof BinaryExpression && 
             callExpr.callee.operator === OperatorType.Dot) {
             // 处理方法调用
-            this.processMethodCall(callExpr, document, hints, filePath, callPosition);
+            this.processMethodCall(callExpr, document, hints, filePath, callPosition, range);
             return;
         }
 
@@ -279,13 +331,13 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 
                 // 如果参数是嵌套的调用表达式，先递归处理它
                 if (arg instanceof CallExpression) {
-                    this.processCallExpression(arg, document, hints, filePath);
+                    this.processCallExpression(arg, document, hints, filePath, range);
                 }
                 
                 if (param && param.type) {
                     // 获取参数表达式的结束位置
                     const pos = this.getExpressionEndPosition(arg, document);
-                    if (pos) {
+                    if (pos && this.isPositionInRange(pos, range)) {
                         const hint = new vscode.InlayHint(
                             pos,
                             `: ${param.type}`,
@@ -310,7 +362,8 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         document: vscode.TextDocument,
         hints: vscode.InlayHint[],
         filePath: string,
-        position: vscode.Position
+        position: vscode.Position,
+        range?: vscode.Range
     ): void {
         const callee = callExpr.callee as BinaryExpression;
         const left = callee.left;
@@ -385,12 +438,12 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                                     const param = methodDef.parameters[i];
                                     
                                     if (arg instanceof CallExpression) {
-                                        this.processCallExpression(arg, document, hints, filePath);
+                                        this.processCallExpression(arg, document, hints, filePath, range);
                                     }
                                     
                                     if (param && param.type) {
                                         const pos = this.getExpressionEndPosition(arg, document);
-                                        if (pos) {
+                                        if (pos && this.isPositionInRange(pos, range)) {
                                             const hint = new vscode.InlayHint(
                                                 pos,
                                                 `: ${param.type}`,
@@ -424,12 +477,12 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                                     const param = methodDef.parameters[i];
                                     
                                     if (arg instanceof CallExpression) {
-                                        this.processCallExpression(arg, document, hints, filePath);
+                                        this.processCallExpression(arg, document, hints, filePath, range);
                                     }
                                     
                                     if (param && param.type) {
                                         const pos = this.getExpressionEndPosition(arg, document);
-                                        if (pos) {
+                                        if (pos && this.isPositionInRange(pos, range)) {
                                             const hint = new vscode.InlayHint(
                                                 pos,
                                                 `: ${param.type}`,
@@ -463,18 +516,18 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                             this.processCallExpression(arg, document, hints, filePath);
                         }
                         
-                        if (param && param.type) {
-                            const pos = this.getExpressionEndPosition(arg, document);
-                            if (pos) {
-                                const hint = new vscode.InlayHint(
-                                    pos,
-                                    `: ${param.type}`,
-                                    vscode.InlayHintKind.Parameter
-                                );
-                                hint.tooltip = new vscode.MarkdownString(`**${functionName}.${methodName}** 参数 \`${param.name}\`: \`${param.type}\``);
-                                hints.push(hint);
-                            }
-                        }
+                                if (param && param.type) {
+                                    const pos = this.getExpressionEndPosition(arg, document);
+                                    if (pos && this.isPositionInRange(pos, range)) {
+                                        const hint = new vscode.InlayHint(
+                                            pos,
+                                            `: ${param.type}`,
+                                            vscode.InlayHintKind.Parameter
+                                        );
+                                        hint.tooltip = new vscode.MarkdownString(`**${functionName}.${methodName}** 参数 \`${param.name}\`: \`${param.type}\``);
+                                        hints.push(hint);
+                                    }
+                                }
                     }
                 }
             }
@@ -538,7 +591,8 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         assignment: AssignmentStatement,
         document: vscode.TextDocument,
         hints: vscode.InlayHint[],
-        filePath: string
+        filePath: string,
+        range?: vscode.Range
     ): void {
         // 获取赋值目标的类型
         let targetType: string | null = null;
@@ -574,18 +628,18 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                    assignment.target.operator === OperatorType.Index) {
             // 数组访问：set arr[i] = value
             // 处理数组下标中的调用
-            this.processExpression(assignment.target.right, document, hints, filePath);
+            this.processExpression(assignment.target.right, document, hints, filePath, range);
             // 处理数组名中的调用（虽然不太可能，但为了完整性）
-            this.processExpression(assignment.target.left, document, hints, filePath);
+            this.processExpression(assignment.target.left, document, hints, filePath, range);
         }
 
         // 处理赋值表达式中的调用（value 部分）
-        this.processExpression(assignment.value, document, hints, filePath);
+        this.processExpression(assignment.value, document, hints, filePath, range);
 
         // 如果目标类型存在，在赋值目标后显示类型提示
         if (targetType) {
             const pos = this.getExpressionEndPosition(assignment.target, document);
-            if (pos) {
+            if (pos && this.isPositionInRange(pos, range)) {
                 const hint = new vscode.InlayHint(
                     pos,
                     `: ${targetType}`,
@@ -724,7 +778,7 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                     if (position.line >= funcStartLine && position.line <= funcEndLine + 1) {
                         return stmt;
                     }
-                } else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                } else if (stmt.body && this.isPositionInAstRange(position, stmt.body.start, stmt.body.end)) {
                     return stmt;
                 }
             } else if (stmt instanceof BlockStatement) {
@@ -752,7 +806,7 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                     if (position.line >= methodStartLine && position.line <= methodEndLine + 1) {
                         return stmt;
                     }
-                } else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                } else if (stmt.body && this.isPositionInAstRange(position, stmt.body.start, stmt.body.end)) {
                     return stmt;
                 }
             } else if (stmt instanceof StructDeclaration) {
@@ -765,7 +819,7 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                             if (position.line >= methodStartLine && position.line <= methodEndLine + 1) {
                                 return member;
                             }
-                        } else if (member.body && this.isPositionInRange(position, member.body.start, member.body.end)) {
+                        } else if (member.body && this.isPositionInAstRange(position, member.body.start, member.body.end)) {
                             return member;
                         }
                     }
@@ -783,7 +837,25 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
     /**
      * 检查位置是否在范围内
      */
+    /**
+     * 检查位置是否在范围内（用于 hint 位置验证）
+     */
     private isPositionInRange(
+        position: vscode.Position,
+        range?: vscode.Range
+    ): boolean {
+        // 如果没有提供 range，认为位置在范围内（向后兼容）
+        if (!range) {
+            return true;
+        }
+        // 检查位置是否在 range 内
+        return position.isAfterOrEqual(range.start) && position.isBeforeOrEqual(range.end);
+    }
+
+    /**
+     * 检查位置是否在 AST 节点范围内（用于查找包含位置的函数/方法）
+     */
+    private isPositionInAstRange(
         position: vscode.Position,
         start: { line: number, position: number },
         end: { line: number, position: number }
@@ -1380,11 +1452,11 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 // 递归查找结构体成员中的方法
                 for (const member of stmt.members) {
                     if (member instanceof MethodDeclaration) {
-                        if (member.body && this.isPositionInRange(position, member.body.start, member.body.end)) {
+                        if (member.body && this.isPositionInAstRange(position, member.body.start, member.body.end)) {
                             return stmt;
                         }
                     } else if (member instanceof BlockStatement) {
-                        if (this.isPositionInRange(position, member.start, member.end)) {
+                        if (this.isPositionInAstRange(position, member.start, member.end)) {
                             return stmt;
                         }
                     }

@@ -15,6 +15,7 @@ import { ErrorCollection } from '../vjass/error';
 import { InnerZincParser } from '../vjass/inner-zinc-parser';
 import { ZincProgram } from '../vjass/zinc-ast';
 import { analyzeSemantics, analyzeSemanticsWithAllFiles, SemanticAnalyzerOptions } from '../vjass/analyzer';
+import { JumpCache, JumpCacheItem } from './jump-cache';
 
 /**
  * 文件事件类型
@@ -93,6 +94,8 @@ interface DiagnosticsConfig {
     checkUndefined?: boolean;
     /** 是否检查未使用 */
     checkUnused?: boolean;
+    /** 是否检查数组越界（默认开启） */
+    checkArrayBounds?: boolean;
 }
 
 /**
@@ -164,6 +167,9 @@ export class DataEnterManager {
     // Define 相关组件
     private readonly defineRegistry: DefineRegistry;
     
+    // 跳转缓存相关组件
+    private readonly jumpCache: JumpCache;
+    
     // 配置文件相关
     private config: JassConfig | null = null;
     private configPath?: string;
@@ -188,6 +194,9 @@ export class DataEnterManager {
         
         // 初始化 Define 组件
         this.defineRegistry = DefineRegistry.getInstance();
+        
+        // 初始化跳转缓存
+        this.jumpCache = JumpCache.getInstance();
 
         // 加载配置文件
         this.loadConfig();
@@ -335,19 +344,29 @@ export class DataEnterManager {
                     // 获取诊断配置
                     const diagnosticsConfig = this.config?.diagnostics || {};
                     const checkUndefined = diagnosticsConfig.checkUndefined !== false; // 默认启用
+                    const checkTypes = diagnosticsConfig.checkTypes !== false; // 默认启用
+                    const checkUnused = diagnosticsConfig.checkUnused === true; // 默认不启用
+                    const checkArrayBounds = diagnosticsConfig.checkArrayBounds !== false; // 默认启用
                     
                     if (checkUndefined) {
                         // 使用新的方法：先解析所有文件，再进行语义分析
                         const workspaceRoot = this.workspaceRoot || path.dirname(filePath);
                         const standardLibFiles = this.getStandardLibraryFiles(workspaceRoot);
-                        const projectFiles = this.getProjectFiles(workspaceRoot, filePath);
+                        // 使用缓存中的所有文件（包括 static 目录的文件），而不是重新扫描文件系统
+                        // 注意：如果标准库文件在 getStandardLibraryFiles 中找不到，会从缓存中获取
+                        const projectFiles = this.getProjectFilesFromCache(filePath, standardLibFiles);
                         
                         // 使用 analyzeSemanticsWithAllFiles 进行语义分析
                         // 注意：确保所有相关文件都被包含，包括可能包含库声明的文件
                         const result = analyzeSemanticsWithAllFiles(
                             { filePath: filePath, content: content },
                             [...standardLibFiles, ...projectFiles],
-                            { checkUndefinedBehavior: checkUndefined }
+                            { 
+                                checkUndefinedBehavior: checkUndefined,
+                                checkTypes: checkTypes,
+                                checkUnused: checkUnused,
+                                checkArrayBounds: checkArrayBounds
+                            }
                         );
                         
                         // 调试信息：检查外部符号表
@@ -413,6 +432,9 @@ export class DataEnterManager {
             if (blockStatement) {
                 this.updateCompletionCache(filePath, blockStatement);
             }
+
+            // 4. 清除跳转缓存（因为文件内容已更新，需要重新计算）
+            this.jumpCache.clear(filePath);
         }
     }
 
@@ -704,13 +726,24 @@ export class DataEnterManager {
         try {
             const configContent = fs.readFileSync(this.configPath, 'utf-8');
             const configJson = JSON.parse(configContent);
+            
+            // 加载所有配置项
             this.config = {
                 excludes: configJson.excludes || [],
-                includes: configJson.includes || []
+                includes: configJson.includes || [],
+                parsing: configJson.parsing || {},
+                standardLibraries: configJson.standardLibraries || {},
+                diagnostics: configJson.diagnostics || {}
             };
+            
             const excludesCount = this.config.excludes?.length || 0;
             const includesCount = this.config.includes?.length || 0;
-            console.log(`📋 Loaded jass.config.json: ${excludesCount} excludes, ${includesCount} includes`);
+            const hasParsing = Object.keys(this.config.parsing || {}).length > 0;
+            const hasStandardLibraries = Object.keys(this.config.standardLibraries || {}).length > 0;
+            const hasDiagnostics = Object.keys(this.config.diagnostics || {}).length > 0;
+            
+            console.log(`📋 Loaded jass.config.json: ${excludesCount} excludes, ${includesCount} includes, ` +
+                       `parsing: ${hasParsing}, standardLibraries: ${hasStandardLibraries}, diagnostics: ${hasDiagnostics}`);
         } catch (error) {
             console.warn(`Failed to parse jass.config.json: ${error}`);
             this.config = null;
@@ -1011,7 +1044,12 @@ export class DataEnterManager {
      * 获取所有缓存的文件路径
      */
     public getAllCachedFiles(): string[] {
-        return Array.from(this.cache.keys());
+        const files = Array.from(this.cache.keys());
+        // 调试：如果缓存为空，输出警告
+        if (files.length === 0) {
+            console.warn('[DataEnterManager] getAllCachedFiles: cache is empty');
+        }
+        return files;
     }
 
     /**
@@ -1072,7 +1110,28 @@ export class DataEnterManager {
     public clearCache(): void {
         this.cache.clear();
         this.parserCache.clear();
+        this.jumpCache.flush(); // 清除跳转缓存
         console.log('🧹 Cleared all cache');
+    }
+
+    /**
+     * 更新跳转缓存
+     */
+    public updateJumpCache(filePath: string, symbolName: string, locations: vscode.Location[]): void {
+        // 将 locations 转换为 JumpCacheItem 格式
+        const jumpCacheItems: JumpCacheItem[] = locations.map(loc => ({
+            symbolName: symbolName,
+            location: {
+                uri: loc.uri.fsPath,
+                range: {
+                    start: { line: loc.range.start.line, character: loc.range.start.character },
+                    end: { line: loc.range.end.line, character: loc.range.end.character }
+                }
+            },
+            filePath: loc.uri.fsPath
+        }));
+        
+        this.jumpCache.update(filePath, jumpCacheItems);
     }
 
     /**
@@ -1507,7 +1566,12 @@ export class DataEnterManager {
      */
     private async loadStaticFiles(workspaceRoot: string): Promise<void> {
         // 扩展的 static 目录路径（相对于扩展安装目录）
-        const extensionStaticDir = path.resolve(__dirname, "../../../static");
+        // 尝试多个可能的路径（因为编译后的 __dirname 位置可能不同）
+        const possiblePaths = [
+            path.resolve(__dirname, "../../../static"),  // out/provider -> static
+            path.resolve(__dirname, "../../../../static"), // out/provider -> static (如果更深)
+            path.resolve(__dirname, "../../static"),     // out/provider -> static (如果更浅)
+        ];
         
         // 也检查工作区的 static 目录（如果存在）
         const workspaceStaticDir = path.join(workspaceRoot, 'static');
@@ -1515,15 +1579,16 @@ export class DataEnterManager {
         const staticDirs: string[] = [];
         
         // 优先加载扩展的 static 目录
-        if (fs.existsSync(extensionStaticDir) && fs.statSync(extensionStaticDir).isDirectory()) {
-            staticDirs.push(extensionStaticDir);
-            console.log(`📁 Found extension static directory: ${extensionStaticDir}`);
+        for (const possiblePath of possiblePaths) {
+            if (fs.existsSync(possiblePath) && fs.statSync(possiblePath).isDirectory()) {
+                staticDirs.push(possiblePath);
+                break; // 找到第一个就停止
+            }
         }
         
         // 也加载工作区的 static 目录（如果存在）
         if (fs.existsSync(workspaceStaticDir) && fs.statSync(workspaceStaticDir).isDirectory()) {
             staticDirs.push(workspaceStaticDir);
-            console.log(`📁 Found workspace static directory: ${workspaceStaticDir}`);
         }
         
         if (staticDirs.length === 0) {
@@ -1544,8 +1609,6 @@ export class DataEnterManager {
                             try {
                                 const content = fs.readFileSync(fullPath, 'utf-8');
                                 await this.handleFileUpdate(fullPath, content);
-                                const relativePath = path.relative(baseDir, fullPath);
-                                console.log(`📁 Loaded static file: ${relativePath}`);
                             } catch (error) {
                                 console.error(`Failed to load static file ${fullPath}:`, error);
                             }
@@ -1734,6 +1797,59 @@ export class DataEnterManager {
      * @param currentFilePath 当前文件路径（排除此文件）
      * @returns 工程文件列表（包含路径和内容）
      */
+    /**
+     * 从缓存中获取项目文件列表（用于语义分析）
+     * 包括所有缓存的文件（工作区文件 + static 目录文件）
+     * 如果标准库文件在 getStandardLibraryFiles 中找不到，也会从缓存中获取
+     */
+    private getProjectFilesFromCache(
+        currentFilePath: string,
+        standardLibFiles: Array<{ filePath: string; content: string }>
+    ): Array<{ filePath: string; content: string }> {
+        const files: Array<{ filePath: string; content: string }> = [];
+        const normalizedCurrentPath = path.resolve(currentFilePath).replace(/\\/g, '/').toLowerCase();
+        
+        // 标准库文件名列表
+        const standardLibNames = new Set(STANDARD_LIBRARY_ORDER.map(name => name.toLowerCase()));
+        
+        // 已找到的标准库文件路径集合（用于检查哪些标准库文件已经在 standardLibFiles 中）
+        const foundStandardLibPaths = new Set(
+            standardLibFiles.map(f => path.resolve(f.filePath).replace(/\\/g, '/').toLowerCase())
+        );
+        
+        // 从缓存中获取所有文件
+        for (const [filePath, cacheItem] of this.cache.entries()) {
+            const normalizedPath = path.resolve(filePath).replace(/\\/g, '/').toLowerCase();
+            
+            // 跳过当前文件
+            if (normalizedPath === normalizedCurrentPath) {
+                continue;
+            }
+            
+            const fileName = path.basename(filePath).toLowerCase();
+            const isStandardLib = standardLibNames.has(fileName);
+            
+            // 如果是标准库文件，但已经在 standardLibFiles 中找到了，就跳过
+            // 如果标准库文件在 standardLibFiles 中找不到，就从缓存中获取（可能是 static 目录中的文件）
+            if (isStandardLib && foundStandardLibPaths.has(normalizedPath)) {
+                continue;
+            }
+            
+            // 跳过 .zn 文件（Zinc 文件使用不同的 AST）
+            const ext = path.extname(filePath).toLowerCase();
+            if (ext === '.zn') {
+                continue;
+            }
+            
+            // 使用缓存中的内容
+            if (cacheItem.content) {
+                files.push({ filePath: filePath, content: cacheItem.content });
+            }
+        }
+        
+        return files;
+    }
+
     private getProjectFiles(workspaceRoot: string, currentFilePath: string): Array<{ filePath: string; content: string }> {
         const files: Array<{ filePath: string; content: string }> = [];
         const normalizedCurrentPath = path.resolve(currentFilePath).replace(/\\/g, '/').toLowerCase();

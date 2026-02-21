@@ -25,9 +25,10 @@
 		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
 	},
 	"exclude": [
-		// "node_modules",
+		"node_modules",
 		".vscode-test",
 		"./out",
+		"./dist",
 		"static",
 		"src/boot",
 		"test-*.ts",

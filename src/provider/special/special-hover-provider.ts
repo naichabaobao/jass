@@ -12,8 +12,8 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
         try {
-            // 检查配置是否启用
-            if (!vscode.workspace.getConfiguration("jass").get<boolean>("literal", true)) {
+            // 检查配置是否启用（使用 literal.hover 配置项）
+            if (!vscode.workspace.getConfiguration("jass").get<boolean>("literal.hover", true)) {
                 return null;
             }
 

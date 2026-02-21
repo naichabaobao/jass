@@ -21,6 +21,7 @@ interface DiagnosticsConfig {
     checkTypes?: boolean;
     checkUndefined?: boolean;
     checkUnused?: boolean;
+    checkArrayBounds?: boolean;
 }
 
 /**
@@ -181,7 +182,8 @@ export class DiagnosticProvider {
                 severity: config.severity,
                 checkTypes: config.checkTypes,
                 checkUndefined: config.checkUndefined,
-                checkUnused: config.checkUnused
+                checkUnused: config.checkUnused,
+                checkArrayBounds: config.checkArrayBounds
             };
             // 如果配置中明确设置了 enable，使用配置值；否则保持当前状态
             if (typeof config.enable === 'boolean') {

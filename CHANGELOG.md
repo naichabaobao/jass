@@ -1,3 +1,17 @@
+#### 1.9.6
+- 修复 hint 功能性能问题：现在只处理可见范围内的代码，大幅提升大文件性能
+- 修复 hint 功能取消支持：添加取消令牌检查，避免在用户快速滚动时造成性能问题
+- 修复 hint 位置计算：确保 hint 位置在可见范围内，避免显示在不可见区域
+- 拆分 literal 配置项：将 `jass.literal` 拆分为 `jass.literal.completion`（默认 false）和 `jass.literal.hover`（默认 true），解决用户反馈的补全提示项太乱的问题
+- 添加 hint 功能开关：新增 `jass.hint` 配置项（默认 false，测试特性），允许用户控制 hint 功能的启用/禁用
+
+#### 1.9.5
+- 添加字符代码 hover 支持：对 'az09' 这样的字符代码显示10进制和16进制值
+- 添加 vJASS 内置常量、时间、随机数等的特殊 hover 支持，从 vjass.docs.txt 读取信息
+- 完善 jass.config.json 配置加载：修复配置加载问题，现在会正确加载所有配置项（excludes, includes, parsing, standardLibraries, diagnostics）
+- 完善 jass.config.json 配置使用：修复所有诊断选项（checkTypes, checkUndefined, checkUnused, checkArrayBounds）的传递和使用
+- 完善 README.md：添加完整的 jass.config.json 配置说明，包括所有配置项的详细说明、默认值和注意事项
+
 #### 1.9.4
 - 修复struct一个public修饰解析错误问题
 - 完善set hint功能，完善caller嵌套hint功能

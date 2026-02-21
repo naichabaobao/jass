@@ -55,6 +55,8 @@ export class WorkspaceSymbolProvider implements vscode.WorkspaceSymbolProvider {
 
                 const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
                 if (!blockStatement) {
+                    // 调试：检查为什么 blockStatement 为 null
+                    console.warn(`[WorkspaceSymbolProvider] BlockStatement is null for file: ${filePath}`);
                     continue;
                 }
 

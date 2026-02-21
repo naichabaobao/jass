@@ -69,6 +69,8 @@ export class ReferenceProvider implements vscode.ReferenceProvider {
             for (const cachedFilePath of allCachedFiles) {
                 const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
                 if (!blockStatement) {
+                    // 调试：检查为什么 blockStatement 为 null
+                    console.warn(`[ReferenceProvider] BlockStatement is null for file: ${cachedFilePath}`);
                     continue;
                 }
 
@@ -109,6 +111,8 @@ export class ReferenceProvider implements vscode.ReferenceProvider {
         for (const cachedFilePath of allCachedFiles) {
             const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
             if (!blockStatement) {
+                // 调试：检查为什么 blockStatement 为 null
+                console.warn(`[ReferenceProvider] BlockStatement is null for file: ${cachedFilePath}`);
                 continue;
             }
 
@@ -153,7 +157,8 @@ export class ReferenceProvider implements vscode.ReferenceProvider {
                     this.addLocation(stmt.name, filePath, locations);
                 }
             } else if (stmt instanceof VariableDeclaration) {
-                if (stmt.name && stmt.name.name === symbolName) {
+                // 只查找非 local 变量（全局变量），local 变量应该只在当前文件中查找
+                if (!stmt.isLocal && stmt.name && stmt.name.name === symbolName) {
                     this.addLocation(stmt.name, filePath, locations);
                 }
             } else if (stmt instanceof TypeDeclaration) {
@@ -387,6 +392,8 @@ export class ReferenceProvider implements vscode.ReferenceProvider {
         for (const cachedFilePath of allCachedFiles) {
             const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
             if (!blockStatement) {
+                // 调试：检查为什么 blockStatement 为 null
+                console.warn(`[ReferenceProvider] BlockStatement is null for file: ${cachedFilePath}`);
                 continue;
             }
 

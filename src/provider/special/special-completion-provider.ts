@@ -14,10 +14,10 @@ export class SpecialCompletionProvider implements vscode.CompletionItemProvider 
         context: vscode.CompletionContext
     ): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
         try {
-            // 检查配置是否启用
-            const literalEnabled = vscode.workspace.getConfiguration("jass").get<boolean>("literal", true);
-            if (!literalEnabled) {
-                console.log('[SpecialCompletionProvider] literal feature is disabled');
+            // 检查配置是否启用（使用 literal.completion 配置项）
+            const literalCompletionEnabled = vscode.workspace.getConfiguration("jass").get<boolean>("literal.completion", false);
+            if (!literalCompletionEnabled) {
+                console.log('[SpecialCompletionProvider] literal completion feature is disabled');
                 return [];
             }
 

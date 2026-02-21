@@ -13,9 +13,14 @@ import {
     ZincBlock,
     ZincParameter,
     ZincCallStatement,
-    ZincAssignmentStatement
+    ZincAssignmentStatement,
+    ZincIfStatement,
+    ZincWhileStatement,
+    ZincForStatement,
+    ZincReturnStatement
 } from '../../vjass/zinc-ast';
-import { CallExpression, Identifier, Expression } from '../../vjass/ast';
+import { CallExpression, Identifier, Expression, BinaryExpression } from '../../vjass/ast';
+import { OperatorType } from '../../vjass/ast';
 
 /**
  * Zinc Inlay Hints 提供者
@@ -175,6 +180,63 @@ export class ZincInlayHintsProvider implements vscode.InlayHintsProvider {
             else if (stmt instanceof ZincAssignmentStatement) {
                 this.processZincAssignmentStatement(stmt, document, hints, filePath, range);
             }
+            // 处理 Return 语句
+            else if (stmt instanceof ZincReturnStatement) {
+                if (stmt.value) {
+                    // 处理 return 表达式中的调用
+                    this.processZincExpression(stmt.value, document, hints, filePath, range);
+                }
+            }
+            // 处理 If 语句
+            else if (stmt instanceof ZincIfStatement) {
+                // 处理 if 条件中的调用
+                if (stmt.condition) {
+                    this.processZincExpression(stmt.condition, document, hints, filePath, range);
+                }
+                // 递归处理 then 分支
+                if (stmt.thenBlock) {
+                    this.extractHintsFromBlock(stmt.thenBlock, document, hints, filePath, range);
+                }
+                // 递归处理 else 分支
+                if (stmt.elseBlock) {
+                    this.extractHintsFromBlock(stmt.elseBlock, document, hints, filePath, range);
+                }
+            }
+            // 处理 While 语句
+            else if (stmt instanceof ZincWhileStatement) {
+                // 处理 while 条件中的调用
+                if (stmt.condition) {
+                    this.processZincExpression(stmt.condition, document, hints, filePath, range);
+                }
+                // 递归处理循环体
+                if (stmt.body) {
+                    this.extractHintsFromBlock(stmt.body, document, hints, filePath, range);
+                }
+            }
+            // 处理 For 语句
+            else if (stmt instanceof ZincForStatement) {
+                // 处理 for 循环的 init、condition、update 表达式
+                if (stmt.init) {
+                    this.processZincExpression(stmt.init, document, hints, filePath, range);
+                }
+                if (stmt.condition) {
+                    this.processZincExpression(stmt.condition, document, hints, filePath, range);
+                }
+                if (stmt.update) {
+                    this.processZincExpression(stmt.update, document, hints, filePath, range);
+                }
+                // 递归处理循环体
+                if (stmt.body) {
+                    this.extractHintsFromBlock(stmt.body, document, hints, filePath, range);
+                }
+            }
+            // 处理变量声明
+            else if (stmt instanceof ZincVariableDeclaration) {
+                if (stmt.initialValue) {
+                    // 处理变量初始化表达式中的调用
+                    this.processZincExpression(stmt.initialValue, document, hints, filePath, range);
+                }
+            }
             // 递归处理嵌套的块
             else if (stmt instanceof ZincBlock) {
                 this.extractHintsFromBlock(stmt, document, hints, filePath, range);
@@ -202,12 +264,38 @@ export class ZincInlayHintsProvider implements vscode.InlayHintsProvider {
         }
 
         const callExpr = callStmt.expression as CallExpression;
-        
-        // 获取函数名
+        this.processZincCallExpression(callExpr, document, hints, filePath, range);
+    }
+
+    /**
+     * 处理 Zinc 调用表达式（支持嵌套调用）
+     */
+    private processZincCallExpression(
+        callExpr: CallExpression,
+        document: vscode.TextDocument,
+        hints: vscode.InlayHint[],
+        filePath: string,
+        range: vscode.Range
+    ): void {
+        // 获取调用位置
+        const callPosition = callExpr.start 
+            ? new vscode.Position(callExpr.start.line, callExpr.start.position || 0)
+            : new vscode.Position(0, 0);
+
+        // 检查是否是方法调用（b.test() 形式）
+        if (callExpr.callee instanceof BinaryExpression && 
+            callExpr.callee.operator === OperatorType.Dot) {
+            // 处理方法调用
+            this.processZincMethodCall(callExpr, document, hints, filePath, range, callPosition);
+            return;
+        }
+
+        // 处理普通函数调用
         let functionName: string | null = null;
         if (callExpr.callee instanceof Identifier) {
             functionName = callExpr.callee.name;
         }
+
         if (!functionName) {
             return;
         }
@@ -223,6 +311,15 @@ export class ZincInlayHintsProvider implements vscode.InlayHintsProvider {
             for (let i = 0; i < Math.min(funcDef.parameters.length, callExpr.arguments.length); i++) {
                 const arg = callExpr.arguments[i];
                 const param = funcDef.parameters[i];
+                
+                // 如果参数是嵌套的调用表达式，先递归处理它
+                if (arg instanceof CallExpression) {
+                    this.processZincCallExpression(arg, document, hints, filePath, range);
+                } else {
+                    // 处理其他类型的表达式
+                    this.processZincExpression(arg, document, hints, filePath, range);
+                }
+                
                 if (param && param.type) {
                     // 获取参数表达式的结束位置
                     const pos = this.getZincExpressionEndPosition(arg, document, range);
@@ -244,6 +341,105 @@ export class ZincInlayHintsProvider implements vscode.InlayHintsProvider {
     }
 
     /**
+     * 处理 Zinc 方法调用（如 b.test()）
+     */
+    private processZincMethodCall(
+        callExpr: CallExpression,
+        document: vscode.TextDocument,
+        hints: vscode.InlayHint[],
+        filePath: string,
+        range: vscode.Range,
+        position: vscode.Position
+    ): void {
+        const callee = callExpr.callee as BinaryExpression;
+        const left = callee.left;
+        const right = callee.right;
+
+        // 获取方法名
+        let methodName: string | null = null;
+        if (right instanceof Identifier) {
+            methodName = right.name;
+        } else {
+            return;
+        }
+
+        if (!methodName) {
+            return;
+        }
+
+        // 获取对象类型
+        let objectType: string | null = null;
+        if (left instanceof Identifier) {
+            // 查找变量类型
+            objectType = this.findZincVariableType(left.name, filePath);
+        }
+
+        if (!objectType) {
+            return;
+        }
+
+        // 查找方法定义
+        const methodDef = this.findZincMethodDefinition(objectType, methodName, filePath);
+        if (!methodDef) {
+            return;
+        }
+
+        // 为每个参数添加类型提示
+        if (methodDef.parameters && methodDef.parameters.length > 0 && callExpr.arguments && callExpr.arguments.length > 0) {
+            for (let i = 0; i < Math.min(methodDef.parameters.length, callExpr.arguments.length); i++) {
+                const arg = callExpr.arguments[i];
+                const param = methodDef.parameters[i];
+                
+                // 如果参数是嵌套的调用表达式，先递归处理它
+                if (arg instanceof CallExpression) {
+                    this.processZincCallExpression(arg, document, hints, filePath, range);
+                } else {
+                    // 处理其他类型的表达式
+                    this.processZincExpression(arg, document, hints, filePath, range);
+                }
+                
+                if (param && param.type) {
+                    const pos = this.getZincExpressionEndPosition(arg, document, range);
+                    if (pos) {
+                        const paramType = this.getZincTypeName(param.type);
+                        const paramName = param.name ? param.name.name : 'unknown';
+                        const hint = new vscode.InlayHint(
+                            pos,
+                            `: ${paramType}`,
+                            vscode.InlayHintKind.Parameter
+                        );
+                        hint.tooltip = new vscode.MarkdownString(`**${objectType}.${methodName}** 参数 \`${paramName}\`: \`${paramType}\``);
+                        hints.push(hint);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 递归处理 Zinc 表达式，提取其中的所有调用表达式
+     */
+    private processZincExpression(
+        expr: Expression,
+        document: vscode.TextDocument,
+        hints: vscode.InlayHint[],
+        filePath: string,
+        range: vscode.Range
+    ): void {
+        // 如果是调用表达式，处理它
+        if (expr instanceof CallExpression) {
+            this.processZincCallExpression(expr, document, hints, filePath, range);
+        }
+        // 如果是二元表达式，递归处理左右操作数
+        else if (expr instanceof BinaryExpression) {
+            // 处理左操作数
+            this.processZincExpression(expr.left, document, hints, filePath, range);
+            // 处理右操作数
+            this.processZincExpression(expr.right, document, hints, filePath, range);
+        }
+    }
+
+    /**
      * 处理 Zinc 赋值语句
      */
     private processZincAssignmentStatement(
@@ -261,15 +457,32 @@ export class ZincInlayHintsProvider implements vscode.InlayHintsProvider {
             if (assignment.target instanceof Identifier) {
                 varName = assignment.target.name;
                 targetType = this.findZincVariableType(varName, filePath);
+            } else if (assignment.target instanceof BinaryExpression) {
+                // 处理成员访问或数组访问
+                if (assignment.target.operator === OperatorType.Index) {
+                    // 数组访问：arr[i] = value
+                    // 处理数组下标中的调用
+                    this.processZincExpression(assignment.target.right, document, hints, filePath, range);
+                    // 处理数组名中的调用
+                    this.processZincExpression(assignment.target.left, document, hints, filePath, range);
+                } else if (assignment.target.operator === OperatorType.Dot) {
+                    // 成员访问：obj.member = value
+                    // 可以在这里添加成员类型查找逻辑
+                }
             } else {
                 // 对于其他类型的表达式，尝试获取类型
                 targetType = this.getZincExpressionType(assignment.target, filePath);
             }
         }
 
-        // 如果目标类型存在，在赋值表达式后显示类型提示
-        if (targetType && assignment.value) {
-            const pos = this.getZincExpressionEndPosition(assignment.value, document, range);
+        // 处理赋值表达式中的调用（value 部分）
+        if (assignment.value) {
+            this.processZincExpression(assignment.value, document, hints, filePath, range);
+        }
+
+        // 如果目标类型存在，在赋值目标后显示类型提示
+        if (targetType && assignment.target) {
+            const pos = this.getZincExpressionEndPosition(assignment.target, document, range);
             if (pos) {
                 const hint = new vscode.InlayHint(
                     pos,
@@ -374,15 +587,73 @@ export class ZincInlayHintsProvider implements vscode.InlayHintsProvider {
     }
 
     /**
-     * 查找 Zinc 变量类型
+     * 查找 Zinc 方法定义
+     */
+    private findZincMethodDefinition(
+        typeName: string,
+        methodName: string,
+        filePath: string
+    ): { parameters: ZincParameter[]; returnType: any } | null {
+        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+
+        for (const cachedFilePath of allCachedFiles) {
+            const zincProgram = this.dataEnterManager.getZincProgram(cachedFilePath);
+            if (!zincProgram) {
+                continue;
+            }
+
+            // 查找 struct 声明
+            for (const stmt of zincProgram.declarations) {
+                if (stmt instanceof ZincStructDeclaration) {
+                    if (stmt.name && stmt.name.name === typeName) {
+                        // 在 struct 成员中查找方法
+                        if (stmt.members) {
+                            for (const member of stmt.members) {
+                                if (member instanceof ZincMethodDeclaration && 
+                                    member.name && member.name.name === methodName) {
+                                    return {
+                                        parameters: member.parameters || [],
+                                        returnType: member.returnType
+                                    };
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 查找 Zinc 变量类型（按照 local -> 参数 -> 全局的顺序）
      */
     private findZincVariableType(
         variableName: string,
         currentFilePath: string
     ): string | null {
+        // 这里需要根据当前位置查找，但 Zinc AST 可能没有位置信息
+        // 暂时使用全局查找
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
 
+        // 先查找当前文件
+        const currentProgram = this.dataEnterManager.getZincProgram(currentFilePath);
+        if (currentProgram) {
+            // 在函数/方法体内查找局部变量
+            // 在函数/方法参数中查找
+            // 在全局变量中查找
+            const varDecl = this.findZincVariableInProgram(currentProgram, variableName);
+            if (varDecl && varDecl.type) {
+                return this.getZincTypeName(varDecl.type);
+            }
+        }
+
+        // 如果当前文件找不到，查找其他文件（全局变量）
         for (const filePath of allCachedFiles) {
+            if (filePath === currentFilePath) {
+                continue; // 已经查找过了
+            }
             const zincProgram = this.dataEnterManager.getZincProgram(filePath);
             if (!zincProgram) {
                 continue;

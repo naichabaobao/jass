@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
 import { DataEnterManager } from './data-enter-manager';
 import {
     BlockStatement,
@@ -25,6 +27,7 @@ import { DefineRegistry } from '../vjass/define-registry';
 import { extractLeadingComments, parseComment, formatCommentAsMarkdown } from './comment-parser';
 import { ZincBlockHelper } from './zinc-block-parser';
 import { ZincHoverProvider } from './zinc/zinc-hover-provider';
+import { HoverCache, HoverCacheItem } from './hover-cache';
 
 /**
  * 基于新 AST 系统的悬停信息提供者
@@ -32,10 +35,14 @@ import { ZincHoverProvider } from './zinc/zinc-hover-provider';
 export class HoverProvider implements vscode.HoverProvider {
     private dataEnterManager: DataEnterManager;
     private zincHoverProvider: ZincHoverProvider;
+    private hoverCache: HoverCache;
+    private vjassBuiltinCache: Map<string, { description: string; type: string; value?: string }> | null = null;
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
         this.zincHoverProvider = new ZincHoverProvider(dataEnterManager);
+        this.hoverCache = HoverCache.getInstance();
+        this.loadVjassBuiltinInfo();
     }
 
     provideHover(
@@ -44,6 +51,12 @@ export class HoverProvider implements vscode.HoverProvider {
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
         try {
+            // 首先检查是否是字符代码（如 'az09'）
+            const charCodeHover = this.checkCharacterCodeHover(document, position);
+            if (charCodeHover) {
+                return charCodeHover;
+            }
+
             // 检查是否在 //! zinc 块内
             const zincBlockInfo = ZincBlockHelper.findZincBlock(document, position, this.dataEnterManager);
             if (zincBlockInfo && zincBlockInfo.program) {
@@ -104,23 +117,60 @@ export class HoverProvider implements vscode.HoverProvider {
             const hoverContents: vscode.MarkdownString[] = [];
             const filePath = document.uri.fsPath;
 
-            // 从所有缓存的文件中查找匹配的符号
+            // 从所有缓存的文件中全局查找匹配的符号（函数、全局变量、类型、结构体等）
+            // 包括工作目录和 static 目录下的所有文件，它们都一视同仁
             const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
 
-            for (const cachedFilePath of allCachedFiles) {
-                const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
-                if (!blockStatement) {
-                    continue;
+            // 先尝试从缓存获取全局符号
+            const cachedItems = this.hoverCache.getBySymbolName(symbolName);
+            let hasCachedGlobalSymbols = false;
+            
+            if (cachedItems.length > 0) {
+                // 从缓存恢复 hover 内容（只包含全局符号）
+                for (const item of cachedItems) {
+                    const markdown = new vscode.MarkdownString(item.content);
+                    markdown.isTrusted = true;
+                    hoverContents.push(markdown);
+                }
+                hasCachedGlobalSymbols = true;
+            }
+
+            // 如果缓存中没有全局符号，需要计算并缓存
+            if (!hasCachedGlobalSymbols) {
+
+                const globalHoverContents: vscode.MarkdownString[] = [];
+
+                for (const cachedFilePath of allCachedFiles) {
+                    // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
+                    if (this.dataEnterManager.isZincFile(cachedFilePath)) {
+                        continue;
+                    }
+                    
+                    const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
+                    if (!blockStatement) {
+                        continue;
+                    }
+
+                    // 在所有文件中查找符号（函数、全局变量、类型、结构体等）
+                    // 包括 native 函数、普通函数、全局变量等
+                    this.findSymbolsInBlock(blockStatement, symbolName, cachedFilePath, globalHoverContents);
+                    // 同时添加到 hoverContents 中
+                    this.findSymbolsInBlock(blockStatement, symbolName, cachedFilePath, hoverContents);
                 }
 
-                // 在当前文件中查找符号
-                this.findSymbolsInBlock(blockStatement, symbolName, cachedFilePath, hoverContents);
-                
-                // 查找局部变量和参数的悬停信息（仅在当前文件中）
-                if (cachedFilePath === filePath) {
-                    this.findLocalVariableHover(blockStatement, symbolName, filePath, position, hoverContents);
+                if (globalHoverContents.length > 0) {
+                    // 将计算的结果保存到缓存（只保存全局符号，不保存局部变量）
+                    this.saveHoverToCache(symbolName, globalHoverContents, filePath);
                 }
             }
+
+            // 查找局部变量和参数的悬停信息（仅在当前文件中，因为 local 和 takes 参数是局部作用域的）
+            // 局部变量不应该缓存，因为它们是局部作用域的
+            const currentFileBlock = this.dataEnterManager.getBlockStatement(filePath);
+            if (currentFileBlock) {
+                this.findLocalVariableHover(currentFileBlock, symbolName, filePath, position, hoverContents);
+            }
+
 
             // 查找 TextMacro
             const textMacroRegistry = TextMacroRegistry.getInstance();
@@ -142,6 +192,12 @@ export class HoverProvider implements vscode.HoverProvider {
                 }
             }
 
+            // 检查是否是 vJASS 内置常量、时间、随机数等
+            const vjassBuiltinHover = this.checkVjassBuiltinHover(symbolName);
+            if (vjassBuiltinHover) {
+                hoverContents.push(vjassBuiltinHover);
+            }
+
             // 如果没有找到任何内容，返回 null
             if (hoverContents.length === 0) {
                 return null;
@@ -155,7 +211,7 @@ export class HoverProvider implements vscode.HoverProvider {
     }
     
     /**
-     * 获取成员访问信息（如 this.xxx、thistype.xxx）
+     * 获取成员访问信息（如 this.xxx、thistype.xxx、StructName.xxx）
      */
     private getMemberAccessInfo(
         document: vscode.TextDocument,
@@ -164,16 +220,32 @@ export class HoverProvider implements vscode.HoverProvider {
         const lineText = document.lineAt(position.line).text;
         const textBeforeCursor = lineText.substring(0, position.character);
         
-        // 匹配模式：identifier.memberName 或 identifier . memberName（允许空格）
-        const memberAccessPattern = /(\w+)\s*\.\s*(\w+)/;
-        const match = textBeforeCursor.match(memberAccessPattern);
+        // 获取当前单词（可能是成员名）
+        const wordRange = document.getWordRangeAtPosition(position);
+        if (!wordRange) {
+            return null;
+        }
+        const currentWord = document.getText(wordRange);
         
-        if (!match) {
+        // 匹配模式：identifier.memberName 或 identifier . memberName（允许空格）
+        // 需要确保匹配到的是当前单词之前的成员访问
+        // 从后往前查找，找到最后一个匹配的成员访问模式
+        const memberAccessPattern = /(\w+)\s*\.\s*(\w+)/g;
+        let match: RegExpMatchArray | null = null;
+        let lastMatch: RegExpMatchArray | null = null;
+        
+        // 找到所有匹配，取最后一个（最接近光标的）
+        while ((match = memberAccessPattern.exec(textBeforeCursor)) !== null) {
+            lastMatch = match;
+        }
+        
+        // 检查最后一个匹配的成员名是否与当前单词匹配
+        if (!lastMatch || lastMatch[2] !== currentWord) {
             return null;
         }
         
-        const identifier = match[1].toLowerCase();
-        const memberName = match[2];
+        const identifier = lastMatch[1].toLowerCase();
+        const memberName = lastMatch[2];
         
         // 检查是否是 this 或 thistype
         if (identifier === 'this') {
@@ -204,17 +276,40 @@ export class HoverProvider implements vscode.HoverProvider {
             return null;
         }
         
-        // 普通标识符访问
-        const originalIdentifier = match[1];
+        // 普通标识符访问（可能是结构名或变量名）
+        const originalIdentifier = lastMatch[1];
+        // 如果首字母大写，假设是结构名（静态方法）
+        // 否则，尝试查找变量类型
         const isStatic = originalIdentifier[0] === originalIdentifier[0].toUpperCase();
         
-        return {
-            structName: originalIdentifier,
-            memberName: memberName,
-            isStatic: isStatic,
-            isThis: false,
-            isThistype: false
-        };
+        // 验证是否是结构名（如果是静态访问，应该是结构名）
+        if (isStatic) {
+            // 验证这个标识符是否真的是一个结构
+            const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+            for (const filePath of allCachedFiles) {
+                if (this.dataEnterManager.isZincFile(filePath)) {
+                    continue;
+                }
+                const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+                if (blockStatement) {
+                    const struct = this.findStructInBlock(blockStatement, originalIdentifier);
+                    if (struct) {
+                        return {
+                            structName: originalIdentifier,
+                            memberName: memberName,
+                            isStatic: true,
+                            isThis: false,
+                            isThistype: false
+                        };
+                    }
+                }
+            }
+        }
+        
+        // 如果不是结构名，可能是变量访问，暂时返回 null
+        // 注意：变量类型推断比较复杂，需要查找局部变量、参数、全局变量等
+        // 这里暂时不处理，如果需要可以后续添加
+        return null;
     }
     
     /**
@@ -228,6 +323,11 @@ export class HoverProvider implements vscode.HoverProvider {
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
         
         for (const filePath of allCachedFiles) {
+            // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
+            if (this.dataEnterManager.isZincFile(filePath)) {
+                continue;
+            }
+            
             const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
             if (!blockStatement) {
                 continue;
@@ -486,7 +586,8 @@ export class HoverProvider implements vscode.HoverProvider {
         hoverContents: vscode.MarkdownString[]
     ): void {
         // 检查是否是 globals 块
-        if (this.isGlobalsBlock(block)) {
+        const isGlobals = this.isGlobalsBlock(block);
+        if (isGlobals) {
             // 在 globals 块中查找全局变量
             for (const stmt of block.body) {
                 if (stmt instanceof VariableDeclaration && !stmt.isLocal) {
@@ -498,9 +599,11 @@ export class HoverProvider implements vscode.HoverProvider {
                     }
                 }
             }
+            // globals 块中不应该有函数，所以这里直接返回
             return;
         }
 
+        // 正常遍历所有语句（包括函数、native 函数等）
         for (const stmt of block.body) {
             // 函数声明
             if (stmt instanceof FunctionDeclaration) {
@@ -529,9 +632,10 @@ export class HoverProvider implements vscode.HoverProvider {
                     }
                 }
             }
-            // 变量声明
+            // 变量声明（跳过 local 变量，local 变量只在当前文件中查找）
             else if (stmt instanceof VariableDeclaration) {
-                if (stmt.name && stmt.name.name === symbolName) {
+                // 只查找非 local 变量（全局变量），local 变量应该只在当前文件中查找
+                if (!stmt.isLocal && stmt.name && stmt.name.name === symbolName) {
                     const content = this.createVariableHoverContent(stmt, filePath);
                     if (content) {
                         hoverContents.push(content);
@@ -602,10 +706,23 @@ export class HoverProvider implements vscode.HoverProvider {
                     if (member instanceof BlockStatement) {
                         // 递归处理 BlockStatement（包括 globals 块）
                         this.findSymbolsInBlock(member, symbolName, filePath, hoverContents);
+                    } else if (member instanceof FunctionDeclaration || member instanceof NativeDeclaration) {
+                        // 直接检查函数和 native 函数，避免创建临时 BlockStatement
+                        if (member.name && member.name.name === symbolName) {
+                            if (member instanceof FunctionDeclaration) {
+                                const content = this.createFunctionHoverContent(member, filePath);
+                                if (content) {
+                                    hoverContents.push(content);
+                                }
+                            } else if (member instanceof NativeDeclaration) {
+                                const content = this.createNativeHoverContent(member, filePath);
+                                if (content) {
+                                    hoverContents.push(content);
+                                }
+                            }
+                        }
                     } else {
-                        // 对于非 BlockStatement 的成员，直接在 findSymbolsInBlock 的循环中处理
-                        // 创建一个临时的 BlockStatement 来复用现有的处理逻辑
-                        // BlockStatement 构造函数参数顺序：statements, start?, end?
+                        // 对于其他非 BlockStatement 的成员，创建一个临时的 BlockStatement 来复用现有的处理逻辑
                         const tempBlock = new BlockStatement(
                             [member],
                             member.start,
@@ -621,6 +738,36 @@ export class HoverProvider implements vscode.HoverProvider {
                     const content = this.createScopeHoverContent(stmt, filePath);
                     if (content) {
                         hoverContents.push(content);
+                    }
+                }
+                // 递归处理 scope 的成员（包括 globals 块）
+                for (const member of stmt.members) {
+                    if (member instanceof BlockStatement) {
+                        // 递归处理 BlockStatement（包括 globals 块）
+                        this.findSymbolsInBlock(member, symbolName, filePath, hoverContents);
+                    } else if (member instanceof FunctionDeclaration || member instanceof NativeDeclaration) {
+                        // 直接检查函数和 native 函数，避免创建临时 BlockStatement
+                        if (member.name && member.name.name === symbolName) {
+                            if (member instanceof FunctionDeclaration) {
+                                const content = this.createFunctionHoverContent(member, filePath);
+                                if (content) {
+                                    hoverContents.push(content);
+                                }
+                            } else if (member instanceof NativeDeclaration) {
+                                const content = this.createNativeHoverContent(member, filePath);
+                                if (content) {
+                                    hoverContents.push(content);
+                                }
+                            }
+                        }
+                    } else {
+                        // 对于其他非 BlockStatement 的成员，创建一个临时的 BlockStatement 来复用现有的处理逻辑
+                        const tempBlock = new BlockStatement(
+                            [member],
+                            member.start,
+                            member.end
+                        );
+                        this.findSymbolsInBlock(tempBlock, symbolName, filePath, hoverContents);
                     }
                 }
             }
@@ -1526,6 +1673,11 @@ export class HoverProvider implements vscode.HoverProvider {
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
         
         for (const cachedFilePath of allCachedFiles) {
+            // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
+            if (this.dataEnterManager.isZincFile(cachedFilePath)) {
+                continue;
+            }
+            
             const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
             if (!blockStatement) {
                 continue;
@@ -1567,6 +1719,11 @@ export class HoverProvider implements vscode.HoverProvider {
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
         
         for (const cachedFilePath of allCachedFiles) {
+            // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
+            if (this.dataEnterManager.isZincFile(cachedFilePath)) {
+                continue;
+            }
+            
             const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
             if (!blockStatement) {
                 continue;
@@ -1638,6 +1795,321 @@ export class HoverProvider implements vscode.HoverProvider {
         const markdown = formatCommentAsMarkdown(parsedComment);
         
         return markdown || null;
+    }
+
+    /**
+     * 将 hover 内容保存到缓存
+     * 只保存全局符号（函数、类型、结构体等），不保存局部变量
+     */
+    private saveHoverToCache(
+        symbolName: string,
+        hoverContents: vscode.MarkdownString[],
+        currentFilePath: string
+    ): void {
+        if (hoverContents.length === 0) {
+            return;
+        }
+
+        // 收集所有文件的缓存项
+        const cacheItemsByFile = new Map<string, HoverCacheItem[]>();
+
+        // 从 hoverContents 中提取信息并分组到各个文件
+        // 注意：hoverContents 可能包含多个文件的符号，需要按文件分组
+        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        
+        for (const cachedFilePath of allCachedFiles) {
+            // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
+            if (this.dataEnterManager.isZincFile(cachedFilePath)) {
+                continue;
+            }
+            
+            const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
+            if (!blockStatement) {
+                continue;
+            }
+
+            // 检查这个文件中是否有匹配的符号
+            const tempHoverContents: vscode.MarkdownString[] = [];
+            this.findSymbolsInBlock(blockStatement, symbolName, cachedFilePath, tempHoverContents);
+
+            if (tempHoverContents.length > 0) {
+                const items: HoverCacheItem[] = tempHoverContents.map(content => ({
+                    symbolName: symbolName,
+                    filePath: cachedFilePath,
+                    content: content.value
+                }));
+                cacheItemsByFile.set(cachedFilePath, items);
+            }
+        }
+
+        if (cacheItemsByFile.size === 0) {
+            return;
+        }
+
+        // 更新每个文件的缓存
+        for (const [filePath, items] of cacheItemsByFile.entries()) {
+            // 合并现有缓存（保留其他符号的缓存）
+            const existingItems = this.hoverCache.get(filePath) || [];
+            const otherItems = existingItems.filter(item => item.symbolName !== symbolName);
+            const allItems = [...otherItems, ...items];
+            this.hoverCache.update(filePath, allItems);
+        }
+    }
+
+    /**
+     * 检查是否是字符代码（如 'az09'），如果是则返回 hover 信息
+     */
+    private checkCharacterCodeHover(
+        document: vscode.TextDocument,
+        position: vscode.Position
+    ): vscode.Hover | null {
+        const lineText = document.lineAt(position.line).text;
+        const char = position.character;
+        
+        // 查找单引号包围的字符代码
+        // 从当前位置向前和向后查找，找到完整的字符代码
+        let start = char;
+        let end = char;
+        
+        // 向前查找单引号开始
+        while (start > 0 && lineText[start - 1] !== "'") {
+            start--;
+        }
+        
+        // 向后查找单引号结束
+        while (end < lineText.length && lineText[end] !== "'") {
+            end++;
+        }
+        
+        // 检查是否找到了完整的字符代码（以单引号开始和结束）
+        if (start > 0 && end < lineText.length && 
+            lineText[start - 1] === "'" && lineText[end] === "'") {
+            const charCodeStr = lineText.substring(start, end);
+            
+            // 计算字符代码的整数值
+            // 规则：每个字符占 8 位，从左到右分别是 24, 16, 8, 0 位
+            let intValue = 0;
+            if (charCodeStr.length === 4) {
+                intValue = (charCodeStr.charCodeAt(0) << 24) | 
+                          (charCodeStr.charCodeAt(1) << 16) | 
+                          (charCodeStr.charCodeAt(2) << 8) | 
+                          charCodeStr.charCodeAt(3);
+            } else if (charCodeStr.length > 0 && charCodeStr.length < 4) {
+                // 如果长度小于 4，右对齐（前面补 0）
+                for (let i = 0; i < charCodeStr.length; i++) {
+                    intValue |= (charCodeStr.charCodeAt(i) << (24 - i * 8));
+                }
+            } else if (charCodeStr.length > 4) {
+                // 如果长度大于 4，只取前 4 个字符
+                intValue = (charCodeStr.charCodeAt(0) << 24) | 
+                          (charCodeStr.charCodeAt(1) << 16) | 
+                          (charCodeStr.charCodeAt(2) << 8) | 
+                          charCodeStr.charCodeAt(3);
+            }
+            
+            // 转换为有符号 32 位整数
+            intValue = intValue | 0;
+            
+            // 转换为无符号 32 位整数（用于16进制显示）
+            const uintValue = intValue >>> 0;
+            
+            // 格式化16进制（8位，大写）
+            const hexValue = uintValue.toString(16).toUpperCase().padStart(8, '0');
+            
+            // 创建 hover 内容
+            const content = new vscode.MarkdownString();
+            content.appendCodeblock(`'${charCodeStr}'`, 'jass');
+            content.appendMarkdown(`\n**字符代码值**\n`);
+            content.appendMarkdown(`- 十进制: \`${intValue}\`\n`);
+            content.appendMarkdown(`- 十六进制: \`0x${hexValue}\`\n`);
+            content.appendMarkdown(`- 无符号: \`${uintValue}\`\n`);
+            
+            // 创建范围（包含单引号）
+            const range = new vscode.Range(
+                position.line,
+                start - 1,
+                position.line,
+                end + 1
+            );
+            
+            return new vscode.Hover(content, range);
+        }
+        
+        return null;
+    }
+
+    /**
+     * 加载 vJASS 内置信息（从 vjass.docs.txt 文件）
+     */
+    private loadVjassBuiltinInfo(): void {
+        if (this.vjassBuiltinCache !== null) {
+            return; // 已经加载过
+        }
+
+        this.vjassBuiltinCache = new Map();
+
+        // 默认的内置信息（作为后备）
+        const defaultBuiltinInfo: { [key: string]: { description: string; type: string; value?: string } } = {
+            // 时间相关
+            'GetTimeOfDay': {
+                description: '获取当前游戏时间（0.00-24.00）',
+                type: 'real'
+            },
+            'SetTimeOfDay': {
+                description: '设置游戏时间',
+                type: 'function'
+            },
+            
+            // 随机数相关
+            'GetRandomInt': {
+                description: '获取指定范围内的随机整数',
+                type: 'function'
+            },
+            'GetRandomReal': {
+                description: '获取指定范围内的随机实数',
+                type: 'function'
+            },
+            
+            // 常量
+            'PI': {
+                description: '圆周率 π (3.14159...)',
+                type: 'real',
+                value: '3.14159'
+            },
+            'E': {
+                description: '自然常数 e (2.71828...)',
+                type: 'real',
+                value: '2.71828'
+            },
+            
+            // 调试相关
+            'BJDebugMsg': {
+                description: '调试消息输出函数',
+                type: 'function'
+            },
+            'DEBUG_MODE': {
+                description: '调试模式常量（布尔值）',
+                type: 'boolean'
+            },
+            
+            // 常用常量
+            'MAX_PLAYERS': {
+                description: '最大玩家数',
+                type: 'integer',
+                value: '16'
+            },
+            'MAX_PLAYER_SLOTS': {
+                description: '最大玩家槽位数',
+                type: 'integer',
+                value: '24'
+            }
+        };
+
+        // 先添加默认信息
+        for (const [key, value] of Object.entries(defaultBuiltinInfo)) {
+            this.vjassBuiltinCache.set(key, value);
+        }
+
+        // 尝试从 vjass.docs.txt 文件读取
+        try {
+            const possiblePaths = [
+                path.resolve(__dirname, "../../../static/vjass.docs.txt"),
+                path.resolve(__dirname, "../../../../static/vjass.docs.txt"),
+                path.resolve(__dirname, "../../static/vjass.docs.txt"),
+            ];
+
+            for (const docPath of possiblePaths) {
+                if (fs.existsSync(docPath)) {
+                    const content = fs.readFileSync(docPath, 'utf-8');
+                    this.parseVjassDocs(content);
+                    break;
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to load vjass.docs.txt:', error);
+        }
+    }
+
+    /**
+     * 解析 vjass.docs.txt 文件内容，提取常量、时间、随机数等信息
+     */
+    private parseVjassDocs(content: string): void {
+        if (!this.vjassBuiltinCache) {
+            return;
+        }
+
+        // 简单的解析逻辑：查找常见的函数和常量说明
+        // 由于文档格式不统一，这里只做基本的模式匹配
+        
+        const lines = content.split('\n');
+        let currentSection = '';
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            
+            // 检测章节标题
+            if (line.includes('时间') || line.includes('Time')) {
+                currentSection = 'time';
+            } else if (line.includes('随机') || line.includes('Random')) {
+                currentSection = 'random';
+            } else if (line.includes('常量') || line.includes('Constant')) {
+                currentSection = 'constant';
+            }
+            
+            // 查找函数或常量定义（简单的模式匹配）
+            // 例如：GetTimeOfDay, GetRandomInt, PI 等
+            const functionPattern = /(GetTimeOfDay|SetTimeOfDay|GetRandomInt|GetRandomReal|BJDebugMsg)/i;
+            const constantPattern = /(PI|E|DEBUG_MODE|MAX_PLAYERS|MAX_PLAYER_SLOTS)/i;
+            
+            const funcMatch = line.match(functionPattern);
+            const constMatch = line.match(constantPattern);
+            
+            if (funcMatch && this.vjassBuiltinCache) {
+                const name = funcMatch[1];
+                if (!this.vjassBuiltinCache.has(name)) {
+                    this.vjassBuiltinCache.set(name, {
+                        description: `vJASS 内置函数（来自 vjass.docs.txt）`,
+                        type: 'function'
+                    });
+                }
+            }
+            
+            if (constMatch && this.vjassBuiltinCache) {
+                const name = constMatch[1];
+                if (!this.vjassBuiltinCache.has(name)) {
+                    this.vjassBuiltinCache.set(name, {
+                        description: `vJASS 内置常量（来自 vjass.docs.txt）`,
+                        type: 'constant'
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查是否是 vJASS 内置常量、时间、随机数等，如果是则返回 hover 信息
+     */
+    private checkVjassBuiltinHover(symbolName: string): vscode.MarkdownString | null {
+        if (!this.vjassBuiltinCache) {
+            this.loadVjassBuiltinInfo();
+        }
+        
+        if (!this.vjassBuiltinCache) {
+            return null;
+        }
+        
+        const info = this.vjassBuiltinCache.get(symbolName);
+        if (info) {
+            const content = new vscode.MarkdownString();
+            content.appendMarkdown(`**vJASS 内置 ${info.type}**\n\n`);
+            content.appendMarkdown(`${info.description}\n\n`);
+            if (info.value) {
+                content.appendMarkdown(`值: \`${info.value}\`\n`);
+            }
+            return content;
+        }
+        
+        return null;
     }
 }
 

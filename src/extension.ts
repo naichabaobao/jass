@@ -246,26 +246,74 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     // 创建并注册 InlayHintsProvider（参数类型提示支持）
-    const inlayHintsProvider = new InlayHintsProvider(dataEnterManager);
+    // 这是一个测试特性，默认不开启，需要通过配置 jass.hint 启用
+    let inlayHintsProvider: InlayHintsProvider | undefined;
+    let zincInlayHintsProvider: ZincInlayHintsProvider | undefined;
+    let inlayHintsDisposables: vscode.Disposable[] = [];
+
+    // 注册或注销 hint 提供者的函数
+    const updateHintProviders = () => {
+        const config = vscode.workspace.getConfiguration('jass');
+        const hintEnabled = config.get<boolean>('hint', false);
+
+        // 先清理现有的注册
+        inlayHintsDisposables.forEach(d => d.dispose());
+        inlayHintsDisposables = [];
+
+        if (hintEnabled && dataEnterManager) {
+            // 创建并注册 InlayHintsProvider（vJASS）
+            inlayHintsProvider = new InlayHintsProvider(dataEnterManager);
+            inlayHintsDisposables.push(
+                vscode.languages.registerInlayHintsProvider(
+                    jassSelector,
+                    inlayHintsProvider
+                )
+            );
+
+            // 创建并注册 ZincInlayHintsProvider（Zinc 文件专用类型提示支持）
+            zincInlayHintsProvider = new ZincInlayHintsProvider(dataEnterManager);
+            inlayHintsDisposables.push(
+                vscode.languages.registerInlayHintsProvider(
+                    { scheme: 'file', pattern: '**/*.zn' },
+                    zincInlayHintsProvider
+                )
+            );
+            inlayHintsDisposables.push({
+                dispose: () => {
+                    zincInlayHintsProvider?.dispose();
+                }
+            });
+        } else {
+            // 如果禁用，清理提供者实例
+            if (inlayHintsProvider) {
+                inlayHintsProvider = undefined;
+            }
+            if (zincInlayHintsProvider) {
+                zincInlayHintsProvider.dispose();
+                zincInlayHintsProvider = undefined;
+            }
+        }
+    };
+
+    // 初始化 hint 提供者（根据配置）
+    updateHintProviders();
+
+    // 监听配置变化，动态更新 hint 提供者
     context.subscriptions.push(
-        vscode.languages.registerInlayHintsProvider(
-            jassSelector,
-            inlayHintsProvider
-        )
+        vscode.workspace.onDidChangeConfiguration((e) => {
+            if (e.affectsConfiguration('jass.hint')) {
+                updateHintProviders();
+            }
+        })
     );
 
-    // 创建并注册 ZincInlayHintsProvider（Zinc 文件专用类型提示支持）
-    // 使用文件扩展名选择器，支持 .zn 文件
-    const zincInlayHintsProvider = new ZincInlayHintsProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerInlayHintsProvider(
-            { scheme: 'file', pattern: '**/*.zn' },
-            zincInlayHintsProvider
-        )
-    );
+    // 将 hint 相关的 disposable 添加到订阅中
     context.subscriptions.push({
         dispose: () => {
-            zincInlayHintsProvider.dispose();
+            inlayHintsDisposables.forEach(d => d.dispose());
+            if (zincInlayHintsProvider) {
+                zincInlayHintsProvider.dispose();
+            }
         }
     });
 
@@ -485,7 +533,8 @@ export async function activate(context: vscode.ExtensionContext) {
                     },
                     "checkTypes": true,
                     "checkUndefined": true,
-                    "checkUnused": false
+                    "checkUnused": false,
+                    "checkArrayBounds": true
                 }
             };
 

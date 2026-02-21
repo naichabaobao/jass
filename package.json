@@ -4,7 +4,7 @@
   "description": "完整的 JASS/vJass/Zinc 语言支持，包括语法高亮、代码补全、跳转定义、悬停提示、错误诊断、代码格式化等功能。支持 vJass 的库、结构、接口、模块、委托等特性，以及 Zinc 的 C-like 语法。QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.9.4",
+  "version": "1.9.6",
   "keywords": [
     "jass",
     "vjass",
@@ -46,10 +46,20 @@
           "default": true,
           "description": "(Test) diagnostic support,does not support including Lua and pre-processing code"
         },
-        "jass.literal": {
-          "type":"boolean",
+        "jass.literal.completion": {
+          "type": "boolean",
           "default": false,
-          "dependencies": "Whether to prompt for literal values (string, number, mark)"
+          "description": "Enable literal completion suggestions (string, number, mark). Default: false (disabled) to reduce clutter."
+        },
+        "jass.literal.hover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable literal hover and definition navigation (string, number, mark). Default: true (enabled)."
+        },
+        "jass.hint": {
+          "type": "boolean",
+          "default": false,
+          "description": "(Test) Enable hint support for function parameters and method calls. This is an experimental feature."
         }
       }
     },

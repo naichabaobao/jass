@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { DataEnterManager } from './data-enter-manager';
+import { JumpCache, JumpCacheItem } from './jump-cache';
 import {
     BlockStatement,
     Statement,
@@ -31,10 +33,12 @@ import { ZincDefinitionProvider } from './zinc/zinc-definition-provider';
 export class DefinitionProvider implements vscode.DefinitionProvider {
     private dataEnterManager: DataEnterManager;
     private zincDefinitionProvider: ZincDefinitionProvider;
+    private jumpCache: JumpCache;
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
         this.zincDefinitionProvider = new ZincDefinitionProvider(dataEnterManager);
+        this.jumpCache = JumpCache.getInstance();
     }
 
     async provideDefinition(
@@ -110,166 +114,211 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
             const locations: vscode.Location[] = [];
             const filePath = document.uri.fsPath;
 
-            // 检查当前位置是否在 runtextmacro 调用中
-            const lineText = document.lineAt(position.line).text;
-            const isRunTextMacroLine = /\/\/!\s*runtextmacro/i.test(lineText);
-            
-            // 如果是在 runtextmacro 行上，优先查找 TextMacro 定义
-            if (isRunTextMacroLine) {
-                const textMacroRegistry = TextMacroRegistry.getInstance();
-                const macro = textMacroRegistry.find(symbolName);
-                if (macro && macro.start && macro.end) {
+            // 检查缓存
+            const cachedLocations = this.jumpCache.getBySymbolName(symbolName);
+            if (cachedLocations.length > 0) {
+                // 从缓存恢复跳转位置
+                for (const cachedLocation of cachedLocations) {
                     locations.push(new vscode.Location(
-                        vscode.Uri.file(macro.filePath),
+                        vscode.Uri.file(cachedLocation.filePath),
                         new vscode.Range(
-                            new vscode.Position(macro.start.line, macro.start.position),
-                            new vscode.Position(macro.end.line, macro.end.position)
-                        )
-                    ));
-                    // 如果找到了 textmacro 定义，直接返回（优先显示 textmacro 定义）
-                    if (locations.length > 0) {
-                        return locations;
-                    }
-                }
-            }
-
-            // 从所有缓存的文件中查找定义
-            const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
-
-            for (const cachedFilePath of allCachedFiles) {
-                const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
-                if (!blockStatement) {
-                    continue;
-                }
-
-                // 在当前文件中查找定义
-                this.findDefinitionsInBlock(blockStatement, symbolName, cachedFilePath, locations);
-                
-                // 查找局部变量和参数的定义（仅在当前文件中）
-                if (cachedFilePath === filePath) {
-                    this.findLocalVariableDefinitions(blockStatement, symbolName, filePath, position, locations);
-                }
-            }
-
-            // 查找 TextMacro 定义（如果还没有找到）
-            if (!isRunTextMacroLine) {
-                const textMacroRegistry = TextMacroRegistry.getInstance();
-                const macro = textMacroRegistry.find(symbolName);
-                if (macro && macro.start && macro.end) {
-                    locations.push(new vscode.Location(
-                        vscode.Uri.file(macro.filePath),
-                        new vscode.Range(
-                            new vscode.Position(macro.start.line, macro.start.position),
-                            new vscode.Position(macro.end.line, macro.end.position)
+                            new vscode.Position(cachedLocation.location.range.start.line, cachedLocation.location.range.start.character),
+                            new vscode.Position(cachedLocation.location.range.end.line, cachedLocation.location.range.end.character)
                         )
                     ));
                 }
-            }
-            
-            // 查找 #define 定义（同时查找，不只在未找到时）
-            const defineRegistry = DefineRegistry.getInstance();
-            const define = defineRegistry.find(symbolName);
-            if (define) {
-                const line = define.lineNumber; // lineNumber 已经是 0-based
-                const defineUri = vscode.Uri.file(define.filePath);
                 
-                // 优先使用缓存的文件内容
-                const fileContent = this.dataEnterManager.getFileContent(define.filePath);
-                if (fileContent) {
-                    const lines = fileContent.split('\n');
-                    if (line < lines.length) {
-                        // 使用原始代码来精确定位（处理多行 #define）
-                        const defineLineText = lines[line];
-                        
-                        // 尝试在原始代码中查找宏名称的精确位置
-                        // 首先查找 #define 关键字
-                        const defineMatch = defineLineText.match(/^\s*#define\s+/);
-                        if (defineMatch) {
-                            // 在 #define 之后查找宏名称
-                            const afterDefine = defineLineText.substring(defineMatch[0].length);
-                            const nameMatch = afterDefine.match(new RegExp(`^\\s*${this.escapeRegex(define.name)}\\b`));
-                            if (nameMatch) {
-                                const startChar = defineMatch[0].length + nameMatch.index!;
-                                const endChar = startChar + define.name.length;
-                                locations.push(new vscode.Location(
-                                    defineUri,
-                                    new vscode.Range(
-                                        new vscode.Position(line, startChar),
-                                        new vscode.Position(line, endChar)
-                                    )
-                                ));
-                            } else {
-                                // 如果无法精确匹配，使用简单方法
-                                const startChar = defineMatch[0].length;
-                                const endChar = startChar + define.name.length;
-                                locations.push(new vscode.Location(
-                                    defineUri,
-                                    new vscode.Range(
-                                        new vscode.Position(line, startChar),
-                                        new vscode.Position(line, endChar)
-                                    )
-                                ));
-                            }
-                        } else {
-                            // 如果无法匹配 #define，至少跳转到行首
-                            locations.push(new vscode.Location(
-                                defineUri,
-                                new vscode.Range(
-                                    new vscode.Position(line, 0),
-                                    new vscode.Position(line, define.name.length)
-                                )
-                            ));
-                        }
-                    }
-                } else {
-                    // 如果缓存中没有，尝试打开文档
-                    try {
-                        const defineDocument = await vscode.workspace.openTextDocument(defineUri);
-                        const defineLineText = defineDocument.lineAt(line).text;
-                        const defineMatch = defineLineText.match(/^\s*#define\s+/);
-                        if (defineMatch) {
-                            const afterDefine = defineLineText.substring(defineMatch[0].length);
-                            const nameMatch = afterDefine.match(new RegExp(`^\\s*${this.escapeRegex(define.name)}\\b`));
-                            if (nameMatch) {
-                                const startChar = defineMatch[0].length + nameMatch.index!;
-                                const endChar = startChar + define.name.length;
-                                locations.push(new vscode.Location(
-                                    defineUri,
-                                    new vscode.Range(
-                                        new vscode.Position(line, startChar),
-                                        new vscode.Position(line, endChar)
-                                    )
-                                ));
-                            } else {
-                                const startChar = defineMatch[0].length;
-                                const endChar = startChar + define.name.length;
-                                locations.push(new vscode.Location(
-                                    defineUri,
-                                    new vscode.Range(
-                                        new vscode.Position(line, startChar),
-                                        new vscode.Position(line, endChar)
-                                    )
-                                ));
-                            }
-                        } else {
-                            locations.push(new vscode.Location(
-                                defineUri,
-                                new vscode.Range(
-                                    new vscode.Position(line, 0),
-                                    new vscode.Position(line, define.name.length)
-                                )
-                            ));
-                        }
-                    } catch (error) {
-                        // 如果无法打开文档，至少提供行号信息
+                // 如果缓存中有内容，直接返回（但还需要检查 TextMacro 和 #define，因为它们不在缓存中）
+                // 继续查找 TextMacro 和 #define
+            } else {
+                // 缓存中没有，需要计算并缓存
+                // 检查当前位置是否在 runtextmacro 调用中
+                const lineText = document.lineAt(position.line).text;
+                const isRunTextMacroLine = /\/\/!\s*runtextmacro/i.test(lineText);
+                
+                // 如果是在 runtextmacro 行上，优先查找 TextMacro 定义
+                if (isRunTextMacroLine) {
+                    const textMacroRegistry = TextMacroRegistry.getInstance();
+                    const macro = textMacroRegistry.find(symbolName);
+                    if (macro && macro.start && macro.end) {
                         locations.push(new vscode.Location(
-                            defineUri,
+                            vscode.Uri.file(macro.filePath),
                             new vscode.Range(
-                                new vscode.Position(line, 0),
-                                new vscode.Position(line, define.name.length)
+                                new vscode.Position(macro.start.line, macro.start.position),
+                                new vscode.Position(macro.end.line, macro.end.position)
+                            )
+                        ));
+                        // 如果找到了 textmacro 定义，直接返回（优先显示 textmacro 定义）
+                        if (locations.length > 0) {
+                            return locations;
+                        }
+                    }
+                }
+
+                // 从所有缓存的文件中全局查找定义（函数、全局变量、类型、结构体等）
+                // 包括工作目录和 static 目录下的所有文件，它们都一视同仁
+                const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+                
+                // 调试：检查缓存的文件数量
+                if (allCachedFiles.length === 0) {
+                    console.warn(`[DefinitionProvider] No cached files found for symbol: ${symbolName}`);
+                }
+
+                for (const cachedFilePath of allCachedFiles) {
+                    const blockStatement = this.dataEnterManager.getBlockStatement(cachedFilePath);
+                    if (!blockStatement) {
+                        // 调试：检查为什么 blockStatement 为 null
+                        console.warn(`[DefinitionProvider] BlockStatement is null for file: ${cachedFilePath}`);
+                        continue;
+                    }
+
+                    // 在所有文件中查找定义（函数、全局变量、类型、结构体等）
+                    // 包括 native 函数、普通函数、全局变量等
+                    this.findDefinitionsInBlock(blockStatement, symbolName, cachedFilePath, locations);
+                    
+                    // 查找局部变量和参数的定义（仅在当前文件中，因为 local 和 takes 参数是局部作用域的）
+                    if (cachedFilePath === filePath) {
+                        this.findLocalVariableDefinitions(blockStatement, symbolName, filePath, position, locations);
+                    }
+                }
+
+                // 查找 TextMacro 定义（如果还没有找到）
+                if (!isRunTextMacroLine) {
+                    const textMacroRegistry = TextMacroRegistry.getInstance();
+                    const macro = textMacroRegistry.find(symbolName);
+                    if (macro && macro.start && macro.end) {
+                        locations.push(new vscode.Location(
+                            vscode.Uri.file(macro.filePath),
+                            new vscode.Range(
+                                new vscode.Position(macro.start.line, macro.start.position),
+                                new vscode.Position(macro.end.line, macro.end.position)
                             )
                         ));
                     }
+                }
+                
+                // 查找 #define 定义（同时查找，不只在未找到时）
+                const defineRegistry = DefineRegistry.getInstance();
+                const define = defineRegistry.find(symbolName);
+                if (define) {
+                    const line = define.lineNumber; // lineNumber 已经是 0-based
+                    const defineUri = vscode.Uri.file(define.filePath);
+                    
+                    // 优先使用缓存的文件内容
+                    const fileContent = this.dataEnterManager.getFileContent(define.filePath);
+                    if (fileContent) {
+                        const lines = fileContent.split('\n');
+                        if (line < lines.length) {
+                            // 使用原始代码来精确定位（处理多行 #define）
+                            const defineLineText = lines[line];
+                            
+                            // 尝试在原始代码中查找宏名称的精确位置
+                            // 首先查找 #define 关键字
+                            const defineMatch = defineLineText.match(/^\s*#define\s+/);
+                            if (defineMatch) {
+                                // 在 #define 之后查找宏名称
+                                const afterDefine = defineLineText.substring(defineMatch[0].length);
+                                const nameMatch = afterDefine.match(new RegExp(`^\\s*${this.escapeRegex(define.name)}\\b`));
+                                if (nameMatch) {
+                                    const startChar = defineMatch[0].length + nameMatch.index!;
+                                    const endChar = startChar + define.name.length;
+                                    locations.push(new vscode.Location(
+                                        defineUri,
+                                        new vscode.Range(
+                                            new vscode.Position(line, startChar),
+                                            new vscode.Position(line, endChar)
+                                        )
+                                    ));
+                                } else {
+                                    // 如果无法精确匹配，使用简单方法
+                                    const startChar = defineMatch[0].length;
+                                    const endChar = startChar + define.name.length;
+                                    locations.push(new vscode.Location(
+                                        defineUri,
+                                        new vscode.Range(
+                                            new vscode.Position(line, startChar),
+                                            new vscode.Position(line, endChar)
+                                        )
+                                    ));
+                                }
+                            } else {
+                                // 如果无法匹配 #define，至少跳转到行首
+                                locations.push(new vscode.Location(
+                                    defineUri,
+                                    new vscode.Range(
+                                        new vscode.Position(line, 0),
+                                        new vscode.Position(line, define.name.length)
+                                    )
+                                ));
+                            }
+                        }
+                    } else {
+                        // 如果缓存中没有，尝试打开文档
+                        try {
+                            const defineDocument = await vscode.workspace.openTextDocument(defineUri);
+                            const defineLineText = defineDocument.lineAt(line).text;
+                            const defineMatch = defineLineText.match(/^\s*#define\s+/);
+                            if (defineMatch) {
+                                const afterDefine = defineLineText.substring(defineMatch[0].length);
+                                const nameMatch = afterDefine.match(new RegExp(`^\\s*${this.escapeRegex(define.name)}\\b`));
+                                if (nameMatch) {
+                                    const startChar = defineMatch[0].length + nameMatch.index!;
+                                    const endChar = startChar + define.name.length;
+                                    locations.push(new vscode.Location(
+                                        defineUri,
+                                        new vscode.Range(
+                                            new vscode.Position(line, startChar),
+                                            new vscode.Position(line, endChar)
+                                        )
+                                    ));
+                                } else {
+                                    const startChar = defineMatch[0].length;
+                                    const endChar = startChar + define.name.length;
+                                    locations.push(new vscode.Location(
+                                        defineUri,
+                                        new vscode.Range(
+                                            new vscode.Position(line, startChar),
+                                            new vscode.Position(line, endChar)
+                                        )
+                                    ));
+                                }
+                            } else {
+                                locations.push(new vscode.Location(
+                                    defineUri,
+                                    new vscode.Range(
+                                        new vscode.Position(line, 0),
+                                        new vscode.Position(line, define.name.length)
+                                    )
+                                ));
+                            }
+                        } catch (error) {
+                            // 如果无法打开文档，至少提供行号信息
+                            locations.push(new vscode.Location(
+                                defineUri,
+                                new vscode.Range(
+                                    new vscode.Position(line, 0),
+                                    new vscode.Position(line, define.name.length)
+                                )
+                            ));
+                        }
+                    }
+                }
+
+                // 将计算的结果保存到缓存（只保存全局符号，不保存局部变量）
+                if (locations.length > 0) {
+                    const cacheItems: JumpCacheItem[] = locations.map(loc => ({
+                        symbolName: symbolName,
+                        location: {
+                            uri: loc.uri.fsPath,
+                            range: {
+                                start: { line: loc.range.start.line, character: loc.range.start.character },
+                                end: { line: loc.range.end.line, character: loc.range.end.character }
+                            }
+                        },
+                        filePath: loc.uri.fsPath
+                    }));
+
+                    this.jumpCache.update(filePath, cacheItems);
                 }
             }
 
@@ -321,9 +370,10 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
                     this.addLocation(stmt.name, filePath, locations);
                 }
             }
-            // 变量声明
+            // 变量声明（跳过 local 变量，local 变量只在当前文件中查找）
             else if (stmt instanceof VariableDeclaration) {
-                if (stmt.name && stmt.name.name === symbolName) {
+                // 只查找非 local 变量（全局变量），local 变量应该只在当前文件中查找
+                if (!stmt.isLocal && stmt.name && stmt.name.name === symbolName) {
                     this.addLocation(stmt.name, filePath, locations);
                 }
             }
@@ -389,6 +439,21 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
             else if (stmt instanceof ScopeDeclaration) {
                 if (stmt.name && stmt.name.name === symbolName) {
                     this.addLocation(stmt.name, filePath, locations);
+                }
+                // 递归处理 scope 的成员（包括 globals 块）
+                for (const member of stmt.members) {
+                    if (member instanceof BlockStatement) {
+                        // 递归处理 BlockStatement（包括 globals 块）
+                        this.findDefinitionsInBlock(member, symbolName, filePath, locations);
+                    } else {
+                        // 对于非 BlockStatement 的成员，创建一个临时的 BlockStatement 来复用现有的处理逻辑
+                        const tempBlock = new BlockStatement(
+                            [member],
+                            member.start,
+                            member.end
+                        );
+                        this.findDefinitionsInBlock(tempBlock, symbolName, filePath, locations);
+                    }
                 }
             }
             // TextMacro 声明

@@ -249,16 +249,23 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
     ): vscode.SignatureInformation[] {
         const signatures: vscode.SignatureInformation[] = [];
 
-        // 从所有缓存的文件中查找
+        // 从所有缓存的文件中查找（包括工作目录和 static 目录下的所有文件，它们都一视同仁）
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        
+        // 调试：检查缓存的文件数量
+        if (allCachedFiles.length === 0) {
+            console.warn(`[SignatureHelpProvider] No cached files found for function: ${callInfo.name}`);
+        }
 
         for (const filePath of allCachedFiles) {
             const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
             if (!blockStatement) {
+                // 调试：检查为什么 blockStatement 为 null
+                console.warn(`[SignatureHelpProvider] BlockStatement is null for file: ${filePath}`);
                 continue;
             }
 
-            // 查找函数声明
+            // 查找函数声明（包括 native 函数）
             if (!callInfo.isMethod) {
                 this.findFunctionsInBlock(blockStatement, callInfo.name, signatures);
             }
@@ -375,6 +382,10 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
         isStatic: boolean | undefined,
         signatures: vscode.SignatureInformation[]
     ): void {
+        // 首先在当前块中查找结构体
+        const allStructs: StructDeclaration[] = [];
+        this.findStructsInBlock(block, allStructs);
+        
         for (const stmt of block.body) {
             // 查找结构体声明
             if (stmt instanceof StructDeclaration) {
@@ -417,6 +428,55 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             // 递归查找嵌套的 BlockStatement
             if (stmt instanceof BlockStatement) {
                 this.findMethodsInBlock(stmt, methodName, structName, isStatic, signatures);
+            }
+        }
+        
+        // 如果没有找到指定的结构体，尝试跨文件查找
+        if (!structName && allStructs.length === 0) {
+            const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+            
+            for (const filePath of allCachedFiles) {
+                const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+                if (!blockStatement) {
+                    // 调试：检查为什么 blockStatement 为 null
+                    console.warn(`[SignatureHelpProvider] BlockStatement is null for file: ${filePath}`);
+                    continue;
+                }
+                
+                // 在其他文件中查找结构体
+                const structs: StructDeclaration[] = [];
+                this.findStructsInBlock(blockStatement, structs);
+                
+                for (const struct of structs) {
+                    // 在结构体的成员中查找方法
+                    for (const member of struct.members) {
+                        if (member instanceof MethodDeclaration) {
+                            if (member.name && member.name.name === methodName) {
+                                // 检查 static 匹配
+                                if (isStatic !== undefined) {
+                                    if (isStatic && !member.isStatic) {
+                                        continue;
+                                    }
+                                    if (!isStatic && member.isStatic) {
+                                        continue;
+                                    }
+                                }
+                                
+                                const signature = this.createMethodSignature(
+                                    member,
+                                    struct.name?.name
+                                );
+                                signatures.push(signature);
+                            }
+                        }
+                    }
+                    
+                    // 查找实现的 module 中的方法
+                    this.findModuleMethods(struct, methodName, isStatic, signatures);
+                    
+                    // 查找内置方法
+                    this.findBuiltinMethods(struct, methodName, isStatic, signatures);
+                }
             }
         }
     }
@@ -516,6 +576,24 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             }
         }
         return null;
+    }
+    
+    /**
+     * 在 BlockStatement 中查找所有结构体
+     */
+    private findStructsInBlock(
+        block: BlockStatement,
+        structs: StructDeclaration[]
+    ): void {
+        for (const stmt of block.body) {
+            if (stmt instanceof StructDeclaration) {
+                structs.push(stmt);
+            }
+            
+            if (stmt instanceof BlockStatement) {
+                this.findStructsInBlock(stmt, structs);
+            }
+        }
     }
     
     /**
@@ -978,8 +1056,22 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             }
         }
         
-        // 3. 最后查找 globals 变量
-        return this.findVariableInGlobals(blockStatement, variableName);
+        // 3. 最后查找 globals 变量（在所有文件中查找）
+        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        for (const cachedFilePath of allCachedFiles) {
+            const cachedBlock = this.dataEnterManager.getBlockStatement(cachedFilePath);
+if (!cachedBlock) {
+                    // 调试：检查为什么 BlockStatement 为 null
+                    console.warn(`[SignatureHelpProvider] BlockStatement is null for file: ${cachedFilePath}`);
+                    continue;
+                }
+            const varType = this.findVariableInGlobals(cachedBlock, variableName);
+            if (varType) {
+                return varType;
+            }
+        }
+        
+        return null;
     }
     
     /**
