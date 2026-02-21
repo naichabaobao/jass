@@ -1137,51 +1137,52 @@ export class DataEnterManager {
     /**
      * 初始化工作区文件
      * 两阶段解析：先收集所有 textmacro，再解析文件
+     * 无工作区时仍注册文档监听，保证单文件打开/编辑时解析与功能可用
      */
     public async initializeWorkspace(): Promise<void> {
         const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
-        if (!workspaceFolder) {
-            return;
+        const hasWorkspace = !!workspaceFolder;
+        const workspaceRoot = workspaceFolder?.uri.fsPath;
+
+        if (hasWorkspace && workspaceRoot) {
+            console.log('📦 Phase 1: Collecting TextMacros...');
+            // 阶段1：收集所有文件中的 textmacro 定义
+            await this.collectAllTextMacros(workspaceRoot);
+            
+            const stats = this.textMacroRegistry.getStats();
+            console.log(`✅ Collected ${stats.totalMacros} textmacros from ${stats.totalFiles} files`);
+
+            console.log('📦 Phase 2: Parsing files with TextMacro expansion...');
+            // 阶段2：解析所有文件（此时 runtextmacro 可以正确展开）
+            await this.loadStandardLibraries(workspaceRoot);
+            await this.loadStaticFiles(workspaceRoot);
+            await this.loadWorkspaceFiles(workspaceRoot);
+            
+            const cacheStats = this.getCacheStats();
+            console.log('✅ Workspace initialization complete');
+            console.log(`📊 Cache Stats: ${cacheStats.totalFiles} files cached (${cacheStats.immutableFiles} immutable)`);
+            if (cacheStats.totalFiles > 0) {
+                const fileList = cacheStats.cachedFiles.slice(0, 10).map(f => path.basename(f)).join(', ');
+                console.log(`📁 Sample cached files: ${fileList}${cacheStats.cachedFiles.length > 10 ? '...' : ''}`);
+            }
+        } else {
+            console.log('📂 No workspace folder; single-file mode enabled (parse on open/edit).');
         }
 
-        const workspaceRoot = workspaceFolder.uri.fsPath;
-
-        console.log('📦 Phase 1: Collecting TextMacros...');
-        // 阶段1：收集所有文件中的 textmacro 定义
-        await this.collectAllTextMacros(workspaceRoot);
-        
-        const stats = this.textMacroRegistry.getStats();
-        console.log(`✅ Collected ${stats.totalMacros} textmacros from ${stats.totalFiles} files`);
-
-        console.log('📦 Phase 2: Parsing files with TextMacro expansion...');
-        // 阶段2：解析所有文件（此时 runtextmacro 可以正确展开）
-        // 1. 按顺序解析标准库文件（不可变，不监听）
-        await this.loadStandardLibraries(workspaceRoot);
-
-        // 2. 加载 static 目录下的文件（不可变，不监听）
-        await this.loadStaticFiles(workspaceRoot);
-
-        // 3. 加载工作区文件（可变，监听）
-        await this.loadWorkspaceFiles(workspaceRoot);
-        
-        // 输出缓存统计信息
-        const cacheStats = this.getCacheStats();
-        console.log('✅ Workspace initialization complete');
-        console.log(`📊 Cache Stats: ${cacheStats.totalFiles} files cached (${cacheStats.immutableFiles} immutable)`);
-        if (cacheStats.totalFiles > 0) {
-            const fileList = cacheStats.cachedFiles.slice(0, 10).map(f => path.basename(f)).join(', ');
-            console.log(`📁 Sample cached files: ${fileList}${cacheStats.cachedFiles.length > 10 ? '...' : ''}`);
-        }
-
-        // 设置事件处理器（监听和数据处理分离）
+        // 无论是否有工作区，都注册事件与文档监听，保证解析和补全/诊断等功能可用
         this.setupEventHandlers();
-        
-        // 设置配置文件监听器
         this.setupConfigWatcher();
-        
-        // 设置文件监听器（监听和数据处理分离）
         if (this.options.enableFileWatcher) {
             this.setupFileWatcher();
+        }
+
+        // 无工作区时：对当前已打开的 JASS 文档做一次解析，否则已打开的单文件不会进缓存
+        if (!hasWorkspace) {
+            vscode.workspace.textDocuments.forEach((doc) => {
+                if (this.isJassFile(doc.uri.fsPath) && !this.shouldIgnoreFile(doc.uri.fsPath)) {
+                    this.handleFileChange(doc.uri.fsPath);
+                }
+            });
         }
     }
 

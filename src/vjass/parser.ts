@@ -250,9 +250,15 @@ export class Parser {
      */
     private consumeValue(value: string, message: string): IToken {
         const token = this.lexer.current();
-        if (token === null || token.value.toLowerCase() !== value.toLowerCase()) {
+        if (token === null) {
             this.error(message);
-            return token || new Token(TokenType.Identifier, "", { line: 0, position: 0 }, { line: 0, position: 0 });
+            return new Token(TokenType.Identifier, "", { line: 0, position: 0 }, { line: 0, position: 0 });
+        }
+        const valueMatch = token.value.toLowerCase() === value.toLowerCase();
+        const thenMatch = value.toLowerCase() === "then" && token.type === TokenType.KeywordThen;
+        if (!valueMatch && !thenMatch) {
+            this.error(message);
+            return token;
         }
         this.lexer.next();
         return token;
@@ -1454,17 +1460,8 @@ export class Parser {
                     // 消费 private 关键字，但不消费 method，让 parseMethod 处理
                     this.lexer.next(); // 消费 private
                 } else if (peekToken && peekToken.value?.toLowerCase() === "static") {
-                    // 检查 private static method
-                    // 先消费 private 和 static，然后检查是否是 method
-                    this.lexer.next(); // 消费 private
-                    this.lexer.next(); // 消费 static
-                    const peekToken2 = this.lexer.peek();
-                    if (peekToken2 && peekToken2.value?.toLowerCase() === "method") {
-                        isPrivateStaticMethod = true;
-                        // static 已经被消费，method 会在后面被 parseMethod 处理
-                    }
-                    // 注意：如果 peekToken2 不是 method，我们已经消费了 private 和 static
-                    // 这会导致后续解析问题，但这种情况应该很少见（可能是语法错误）
+                    // 不在此处消费 static：可能是 private static method 或 private static integer array xxx
+                    // static 留到后面：变量声明会消费 static（并设 isStatic），或 static+method 分支会消费
                 }
             } else if (this.checkValue("public")) {
                 const peekToken = this.lexer.peek();
@@ -1473,17 +1470,7 @@ export class Parser {
                     // 消费 public 关键字，但不消费 method，让 parseMethod 处理
                     this.lexer.next(); // 消费 public
                 } else if (peekToken && peekToken.value?.toLowerCase() === "static") {
-                    // 检查 public static method
-                    // 先消费 public 和 static，然后检查是否是 method
-                    this.lexer.next(); // 消费 public
-                    this.lexer.next(); // 消费 static
-                    const peekToken2 = this.lexer.peek();
-                    if (peekToken2 && peekToken2.value?.toLowerCase() === "method") {
-                        isPublicStaticMethod = true;
-                        // static 已经被消费，method 会在后面被 parseMethod 处理
-                    }
-                    // 注意：如果 peekToken2 不是 method，我们已经消费了 public 和 static
-                    // 这会导致后续解析问题，但这种情况应该很少见（可能是语法错误）
+                    // 不在此处消费 static：可能是 public static method 或 public static integer array xxx
                 }
             }
 
@@ -1645,8 +1632,8 @@ export class Parser {
                 if (this.checkValue("endstruct")) {
                     break;
                 }
-                // 检查是否是类型关键字或标识符（基本类型或自定义类型）
-                // 在 struct 中，如果遇到类型关键字或标识符，可能是类型名，尝试解析为变量声明
+                // 检查是否是类型关键字或标识符（基本类型或自定义类型），或 static（static Type name 为静态成员）
+                // 在 struct 中，如果遇到类型关键字、标识符或 static，尝试解析为变量声明
                 const isTypeKeyword = token.type === TokenType.TypeInteger ||
                                     token.type === TokenType.TypeReal ||
                                     token.type === TokenType.TypeString ||
@@ -1655,7 +1642,10 @@ export class Parser {
                                     token.type === TokenType.TypeHandle ||
                                     token.type === TokenType.TypeKey;
                 const isIdentifier = token.type === TokenType.Identifier;
-                if (isTypeKeyword || isIdentifier) {
+                const isStaticKeyword = this.checkValue("static");
+                const peekVal = this.lexer.peek()?.value?.toLowerCase();
+                const isStaticMethodOrStub = isStaticKeyword && (peekVal === "method" || peekVal === "stub");
+                if ((isTypeKeyword || isIdentifier || isStaticKeyword) && !isStaticMethodOrStub) {
                     const varDecl = this.parseVariableDeclaration(false, isReadonlyVar);
                     if (varDecl) {
                         members.push(varDecl);
@@ -2999,9 +2989,9 @@ export class Parser {
                     }
                 }
                 
-                // 如果成功展开，返回包含展开语句的 BlockStatement
+                // 如果成功展开，返回包含展开语句的 BlockStatement（标记来源，便于 analyzer 按 textmacro 作用域跳过占位符类型检查）
                 if (expandedStatements.length > 0) {
-                    return new BlockStatement(expandedStatements, startPos, endPos);
+                    return new BlockStatement(expandedStatements, startPos, endPos, true);
                 } else {
                     // 展开后没有语句，返回 null
                     return null;
@@ -3752,11 +3742,29 @@ export class Parser {
             return null;
         }
         
-        if (token.type === TokenType.Identifier) {
+        // call .method()：隐式 this 的方法调用
+        if (token.type === TokenType.Dot) {
+            this.lexer.next();
+            const methodToken = this.lexer.current();
+            if (!methodToken || methodToken.type !== TokenType.Identifier) {
+                this.error("Expected method name after '.' in call");
+                return null;
+            }
+            const thisIdent = new Identifier("this", token.start, token.end);
+            const member = new Identifier(methodToken.value, methodToken.start, methodToken.end);
+            this.lexer.next();
+            callee = new BinaryExpression(
+                OperatorType.Dot,
+                thisIdent,
+                member,
+                token.start,
+                member.end
+            );
+        } else if (token.type === TokenType.Identifier || this.checkValue("super")) {
             callee = new Identifier(token.value, token.start, token.end);
             this.lexer.next();
             
-            // 支持链式成员访问（如 Worker.doWork.execute）
+            // 支持链式成员访问（如 Worker.doWork.execute、super.onApply）
             while (this.check(TokenType.Dot)) {
                 this.lexer.next();
                 const memberToken = this.lexer.current();
@@ -3932,6 +3940,8 @@ export class Parser {
         while (true) {
             const token = this.lexer.current();
             if (!token) break;
+            // vJass: 不将 "then" 当作表达式的一部分，以便 if condition then 正确收尾
+            if (this.checkValue("then")) break;
 
             const precedence = this.getPrecedence(token.type);
             if (precedence < minPrecedence) {
@@ -4156,11 +4166,135 @@ export class Parser {
                     memberToken.end
                 );
                 
-                // 检查是否是函数调用 thistype.methodName()
+                // 与标识符分支一致：支持 thistype.member[index]、thistype.member() 等后缀
+                while (this.check(TokenType.LeftBracket)) {
+                    this.lexer.next();
+                    const indexExpr = this.parseExpression();
+                    if (!indexExpr) {
+                        this.error("Expected index expression after '['");
+                        return null;
+                    }
+                    if (!this.check(TokenType.RightBracket)) {
+                        this.error("Expected ']' after index expression");
+                        return null;
+                    }
+                    this.lexer.next();
+                    expr = new BinaryExpression(
+                        OperatorType.Index,
+                        expr,
+                        indexExpr,
+                        expr.start,
+                        indexExpr.end
+                    );
+                }
+                while (this.check(TokenType.Dot)) {
+                    this.lexer.next();
+                    const memberToken2 = this.lexer.current();
+                    if (!memberToken2 || memberToken2.type !== TokenType.Identifier) {
+                        this.error("Expected identifier after '.' for member access");
+                        return null;
+                    }
+                    const member2 = new Identifier(memberToken2.value, memberToken2.start, memberToken2.end);
+                    this.lexer.next();
+                    expr = new BinaryExpression(
+                        OperatorType.Dot,
+                        expr,
+                        member2,
+                        expr.start,
+                        member2.end
+                    );
+                }
+                while (this.check(TokenType.LeftBracket)) {
+                    this.lexer.next();
+                    const indexExpr = this.parseExpression();
+                    if (!indexExpr) {
+                        this.error("Expected index expression after '['");
+                        return null;
+                    }
+                    if (!this.check(TokenType.RightBracket)) {
+                        this.error("Expected ']' after index expression");
+                        return null;
+                    }
+                    this.lexer.next();
+                    expr = new BinaryExpression(
+                        OperatorType.Index,
+                        expr,
+                        indexExpr,
+                        expr.start,
+                        indexExpr.end
+                    );
+                }
                 if (this.check(TokenType.LeftParen)) {
                     return this.parseCallExpressionWithCallee(expr);
                 }
-                
+                return expr;
+            } else if (this.check(TokenType.LeftParen)) {
+                // thistype(expr) - 静态方法调用或类型转换，如 thistype(i).t、thistype.getByTimer(t)
+                const thistypeExpr = new ThistypeExpression(thistypeToken.start, thistypeToken.end);
+                const callResult = this.parseCallExpressionWithCallee(thistypeExpr);
+                if (!callResult) return null;
+                let expr: Expression = callResult;
+                // 与 thistype.member 相同的后缀链：支持 thistype(i).t、thistype(i)[j] 等
+                while (this.check(TokenType.LeftBracket)) {
+                    this.lexer.next();
+                    const indexExpr = this.parseExpression();
+                    if (!indexExpr) {
+                        this.error("Expected index expression after '['");
+                        return null;
+                    }
+                    if (!this.check(TokenType.RightBracket)) {
+                        this.error("Expected ']' after index expression");
+                        return null;
+                    }
+                    this.lexer.next();
+                    expr = new BinaryExpression(
+                        OperatorType.Index,
+                        expr,
+                        indexExpr,
+                        expr.start,
+                        indexExpr.end
+                    );
+                }
+                while (this.check(TokenType.Dot)) {
+                    this.lexer.next();
+                    const memberToken2 = this.lexer.current();
+                    if (!memberToken2 || memberToken2.type !== TokenType.Identifier) {
+                        this.error("Expected identifier after '.' for member access");
+                        return null;
+                    }
+                    const member2 = new Identifier(memberToken2.value, memberToken2.start, memberToken2.end);
+                    this.lexer.next();
+                    expr = new BinaryExpression(
+                        OperatorType.Dot,
+                        expr,
+                        member2,
+                        expr.start,
+                        member2.end
+                    );
+                }
+                while (this.check(TokenType.LeftBracket)) {
+                    this.lexer.next();
+                    const indexExpr = this.parseExpression();
+                    if (!indexExpr) {
+                        this.error("Expected index expression after '['");
+                        return null;
+                    }
+                    if (!this.check(TokenType.RightBracket)) {
+                        this.error("Expected ']' after index expression");
+                        return null;
+                    }
+                    this.lexer.next();
+                    expr = new BinaryExpression(
+                        OperatorType.Index,
+                        expr,
+                        indexExpr,
+                        expr.start,
+                        indexExpr.end
+                    );
+                }
+                if (this.check(TokenType.LeftParen)) {
+                    return this.parseCallExpressionWithCallee(expr);
+                }
                 return expr;
             } else {
                 // thistype 单独使用，作为类型或表达式
@@ -4379,8 +4513,6 @@ export class Parser {
                 }
             }
             
-            return expr;
-
             return expr;
         }
 

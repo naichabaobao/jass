@@ -32,7 +32,8 @@ import {
     HookStatement,
     LoopStatement,
     ExitWhenStatement,
-    CallStatement
+    CallStatement,
+    TextMacroStatement
 } from "./ast";
 import { ErrorCollection, SimpleError, SimpleWarning, CheckValidationError, CheckErrorType } from "./error";
 import { Parser } from "./parser";
@@ -133,7 +134,7 @@ interface ScopeInfo {
     /** 作用域名称 */
     name: string;
     /** 作用域类型（library/scope/struct/interface） */
-    type: "library" | "scope" | "struct" | "interface" | "module" | "function";
+    type: "library" | "scope" | "struct" | "interface" | "module" | "function" | "textmacro";
     /** 父作用域 */
     parent?: ScopeInfo;
     /** 符号表 */
@@ -1328,6 +1329,9 @@ export class SemanticAnalyzer {
             return; // 已经处理了子节点，不需要再次递归
         } else if (node instanceof InterfaceDeclaration) {
             this.checkInterface(node);
+        } else if (node instanceof TextMacroStatement) {
+            this.checkTextMacro(node);
+            return;
         } else if (node instanceof ModuleDeclaration) {
             this.checkModule(node);
         } else if (node instanceof LibraryDeclaration) {
@@ -1475,6 +1479,24 @@ export class SemanticAnalyzer {
             }
             // 注意：Identifier 的检查在具体使用场景中进行，避免误报
             return; // 已经处理了子节点，不需要再次递归
+        } else if (node instanceof BlockStatement && node.fromTextMacroExpansion) {
+            // runtextmacro 展开块：压入 textmacro 作用域，使 isInsideTextMacro() 为 true，占位符如 $TYPE$ 不报类型错误
+            const currentScope = this.scopeStack[this.scopeStack.length - 1];
+            const macroScope: ScopeInfo = {
+                name: "(runtextmacro expanded)",
+                type: "textmacro",
+                symbols: new Map(),
+                children: [],
+                node,
+                parent: currentScope,
+                isPublic: true
+            };
+            this.scopeStack.push(macroScope);
+            for (const child of node.children) {
+                this.checkSemantics(child);
+            }
+            this.scopeStack.pop();
+            return;
         }
         // 递归处理子节点
         for (const child of node.children) {
@@ -1645,8 +1667,8 @@ export class SemanticAnalyzer {
         if (node.isArrayStruct) {
             for (const member of node.members) {
                 if (member instanceof VariableDeclaration && !member.isLocal) {
-                    // 检查是否有默认值
-                    if (member.initializer) {
+                    // 检查是否有默认值（仅禁止实例成员的默认值，静态成员允许，与静态数组成员规则一致）
+                    if (member.initializer && !member.isStatic) {
                         this.addError(
                             member.start,
                             member.end,
@@ -1654,13 +1676,13 @@ export class SemanticAnalyzer {
                             `Remove the default value from member '${member.name.name}'`
                         );
                     }
-                    // 检查是否是数组成员
-                    if (member.isArray) {
+                    // 检查是否是实例数组成员（数组结构不允许实例数组成员，但允许静态数组成员，见 changelog 0.9.G.3）
+                    if (member.isArray && !member.isStatic) {
                         this.addError(
                             member.start,
                             member.end,
                             `Array struct '${structName}' cannot have array members`,
-                            `Remove array member '${member.name.name}' or use dynamic arrays`
+                            `Remove array member '${member.name.name}' or use static array or use dynamic arrays`
                         );
                     }
                 } else if (member instanceof MethodDeclaration) {
@@ -2021,6 +2043,27 @@ export class SemanticAnalyzer {
                 }
             }
         }
+    }
+
+    /**
+     * 检查 textmacro 定义：仅压入 textmacro 作用域，其内部跳过语法/类型检测；仅对 runtextmacro 展开后的代码做检查
+     */
+    private checkTextMacro(node: TextMacroStatement): void {
+        const currentScope = this.scopeStack[this.scopeStack.length - 1];
+        const macroScope: ScopeInfo = {
+            name: node.name,
+            type: "textmacro",
+            symbols: new Map(),
+            children: [],
+            node,
+            parent: currentScope,
+            isPublic: true
+        };
+        this.scopeStack.push(macroScope);
+        for (const child of node.children) {
+            this.checkSemantics(child);
+        }
+        this.scopeStack.pop();
     }
 
     /**
@@ -2899,10 +2942,10 @@ export class SemanticAnalyzer {
     }
 
     /**
-     * 获取当前所在的结构体名称
+     * 获取当前结构体名称（作用域栈中最内层 struct 的名称）
+     * 文档：thistype 关键字在结构内部代码中，等同于该结构的名称。（vjass.docs.txt）
      */
     private getCurrentStructName(): string | null {
-        // 从作用域栈中查找结构体作用域
         for (let i = this.scopeStack.length - 1; i >= 0; i--) {
             const scope = this.scopeStack[i];
             if (scope.type === "struct") {
@@ -2910,6 +2953,28 @@ export class SemanticAnalyzer {
             }
         }
         return null;
+    }
+
+    /**
+     * 是否处于 textmacro 定义内部（仅对 runtextmacro 展开后的代码做语法检查，textmacro 内部跳过）
+     */
+    private isInsideTextMacro(): boolean {
+        for (let i = this.scopeStack.length - 1; i >= 0; i--) {
+            if (this.scopeStack[i].type === "textmacro") return true;
+        }
+        return false;
+    }
+
+    /**
+     * 节点是否位于某 textmacro 定义内部（通过 parent 链判断，用于 body 被解析为 AST 的情况）
+     */
+    private isNodeInsideTextMacro(node: Identifier | ThistypeExpression | null | undefined): boolean {
+        let n: ASTNode | null = node ?? null;
+        while (n) {
+            if (n instanceof TextMacroStatement) return true;
+            n = n.parent;
+        }
+        return false;
     }
 
     /**
@@ -3218,28 +3283,18 @@ export class SemanticAnalyzer {
             return true;
         }
 
-        // 处理 thistype 类型
-        // 在结构内部，thistype 等同于结构名
+        // 处理 thistype：文档规定在结构内部等同于该结构的名称，即当前结构体
+        const currentStruct = this.getCurrentStructName();
         if (actualType === "thistype") {
-            if (contextExpr) {
-                const resolvedType = this.resolveThistype(contextExpr);
-                if (resolvedType) {
-                    // 递归检查解析后的类型
-                    return this.isTypeCompatible(resolvedType, expectedType, contextExpr);
-                }
+            if (currentStruct) {
+                return this.isTypeCompatible(currentStruct, expectedType, contextExpr);
             }
-            // 如果没有上下文，无法解析 thistype，返回 false
             return false;
         }
         if (expectedType === "thistype") {
-            if (contextExpr) {
-                const resolvedType = this.resolveThistype(contextExpr);
-                if (resolvedType) {
-                    // 递归检查解析后的类型
-                    return this.isTypeCompatible(actualType, resolvedType, contextExpr);
-                }
+            if (currentStruct) {
+                return this.isTypeCompatible(actualType, currentStruct, contextExpr);
             }
-            // 如果没有上下文，无法解析 thistype，返回 false
             return false;
         }
 
@@ -3408,6 +3463,11 @@ export class SemanticAnalyzer {
             return false;
         }
 
+        // textmacro 定义内部或 runtextmacro 展开块内部：不把占位符（如 $TYPE$）当无效类型报错
+        if (this.isInsideTextMacro() || this.isNodeInsideTextMacro(typeNode)) {
+            return true;
+        }
+
         if (!this.isValidType(type, typeNode)) {
             this.addError(
                 typeNode.start,
@@ -3461,18 +3521,12 @@ export class SemanticAnalyzer {
     }
 
     /**
-     * 解析 thistype 类型
-     * 在结构内部，thistype 等同于结构名
+     * 解析 thistype 为当前结构体名称
+     * 在结构内部，thistype 等同于该结构的名称；在 module 内分析时无当前 struct，返回 null
+     * @param _expr 保留以兼容调用方，解析仅依赖当前作用域栈中的「当前结构体」
      */
-    private resolveThistype(expr: Expression): string | null {
-        // 查找包含该表达式的结构作用域
-        for (let i = this.scopeStack.length - 1; i >= 0; i--) {
-            const scope = this.scopeStack[i];
-            if (scope.type === "struct") {
-                return scope.name;
-            }
-        }
-        return null;
+    private resolveThistype(_expr?: Expression): string | null {
+        return this.getCurrentStructName();
     }
 
     /**
@@ -4545,18 +4599,22 @@ export class SemanticAnalyzer {
         // 检查返回值的类型是否匹配
         const actualReturnType = node.argument.getType();
         if (actualReturnType) {
-            // 处理 thistype 类型
+            // thistype 指向当前结构体（文档：在结构内部等同于该结构的名称）
             let resolvedExpectedType = expectedReturnType;
-            if (expectedReturnType === "thistype" && node.argument instanceof ThistypeExpression) {
-                const resolvedType = this.resolveThistype(node.argument);
-                if (resolvedType) {
-                    resolvedExpectedType = resolvedType;
+            if (expectedReturnType === "thistype") {
+                const currentStruct = this.getCurrentStructName();
+                if (currentStruct) {
+                    resolvedExpectedType = currentStruct;
                 }
             }
 
             // null 可合法作为 handle 类型返回值，不报错
             if (actualReturnType !== resolvedExpectedType &&
                 !this.isTypeCompatible(actualReturnType, resolvedExpectedType, node.argument)) {
+                // returns thistype 时，JassHelper 编译后 struct 实例即整数索引，return 0（表示 null 实例）或 return 索引变量 为常见写法，不在此处报错
+                if (expectedReturnType === "thistype" && actualReturnType === "integer") {
+                    return;
+                }
                 this.addError(
                     node.argument.start,
                     node.argument.end,

@@ -7,6 +7,7 @@ export enum TokenType {
     KeywordElse = "ELSE",
     KeywordElseif = "ELSEIF",
     keywordEndif = "ENDIF",
+    KeywordThen = "THEN",
     keywordLoop = "LOOP",
     keywordEndloop = "ENDLOOP",
     keywordExitwhen = "EXITWHEN",
@@ -139,6 +140,7 @@ export class Token implements IToken {
         "else",
         "elseif",
         "endif",
+        "then",
         "loop",
         "endloop",
         "exitwhen",
@@ -932,9 +934,10 @@ export class Lexer implements ILexer {
             TokenType.KeywordElse,            // 3: else
             TokenType.KeywordElseif,          // 4: elseif
             TokenType.keywordEndif,           // 5: endif
-            TokenType.keywordLoop,            // 6: loop
-            TokenType.keywordEndloop,         // 7: endloop
-            TokenType.keywordExitwhen,        // 8: exitwhen
+            TokenType.KeywordThen,            // 6: then
+            TokenType.keywordLoop,            // 7: loop
+            TokenType.keywordEndloop,         // 8: endloop
+            TokenType.keywordExitwhen,        // 9: exitwhen
             TokenType.keywordSet,             // 9: set
             TokenType.keywordCall,            // 10: call
             TokenType.keywordReturn,          // 11: return
@@ -949,30 +952,30 @@ export class Lexer implements ILexer {
             TokenType.keywordEndglobals,      // 20: endglobals
         ];
 
-        // 类型关键字（索引 21-26）
-        if (index >= 21 && index <= 26) {
+        // 类型关键字（索引 22-27，因 TokenTexts 中 then 占 6）
+        if (index >= 22 && index <= 27) {
             const typeKeywords: TokenType[] = [
-                TokenType.TypeInteger,        // 21: integer
-                TokenType.TypeReal,           // 22: real
-                TokenType.TypeString,         // 23: string
-                TokenType.TypeBoolean,        // 24: boolean
-                TokenType.TypeCode,           // 25: code
-                TokenType.TypeHandle,         // 26: handle
+                TokenType.TypeInteger,        // 22: integer
+                TokenType.TypeReal,           // 23: real
+                TokenType.TypeString,         // 24: string
+                TokenType.TypeBoolean,        // 25: boolean
+                TokenType.TypeCode,           // 26: code
+                TokenType.TypeHandle,         // 27: handle
             ];
-            return typeKeywords[index - 21];
+            return typeKeywords[index - 22];
         }
 
-        // key 类型关键字（索引 199）
-        if (index === 199) return TokenType.TypeKey; // key
+        // key 类型关键字（TokenTexts 中插入 then 后索引 +1）
+        if (index === 200) return TokenType.TypeKey; // key
 
-        // 逻辑运算符（索引 27-29）
-        if (index === 27) return TokenType.OperatorLogicalAnd; // and
-        if (index === 28) return TokenType.OperatorLogicalOr; // or
-        if (index === 29) return TokenType.OperatorLogicalNot; // not
+        // 逻辑运算符（索引 28-30，因 then 占 6）
+        if (index === 28) return TokenType.OperatorLogicalAnd; // and
+        if (index === 29) return TokenType.OperatorLogicalOr; // or
+        if (index === 30) return TokenType.OperatorLogicalNot; // not
 
-        // 布尔字面量（索引 30-31）
-        if (index === 30) return TokenType.BooleanLiteral; // true
-        if (index === 31) return TokenType.BooleanLiteral; // false
+        // 布尔字面量（索引 31-32）
+        if (index === 31) return TokenType.BooleanLiteral; // true
+        if (index === 32) return TokenType.BooleanLiteral; // false
 
         // 基本关键字（索引 0-20）
         if (index < basicKeywords.length) {

@@ -116,24 +116,24 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
             }
             // 处理 AssignmentStatement（set 语句）
             else if (stmt instanceof AssignmentStatement) {
-                this.processAssignmentExpression(stmt, document, hints, filePath, range);
+                this.processAssignmentExpression(stmt, document, hints, filePath, range, token);
             }
             // 处理 ReturnStatement（return 语句）
             else if (stmt instanceof ReturnStatement) {
                 if (stmt.argument) {
                     // 处理 return 表达式中的调用
-                    this.processExpression(stmt.argument, document, hints, filePath, range);
+                    this.processExpression(stmt.argument, document, hints, filePath, range, token);
                 }
             }
             // 处理 ExitWhenStatement（exitwhen 语句）
             else if (stmt instanceof ExitWhenStatement) {
                 // 处理 exitwhen 条件中的调用
-                this.processExpression(stmt.condition, document, hints, filePath, range);
+                this.processExpression(stmt.condition, document, hints, filePath, range, token);
             }
             // 处理 IfStatement（if/elseif 语句）
             else if (stmt instanceof IfStatement) {
                 // 处理 if 条件中的调用
-                this.processExpression(stmt.condition, document, hints, filePath, range);
+                this.processExpression(stmt.condition, document, hints, filePath, range, token);
                 // 递归处理 then 分支
                 if (stmt.consequent instanceof BlockStatement) {
                     this.extractHintsFromBlock(stmt.consequent, document, hints, filePath, range, token);
@@ -159,7 +159,7 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
             else if (stmt instanceof VariableDeclaration) {
                 if (stmt.initializer) {
                     // 处理 local 变量初始化表达式中的调用
-                    this.processExpression(stmt.initializer, document, hints, filePath, range);
+                    this.processExpression(stmt.initializer, document, hints, filePath, range, token);
                 }
             }
             // 递归处理嵌套的 BlockStatement
@@ -184,6 +184,13 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                     }
                 }
             }
+            // 处理 scope/library：递归其 members，否则内部的 call 等不会产生 hint
+            else if (stmt instanceof ScopeDeclaration) {
+                this.extractHintsFromBlock(new BlockStatement(stmt.members), document, hints, filePath, range, token);
+            }
+            else if (stmt instanceof LibraryDeclaration) {
+                this.extractHintsFromBlock(new BlockStatement(stmt.members), document, hints, filePath, range, token);
+            }
             // 处理其他语句（可能包含表达式）
             else {
                 this.processStatement(stmt, document, hints, filePath, range, token);
@@ -207,32 +214,32 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         }
         // 递归处理语句中的表达式
         if (stmt instanceof IfStatement) {
-            this.processExpression(stmt.condition, document, hints, filePath, range);
+            this.processExpression(stmt.condition, document, hints, filePath, range, token);
             if (stmt.consequent instanceof BlockStatement) {
-                this.extractHintsFromBlock(stmt.consequent, document, hints, filePath);
+                this.extractHintsFromBlock(stmt.consequent, document, hints, filePath, range, token);
             } else {
-                this.processStatement(stmt.consequent, document, hints, filePath);
+                this.processStatement(stmt.consequent, document, hints, filePath, range, token);
             }
             if (stmt.alternate) {
                 if (stmt.alternate instanceof BlockStatement) {
-                    this.extractHintsFromBlock(stmt.alternate, document, hints, filePath);
+                    this.extractHintsFromBlock(stmt.alternate, document, hints, filePath, range, token);
                 } else if (stmt.alternate instanceof IfStatement) {
-                    this.processStatement(stmt.alternate, document, hints, filePath);
+                    this.processStatement(stmt.alternate, document, hints, filePath, range, token);
                 }
             }
         } else if (stmt instanceof ExitWhenStatement) {
-            this.processExpression(stmt.condition, document, hints, filePath, range);
+            this.processExpression(stmt.condition, document, hints, filePath, range, token);
         } else if (stmt instanceof ReturnStatement) {
             if (stmt.argument) {
-                this.processExpression(stmt.argument, document, hints, filePath, range);
+                this.processExpression(stmt.argument, document, hints, filePath, range, token);
             }
         } else if (stmt instanceof AssignmentStatement) {
-            this.processAssignmentExpression(stmt, document, hints, filePath, range);
+            this.processAssignmentExpression(stmt, document, hints, filePath, range, token);
         } else if (stmt instanceof CallStatement) {
             this.processCallExpression(stmt.expression, document, hints, filePath, range);
         } else if (stmt instanceof VariableDeclaration) {
             if (stmt.initializer) {
-                this.processExpression(stmt.initializer, document, hints, filePath, range);
+                this.processExpression(stmt.initializer, document, hints, filePath, range, token);
             }
         } else if (stmt instanceof LoopStatement) {
             this.extractHintsFromBlock(stmt.body, document, hints, filePath, range, token);
@@ -592,8 +599,12 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
         document: vscode.TextDocument,
         hints: vscode.InlayHint[],
         filePath: string,
-        range?: vscode.Range
+        range?: vscode.Range,
+        token?: vscode.CancellationToken
     ): void {
+        if (token?.isCancellationRequested) {
+            return;
+        }
         // 获取赋值目标的类型
         let targetType: string | null = null;
         let varName = 'variable';
@@ -626,16 +637,19 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
             }
         } else if (assignment.target instanceof BinaryExpression && 
                    assignment.target.operator === OperatorType.Index) {
-            // 数组访问：set arr[i] = value
+            // 数组访问：set arr[i] = value（TODO: 若有“数组 of T”类型信息，可在此显示元素类型）
             // 处理数组下标中的调用
-            this.processExpression(assignment.target.right, document, hints, filePath, range);
+            this.processExpression(assignment.target.right, document, hints, filePath, range, token);
             // 处理数组名中的调用（虽然不太可能，但为了完整性）
-            this.processExpression(assignment.target.left, document, hints, filePath, range);
+            this.processExpression(assignment.target.left, document, hints, filePath, range, token);
         }
 
         // 处理赋值表达式中的调用（value 部分）
-        this.processExpression(assignment.value, document, hints, filePath, range);
+        this.processExpression(assignment.value, document, hints, filePath, range, token);
 
+        if (token?.isCancellationRequested) {
+            return;
+        }
         // 如果目标类型存在，在赋值目标后显示类型提示
         if (targetType) {
             const pos = this.getExpressionEndPosition(assignment.target, document);
@@ -786,6 +800,11 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 if (nestedFunc) {
                     return nestedFunc;
                 }
+            } else if (stmt instanceof ScopeDeclaration || stmt instanceof LibraryDeclaration) {
+                const nestedFunc = this.findContainingFunction(new BlockStatement(stmt.members), position);
+                if (nestedFunc) {
+                    return nestedFunc;
+                }
             }
         }
         return null;
@@ -826,6 +845,11 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 }
             } else if (stmt instanceof BlockStatement) {
                 const nestedMethod = this.findContainingMethod(stmt, position);
+                if (nestedMethod) {
+                    return nestedMethod;
+                }
+            } else if (stmt instanceof ScopeDeclaration || stmt instanceof LibraryDeclaration) {
+                const nestedMethod = this.findContainingMethod(new BlockStatement(stmt.members), position);
                 if (nestedMethod) {
                     return nestedMethod;
                 }
@@ -1466,6 +1490,11 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 if (nestedStruct) {
                     return nestedStruct;
                 }
+            } else if (stmt instanceof ScopeDeclaration || stmt instanceof LibraryDeclaration) {
+                const nestedStruct = this.findContainingStructInBlock(new BlockStatement(stmt.members), position);
+                if (nestedStruct) {
+                    return nestedStruct;
+                }
             }
         }
         return null;
@@ -1564,6 +1593,11 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 if (found) {
                     return found;
                 }
+            } else if (stmt instanceof ScopeDeclaration || stmt instanceof LibraryDeclaration) {
+                const found = this.findStructInBlock(new BlockStatement(stmt.members), structName);
+                if (found) {
+                    return found;
+                }
             }
         }
         return null;
@@ -1583,6 +1617,11 @@ export class InlayHintsProvider implements vscode.InlayHintsProvider {
                 }
             } else if (stmt instanceof BlockStatement) {
                 const found = this.findInterfaceInBlock(stmt, interfaceName);
+                if (found) {
+                    return found;
+                }
+            } else if (stmt instanceof ScopeDeclaration || stmt instanceof LibraryDeclaration) {
+                const found = this.findInterfaceInBlock(new BlockStatement(stmt.members), interfaceName);
                 if (found) {
                     return found;
                 }

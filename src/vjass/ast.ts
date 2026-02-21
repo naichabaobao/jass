@@ -992,11 +992,18 @@ class TypecastExpression extends Expression {
  */
 class BlockStatement extends Statement {
     public body: Statement[];
-    
-    constructor(statements: Statement[] = [], start?: { line: number, position: number }, end?: { line: number, position: number }) {
+    /** 由 runtextmacro 展开得到的块，其内可能含未替换的占位符如 $TYPE$，类型检查时按 textmacro 作用域处理 */
+    public readonly fromTextMacroExpansion?: boolean;
+
+    constructor(
+        statements: Statement[] = [],
+        start?: { line: number, position: number },
+        end?: { line: number, position: number },
+        fromTextMacroExpansion?: boolean
+    ) {
         super(start, end);
         this.body = statements;
-        
+        this.fromTextMacroExpansion = fromTextMacroExpansion;
         statements.forEach(stmt => this.addChild(stmt));
     }
     

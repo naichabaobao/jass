@@ -1,4 +1,5 @@
 #### 1.9.7
+- 数组结构（extends array）误报修复：允许静态数组成员与静态成员默认值；修复 `private static integer array xxx` 等成员解析，不再误报「cannot have array members」「cannot have default values」
 - 类型查询优先级：类型语法检查按顺序解析——基本类型 → type 声明 → struct/interface → function interface → vjass type（见 docs/type-system.md）
 - 新增 function interface 符号：收集 `function interface Name takes ... returns ...`，参与类型合法性判断
 - 类型解析测试与调试：新增 `npm run test:type` 仅跑 type/thistype 相关测试，支持 `DEBUG_TYPE=1` 打印失败代码片段；文档补充 type 解析测试说明
