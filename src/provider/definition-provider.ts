@@ -611,14 +611,13 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
             return;
         }
 
-        // 添加参数的定义
+        // 添加参数的定义（含 takes 行内的参数名跳转到自身声明位置）
         if (funcOrMethod instanceof FunctionDeclaration) {
             for (const param of funcOrMethod.parameters) {
                 if (param.name && param.name.name === symbolName) {
                     this.addLocation(param.name, filePath, locations);
                 }
             }
-            // 在函数体中查找局部变量
             if (funcOrMethod.body) {
                 this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, locations);
             }
@@ -628,60 +627,66 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
                     this.addLocation(param.name, filePath, locations);
                 }
             }
-            // 在方法体中查找局部变量
             if (funcOrMethod.body) {
                 this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, locations);
+            }
+        } else if (funcOrMethod instanceof NativeDeclaration) {
+            for (const param of funcOrMethod.parameters) {
+                if (param.name && param.name.name === symbolName) {
+                    this.addLocation(param.name, filePath, locations);
+                }
             }
         }
     }
 
     /**
-     * 查找包含指定位置的函数或方法
-     * 参数在整个函数范围内都可用（包括函数声明行和函数体）
+     * 查找包含指定位置的函数、方法或 native（含 takes 声明行），用于参数跳转定义
+     * 会递归进入 library/scope/struct，使 takes 行内的参数也能跳转
      */
     private findContainingFunctionOrMethod(
         block: BlockStatement,
         position: vscode.Position
-    ): FunctionDeclaration | MethodDeclaration | null {
-        for (const stmt of block.body) {
+    ): FunctionDeclaration | MethodDeclaration | NativeDeclaration | null {
+        return this.findContainingCallableInStatements(block.body, position);
+    }
+
+    private findContainingCallableInStatements(
+        statements: Statement[],
+        position: vscode.Position
+    ): FunctionDeclaration | MethodDeclaration | NativeDeclaration | null {
+        for (const stmt of statements) {
             if (stmt instanceof FunctionDeclaration) {
-                // 检查位置是否在整个函数范围内（包括函数声明行和函数体）
                 if (stmt.start && stmt.end) {
-                    const funcStartLine = stmt.start.line;
-                    const funcEndLine = stmt.end.line;
-                    
-                    // 位置在函数开始行和结束行之间（包括结束行）
-                    // 允许位置在结束行的下一行（容错处理）
-                    if (position.line >= funcStartLine && position.line <= funcEndLine + 1) {
+                    if (position.line >= stmt.start.line && position.line <= stmt.end.line + 1) {
                         return stmt;
                     }
-                }
-                // 如果没有位置信息，也检查函数体范围（作为补充）
-                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                } else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
                     return stmt;
                 }
             } else if (stmt instanceof MethodDeclaration) {
-                // 检查位置是否在整个方法范围内（包括方法声明行和方法体）
                 if (stmt.start && stmt.end) {
-                    const methodStartLine = stmt.start.line;
-                    const methodEndLine = stmt.end.line;
-                    
-                    // 位置在方法开始行和结束行之间（包括结束行）
-                    // 允许位置在结束行的下一行（容错处理）
-                    if (position.line >= methodStartLine && position.line <= methodEndLine + 1) {
+                    if (position.line >= stmt.start.line && position.line <= stmt.end.line + 1) {
                         return stmt;
                     }
-                }
-                // 如果没有位置信息，也检查方法体范围（作为补充）
-                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                } else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
                     return stmt;
                 }
-            } else if (stmt instanceof BlockStatement) {
-                // 递归查找嵌套块
-                const nested = this.findContainingFunctionOrMethod(stmt, position);
-                if (nested) {
-                    return nested;
+            } else if (stmt instanceof NativeDeclaration) {
+                if (stmt.start && stmt.end && this.isPositionInRange(position, stmt.start, stmt.end)) {
+                    return stmt;
                 }
+            } else if (stmt instanceof LibraryDeclaration) {
+                const nested = this.findContainingCallableInStatements(stmt.members, position);
+                if (nested) return nested;
+            } else if (stmt instanceof ScopeDeclaration) {
+                const nested = this.findContainingCallableInStatements(stmt.members, position);
+                if (nested) return nested;
+            } else if (stmt instanceof StructDeclaration) {
+                const nested = this.findContainingCallableInStatements(stmt.members, position);
+                if (nested) return nested;
+            } else if (stmt instanceof BlockStatement) {
+                const nested = this.findContainingCallableInStatements(stmt.body, position);
+                if (nested) return nested;
             }
         }
         return null;

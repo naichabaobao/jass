@@ -63,9 +63,21 @@ const SymbolType = {
  * 运行方式：
  * node -e "const { runAnalyzerTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTests();"
  * ts-node ./src/vjass/analyzer.test.ts
+ *
+ * 仅运行 type 解析相关测试（调试用）：
+ * npm run test:type
+ * DEBUG_TYPE=1 npm run test:type   # 失败时打印代码片段
  */
-export function runAnalyzerTests(): void {
+export type AnalyzerTestOptions = {
+    /** 仅运行名称匹配的测试（用于 type 解析调试） */
+    nameFilter?: (name: string) => boolean;
+};
+
+export function runAnalyzerTests(runOptions?: AnalyzerTestOptions): void {
+    const nameFilter = runOptions?.nameFilter;
+    const debugType = typeof process !== "undefined" && process.env["DEBUG_TYPE"] === "1";
     console.log("\n========== vJass 语义分析器测试套件 ==========\n");
+    if (nameFilter) console.log("(仅运行与 type/thistype 相关的测试)\n");
 
     let totalPassed = 0;
     let totalFailed = 0;
@@ -79,6 +91,8 @@ export function runAnalyzerTests(): void {
         validator: (errors: ErrorCollection, parser: Parser) => boolean,
         options?: SemanticAnalyzerOptions
     ): boolean {
+        if (nameFilter && !nameFilter(name)) return true; // 跳过不计入
+
         try {
             const parser = new Parser(code);
             const ast = parser.parse();
@@ -87,6 +101,7 @@ export function runAnalyzerTests(): void {
             if (parser.errors.errors.length > 0 && !validator(parser.errors, parser)) {
                 console.log(`✗ ${name} (解析错误)`);
                 console.log(`  解析错误: ${parser.errors.errors.map(e => e.message).join(", ")}`);
+                if (debugType) console.log(`  代码片段:\n${code.split("\n").slice(0, 8).join("\n")}`);
                 totalFailed++;
                 return false;
             }
@@ -108,12 +123,14 @@ export function runAnalyzerTests(): void {
                 if (result.checkValidationErrors && result.checkValidationErrors.length > 0) {
                     console.log(`  检查错误: ${result.checkValidationErrors.map(e => e.message).join(", ")}`);
                 }
+                if (debugType) console.log(`  代码片段:\n${code.split("\n").slice(0, 12).join("\n")}`);
                 totalFailed++;
             }
             return success;
         } catch (error) {
             console.log(`✗ ${name} (异常)`);
             console.log(`  异常: ${error instanceof Error ? error.message : String(error)}`);
+            if (debugType) console.log(`  代码片段:\n${code.split("\n").slice(0, 8).join("\n")}`);
             totalFailed++;
             return false;
         }
@@ -560,6 +577,35 @@ endfunction`,
                 e.message.includes("return") || 
                 e.message.includes("返回值")
             );
+        }
+    );
+
+    testSemantic(
+        "then 分支为嵌套 if 且所有路径都有返回值（常见 BJ 风格）",
+        `function TriggerRegisterPlayerKeyEventBJ takes trigger trig, player whichPlayer, integer keType, integer keKey returns event
+if keType == 0 then
+    if keKey == 1 then
+        return null
+    elseif keKey == 2 then
+        return null
+    else
+        return null
+    endif
+elseif keType == 1 then
+    if keKey == 1 then
+        return null
+    else
+        return null
+    endif
+else
+    return null
+endif
+endfunction`,
+        (errors) => {
+            const hasReturnError = errors.errors.some(e =>
+                e.message.includes("not all code paths return") || e.message.includes("路径")
+            );
+            return !hasReturnError && errors.errors.length === 0;
         }
     );
 
@@ -1325,6 +1371,21 @@ endfunction`,
         }
     );
 
+    testSemantic(
+        "returns string 且 return 为字符串拼接（函数调用 +）不应误报为 integer",
+        `native GetLocalizedString takes string source returns string
+native GetPlayerName takes player p returns string
+function MeleeGetCrippledRevealedMessage takes player whichPlayer returns string
+    return GetLocalizedString("PREFIX") + GetPlayerName(whichPlayer) + GetLocalizedString("POSTFIX")
+endfunction`,
+        (errors) => {
+            const bad = errors.errors.some(e =>
+                e.message.includes("Return type") && e.message.includes("integer") && e.message.includes("string")
+            );
+            return !bad && errors.errors.length === 0;
+        }
+    );
+
     // ========== 测试 30: 未声明变量检查 ==========
     console.log("\n【测试 30】未声明变量检查");
 
@@ -1998,5 +2059,14 @@ endfunction`,
     console.log("=============================\n");
 }
 
-// 函数已经在上面通过 export function 导出了
-runAnalyzerTests();
+/** 仅运行与 type 解析 / thistype / handle 类型相关的测试，便于调试 type 解析 */
+export function runAnalyzerTypeTests(): void {
+    runAnalyzerTests({
+        nameFilter: (name) => /thistype|handle.*类型|类型兼容|extends/i.test(name),
+    });
+}
+
+// 直接运行本文件时执行完整测试套件；通过 require 调用 runAnalyzerTypeTests() 时不会先跑全量
+if (typeof require !== "undefined" && require.main === module) {
+    runAnalyzerTests();
+}

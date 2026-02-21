@@ -4,7 +4,7 @@
   "description": "完整的 JASS/vJass/Zinc 语言支持，包括语法高亮、代码补全、跳转定义、悬停提示、错误诊断、代码格式化等功能。支持 vJass 的库、结构、接口、模块、委托等特性，以及 Zinc 的 C-like 语法。QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.9.6",
+  "version": "1.9.7",
   "keywords": [
     "jass",
     "vjass",
@@ -58,7 +58,7 @@
         },
         "jass.hint": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "(Test) Enable hint support for function parameters and method calls. This is an experimental feature."
         }
       }
@@ -147,6 +147,10 @@
     "compile": "tsc  -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
+    "test": "npm run test:parser && npm run test:analyzer",
+    "test:parser": "node out/vjass/parser.test.js",
+    "test:analyzer": "node -e \"const { runAnalyzerTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTests();\"",
+    "test:type": "node -e \"const { runAnalyzerTypeTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTypeTests();\"",
     "package": "vsce package",
     "publish:skip-duplicate": "vsce publish --skip-duplicate",
     "publish": "vsce publish",

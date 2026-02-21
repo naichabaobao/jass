@@ -4,6 +4,7 @@ import {
     Expression,
     BlockStatement,
     FunctionDeclaration,
+    FunctionInterfaceDeclaration,
     NativeDeclaration,
     StructDeclaration,
     InterfaceDeclaration,
@@ -75,8 +76,10 @@ enum SymbolType {
     SCOPE = "scope",
     /** 模块 */
     MODULE = "module",
-    /** 类型 */
+    /** 类型（type X extends Y） */
     TYPE = "type",
+    /** 函数接口（function interface Name takes ... returns ...） */
+    FUNCTION_INTERFACE = "function_interface",
     /** 方法 */
     METHOD = "method",
     /** 静态成员 */
@@ -174,6 +177,39 @@ interface ObjectTypeInfo {
     /** 是否是接口类型 */
     isInterface: boolean;
 }
+
+/**
+ * common.j / Blizzard.j 中「未在当前工程声明」时的 handle 类型名回退集合。
+ * 仅当类型未在符号表/外部符号表中声明时使用，用于单独解析 blizzard.j 时避免误报。
+ * 自定义 type XXX extends integer array [5] 等会走符号表解析，不会误判为 handle。
+ */
+const FALLBACK_HANDLE_TYPE_NAMES = new Set([
+    "handle", "unit", "item", "location", "trigger", "timer", "effect", "group", "force",
+    "player", "widget", "destructable", "fogmodifier", "hashtable", "rect", "region",
+    "sound", "texttag", "lightning", "image", "ubersplat", "multiboard", "multiboarditem",
+    "trackable", "dialog", "button", "quest", "questitem", "defeatcondition", "timerdialog",
+    "leaderboard", "boarditem", "gamecache", "unitpool", "itempool", "triggercondition",
+    "triggeraction", "boolexpr", "conditionfunc", "filterfunc", "code", "event",
+    "playerunitevent", "unitevent", "limitop", "oplimit", "eventid", "gameevent",
+    "playerevent", "widgetevent", "dialogevent", "unitstate", "aidifficulty",
+    "gamedifficulty", "gametype", "mapflag", "mapvisibility", "mapsetting", "mapdensity",
+    "playerslotstate", "volumegroup", "camerafield", "camerasetup", "playercolor",
+    "placement", "startlocprio", "raritycontrol", "igamestate", "fgamestate", "gamestate",
+    "playerstate", "playerscore", "playergameresult", "gamespeed", "mapcontrol",
+    "itemtype", "weathereffect", "terraindeformation", "minimapicon", "commandbuttoneffect",
+    "race", "racepreference", "version", "effecttype", "soundtype", "pathingtype", "fogstate",
+    "ability", "buff", "agent", "attacktype", "damagetype", "unittype", "alliancetype",
+    "blendmode", "texmapflags", "mousebuttontype", "animtype", "subanimtype",
+    "framehandle", "originframetype", "framepointtype", "textaligntype", "frameeventtype", "oskeytype",
+    "movetype", "targetflag", "armortype", "heroattribute", "defensetype", "regentype",
+    "unitcategory", "pathingflag",
+    "abilitybooleanfield", "abilityintegerfield", "abilityrealfield", "abilitystringfield",
+    "abilitybooleanlevelfield", "abilityintegerlevelfield", "abilityreallevelfield", "abilitystringlevelfield",
+    "abilitybooleanlevelarrayfield", "abilityintegerlevelarrayfield", "abilityreallevelarrayfield", "abilitystringlevelarrayfield",
+    "itembooleanfield", "itemintegerfield", "itemrealfield", "itemstringfield",
+    "unitbooleanfield", "unitintegerfield", "unitrealfield", "unitstringfield",
+    "unitweaponbooleanfield", "unitweaponintegerfield", "unitweaponrealfield", "unitweaponstringfield"
+]);
 
 /**
  * vJass 语义分析器
@@ -343,6 +379,8 @@ export class SemanticAnalyzer {
             this.collectNative(node);
         } else if (node instanceof TypeDeclaration) {
             this.collectType(node);
+        } else if (node instanceof FunctionInterfaceDeclaration) {
+            this.collectFunctionInterface(node);
         } else if (node instanceof ModuleDeclaration) {
             this.collectModule(node);
         } else if (node instanceof HookStatement) {
@@ -1213,6 +1251,33 @@ export class SemanticAnalyzer {
             isPublic: true,
             scope: currentScope.name || undefined,
             valueType: node.baseType.name
+        });
+    }
+
+    /**
+     * 收集函数接口声明（function interface Name takes ... returns ...）
+     * 类型查询优先级：基本类型 -> type -> struct/interface -> function interface -> vjass type
+     */
+    private collectFunctionInterface(node: FunctionInterfaceDeclaration): void {
+        if (!node.name) return;
+        const name = node.name.name;
+        const currentScope = this.scopeStack[this.scopeStack.length - 1];
+        if (currentScope.symbols.has(name)) {
+            this.addError(
+                node.start,
+                node.end,
+                `Function interface '${name}' is already declared`,
+                `Remove duplicate declaration or rename it`
+            );
+            return;
+        }
+        currentScope.symbols.set(name, {
+            name,
+            type: SymbolType.FUNCTION_INTERFACE,
+            node,
+            isPrivate: false,
+            isPublic: true,
+            scope: currentScope.name || undefined
         });
     }
 
@@ -3125,6 +3190,11 @@ export class SemanticAnalyzer {
      * @returns 是否兼容
      */
     private isTypeCompatible(actualType: string, expectedType: string, contextExpr?: Expression): boolean {
+        // null 可赋值给任意 handle 类型（JASS 语义）
+        if (actualType === "null" && this.isHandleType(expectedType)) {
+            return true;
+        }
+
         // 基本类型兼容性规则
         // integer 和 real 在某些情况下可以兼容
         if ((actualType === "integer" && expectedType === "real") ||
@@ -3138,30 +3208,8 @@ export class SemanticAnalyzer {
             return false;
         }
 
-        // handle 类型兼容性规则
-        // handle 是基类，所有 handle 子类型都可以传递给 handle 参数
-        // 常见的 handle 子类型包括：unit, item, location, trigger, timer, effect, group, force, 
-        // player, widget, destructable, fogmodifier, hashtable, rect, region, sound, texttag, 
-        // lightning, image, ubersplat, multiboard, multiboarditem, trackable, dialog, button, 
-        // quest, questitem, defeatcondition, timerdialog, leaderboard, boarditem, gamecache, 
-        // unitpool, itempool, triggercondition, triggeraction, boolexpr, conditionfunc, 
-        // filterfunc, code, event 等
-        const handleSubtypes = new Set([
-            "unit", "item", "location", "trigger", "timer", "effect", "group", "force", 
-            "player", "widget", "destructable", "fogmodifier", "hashtable", "rect", "region", 
-            "sound", "texttag", "lightning", "image", "ubersplat", "multiboard", "multiboarditem", 
-            "trackable", "dialog", "button", "quest", "questitem", "defeatcondition", "timerdialog", 
-            "leaderboard", "boarditem", "gamecache", "unitpool", "itempool", "triggercondition", 
-            "triggeraction", "boolexpr", "conditionfunc", "filterfunc", "code", "event", 
-            "playerunitevent", "unitevent", "limitop", "oplimit", "eventid", "gameevent", 
-            "playerevent", "widgetevent", "dialogevent", "unitstate", "aidifficulty", 
-            "gamedifficulty", "gametype", "mapflag", "mapvisibility", "playerslotstate", 
-            "volumegroup", "camerafield", "camerasetup", "playercolor", "placement", "startlocprio", 
-            "igamestate", "fgamestate", "playerstate", "playerscore", "playergameresult"
-        ]);
-        
-        // 如果 actualType 是 handle 的子类型，expectedType 是 handle，则兼容
-        if (handleSubtypes.has(actualType.toLowerCase()) && expectedType.toLowerCase() === "handle") {
+        // handle 类型兼容性规则：handle 是基类，所有解析到 handle 的类型都可传递给 handle 参数
+        if (this.isHandleType(actualType) && expectedType.toLowerCase() === "handle") {
             return true;
         }
 
@@ -3264,75 +3312,82 @@ export class SemanticAnalyzer {
     }
 
     /**
+     * 沿 type X extends Y 解析到根类型（JASS/vJASS 类型体系统一）
+     * 例如：type race extends handle → handle；type xxx extends integer array [5] → integer
+     * @param typeName 类型名
+     * @param visited 已访问集合，用于防止循环 type 定义
+     * @returns 根类型名
+     */
+    private resolveTypeRoot(typeName: string, visited: Set<string> = new Set()): string {
+        if (!typeName) return typeName;
+        const key = typeName.toLowerCase();
+        if (visited.has(key)) return typeName;
+        visited.add(key);
+
+        const typeSymbol = this.findSymbol(typeName, SymbolType.TYPE);
+        if (typeSymbol?.valueType) {
+            return this.resolveTypeRoot(typeSymbol.valueType, visited);
+        }
+        const external = this.externalSymbols.get(typeName);
+        if (external?.type === SymbolType.TYPE && external.valueType) {
+            return this.resolveTypeRoot(external.valueType, visited);
+        }
+        return typeName;
+    }
+
+    /**
      * 检查类型是否是 handle 类型（可能为 null）
-     * @param type 类型名称
-     * @returns 是否是 handle 类型
+     * 先按 type 声明链解析到根类型；仅当类型未声明时使用 FALLBACK_HANDLE_TYPE_NAMES（如单独解析 blizzard.j）
      */
     private isHandleType(type: string): boolean {
-        if (!type) {
-            return false;
+        if (!type) return false;
+        const root = this.resolveTypeRoot(type);
+        if (root.toLowerCase() === "handle") return true;
+        // 未在符号表中解析到的类型（如 common.j 的 race、effecttype）单独解析时用回退集合
+        if (root === type && !this.findSymbol(type, SymbolType.TYPE) && !this.externalSymbols.has(type)) {
+            return FALLBACK_HANDLE_TYPE_NAMES.has(type.toLowerCase());
         }
-        
-        const handleSubtypes = new Set([
-            "handle", "unit", "item", "location", "trigger", "timer", "effect", "group", "force", 
-            "player", "widget", "destructable", "fogmodifier", "hashtable", "rect", "region", 
-            "sound", "texttag", "lightning", "image", "ubersplat", "multiboard", "multiboarditem", 
-            "trackable", "dialog", "button", "quest", "questitem", "defeatcondition", "timerdialog", 
-            "leaderboard", "boarditem", "gamecache", "unitpool", "itempool", "triggercondition", 
-            "triggeraction", "boolexpr", "conditionfunc", "filterfunc", "code", "event", 
-            "playerunitevent", "unitevent", "limitop", "oplimit", "eventid", "gameevent", 
-            "playerevent", "widgetevent", "dialogevent", "unitstate", "aidifficulty", 
-            "gamedifficulty", "gametype", "mapflag", "mapvisibility", "playerslotstate", 
-            "volumegroup", "camerafield", "camerasetup", "playercolor", "placement", "startlocprio", 
-            "igamestate", "fgamestate", "playerstate", "playerscore", "playergameresult"
-        ]);
-        
-        return handleSubtypes.has(type.toLowerCase());
+        return false;
     }
 
     /**
      * 检查类型是否有效
+     * 类型查询优先级：1. 基本类型 2. type 声明 3. struct/interface 4. function interface 5. vjass type（外部符号、handle 回退）
      * @param type 类型名称
      * @param typeNode 类型节点（用于错误报告）
      * @returns 类型是否有效
      */
     private isValidType(type: string | null, typeNode?: Identifier | ThistypeExpression): boolean {
-        if (!type) {
-            return false;
-        }
+        if (!type) return false;
 
-        // 基本类型
         const basicTypes = new Set([
             "integer", "real", "string", "boolean", "code", "handle", "key", "nothing", "thistype"
         ]);
-        
-        if (basicTypes.has(type.toLowerCase())) {
-            return true;
-        }
 
-        // 检查是否是 handle 子类型（这些也是有效的）
-        if (this.isHandleType(type)) {
-            return true;
-        }
+        // 1. 基本类型优先（JASS 六种 + key/nothing/thistype）
+        if (basicTypes.has(type.toLowerCase())) return true;
 
-        // 检查是否是自定义类型（struct, interface, type）
-        const symbol = this.findSymbol(type, SymbolType.STRUCT) || 
-                      this.findSymbol(type, SymbolType.INTERFACE) ||
-                      this.findSymbol(type, SymbolType.TYPE);
-        
-        if (symbol) {
-            return true;
-        }
+        // 2. type 声明（type X extends Y）
+        if (this.findSymbol(type, SymbolType.TYPE)) return true;
 
-        // 检查外部符号表
-        if (this.externalSymbols.has(type)) {
-            const externalSymbol = this.externalSymbols.get(type)!;
-            if (externalSymbol.type === SymbolType.STRUCT || 
-                externalSymbol.type === SymbolType.INTERFACE ||
-                externalSymbol.type === SymbolType.TYPE) {
-                return true;
-            }
-        }
+        // 3. struct, interface
+        if (this.findSymbol(type, SymbolType.STRUCT)) return true;
+        if (this.findSymbol(type, SymbolType.INTERFACE)) return true;
+
+        // 4. function interface
+        if (this.findSymbol(type, SymbolType.FUNCTION_INTERFACE)) return true;
+
+        // 5. vjass type：type 链解析到根类型、handle 子类型及回退、外部符号表
+        const root = this.resolveTypeRoot(type);
+        if (basicTypes.has(root.toLowerCase())) return true;
+        if (this.isHandleType(type)) return true;
+        const ext = this.externalSymbols.get(type);
+        if (ext && (
+            ext.type === SymbolType.TYPE ||
+            ext.type === SymbolType.STRUCT ||
+            ext.type === SymbolType.INTERFACE ||
+            ext.type === SymbolType.FUNCTION_INTERFACE
+        )) return true;
 
         return false;
     }
@@ -3573,12 +3628,11 @@ export class SemanticAnalyzer {
                 if (this.options.checkUndefinedBehavior) {
                     const hasExternalSymbols = this.externalSymbols.size > 0;
                     if (hasExternalSymbols) {
-                        // 已经检查了所有外部文件，仍然找不到，说明变量未声明
-                        this.addError(
+                        // 已经检查了所有外部文件，仍然找不到，说明变量未声明（仅警告，可能是其他文件中的全局或 native 相关）
+                        this.addWarning(
                             node.target.start,
                             node.target.end,
-                            `Variable '${varName}' is not declared. Ensure it is declared with 'local' keyword or as a global variable`,
-                            `Declare the variable with 'local ${varName} type' or 'globals type ${varName} endglobals'`
+                            `Variable '${varName}' may not be declared. Ensure it is declared with 'local' keyword or as a global variable`
                         );
                         return;
                     }
@@ -4500,6 +4554,7 @@ export class SemanticAnalyzer {
                 }
             }
 
+            // null 可合法作为 handle 类型返回值，不报错
             if (actualReturnType !== resolvedExpectedType &&
                 !this.isTypeCompatible(actualReturnType, resolvedExpectedType, node.argument)) {
                 this.addError(
@@ -4816,15 +4871,17 @@ export class SemanticAnalyzer {
      * @returns 如果所有分支都有返回值，返回 true；否则返回 false
      */
     private checkIfStatementReturns(node: IfStatement): boolean {
-        // 检查 then 分支
+        // 检查 then 分支（then 可能是 BlockStatement、单条 ReturnStatement 或单条嵌套 IfStatement）
         let thenReturns = false;
         if (node.consequent instanceof BlockStatement) {
             thenReturns = this.checkBlockReturns(node.consequent);
         } else if (node.consequent instanceof ReturnStatement) {
             thenReturns = true;
+        } else if (node.consequent instanceof IfStatement) {
+            thenReturns = this.checkIfStatementReturns(node.consequent);
         }
 
-        // 检查 else 分支
+        // 检查 else/elseif 分支
         let elseReturns = false;
         if (node.alternate) {
             if (node.alternate instanceof BlockStatement) {
@@ -4832,7 +4889,6 @@ export class SemanticAnalyzer {
             } else if (node.alternate instanceof ReturnStatement) {
                 elseReturns = true;
             } else if (node.alternate instanceof IfStatement) {
-                // elseif 分支
                 elseReturns = this.checkIfStatementReturns(node.alternate);
             }
         }

@@ -1332,7 +1332,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     }
 
     /**
-     * 获取 takes 上下文信息
+     * 获取 takes 上下文信息（支持当前行含 takes，以及多行时上一行为 takes 的续行）
      */
     private getTakesContext(
         document: vscode.TextDocument,
@@ -1340,21 +1340,33 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     ): { expectsType: boolean; expectsName: boolean; afterComma: boolean } | null {
         const lineText = document.lineAt(position.line).text;
         const textBeforeCursor = lineText.substring(0, position.character);
-
-        // 检查是否包含 "takes" 关键字（使用单词边界匹配）
         const takesRegex = /\btakes\b/;
+        let afterTakesText: string;
+
         const takesMatch = textBeforeCursor.match(takesRegex);
-        if (!takesMatch || takesMatch.index === undefined) {
+        if (takesMatch && takesMatch.index !== undefined) {
+            // 当前行光标前有 takes
+            afterTakesText = textBeforeCursor.substring(takesMatch.index + 5);
+        } else if (position.line > 0) {
+            // 多行：上一行可能以 takes 结尾，当前行为参数续行
+            const prevLine = document.lineAt(position.line - 1).text;
+            const prevTakesMatch = prevLine.match(takesRegex);
+            if (!prevTakesMatch || prevTakesMatch.index === undefined) {
+                return null;
+            }
+            const afterTakesOnPrev = prevLine.substring(prevTakesMatch.index + 5).trim();
+            if (/\breturns\b/.test(afterTakesOnPrev)) {
+                return null;
+            }
+            afterTakesText = afterTakesOnPrev + ' ' + textBeforeCursor.trim();
+        } else {
             return null;
         }
 
-        // 检查 "takes" 之后是否有 "returns"（如果已经到 returns，不需要补全）
-        const afterTakesText = textBeforeCursor.substring(takesMatch.index + 5);
         if (/\breturns\b/.test(afterTakesText)) {
             return null;
         }
 
-        // 获取 "takes" 之后的文本
         const afterTakes = afterTakesText.trim();
 
         // 如果 "takes" 后是空的，期望类型
@@ -1499,44 +1511,41 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     }
 
     /**
-     * 从 BlockStatement 中提取 takes 参数签名
+     * 从 BlockStatement 中提取 takes 参数签名（递归进入 library/scope/struct）
      */
     private extractTakesSignaturesFromBlock(
         block: BlockStatement,
         signatureSet: Set<string>,
         position: vscode.Position
     ): void {
-        for (const stmt of block.body) {
-            // 提取函数声明的参数签名
-            if (stmt instanceof FunctionDeclaration) {
-                const signature = this.formatTakesSignature(stmt.parameters);
-                if (signature) {
-                    signatureSet.add(signature);
-                }
-            }
-            // 提取 Native 函数声明的参数签名
-            if (stmt instanceof NativeDeclaration) {
-                const signature = this.formatTakesSignature(stmt.parameters);
-                if (signature) {
-                    signatureSet.add(signature);
-                }
-            }
+        this.extractTakesSignaturesFromStatements(block.body, signatureSet);
+    }
 
-            // 提取方法声明的参数签名
-            if (stmt instanceof StructDeclaration) {
+    private extractTakesSignaturesFromStatements(
+        statements: Statement[],
+        signatureSet: Set<string>
+    ): void {
+        for (const stmt of statements) {
+            if (stmt instanceof FunctionDeclaration) {
+                const sig = this.formatTakesSignature(stmt.parameters);
+                if (sig) signatureSet.add(sig);
+            } else if (stmt instanceof NativeDeclaration) {
+                const sig = this.formatTakesSignature(stmt.parameters);
+                if (sig) signatureSet.add(sig);
+            } else if (stmt instanceof StructDeclaration) {
                 for (const member of stmt.members) {
                     if (member instanceof MethodDeclaration) {
-                        const signature = this.formatTakesSignature(member.parameters);
-                        if (signature) {
-                            signatureSet.add(signature);
-                        }
+                        const sig = this.formatTakesSignature(member.parameters);
+                        if (sig) signatureSet.add(sig);
                     }
                 }
-            }
-
-            // 递归处理嵌套的 BlockStatement
-            if (stmt instanceof BlockStatement) {
-                this.extractTakesSignaturesFromBlock(stmt, signatureSet, position);
+                this.extractTakesSignaturesFromStatements(stmt.members, signatureSet);
+            } else if (stmt instanceof LibraryDeclaration) {
+                this.extractTakesSignaturesFromStatements(stmt.members, signatureSet);
+            } else if (stmt instanceof ScopeDeclaration) {
+                this.extractTakesSignaturesFromStatements(stmt.members, signatureSet);
+            } else if (stmt instanceof BlockStatement) {
+                this.extractTakesSignaturesFromStatements(stmt.body, signatureSet);
             }
         }
     }
@@ -1559,19 +1568,22 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     }
 
     /**
-     * 从 BlockStatement 中提取类型声明
+     * 从 BlockStatement 中提取类型声明（递归进入 library/scope）
      */
     private extractTypesFromBlock(block: BlockStatement, typeSet: Set<string>): void {
-        for (const stmt of block.body) {
-            if (stmt instanceof TypeDeclaration) {
-                if (stmt.name) {
-                    typeSet.add(stmt.name.name);
-                }
-            }
+        this.extractTypesFromStatements(block.body, typeSet);
+    }
 
-            // 递归处理嵌套的 BlockStatement
-            if (stmt instanceof BlockStatement) {
-                this.extractTypesFromBlock(stmt, typeSet);
+    private extractTypesFromStatements(statements: Statement[], typeSet: Set<string>): void {
+        for (const stmt of statements) {
+            if (stmt instanceof TypeDeclaration && stmt.name) {
+                typeSet.add(stmt.name.name);
+            } else if (stmt instanceof LibraryDeclaration) {
+                this.extractTypesFromStatements(stmt.members, typeSet);
+            } else if (stmt instanceof ScopeDeclaration) {
+                this.extractTypesFromStatements(stmt.members, typeSet);
+            } else if (stmt instanceof BlockStatement) {
+                this.extractTypesFromStatements(stmt.body, typeSet);
             }
         }
     }
@@ -1633,14 +1645,22 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     }
     
     /**
-     * 从 BlockStatement 中提取结构体类型
+     * 从 BlockStatement 中提取结构体类型（递归进入 library/scope）
      */
     private extractStructTypesFromBlock(
         block: BlockStatement,
         typeSet: Set<string>,
         items: vscode.CompletionItem[]
     ): void {
-        for (const stmt of block.body) {
+        this.extractStructTypesFromStatements(block.body, typeSet, items);
+    }
+
+    private extractStructTypesFromStatements(
+        statements: Statement[],
+        typeSet: Set<string>,
+        items: vscode.CompletionItem[]
+    ): void {
+        for (const stmt of statements) {
             if (stmt instanceof StructDeclaration && stmt.name) {
                 const structName = stmt.name.name;
                 if (!typeSet.has(structName)) {
@@ -1652,11 +1672,12 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     item.sortText = `1_struct_${structName}`;
                     items.push(item);
                 }
-            }
-            
-            // 递归处理嵌套的 BlockStatement
-            if (stmt instanceof BlockStatement) {
-                this.extractStructTypesFromBlock(stmt, typeSet, items);
+            } else if (stmt instanceof LibraryDeclaration) {
+                this.extractStructTypesFromStatements(stmt.members, typeSet, items);
+            } else if (stmt instanceof ScopeDeclaration) {
+                this.extractStructTypesFromStatements(stmt.members, typeSet, items);
+            } else if (stmt instanceof BlockStatement) {
+                this.extractStructTypesFromStatements(stmt.body, typeSet, items);
             }
         }
     }

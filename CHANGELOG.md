@@ -1,9 +1,19 @@
+#### 1.9.7
+- 类型查询优先级：类型语法检查按顺序解析——基本类型 → type 声明 → struct/interface → function interface → vjass type（见 docs/type-system.md）
+- 新增 function interface 符号：收集 `function interface Name takes ... returns ...`，参与类型合法性判断
+- 类型解析测试与调试：新增 `npm run test:type` 仅跑 type/thistype 相关测试，支持 `DEBUG_TYPE=1` 打印失败代码片段；文档补充 type 解析测试说明
+- 修复「not all code paths return a value」误报：then 分支为单条嵌套 if（如 BJ 风格 if/elseif/else 内层 if）时正确识别所有路径都有返回值
+- 修复「Return type 'integer' does not match function return type 'string'」误报：`+` 在 JASS 中用于字符串拼接时若任一侧为 string 则结果为 string；两侧类型均未知（如函数调用）时不再假定为 integer
+- 允许 struct 的 `private method onDestroy`：按 vjass.docs.txt 仅规定模块中不能使用 private，结构体 onDestroy 可为 private
+- takes 参数体验：takes 内参数名支持 hover、跳转定义；递归进入 library/scope/struct 与 NativeDeclaration 参数；completion 支持多行 takes 与 library/scope 内类型与签名
+- 未声明变量：由 error 改为 warning（如 `gg_trg_xxx` 可能为其他文件全局变量，仅提示警告）
+
 #### 1.9.6
 - 修复 hint 功能性能问题：现在只处理可见范围内的代码，大幅提升大文件性能
 - 修复 hint 功能取消支持：添加取消令牌检查，避免在用户快速滚动时造成性能问题
 - 修复 hint 位置计算：确保 hint 位置在可见范围内，避免显示在不可见区域
 - 拆分 literal 配置项：将 `jass.literal` 拆分为 `jass.literal.completion`（默认 false）和 `jass.literal.hover`（默认 true），解决用户反馈的补全提示项太乱的问题
-- 添加 hint 功能开关：新增 `jass.hint` 配置项（默认 false，测试特性），允许用户控制 hint 功能的启用/禁用
+- 添加 hint 功能开关：新增 `jass.hint` 配置项（默认 true hint 功能的启用/禁用
 
 #### 1.9.5
 - 添加字符代码 hover 支持：对 'az09' 这样的字符代码显示10进制和16进制值

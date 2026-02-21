@@ -34,6 +34,7 @@ import { SpecialDefinitionProvider } from './provider/special/special-definition
 import { DocumentLinkProvider } from './provider/link-provider';
 import { CodeActionProvider } from './provider/code-action-provider';
 import { WorkspaceSymbolProvider } from './provider/workspace-symbol-provider';
+import { DocumentInfoManager } from './provider/document-info-manager';
 
 // JASS 语言选择器
 const jassSelector = { scheme: 'file', language: 'jass' };
@@ -166,6 +167,11 @@ export async function activate(context: vscode.ExtensionContext) {
             hoverProvider
         )
     );
+    context.subscriptions.push({
+        dispose: () => {
+            hoverProvider.dispose();
+        }
+    });
 
     // 创建并注册特殊文件悬停提供者
     const specialHoverProvider = new SpecialHoverProvider();
@@ -184,6 +190,11 @@ export async function activate(context: vscode.ExtensionContext) {
             zincHoverProvider
         )
     );
+    context.subscriptions.push({
+        dispose: () => {
+            zincHoverProvider.dispose();
+        }
+    });
 
     // 创建并注册 DefinitionProvider（跳转到定义支持）
     const definitionProvider = new DefinitionProvider(dataEnterManager);
@@ -556,13 +567,14 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    // 将 DataEnterManager 的 dispose 方法添加到订阅中，以便在扩展停用时清理资源
+    // 将 DataEnterManager 与 DocumentInfoManager 的清理添加到订阅中，以便在扩展停用时释放资源
     context.subscriptions.push({
         dispose: () => {
             if (dataEnterManager) {
                 dataEnterManager.dispose();
                 dataEnterManager = undefined;
             }
+            DocumentInfoManager.resetInstance();
         }
     });
 
@@ -575,5 +587,7 @@ export function deactivate() {
         dataEnterManager.dispose();
         dataEnterManager = undefined;
     }
+    // 引用计数：强制清理并重置单例，确保下次激活时状态干净
+    DocumentInfoManager.resetInstance();
     console.log('JASS Extension deactivated');
 }

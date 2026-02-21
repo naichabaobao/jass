@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
 import { DataEnterManager } from './data-enter-manager';
+import { DocumentInfoManager } from './document-info-manager';
+import type { DocumentInfo } from './document-info-manager';
 import {
     BlockStatement,
     Statement,
@@ -36,13 +36,21 @@ export class HoverProvider implements vscode.HoverProvider {
     private dataEnterManager: DataEnterManager;
     private zincHoverProvider: ZincHoverProvider;
     private hoverCache: HoverCache;
-    private vjassBuiltinCache: Map<string, { description: string; type: string; value?: string }> | null = null;
+    private docManager = DocumentInfoManager.getInstance();
+    private vjassInfoRef?: DocumentInfo;
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
         this.zincHoverProvider = new ZincHoverProvider(dataEnterManager);
         this.hoverCache = HoverCache.getInstance();
-        this.loadVjassBuiltinInfo();
+        this.vjassInfoRef = this.docManager.acquireRef('vjass');
+    }
+
+    dispose(): void {
+        if (this.vjassInfoRef) {
+            this.docManager.releaseRef('vjass');
+            this.vjassInfoRef = undefined;
+        }
     }
 
     provideHover(
@@ -1458,7 +1466,7 @@ export class HoverProvider implements vscode.HoverProvider {
             return;
         }
 
-        // 添加参数的悬停信息
+        // 添加参数的悬停信息（含 takes 行内的参数）
         if (funcOrMethod instanceof FunctionDeclaration) {
             for (const param of funcOrMethod.parameters) {
                 if (param.name && param.name.name === symbolName) {
@@ -1471,7 +1479,6 @@ export class HoverProvider implements vscode.HoverProvider {
                     }
                 }
             }
-            // 在函数体中查找局部变量
             if (funcOrMethod.body) {
                 this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, hoverContents);
             }
@@ -1487,60 +1494,72 @@ export class HoverProvider implements vscode.HoverProvider {
                     }
                 }
             }
-            // 在方法体中查找局部变量
             if (funcOrMethod.body) {
                 this.findLocalVariablesInBlock(funcOrMethod.body, symbolName, filePath, position, hoverContents);
+            }
+        } else if (funcOrMethod instanceof NativeDeclaration) {
+            for (const param of funcOrMethod.parameters) {
+                if (param.name && param.name.name === symbolName) {
+                    const content = this.createParameterHoverContent(
+                        { name: param.name, type: param.type },
+                        filePath
+                    );
+                    if (content) {
+                        hoverContents.push(content);
+                    }
+                }
             }
         }
     }
 
     /**
-     * 查找包含指定位置的函数或方法
-     * 参数在整个函数范围内都可用（包括函数声明行和函数体）
+     * 查找包含指定位置的函数、方法或 native（含 takes 声明行），用于参数 hover/跳转
+     * 会递归进入 library/scope/struct，使 takes 行内的参数也能生效
      */
     private findContainingFunctionOrMethod(
         block: BlockStatement,
         position: vscode.Position
-    ): FunctionDeclaration | MethodDeclaration | null {
-        for (const stmt of block.body) {
+    ): FunctionDeclaration | MethodDeclaration | NativeDeclaration | null {
+        return this.findContainingCallableInStatements(block.body, position);
+    }
+
+    private findContainingCallableInStatements(
+        statements: Statement[],
+        position: vscode.Position
+    ): FunctionDeclaration | MethodDeclaration | NativeDeclaration | null {
+        for (const stmt of statements) {
             if (stmt instanceof FunctionDeclaration) {
-                // 检查位置是否在整个函数范围内（包括函数声明行和函数体）
                 if (stmt.start && stmt.end) {
-                    const funcStartLine = stmt.start.line;
-                    const funcEndLine = stmt.end.line;
-                    
-                    // 位置在函数开始行和结束行之间（包括结束行）
-                    // 允许位置在结束行的下一行（容错处理）
-                    if (position.line >= funcStartLine && position.line <= funcEndLine + 1) {
+                    if (position.line >= stmt.start.line && position.line <= stmt.end.line + 1) {
                         return stmt;
                     }
-                }
-                // 如果没有位置信息，也检查函数体范围（作为补充）
-                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                } else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
                     return stmt;
                 }
             } else if (stmt instanceof MethodDeclaration) {
-                // 检查位置是否在整个方法范围内（包括方法声明行和方法体）
                 if (stmt.start && stmt.end) {
-                    const methodStartLine = stmt.start.line;
-                    const methodEndLine = stmt.end.line;
-                    
-                    // 位置在方法开始行和结束行之间（包括结束行）
-                    // 允许位置在结束行的下一行（容错处理）
-                    if (position.line >= methodStartLine && position.line <= methodEndLine + 1) {
+                    if (position.line >= stmt.start.line && position.line <= stmt.end.line + 1) {
                         return stmt;
                     }
-                }
-                // 如果没有位置信息，也检查方法体范围（作为补充）
-                else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
+                } else if (stmt.body && this.isPositionInRange(position, stmt.body.start, stmt.body.end)) {
                     return stmt;
                 }
-            } else if (stmt instanceof BlockStatement) {
-                // 递归查找嵌套块
-                const nested = this.findContainingFunctionOrMethod(stmt, position);
-                if (nested) {
-                    return nested;
+            } else if (stmt instanceof NativeDeclaration) {
+                if (stmt.start && stmt.end && this.isPositionInRange(position, stmt.start, stmt.end)) {
+                    return stmt;
                 }
+            } else if (stmt instanceof LibraryDeclaration) {
+                const nested = this.findContainingCallableInStatements(stmt.members, position);
+                if (nested) return nested;
+            } else if (stmt instanceof ScopeDeclaration) {
+                const nested = this.findContainingCallableInStatements(stmt.members, position);
+                if (nested) return nested;
+            } else if (stmt instanceof StructDeclaration) {
+                const nested = this.findContainingCallableInStatements(stmt.members, position);
+                if (nested) return nested;
+            } else if (stmt instanceof BlockStatement) {
+                const nested = this.findContainingCallableInStatements(stmt.body, position);
+                if (nested) return nested;
             }
         }
         return null;
@@ -1939,166 +1958,14 @@ export class HoverProvider implements vscode.HoverProvider {
     }
 
     /**
-     * 加载 vJASS 内置信息（从 vjass.docs.txt 文件）
-     */
-    private loadVjassBuiltinInfo(): void {
-        if (this.vjassBuiltinCache !== null) {
-            return; // 已经加载过
-        }
-
-        this.vjassBuiltinCache = new Map();
-
-        // 默认的内置信息（作为后备）
-        const defaultBuiltinInfo: { [key: string]: { description: string; type: string; value?: string } } = {
-            // 时间相关
-            'GetTimeOfDay': {
-                description: '获取当前游戏时间（0.00-24.00）',
-                type: 'real'
-            },
-            'SetTimeOfDay': {
-                description: '设置游戏时间',
-                type: 'function'
-            },
-            
-            // 随机数相关
-            'GetRandomInt': {
-                description: '获取指定范围内的随机整数',
-                type: 'function'
-            },
-            'GetRandomReal': {
-                description: '获取指定范围内的随机实数',
-                type: 'function'
-            },
-            
-            // 常量
-            'PI': {
-                description: '圆周率 π (3.14159...)',
-                type: 'real',
-                value: '3.14159'
-            },
-            'E': {
-                description: '自然常数 e (2.71828...)',
-                type: 'real',
-                value: '2.71828'
-            },
-            
-            // 调试相关
-            'BJDebugMsg': {
-                description: '调试消息输出函数',
-                type: 'function'
-            },
-            'DEBUG_MODE': {
-                description: '调试模式常量（布尔值）',
-                type: 'boolean'
-            },
-            
-            // 常用常量
-            'MAX_PLAYERS': {
-                description: '最大玩家数',
-                type: 'integer',
-                value: '16'
-            },
-            'MAX_PLAYER_SLOTS': {
-                description: '最大玩家槽位数',
-                type: 'integer',
-                value: '24'
-            }
-        };
-
-        // 先添加默认信息
-        for (const [key, value] of Object.entries(defaultBuiltinInfo)) {
-            this.vjassBuiltinCache.set(key, value);
-        }
-
-        // 尝试从 vjass.docs.txt 文件读取
-        try {
-            const possiblePaths = [
-                path.resolve(__dirname, "../../../static/vjass.docs.txt"),
-                path.resolve(__dirname, "../../../../static/vjass.docs.txt"),
-                path.resolve(__dirname, "../../static/vjass.docs.txt"),
-            ];
-
-            for (const docPath of possiblePaths) {
-                if (fs.existsSync(docPath)) {
-                    const content = fs.readFileSync(docPath, 'utf-8');
-                    this.parseVjassDocs(content);
-                    break;
-                }
-            }
-        } catch (error) {
-            console.warn('Failed to load vjass.docs.txt:', error);
-        }
-    }
-
-    /**
-     * 解析 vjass.docs.txt 文件内容，提取常量、时间、随机数等信息
-     */
-    private parseVjassDocs(content: string): void {
-        if (!this.vjassBuiltinCache) {
-            return;
-        }
-
-        // 简单的解析逻辑：查找常见的函数和常量说明
-        // 由于文档格式不统一，这里只做基本的模式匹配
-        
-        const lines = content.split('\n');
-        let currentSection = '';
-        
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
-            
-            // 检测章节标题
-            if (line.includes('时间') || line.includes('Time')) {
-                currentSection = 'time';
-            } else if (line.includes('随机') || line.includes('Random')) {
-                currentSection = 'random';
-            } else if (line.includes('常量') || line.includes('Constant')) {
-                currentSection = 'constant';
-            }
-            
-            // 查找函数或常量定义（简单的模式匹配）
-            // 例如：GetTimeOfDay, GetRandomInt, PI 等
-            const functionPattern = /(GetTimeOfDay|SetTimeOfDay|GetRandomInt|GetRandomReal|BJDebugMsg)/i;
-            const constantPattern = /(PI|E|DEBUG_MODE|MAX_PLAYERS|MAX_PLAYER_SLOTS)/i;
-            
-            const funcMatch = line.match(functionPattern);
-            const constMatch = line.match(constantPattern);
-            
-            if (funcMatch && this.vjassBuiltinCache) {
-                const name = funcMatch[1];
-                if (!this.vjassBuiltinCache.has(name)) {
-                    this.vjassBuiltinCache.set(name, {
-                        description: `vJASS 内置函数（来自 vjass.docs.txt）`,
-                        type: 'function'
-                    });
-                }
-            }
-            
-            if (constMatch && this.vjassBuiltinCache) {
-                const name = constMatch[1];
-                if (!this.vjassBuiltinCache.has(name)) {
-                    this.vjassBuiltinCache.set(name, {
-                        description: `vJASS 内置常量（来自 vjass.docs.txt）`,
-                        type: 'constant'
-                    });
-                }
-            }
-        }
-    }
-
-    /**
      * 检查是否是 vJASS 内置常量、时间、随机数等，如果是则返回 hover 信息
      */
     private checkVjassBuiltinHover(symbolName: string): vscode.MarkdownString | null {
-        if (!this.vjassBuiltinCache) {
-            this.loadVjassBuiltinInfo();
-        }
-        
-        if (!this.vjassBuiltinCache) {
+        if (!this.vjassInfoRef) {
             return null;
         }
-        
-        const info = this.vjassBuiltinCache.get(symbolName);
+
+        const info = this.vjassInfoRef.symbols.get(symbolName);
         if (info) {
             const content = new vscode.MarkdownString();
             content.appendMarkdown(`**vJASS 内置 ${info.type}**\n\n`);
@@ -2108,7 +1975,7 @@ export class HoverProvider implements vscode.HoverProvider {
             }
             return content;
         }
-        
+
         return null;
     }
 }

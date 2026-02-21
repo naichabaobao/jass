@@ -835,15 +835,24 @@ class BinaryExpression extends Expression {
             return leftType || rightType || "integer";
         }
         
-        // 算术运算符：如果有 real 类型，返回 real
+        // 算术运算符：如果有 real 类型，返回 real；Plus 在 JASS 中也可用于字符串拼接
         if (this.operator === OperatorType.Plus ||
             this.operator === OperatorType.Minus ||
             this.operator === OperatorType.Multiply ||
             this.operator === OperatorType.Divide) {
+            // JASS: 任意一侧为 string 时，+ 表示字符串拼接，结果为 string
+            if (this.operator === OperatorType.Plus && (leftType === "string" || rightType === "string")) {
+                return "string";
+            }
             if (leftType === "real" || rightType === "real") {
                 return "real";
             }
-            return leftType || rightType || "integer";
+            const resolved = leftType || rightType;
+            // 两侧类型均未知时（如函数调用）不假定为 integer，避免误报
+            if (this.operator === OperatorType.Plus && !resolved) {
+                return null;
+            }
+            return resolved || "integer";
         }
         
         // 成员访问运算符的类型需要根据上下文确定

@@ -1491,16 +1491,7 @@ export class Parser {
             if (this.checkValue("method") || (this.checkValue("stub") && this.lexer.peek()?.value?.toLowerCase() === "method")) {
                 const member = this.parseMethod();
                 if (member) {
-                    // 检查是否是 private onDestroy
-                    if (isPrivateMethod && member.name && member.name.toString().toLowerCase() === "ondestroy") {
-                        const memberStart = member.start || { line: 0, position: 0 };
-                        this.error(
-                            `Method 'onDestroy' cannot be private. The onDestroy method must be public as it is automatically called by the destroy method.`,
-                            memberStart,
-                            member.end || memberStart,
-                            `Remove 'private' keyword before 'onDestroy'. The onDestroy method must be public.`
-                        );
-                    }
+                    // 根据 vjass.docs.txt，仅规定模块中不能使用 private；结构体的 onDestroy 可为 private，由生成的 destroy() 在同一结构内调用
                     // 如果是 public static method 或 private static method，设置 isStatic
                     if (isPublicStaticMethod || isPrivateStaticMethod) {
                         member.isStatic = true;
