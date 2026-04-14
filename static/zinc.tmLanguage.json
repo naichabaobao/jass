@@ -85,7 +85,7 @@
         },
         {
           "name": "keyword.operator.logical",
-          "match": "&&|\\|\\|\\||!"
+          "match": "&&|\\|\\||!"
         }
       ]
     },

@@ -4697,27 +4697,36 @@ native GetPlayerName takes player whichPlayer returns string
 //
 
 // 新建计时器 [R]
+// @example set t = CreateTimer()
 native CreateTimer takes nothing returns timer
 // 销毁计时器 [R]
+// @example call DestroyTimer(t)
 native DestroyTimer takes timer whichTimer returns nothing
 // 开始计时器(计时) [C]
 // @param whichTimer 计时器
 // @param timeout 超时/倒计时初始值
 // @param periodic 是否循环
 // @param handlerFunc 到期后运行的函数
+// @example call TimerStart(t, 1.00, false, function OnTimer)
 native TimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
 // 获取计时器经过的时间/已倒计的时间
+// @example set elapsed = TimerGetElapsed(t)
 native TimerGetElapsed takes timer whichTimer returns real
 // 获取计时器剩余时间
+// @example set remaining = TimerGetRemaining(t)
 native TimerGetRemaining takes timer whichTimer returns real
 // 获取计时器初始时间/倒计时初始值
+// @example set timeout = TimerGetTimeout(t)
 native TimerGetTimeout takes timer whichTimer returns real
 // 暂停计时器(计时) [R]
+// @example call PauseTimer(t)
 native PauseTimer takes timer whichTimer returns nothing
 // 恢复计时器(计时) [R]
+// @example call ResumeTimer(t)
 native ResumeTimer takes timer whichTimer returns nothing
 // 获取到期的计时器
 // 与 TimerStart 一同使用
+// @example set t = GetExpiredTimer()
 native GetExpiredTimer takes nothing returns timer
 
 
@@ -4837,6 +4846,7 @@ native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
 // 从玩家组移除玩家 [R]
 native ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing
 // 查询玩家是否在玩家组内
+// @version 1.33
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
 // 清空玩家组
 // 排泄需使用销毁玩家组 DestroyForce，而非清空
@@ -5053,12 +5063,14 @@ native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, 
 // Creates it's own timer and triggers when it expires
 
 // 触发器登记计时器事件
+// @example call TriggerRegisterTimerEvent(trg, 5.00, true)
 native TriggerRegisterTimerEvent takes trigger whichTrigger, real timeout, boolean periodic returns event
 
 // Triggers when the timer you tell it about expires
 // Triggers when the timer you tell it about expires
 
 // 触发器登记计时器到期事件
+// @example call TriggerRegisterTimerExpireEvent(trg, t)
 native TriggerRegisterTimerExpireEvent takes trigger whichTrigger, timer t returns event
 
 // 触发器登记游戏状态事件
@@ -5770,7 +5782,7 @@ native SetItemUserData takes item whichItem, integer data returns nothing
 // @param y Y坐标位置
 // @param face 面向角度（弧度）
 // @returns 创建的单位
-// 示例: set u = CreateUnit(Player(0), FourCC("hfoo"), 0.0, 0.0, 0.0) // 在原点创建步兵
+// @example set u = CreateUnit(Player(0), FourCC("hfoo"), 0.0, 0.0, 0.0)
 native CreateUnit takes player id, integer unitid, real x, real y, real face returns unit
 // 新建单位(指定单位名称及坐标) [R]
 // 通过单位名称在指定位置创建单位
@@ -5780,7 +5792,7 @@ native CreateUnit takes player id, integer unitid, real x, real y, real face ret
 // @param y Y坐标位置
 // @param face 面向角度（弧度）
 // @returns 创建的单位
-// 示例: set u = CreateUnitByName(Player(0), "footman", 0.0, 0.0, 0.0) // 创建步兵
+// @example set u = CreateUnitByName(Player(0), "footman", 0.0, 0.0, 0.0)
 native CreateUnitByName takes player whichPlayer, string unitname, real x, real y, real face returns unit
 // 新建单位(指定单位类型及点) [R]
 // 在指定位置点创建单位
@@ -5789,7 +5801,7 @@ native CreateUnitByName takes player whichPlayer, string unitname, real x, real 
 // @param whichLocation 位置点
 // @param face 面向角度（弧度）
 // @returns 创建的单位
-// 示例: set u = CreateUnitAtLoc(Player(0), FourCC("hfoo"), loc, 0.0) // 在位置点创建步兵
+// @example set u = CreateUnitAtLoc(Player(0), FourCC("hfoo"), loc, 0.0)
 native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, real face returns unit
 // 新建单位(指定单位名称及点) [R]
 // 通过单位名称在指定位置点创建单位
@@ -5798,23 +5810,24 @@ native CreateUnitAtLoc takes player id, integer unitid, location whichLocation, 
 // @param whichLocation 位置点
 // @param face 面向角度（弧度）
 // @returns 创建的单位
-// 示例: set u = CreateUnitAtLocByName(Player(0), "footman", loc, 0.0) // 在位置点创建步兵
+// @example set u = CreateUnitAtLocByName(Player(0), "footman", loc, 0.0)
 native CreateUnitAtLocByName takes player id, string unitname, location whichLocation, real face returns unit
 // 新建尸体 [R]
 // 不是所有单位都有尸体
 // 尸体从死亡开始（肉态）逐渐腐烂（骨态），拥有原单位最大生命值和最大魔法值，生命值为0，魔法值为物编设定的魔法初始值
+// @example set corpse = CreateCorpse(Player(0), FourCC("hfoo"), 0.0, 0.0, 0.0)
 native CreateCorpse takes player whichPlayer, integer unitid, real x, real y, real face returns unit
 
 // 杀死单位
 // 杀死单位
 // 立即杀死指定单位，会触发死亡事件和掉落物品
 // @param whichUnit 要杀死的单位
-// 示例: call KillUnit(u) // 杀死单位u
+// @example call KillUnit(u)
 native KillUnit takes unit whichUnit returns nothing
 // 删除单位
 // 立即删除指定单位，不会留下尸体，不会触发死亡事件
 // @param whichUnit 要删除的单位
-// 示例: call RemoveUnit(u) // 删除单位u
+// @example call RemoveUnit(u)
 native RemoveUnit takes unit whichUnit returns nothing
 // 显示/隐藏 指定单位 [R]
 // 隐藏后不能通过反隐查看，碰撞体积按设置工作，仍提供视野，不能通过鼠标键盘控制
@@ -5827,11 +5840,13 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 // @param whichUnit 要设置的单位
 // @param whichUnitState 单位状态类型 (UNIT_STATE_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_LIFE, UNIT_STATE_MAX_MANA等)
 // @param newVal 新的状态值
-// 示例: call SetUnitState(u, UNIT_STATE_LIFE, 100.0) // 设置单位生命值为100
+// @example call SetUnitState(u, UNIT_STATE_LIFE, 100.0)
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
 // 设置指定单位 X 坐标 [R]
+// @example call SetUnitX(u, 256.0)
 native SetUnitX takes unit whichUnit, real newX returns nothing
 // 设置指定单位 Y 坐标 [R]
+// @example call SetUnitY(u, 512.0)
 native SetUnitY takes unit whichUnit, real newY returns nothing
 // 移动指定单位(立即)(指定坐标) [R]
 // 设置单位位置
@@ -5839,40 +5854,44 @@ native SetUnitY takes unit whichUnit, real newY returns nothing
 // @param whichUnit 要移动的单位
 // @param newX 新的X坐标
 // @param newY 新的Y坐标
-// 示例: call SetUnitPosition(u, 100.0, 200.0) // 将单位移动到(100,200)
+// @example call SetUnitPosition(u, 100.0, 200.0)
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
 // 移动指定单位(立即)(指定点)
 // 立即将单位移动到指定位置点
 // @param whichUnit 要移动的单位
 // @param whichLocation 目标位置点
-// 示例: call SetUnitPositionLoc(u, loc) // 将单位移动到位置点
+// @example call SetUnitPositionLoc(u, loc)
 native SetUnitPositionLoc takes unit whichUnit, location whichLocation returns nothing
 // 设置指定单位朝向 [R]
 // 设置单位的面向角度
 // @param whichUnit 要设置的单位
 // @param facingAngle 面向角度（弧度）
-// 示例: call SetUnitFacing(u, 1.57) // 设置单位面向90度
+// @example call SetUnitFacing(u, 1.57)
 native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
 // 设置指定单位朝向(指定转身持续时间)
+// @example call SetUnitFacingTimed(u, 3.14, 0.5)
 native SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration returns nothing
 // 设置指定单位移动速度
 // 设置单位的移动速度
 // @param whichUnit 要设置的单位
 // @param newSpeed 新的移动速度（游戏单位/秒）
-// 示例: call SetUnitMoveSpeed(u, 300.0) // 设置单位移动速度为300
+// @example call SetUnitMoveSpeed(u, 300.0)
 native SetUnitMoveSpeed takes unit whichUnit, real newSpeed returns nothing
 // 设置指定单位飞行高度
+// @example call SetUnitFlyHeight(u, 300.0, 0.0)
 native SetUnitFlyHeight takes unit whichUnit, real newHeight, real rate returns nothing
 // 设置指定单位转身速度
+// @example call SetUnitTurnSpeed(u, 0.6)
 native SetUnitTurnSpeed takes unit whichUnit, real newTurnSpeed returns nothing
 // 设置指定单位转向角度(弧度制) [R]
+// @example call SetUnitPropWindow(u, 1.57)
 native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns nothing
 // 设置指定单位警界范围，未设置时默认值取物遍
 // 设置单位攻击范围
 // 设置单位的自动攻击获取范围
 // @param whichUnit 要设置的单位
 // @param newAcquireRange 新的攻击获取范围
-// 示例: call SetUnitAcquireRange(u, 500.0) // 设置单位攻击范围为500
+// @example call SetUnitAcquireRange(u, 500.0)
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
@@ -5902,7 +5921,7 @@ native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 // @param whichUnit 要改变拥有者的单位
 // @param whichPlayer 新的拥有者玩家
 // @param changeColor 是否改变单位颜色
-// 示例: call SetUnitOwner(u, Player(1), true) // 将单位转移给玩家2并改变颜色
+// @example call SetUnitOwner(u, Player(1), true)
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色(指定玩家颜色)
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
@@ -6787,6 +6806,7 @@ native SaveUnitHandle takes hashtable table, integer parentKey, integer childKey
 native SaveAbilityHandle takes hashtable table, integer parentKey, integer childKey, ability whichAbility returns boolean
 // 保存计时器到哈希表 [C]
 // @version 1.24
+// @example call SaveTimerHandle(ht, 0, 1, t)
 native SaveTimerHandle takes hashtable table, integer parentKey, integer childKey, timer whichTimer returns boolean
 // 保存触发器到哈希表 [C]
 // @version 1.24
@@ -6922,6 +6942,7 @@ native LoadAbilityHandle takes hashtable table, integer parentKey, integer child
 // 从哈希表提取计时器 [C]
 // 若仍需继续使用该计时器，请勿排泄
 // @version 1.24
+// @example set t = LoadTimerHandle(ht, 0, 1)
 native LoadTimerHandle takes hashtable table, integer parentKey, integer childKey returns timer
 // 从哈希表提取触发器 [C]
 // @version 1.24
@@ -7344,23 +7365,32 @@ native ForceQuestDialogUpdate takes nothing returns nothing
 
 // 新建计时器窗口 [R]
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
+// @example set td = CreateTimerDialog(t)
 native CreateTimerDialog takes timer t returns timerdialog
 // 销毁计时器窗口
+// @example call DestroyTimerDialog(td)
 native DestroyTimerDialog takes timerdialog whichDialog returns nothing
 // 设置计时器窗口标题
+// @example call TimerDialogSetTitle(td, "Wave Timer")
 native TimerDialogSetTitle takes timerdialog whichDialog, string title returns nothing
 // 设置计时器窗口文字颜色 [R]
+// @example call TimerDialogSetTitleColor(td, 255, 255, 0, 255)
 native TimerDialogSetTitleColor takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置计时器窗口计时颜色 [R]
+// @example call TimerDialogSetTimeColor(td, 255, 255, 255, 255)
 native TimerDialogSetTimeColor takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置计时器窗口速率 [R]
+// @example call TimerDialogSetSpeed(td, 1.00)
 native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor returns nothing
 // 显示/隐藏 计时器窗口(所有玩家) [R]
+// @example call TimerDialogDisplay(td, true)
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
 // 查询计时器窗口是否显示
+// @example set shown = IsTimerDialogDisplayed(td)
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
 // 设置计时器窗口倒计时
 // 可创建另一个计时器(隐藏)，在其倒计时结束后，修改本窗口的倒计时，从而实现正向计时
+// @example call TimerDialogSetRealTimeRemaining(td, 30.00)
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
 
@@ -7575,8 +7605,10 @@ native CameraSetupApplyForceDuration takes camerasetup whichSetup, boolean doPan
 // 应用镜头(所有玩家)(限时)(指定高度) [R]
 native CameraSetupApplyForceDurationWithZ takes camerasetup whichSetup, real zDestOffset, real forceDuration returns nothing
 // 设置镜头标签
+// @version 1.33
 native BlzCameraSetupSetLabel takes camerasetup whichSetup, string label returns nothing
 // 获取镜头标签
+// @version 1.33
 native BlzCameraSetupGetLabel takes camerasetup whichSetup returns string
 // 摇晃镜头朝向
 native CameraSetTargetNoise takes real mag, real velocity returns nothing
@@ -8073,6 +8105,7 @@ native Preloader takes string filename returns nothing
 
 
 // 显示/隐藏 电影面板，包括标题栏、字幕及头像框体
+// @version 1.33
 native BlzHideCinematicPanels takes boolean enable returns nothing
 
 
@@ -8089,92 +8122,137 @@ native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
 
+// @version 1.33
+
 // 玩家鼠标触发位置 - X 坐标
+// @version 1.33
 native BlzGetTriggerPlayerMouseX takes nothing returns real
 // 玩家鼠标触发位置 - Y 坐标
+// @version 1.33
 native BlzGetTriggerPlayerMouseY takes nothing returns real
 // 玩家鼠标触发位置 - 点
 // 会创建点，用完请注意排泄
+// @version 1.33
 native BlzGetTriggerPlayerMousePosition takes nothing returns location
 // 玩家鼠标按键类型
+// @version 1.33
 native BlzGetTriggerPlayerMouseButton takes nothing returns mousebuttontype
 // 设置技能提示信息
+// @version 1.33
 native BlzSetAbilityTooltip takes integer abilCode, string tooltip, integer level returns nothing
 // 设置技能提示信息(自动施法启用)
+// @version 1.33
 native BlzSetAbilityActivatedTooltip takes integer abilCode, string tooltip, integer level returns nothing
 // 设置技能扩展提示信息
+// @version 1.33
 native BlzSetAbilityExtendedTooltip takes integer abilCode, string extendedTooltip, integer level returns nothing
 // 设置技能扩展提示信息(自动施法启用)
+// @version 1.33
 native BlzSetAbilityActivatedExtendedTooltip takes integer abilCode, string extendedTooltip, integer level returns nothing
 // 设置提示信息(学习)
+// @version 1.33
 native BlzSetAbilityResearchTooltip takes integer abilCode, string researchTooltip, integer level returns nothing
 // 设置扩展提示信息(学习)
+// @version 1.33
 native BlzSetAbilityResearchExtendedTooltip takes integer abilCode, string researchExtendedTooltip, integer level returns nothing
 // 获取技能提示信息
+// @version 1.33
 native BlzGetAbilityTooltip takes integer abilCode, integer level returns string
 // 获取技能提示信息(自动施法启用)
+// @version 1.33
 native BlzGetAbilityActivatedTooltip takes integer abilCode, integer level returns string
 // 获取技能扩展提示信息
+// @version 1.33
 native BlzGetAbilityExtendedTooltip takes integer abilCode, integer level returns string
 // 获取技能扩展提示信息(自动施法启用)
+// @version 1.33
 native BlzGetAbilityActivatedExtendedTooltip takes integer abilCode, integer level returns string
 // 获取技能提示信息(学习文本)
+// @version 1.33
 native BlzGetAbilityResearchTooltip takes integer abilCode, integer level returns string
 // 获取技能扩展提示信息(学习文本)
+// @version 1.33
 native BlzGetAbilityResearchExtendedTooltip takes integer abilCode, integer level returns string
 // 设置技能图标
+// @version 1.33
 native BlzSetAbilityIcon takes integer abilCode, string iconPath returns nothing
 // 获取技能图标
+// @version 1.33
 native BlzGetAbilityIcon takes integer abilCode returns string
 // 设置技能图标(自动施法启用)
+// @version 1.33
 native BlzSetAbilityActivatedIcon takes integer abilCode, string iconPath returns nothing
 // 获取技能图标(自动施法启用)
+// @version 1.33
 native BlzGetAbilityActivatedIcon takes integer abilCode returns string
 // 获取技能图标位置 - X
+// @version 1.33
 native BlzGetAbilityPosX takes integer abilCode returns integer
 // 获取技能图标位置 - Y
+// @version 1.33
 native BlzGetAbilityPosY takes integer abilCode returns integer
 // 设置技能图标位置 - X
+// @version 1.33
 native BlzSetAbilityPosX takes integer abilCode, integer x returns nothing
 // 设置技能图标位置 - Y
+// @version 1.33
 native BlzSetAbilityPosY takes integer abilCode, integer y returns nothing
 // 获取技能图标位置 - X (启用自动施法)
+// @version 1.33
 native BlzGetAbilityActivatedPosX takes integer abilCode returns integer
 // 获取技能图标位置 - Y (启用自动施法)
+// @version 1.33
 native BlzGetAbilityActivatedPosY takes integer abilCode returns integer
 // 设置技能图标位置 - X (启用自动施法)
+// @version 1.33
 native BlzSetAbilityActivatedPosX takes integer abilCode, integer x returns nothing
 // 设置技能图标位置 - Y (启用自动施法)
+// @version 1.33
 native BlzSetAbilityActivatedPosY takes integer abilCode, integer y returns nothing
 // 获取指定单位最大生命值
+// @version 1.33
 native BlzGetUnitMaxHP takes unit whichUnit returns integer
 // 设置指定单位最大生命值
+// @version 1.33
 native BlzSetUnitMaxHP takes unit whichUnit, integer hp returns nothing
 // 获取指定单位最大魔法值
+// @version 1.33
 native BlzGetUnitMaxMana takes unit whichUnit returns integer
 // 设置指定单位最大法力值
+// @version 1.33
 native BlzSetUnitMaxMana takes unit whichUnit, integer mana returns nothing
 // 设置指定物品名称
+// @version 1.33
 native BlzSetItemName takes item whichItem, string name returns nothing
 // 设置指定物品介绍
+// @version 1.33
 native BlzSetItemDescription takes item whichItem, string description returns nothing
 // 获取指定物品介绍
+// @version 1.33
 native BlzGetItemDescription takes item whichItem returns string
 // 设置指定物品提示
+// @version 1.33
 native BlzSetItemTooltip takes item whichItem, string tooltip returns nothing
 // 获取指定物品提示
+// @version 1.33
 native BlzGetItemTooltip takes item whichItem returns string
 // 设置指定物品扩展提示
+// @version 1.33
 native BlzSetItemExtendedTooltip takes item whichItem, string extendedTooltip returns nothing
 // 获取指定物品扩展提示信息
+// @version 1.33
 native BlzGetItemExtendedTooltip takes item whichItem returns string
 // 设置指定物品图标
+// @version 1.33
 native BlzSetItemIconPath takes item whichItem, string iconPath returns nothing
 // 获取指定物品图标
+// @version 1.33
 native BlzGetItemIconPath takes item whichItem returns string
 // 设置指定单位名字
+// @version 1.33
 native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
+// @version 1.33
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
 // 获取指定单位基础伤害
 // @param weaponIndex 武器引索，似乎只有输入1才有效

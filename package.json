@@ -4,7 +4,7 @@
   "description": "完整的 JASS/vJass/Zinc 语言支持，包括语法高亮、代码补全、跳转定义、悬停提示、错误诊断、代码格式化等功能。支持 vJass 的库、结构、接口、模块、委托等特性，以及 Zinc 的 C-like 语法。QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.9.7",
+  "version": "1.9.8",
   "keywords": [
     "jass",
     "vjass",
@@ -58,8 +58,8 @@
         },
         "jass.hint": {
           "type": "boolean",
-          "default": true,
-          "description": "(Test) Enable hint support for function parameters and method calls. This is an experimental feature."
+          "default": false,
+          "description": "Enable hint support for function parameters and method calls. This is an experimental feature."
         }
       }
     },

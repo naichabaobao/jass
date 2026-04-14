@@ -16,6 +16,7 @@ import { InnerZincParser } from '../vjass/inner-zinc-parser';
 import { ZincProgram } from '../vjass/zinc-ast';
 import { analyzeSemantics, analyzeSemanticsWithAllFiles, SemanticAnalyzerOptions } from '../vjass/analyzer';
 import { JumpCache, JumpCacheItem } from './jump-cache';
+import { HoverCache } from './hover-cache';
 
 /**
  * 文件事件类型
@@ -169,6 +170,8 @@ export class DataEnterManager {
     
     // 跳转缓存相关组件
     private readonly jumpCache: JumpCache;
+    // Hover 缓存相关组件
+    private readonly hoverCache: HoverCache;
     
     // 配置文件相关
     private config: JassConfig | null = null;
@@ -197,6 +200,8 @@ export class DataEnterManager {
         
         // 初始化跳转缓存
         this.jumpCache = JumpCache.getInstance();
+        // 初始化 Hover 缓存
+        this.hoverCache = HoverCache.getInstance();
 
         // 加载配置文件
         this.loadConfig();
@@ -435,6 +440,8 @@ export class DataEnterManager {
 
             // 4. 清除跳转缓存（因为文件内容已更新，需要重新计算）
             this.jumpCache.clear(filePath);
+            // 5. 清除 hover 缓存（注释/签名可能已变化，避免 hover 显示旧描述）
+            this.hoverCache.clearAll();
         }
     }
 
@@ -492,6 +499,8 @@ export class DataEnterManager {
         // 从补全项缓存中删除
         const completionCache = CompletionCache.getInstance();
         completionCache.delete(filePath);
+        // 清除 hover 缓存，避免保留已删除文件的旧 hover 内容
+        this.hoverCache.clearAll();
         
         console.log(`🗑️ Removed cache for ${path.basename(filePath)}`);
     }
@@ -542,6 +551,8 @@ export class DataEnterManager {
             const completionCache = CompletionCache.getInstance();
             const oldItems = completionCache.get(oldPath);
             completionCache.delete(oldPath);
+            // 路径变更可能导致 hover 文件来源失效，清空后由后续请求重建
+            this.hoverCache.clearAll();
             if (oldItems.length > 0) {
                 // 更新文件路径并重新保存
                 oldItems.forEach(item => {

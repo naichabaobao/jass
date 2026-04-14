@@ -404,8 +404,8 @@ export class HoverProvider implements vscode.HoverProvider {
             
             const doc = `private static method allocate takes ${paramsStr} returns ${structName}`;
             content.appendCodeblock(doc, 'jass');
-            content.appendMarkdown('\n\n**内置方法** - 为该结构分配唯一的实例 ID');
-            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            content.appendMarkdown('\n\n**Built-in Method** - Allocates a unique instance ID for this struct');
+            content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
             return content;
         }
         
@@ -431,9 +431,9 @@ export class HoverProvider implements vscode.HoverProvider {
                 let paramsStr = 'nothing';
                 const doc = `static method create takes ${paramsStr} returns ${structName}`;
                 content.appendCodeblock(doc, 'jass');
-                content.appendMarkdown('\n\n**内置方法** - 创建结构实例（默认调用 allocate）');
+                content.appendMarkdown('\n\n**Built-in Method** - Creates a struct instance (calls allocate by default)');
             }
-            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
             return content;
         }
         
@@ -455,9 +455,9 @@ export class HoverProvider implements vscode.HoverProvider {
                 const staticStr = isStatic ? 'static ' : '';
                 const doc = `${staticStr}method destroy takes nothing returns nothing`;
                 content.appendCodeblock(doc, 'jass');
-                content.appendMarkdown('\n\n**内置方法** - 销毁结构实例');
+                content.appendMarkdown('\n\n**Built-in Method** - Destroys the struct instance');
             }
-            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
             return content;
         }
         
@@ -465,8 +465,8 @@ export class HoverProvider implements vscode.HoverProvider {
             const content = new vscode.MarkdownString();
             const doc = `method deallocate takes nothing returns nothing`;
             content.appendCodeblock(doc, 'jass');
-            content.appendMarkdown('\n\n**内置方法** - 调用默认的 destroy 方法');
-            content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+            content.appendMarkdown('\n\n**Built-in Method** - Calls the default destroy method');
+            content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
             return content;
         }
         
@@ -479,13 +479,13 @@ export class HoverProvider implements vscode.HoverProvider {
                 const content = new vscode.MarkdownString();
                 const doc = this.formatMethodSignature(onDestroyMethod);
                 content.appendCodeblock(doc, 'jass');
-                content.appendMarkdown('\n\n**特殊方法** - 在结构实例销毁时自动调用');
+                content.appendMarkdown('\n\n**Special Method** - Automatically invoked when struct instance is destroyed');
                 const comment = this.extractCommentForStatement(onDestroyMethod, filePath);
                 if (comment) {
                     content.appendMarkdown('\n\n---\n\n');
                     content.appendMarkdown(comment);
                 }
-                content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+                content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
                 return content;
             }
         }
@@ -951,7 +951,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -985,7 +985,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1017,7 +1017,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1052,7 +1052,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1078,7 +1078,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1106,7 +1106,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1131,7 +1131,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1156,7 +1156,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1184,16 +1184,16 @@ export class HoverProvider implements vscode.HoverProvider {
         }
         
         if (ownerName) {
-            content.appendMarkdown(`\n\n**所属:** \`${ownerName}\``);
+            content.appendMarkdown(`\n\n**Owner:** \`${ownerName}\``);
         }
         
         // 查找被委托的类型（struct）定义
         const structDef = this.findStructDefinition(delegateType);
         if (structDef) {
-            content.appendMarkdown(`\n**委托类型定义:** \`${this.getRelativePath(structDef.filePath)}\``);
+            content.appendMarkdown(`\n**Delegate Type Definition:** \`${this.getRelativePath(structDef.filePath)}\``);
         }
         
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1226,8 +1226,8 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**所属:** \`${ownerName}\``);
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**Owner:** \`${ownerName}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1273,8 +1273,8 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**所属:** \`${ownerName}\``);
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**Owner:** \`${ownerName}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1304,7 +1304,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1330,7 +1330,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1354,7 +1354,7 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1370,7 +1370,7 @@ export class HoverProvider implements vscode.HoverProvider {
             : '';
 
         content.appendCodeblock(`textmacro ${name}${params}`, 'jass');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(macro.filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(macro.filePath)}\``);
         
         return content;
     }
@@ -1407,9 +1407,9 @@ export class HoverProvider implements vscode.HoverProvider {
             if (displayValue.length > 100) {
                 displayValue = displayValue.substring(0, 100) + '...';
             }
-            content.appendMarkdown(`\n**值:** \`${displayValue}\``);
+            content.appendMarkdown(`\n**Value:** \`${displayValue}\``);
         }
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(define.filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(define.filePath)}\``);
         
         return content;
     }
@@ -1436,16 +1436,16 @@ export class HoverProvider implements vscode.HoverProvider {
         }
         
         if (ownerName) {
-            content.appendMarkdown(`\n\n**所属:** \`${ownerName}\``);
+            content.appendMarkdown(`\n\n**Owner:** \`${ownerName}\``);
         }
         
         // 查找被实现的模块定义
         const moduleDef = this.findModuleDefinition(moduleName);
         if (moduleDef) {
-            content.appendMarkdown(`\n**模块定义:** \`${this.getRelativePath(moduleDef.filePath)}\``);
+            content.appendMarkdown(`\n**Module Definition:** \`${this.getRelativePath(moduleDef.filePath)}\``);
         }
         
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
         
         return content;
     }
@@ -1646,8 +1646,8 @@ export class HoverProvider implements vscode.HoverProvider {
 
         const content = new vscode.MarkdownString();
         content.appendCodeblock(signature, 'jass');
-        content.appendMarkdown('\n\n**参数**');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown('\n\n**Parameter**');
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -1679,8 +1679,8 @@ export class HoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
         
-        content.appendMarkdown('\n\n**局部变量**');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown('\n\n**Local Variable**');
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -1938,10 +1938,10 @@ export class HoverProvider implements vscode.HoverProvider {
             // 创建 hover 内容
             const content = new vscode.MarkdownString();
             content.appendCodeblock(`'${charCodeStr}'`, 'jass');
-            content.appendMarkdown(`\n**字符代码值**\n`);
-            content.appendMarkdown(`- 十进制: \`${intValue}\`\n`);
-            content.appendMarkdown(`- 十六进制: \`0x${hexValue}\`\n`);
-            content.appendMarkdown(`- 无符号: \`${uintValue}\`\n`);
+            content.appendMarkdown(`\n**Character Code Value**\n`);
+            content.appendMarkdown(`- Decimal: \`${intValue}\`\n`);
+            content.appendMarkdown(`- Hex: \`0x${hexValue}\`\n`);
+            content.appendMarkdown(`- Unsigned: \`${uintValue}\`\n`);
             
             // 创建范围（包含单引号）
             const range = new vscode.Range(
@@ -1968,10 +1968,10 @@ export class HoverProvider implements vscode.HoverProvider {
         const info = this.vjassInfoRef.symbols.get(symbolName);
         if (info) {
             const content = new vscode.MarkdownString();
-            content.appendMarkdown(`**vJASS 内置 ${info.type}**\n\n`);
+            content.appendMarkdown(`**vJASS Built-in ${info.type}**\n\n`);
             content.appendMarkdown(`${info.description}\n\n`);
             if (info.value) {
-                content.appendMarkdown(`值: \`${info.value}\`\n`);
+                content.appendMarkdown(`Value: \`${info.value}\`\n`);
             }
             return content;
         }

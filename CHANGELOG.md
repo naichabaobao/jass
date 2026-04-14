@@ -1,3 +1,11 @@
+#### 1.9.8
+hint默认false
+修复hover缓存刷新问题
+- 增强标签支持：`@param`（兼容 `{type}` 写法）、`@returns/@return`、`@deprecated`、`@provider`、`@since`、`@see`、`@example`
+- 新增 `@version` 标签支持：可在 hover/completion 文档中展示 `Version` 字段
+- 废弃展示优化：`@deprecated` 在 hover/completion 文档中支持删除线展示
+- 新增 provider 信息区块：支持 `@provider` 并在文档中以 `Providers` 分组展示
+
 #### 1.9.7
 - 数组结构（extends array）误报修复：允许静态数组成员与静态成员默认值；修复 `private static integer array xxx` 等成员解析，不再误报「cannot have array members」「cannot have default values」
 - 类型查询优先级：类型语法检查按顺序解析——基本类型 → type 声明 → struct/interface → function interface → vjass type（见 docs/type-system.md）

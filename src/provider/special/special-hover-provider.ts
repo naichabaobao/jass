@@ -133,15 +133,15 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
         content.appendCodeblock(literalText, 'jass');
         
         if (literal.deprecated) {
-            content.appendMarkdown('\n\n~~**已废弃**~~');
+            content.appendMarkdown('\n\n~~**Deprecated**~~');
         }
 
         if (literal.description) {
             content.appendMarkdown(`\n\n${literal.description}`);
         }
 
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(literal.filePath)}\``);
-        content.appendMarkdown(`\n**类型:** ${literal.type}`);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(literal.filePath)}\``);
+        content.appendMarkdown(`\n**Type:** ${literal.type}`);
 
         return content;
     }

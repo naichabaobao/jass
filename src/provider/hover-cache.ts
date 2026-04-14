@@ -308,6 +308,36 @@ export class HoverCache {
     }
 
     /**
+     * 清除所有缓存
+     */
+    public clearAll(): void {
+        this.cache.clear();
+        this.nameIndex.clear();
+        this.pendingSaves.clear();
+
+        if (this.saveTimer) {
+            clearTimeout(this.saveTimer);
+            this.saveTimer = null;
+        }
+
+        // 删除磁盘上的 hover 缓存文件
+        try {
+            if (!fs.existsSync(this.cacheDir)) {
+                return;
+            }
+            const files = fs.readdirSync(this.cacheDir);
+            for (const file of files) {
+                if (file.endsWith('.json')) {
+                    const cacheFilePath = path.join(this.cacheDir, file);
+                    fs.unlinkSync(cacheFilePath);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to clear hover cache directory:', error);
+        }
+    }
+
+    /**
      * 强制立即保存所有待保存的文件
      */
     public flush(): void {

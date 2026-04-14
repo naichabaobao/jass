@@ -370,7 +370,7 @@ export class ZincHoverProvider implements vscode.HoverProvider {
             : '';
 
         content.appendCodeblock(`${publicStr}${privateStr}library ${name}${reqStr}`, 'zinc');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -406,7 +406,7 @@ export class ZincHoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
 
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -448,7 +448,7 @@ export class ZincHoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
 
-        content.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -484,7 +484,7 @@ export class ZincHoverProvider implements vscode.HoverProvider {
         }
 
         content.appendCodeblock(typeStr, 'zinc');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -518,7 +518,7 @@ export class ZincHoverProvider implements vscode.HoverProvider {
         }
 
         content.appendCodeblock(structStr, 'zinc');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -537,7 +537,7 @@ export class ZincHoverProvider implements vscode.HoverProvider {
         const privateStr = interface_.isPrivate ? 'private ' : '';
 
         content.appendCodeblock(`${publicStr}${privateStr}interface ${name}`, 'zinc');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -554,7 +554,7 @@ export class ZincHoverProvider implements vscode.HoverProvider {
         const name = module.name.name;
 
         content.appendCodeblock(`module ${name}`, 'zinc');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -589,8 +589,8 @@ export class ZincHoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
 
-        content.appendMarkdown(`\n\n**所属:** \`${ownerName}\``);
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**Owner:** \`${ownerName}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -630,8 +630,8 @@ export class ZincHoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
 
-        content.appendMarkdown(`\n\n**所属:** \`${ownerName}\``);
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown(`\n\n**Owner:** \`${ownerName}\``);
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -785,8 +785,8 @@ export class ZincHoverProvider implements vscode.HoverProvider {
 
         const content = new vscode.MarkdownString();
         content.appendCodeblock(signature, 'zinc');
-        content.appendMarkdown('\n\n**参数**');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown('\n\n**Parameter**');
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
@@ -831,8 +831,8 @@ export class ZincHoverProvider implements vscode.HoverProvider {
             content.appendMarkdown(comment);
         }
 
-        content.appendMarkdown('\n\n**局部变量**');
-        content.appendMarkdown(`\n**文件:** \`${this.getRelativePath(filePath)}\``);
+        content.appendMarkdown('\n\n**Local Variable**');
+        content.appendMarkdown(`\n**File:** \`${this.getRelativePath(filePath)}\``);
 
         return content;
     }
