@@ -29,6 +29,9 @@
           "include": "#keyword"
         },
         {
+          "include": "#storage-modifier"
+        },
+        {
           "include": "#keyword-control"
         },
         {
@@ -159,8 +162,28 @@
           ]
         },
         "keyword": {
-          "name": "keyword",
-          "match": "\\b(globals|endglobals|function|endfunction|constant|native|local|type|set|call|takes|returns|extends|array|debug)\\b"
+          "patterns": [
+            {
+              "name": "keyword.declaration.function",
+              "match": "\\b(function|native|endfunction)\\b"
+            },
+            {
+              "name": "keyword.declaration.type",
+              "match": "\\b(type)\\b"
+            },
+            {
+              "name": "keyword.declaration.block",
+              "match": "\\b(globals|endglobals)\\b"
+            },
+            {
+              "name": "keyword.other",
+              "match": "\\b(set|call|takes|returns|extends)\\b"
+            }
+          ]
+        },
+        "storage-modifier": {
+          "name": "storage.modifier",
+          "match": "\\b(constant|local|array|debug|private|public|static|readonly|optional|stub|delegate)\\b"
         },
         "keyword-control": {
           "name": "keyword.control",
@@ -187,11 +210,11 @@
           "match": "(?<=\\b(?:function|method)\\s+)[a-zA-Z][a-zA-Z0-9_]*|[a-zA-Z][a-zA-Z0-9_]*(?=\\s*\\()"
         },
         "base-type": {
-          "name": "support.class",
+          "name": "storage.type.primitive",
           "match": "\\b(integer|real|boolean|string|handle|code|nothing)\\b"
         },
         "type": {
-          "name": "support.type",
+          "name": "storage.type",
           "match": "\\b(agent|event|player|widget|unit|destructable|item|ability|buff|force|group|trigger|triggercondition|triggeraction|timer|location|region|rect|boolexpr|sound|conditionfunc|filterfunc|unitpool|itempool|race|alliancetype|racepreference|gamestate|igamestate|fgamestate|playerstate|playerscore|playergameresult|unitstate|aidifficulty|eventid|gameevent|playerevent|playerunitevent|unitevent|limitop|widgetevent|dialogevent|unittype|gamespeed|gamedifficulty|gametype|mapflag|mapvisibility|mapsetting|mapdensity|mapcontrol|playerslotstate|volumegroup|camerafield|camerasetup|playercolor|placement|startlocprio|raritycontrol|blendmode|texmapflags|effect|effecttype|weathereffect|terraindeformation|fogstate|fogmodifier|dialog|button|quest|questitem|defeatcondition|timerdialog|leaderboard|multiboard|multiboarditem|trackable|gamecache|version|itemtype|texttag|attacktype|damagetype|weapontype|soundtype|lightning|pathingtype|image|ubersplat|hashtable|mousebuttontype|animtype|subanimtype|framehandle|originframetype|framepointtype|textaligntype|frameeventtype|oskeytype|abilityintegerfield|abilityrealfield|abilitybooleanfield|abilitystringfield|abilityintegerlevelfield|abilityreallevelfield|abilitybooleanlevelfield|abilitystringlevelfield|abilityintegerlevelarrayfield|abilityreallevelarrayfield|abilitybooleanlevelarrayfield|abilitystringlevelarrayfield|unitintegerfield|unitrealfield|unitbooleanfield|unitstringfield|unitweaponintegerfield|unitweaponrealfield|unitweaponbooleanfield|unitweaponstringfield|itemintegerfield|itemrealfield|itembooleanfield|itemstringfield|movetype|targetflag|armortype|heroattribute|defensetype|regentype|unitcategory|pathingflag|minimapicon|commandbuttoneffect)\\b"
         },
         "lua": {
@@ -218,8 +241,24 @@
           "match": "[a-zA-Z][a-zA-Z0-9_]*"
         },
         "vjass-keyword-inline": {
-          "name": "keyword",
-          "match": "\\b(library|library_once|initializer|finalizer|needs|uses|requires|optional|endlibrary|scope|endscope|private|public|static|interface|endinterface|extends|struct|endstruct|method|endmethod|this|super|delegate|operator|module|endmodule|implement|stub|key|thistype|onInit|onDestroy|hook|defaults|allocate|deallocate|create|destroy|execute|evaluate|name|exists|size|getType|typeid|readonly)\\b"
+          "patterns": [
+            {
+              "name": "keyword.declaration.namespace",
+              "match": "\\b(library|library_once|endlibrary|scope|endscope)\\b"
+            },
+            {
+              "name": "keyword.declaration.type",
+              "match": "\\b(interface|endinterface|struct|endstruct|module|endmodule)\\b"
+            },
+            {
+              "name": "keyword.declaration.function",
+              "match": "\\b(method|endmethod|initializer|finalizer|onInit|onDestroy|hook|operator)\\b"
+            },
+            {
+              "name": "keyword.other",
+              "match": "\\b(needs|uses|requires|implement|extends|this|super|thistype|defaults|allocate|deallocate|create|destroy|execute|evaluate|name|exists|size|getType|typeid|key)\\b"
+            }
+          ]
         }
       }
     },
@@ -276,7 +315,7 @@
         "vjass-object": {
           "patterns": [
             {
-              "name": "entity.name.type",
+              "name": "entity.name.type.class",
               "match": "(?<=\\b(?:struct|delegate|interface)\\s+)[a-zA-Z][a-zA-Z0-9_]*"
             },
             {

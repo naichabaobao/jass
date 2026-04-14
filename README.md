@@ -1,5 +1,7 @@
 # VS Code JASS 扩展
 
+语言版本: 简体中文 | [English](README.en.md) | [日本語](README.ja.md)
+
 ## 🚀 快速开始
 
 1. 克隆项目
@@ -23,6 +25,25 @@ npm install
 ### 配置说明
 
 扩展支持通过 `jass.config.json` 配置文件自定义各种选项。配置文件应放在工作区根目录。
+
+#### 编辑器设置（settings.json）
+
+除了 `jass.config.json`，也支持通过 VS Code 设置项调整补全行为：
+
+```json
+{
+  "jass.apiVersion": "off"
+}
+```
+
+`jass.apiVersion` 用于按魔兽常用版本偏好调整补全顺序（默认 `off`，即关闭，不改变现有习惯）。
+
+- 当设置为具体版本（如 `1.20`、`1.24`、`1.27`、`1.28f`、`1.36`）时：
+  - 会根据注释中的 `@since` 信息（兼容 `@version`）对“高于目标版本”的 API 进行降权排序。
+- 没有版本标注的条目不处理（保持原样）。
+
+> 目前标准库中的版本标注还在逐步完善中。  
+> 希望有缘人一起帮忙补充 `common.j / blizzard.j / common.ai` 的 `@since`（兼容 `@version`）标注，欢迎 PR ❤️
 
 #### 创建配置文件
 
@@ -577,13 +598,9 @@ endstruct
 
 ## 💖 支持项目
 
-<div align="center">
-  <h3>请我喝杯奶茶 ☕</h3>
-  <img src="https://user-images.githubusercontent.com/38098031/190127376-c47656c3-8b28-4ff2-a242-78bb28a3652e.png" alt="赞助二维码" width="300"/>
-  
-  <h3>一起出份力赞助我开发吧！❤️</h3>
-  <img src="https://user-images.githubusercontent.com/38098031/189883735-7bbdb474-259a-4bc7-8a6b-09707aa013a4.png" alt="赞助说明" width="500"/>
-</div>
+| 请我喝杯奶茶 ☕ | 一起出份力赞助我开发吧！❤️ |
+| --- | --- |
+| <img src="https://user-images.githubusercontent.com/38098031/190127376-c47656c3-8b28-4ff2-a242-78bb28a3652e.png" alt="赞助二维码" width="280"/> | <img src="https://user-images.githubusercontent.com/38098031/189883735-7bbdb474-259a-4bc7-8a6b-09707aa013a4.png" alt="赞助说明" width="420"/> |
 
 <div align="center">
   <h3>⭐ 如果这个项目对你有帮助，请给我们一个 star！</h3>

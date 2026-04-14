@@ -60,6 +60,26 @@
           "type": "boolean",
           "default": false,
           "description": "Enable hint support for function parameters and method calls. This is an experimental feature."
+        },
+        "jass.apiVersion": {
+          "type": "string",
+          "default": "off",
+          "enum": [
+            "off",
+            "1.20",
+            "1.24",
+            "1.27",
+            "1.26a",
+            "1.27a",
+            "1.28f",
+            "1.29",
+            "1.30",
+            "1.31",
+            "1.32",
+            "1.33",
+            "1.36"
+          ],
+          "markdownDescription": "Warcraft III API version preference for completion ordering. When set, APIs marked by `@since` (compatible with `@version`) newer than selected version are de-prioritized. Items without version tags are unchanged."
         }
       }
     },

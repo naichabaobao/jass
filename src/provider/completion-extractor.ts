@@ -24,6 +24,7 @@ import { CustomCompletionItem } from './completion-cache';
  * 从 BlockStatement 中提取补全项，供 data-enter.ts 和 completion-provider.ts 使用
  */
 export class CompletionExtractor {
+    private static readonly DEPRECATED_SORT_BUCKET = '8_deprecated_';
     /**
      * 从 BlockStatement 中提取补全项（不包含局部变量，因为局部变量需要位置信息）
      */
@@ -337,18 +338,19 @@ export class CompletionExtractor {
         );
         item.detail = 'Function';
         const doc = CompletionExtractor.formatFunctionSignature(func);
-        const comment = CompletionExtractor.extractComment(func, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(func, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_func_${func.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -369,18 +371,19 @@ export class CompletionExtractor {
         );
         item.detail = native.isConstant ? 'Constant Native Function' : 'Native Function';
         const doc = CompletionExtractor.formatNativeSignature(native);
-        const comment = CompletionExtractor.extractComment(native, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(native, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_native_${native.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -401,18 +404,19 @@ export class CompletionExtractor {
         );
         item.detail = 'Function Interface';
         const doc = CompletionExtractor.formatFunctionInterfaceSignature(func);
-        const comment = CompletionExtractor.extractComment(func, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(func, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_func_interface_${func.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -442,18 +446,19 @@ export class CompletionExtractor {
                     : ' array')
             : '';
         const doc = `${constantStr}${typeStr}${arrayStr} ${stmt.name.name}`;
-        const comment = CompletionExtractor.extractComment(stmt, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `2_var_${stmt.name.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -475,18 +480,19 @@ export class CompletionExtractor {
         item.detail = 'Type';
         const baseType = stmt.baseType ? ` extends ${stmt.baseType.toString()}` : '';
         const doc = `type ${stmt.name!.name}${baseType}`;
-        const comment = CompletionExtractor.extractComment(stmt, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_type_${stmt.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -510,18 +516,19 @@ export class CompletionExtractor {
         const indexInfo = stmt.indexSize !== null ? `[${stmt.indexSize}]` : '';
         const arrayInfo = stmt.isArrayStruct ? ` extends array${stmt.arraySize !== null ? ` [${stmt.arraySize}]` : ''}` : '';
         const doc = `struct${indexInfo} ${stmt.name!.name}${extendsInfo}${arrayInfo}`;
-        const comment = CompletionExtractor.extractComment(stmt, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_struct_${stmt.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -542,18 +549,19 @@ export class CompletionExtractor {
         );
         item.detail = 'Interface';
         const doc = `interface ${stmt.name!.name}`;
-        const comment = CompletionExtractor.extractComment(stmt, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_interface_${stmt.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -574,18 +582,19 @@ export class CompletionExtractor {
         );
         item.detail = 'Module';
         const doc = `module ${stmt.name!.name}`;
-        const comment = CompletionExtractor.extractComment(stmt, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_module_${stmt.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -607,18 +616,19 @@ export class CompletionExtractor {
         item.detail = 'Delegate';
         const privateStr = stmt.isPrivate ? 'private ' : '';
         const doc = `${privateStr}delegate ${stmt.delegateType.toString()} ${stmt.name!.name}`;
-        const comment = CompletionExtractor.extractComment(stmt, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.sortText = `1_delegate_${stmt.name!.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -642,19 +652,20 @@ export class CompletionExtractor {
             ? ` takes ${stmt.parameters.join(', ')}`
             : '';
         const doc = `textmacro ${stmt.name}${params}`;
-        const comment = CompletionExtractor.extractComment(stmt, filePath, getFileContent);
+        const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
         documentation.appendCodeblock(doc, 'jass');
-        if (comment) {
+        if (commentData.markdown) {
             documentation.appendMarkdown('\n\n---\n\n');
-            documentation.appendMarkdown(comment);
+            documentation.appendMarkdown(commentData.markdown);
         }
         documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
         
         item.documentation = documentation;
         item.insertText = stmt.name;
         item.sortText = `3_macro_${stmt.name}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
         return item;
     }
 
@@ -707,29 +718,44 @@ export class CompletionExtractor {
     /**
      * 提取注释
      */
-    private static extractComment(
+    private static extractCommentData(
         stmt: Statement,
         filePath: string,
         getFileContent: (filePath: string) => string | null
-    ): string | null {
+    ): { markdown: string | null; deprecated: boolean } {
         if (!stmt.start) {
-            return null;
+            return { markdown: null, deprecated: false };
         }
 
         const fileContent = getFileContent(filePath);
         if (!fileContent) {
-            return null;
+            return { markdown: null, deprecated: false };
         }
 
         const commentLines = extractLeadingComments(fileContent, stmt.start.line);
         if (commentLines.length === 0) {
-            return null;
+            return { markdown: null, deprecated: false };
         }
 
         const parsedComment = parseComment(commentLines);
-        const markdown = formatCommentAsMarkdown(parsedComment);
-        
-        return markdown || null;
+        return {
+            markdown: formatCommentAsMarkdown(parsedComment) || null,
+            deprecated: parsedComment.deprecated
+        };
+    }
+
+    private static applyDeprecatedTagAndSort(item: vscode.CompletionItem, deprecated: boolean): void {
+        if (!deprecated) {
+            return;
+        }
+        const existingTags = item.tags || [];
+        if (!existingTags.includes(vscode.CompletionItemTag.Deprecated)) {
+            item.tags = [...existingTags, vscode.CompletionItemTag.Deprecated];
+        }
+        const originalSort = item.sortText || `${item.label}`;
+        if (!originalSort.startsWith(CompletionExtractor.DEPRECATED_SORT_BUCKET)) {
+            item.sortText = `${CompletionExtractor.DEPRECATED_SORT_BUCKET}${originalSort}`;
+        }
     }
 }
 

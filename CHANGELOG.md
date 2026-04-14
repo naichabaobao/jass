@@ -1,8 +1,13 @@
+#### 1.9.9
+- 语法高亮标准化：细分 token scope（如 `storage.type`、`storage.modifier`、`keyword.declaration.*`、`entity.name.function`），提升主题兼容性
+- `@deprecated` 与补全项联动：自动标记 `CompletionItemTag.Deprecated`（统一删除线），并在排序中降权到靠后位置
+- 新增 `jass.apiVersion` 选项：可按魔兽常用版本偏好调整补全排序；基于 `@since`（兼容 `@version`）对高于目标版本的 API 降权，未标注版本的不受影响
+
 #### 1.9.8
-hint默认false
-修复hover缓存刷新问题
+- hint默认false
+- 修复hover缓存刷新问题
 - 增强标签支持：`@param`（兼容 `{type}` 写法）、`@returns/@return`、`@deprecated`、`@provider`、`@since`、`@see`、`@example`
-- 新增 `@version` 标签支持：可在 hover/completion 文档中展示 `Version` 字段
+- 版本标签策略调整：建议使用 `@since`；`@version` 仅为兼容旧写法保留，展示时统一按 `Since` 输出，后续逐步迁移到 `@since`
 - 废弃展示优化：`@deprecated` 在 hover/completion 文档中支持删除线展示
 - 新增 provider 信息区块：支持 `@provider` 并在文档中以 `Providers` 分组展示
 

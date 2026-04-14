@@ -291,14 +291,11 @@ export function formatCommentAsMarkdown(comment: ParsedComment): string {
         parts.push(`**Returns:** ${comment.returns}`);
     }
 
-    // version 部分
-    if (comment.version) {
-        parts.push(`**Version:** ${comment.version}`);
-    }
-
-    // since 部分
-    if (comment.since) {
-        parts.push(`**Since:** ${comment.since}`);
+    // since/version 兼容部分：
+    // 优先使用 @since；若仅有 @version，则按 Since 展示（兼容旧写法）
+    const sinceText = comment.since || comment.version;
+    if (sinceText) {
+        parts.push(`**Since:** ${sinceText}`);
     }
 
     // see 部分

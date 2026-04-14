@@ -466,7 +466,7 @@ constant native GetObjectName takes integer objectId returns string
 // 1.28及以下：12
 // 1.29及以上：24
 // 不随版本自动变化，即在1.29或以上版本运行低版本编辑器制作的地图时，该值不会自动适配
-// @version 1.29
+// @since 1.29
 constant native GetBJMaxPlayers takes nothing returns integer
 // 获取中立受害玩家编号
 // 1.28及以下：13
@@ -562,51 +562,51 @@ globals
 	constant playercolor PLAYER_COLOR_BROWN = ConvertPlayerColor(11)
 	// 玩家颜色 褐红色
 	// 代码：|Cff9C0000|r , 三色值：155, 0, 0
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_MAROON = ConvertPlayerColor(12)
 	// 玩家颜色 深蓝色
 	// 代码：|Cff0000C3|r , 三色值：0, 0, 195
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_NAVY = ConvertPlayerColor(13)
 	// 玩家颜色 蓝绿色
 	// 代码：|Cff00EBFF|r , 三色值：0, 234, 255
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_TURQUOISE = ConvertPlayerColor(14)
 	// 玩家颜色 紫罗兰色
 	// 代码：|CffBD00FF|r , 三色值：190, 0, 254
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_VIOLET = ConvertPlayerColor(15)
 	// 玩家颜色 小麦色
 	// 代码：|CffECCD87|r , 三色值：235, 205, 135
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_WHEAT = ConvertPlayerColor(16)
 	// 玩家颜色 桃色
 	// 代码：|CffF7A58B|r , 三色值：248, 164, 139
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_PEACH = ConvertPlayerColor(17)
 	// 玩家颜色 薄荷色
 	// 代码：|CffBFFF81|r , 三色值：191, 255, 128
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_MINT = ConvertPlayerColor(18)
 	// 玩家颜色 淡紫色
 	// 代码：|CffDBB9EB|r , 三色值：220, 185, 235
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_LAVENDER = ConvertPlayerColor(19)
 	// 玩家颜色 煤焦油色
 	// 代码：|Cff4F5055|r , 三色值：80, 79, 85
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_COAL = ConvertPlayerColor(20)
 	// 玩家颜色 雪白色
 	// 代码：|CffECF0FF|r , 三色值：235, 240, 255
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_SNOW = ConvertPlayerColor(21)
 	// 玩家颜色 祖母绿色
 	// 代码：|Cff00781E|r , 三色值：0, 120, 30
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_EMERALD = ConvertPlayerColor(22)
 	// 玩家颜色 花生色
 	// 代码：|CffA57033|r , 三色值：164, 111, 51
-	// @version 1.29
+	// @since 1.29
 	constant playercolor PLAYER_COLOR_PEANUT = ConvertPlayerColor(23)
 	// 种族 人类
 	constant race RACE_HUMAN = ConvertRace(1)
@@ -1068,25 +1068,25 @@ globals
 	//region Cinematic Sound Constants 1.33
 	
 	// 声道 背景声
-	// @version 1.33
+	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_GENERAL = ConvertVolumeGroup(8)
 	// 声道 场景声
-	// @version 1.33
+	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_AMBIENT = ConvertVolumeGroup(9)
 	// 声道 音乐
-	// @version 1.33
+	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_MUSIC = ConvertVolumeGroup(10)
 	// 声道 对话声
-	// @version 1.33
+	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_DIALOGUE = ConvertVolumeGroup(11)
 	// 声道 音效1
-	// @version 1.33
+	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_1 = ConvertVolumeGroup(12)
 	// 声道 音效2
-	// @version 1.33
+	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_2 = ConvertVolumeGroup(13)
 	// 声道 音效3
-	// @version 1.33
+	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
 	//endregion
 	
@@ -1877,570 +1877,570 @@ globals
 	// OS Key constants
 	
 	// 键盘按键 退格键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_BACKSPACE = ConvertOsKeyType($08)
 	// 键盘按键 TAB 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_TAB = ConvertOsKeyType($09)
 	// 键盘按键 CLEAR 键(Num Lock关闭时的数字键盘5)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_CLEAR = ConvertOsKeyType($0C)
 	// 键盘按键 回车键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_RETURN = ConvertOsKeyType($0D)
 	// 键盘按键 SHIFT 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_SHIFT = ConvertOsKeyType($10)
 	// 键盘按键 ctrl 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_CONTROL = ConvertOsKeyType($11)
 	// 键盘按键 ALT 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ALT = ConvertOsKeyType($12)
 	// 键盘按键 PAUSE (暂停)键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PAUSE = ConvertOsKeyType($13)
 	// 键盘按键 CAPS LOCK 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_CAPSLOCK = ConvertOsKeyType($14)
 	// 键盘按键 KANA 键，仅用于日语键盘
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_KANA = ConvertOsKeyType($15)
 	// 键盘按键 HANGUL 键，仅用于朝鲜/韩语键盘
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_HANGUL = ConvertOsKeyType($15)
 	// 键盘按键 JUNJA 键，仅用于特定语言输入法
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_JUNJA = ConvertOsKeyType($17)
 	// 键盘按键 FINAL键，仅用于特定语言输入法
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_FINAL = ConvertOsKeyType($18)
 	// 键盘按键 HANJA 键，仅用于朝鲜/韩语键盘
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_HANJA = ConvertOsKeyType($19)
 	// 键盘按键 KANJI 键，仅用于日语键盘
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_KANJI = ConvertOsKeyType($19)
 	// 键盘按键 ESC 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ESCAPE = ConvertOsKeyType($1B)
 	// 键盘按键 Caps lock 键(开启状态)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_CONVERT = ConvertOsKeyType($1C)
 	// 键盘按键 Caps lock 键(关闭状态)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NONCONVERT = ConvertOsKeyType($1D)
 	// 键盘按键 ACCEPT 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ACCEPT = ConvertOsKeyType($1E)
 	// 键盘按键 变更模式键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_MODECHANGE = ConvertOsKeyType($1F)
 	// 键盘按键 空格键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_SPACE = ConvertOsKeyType($20)
 	// 键盘按键 向上翻页键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PAGEUP = ConvertOsKeyType($21)
 	// 键盘按键 向下翻页键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PAGEDOWN = ConvertOsKeyType($22)
 	// 键盘按键 结束键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_END = ConvertOsKeyType($23)
 	// 键盘按键 HOME 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_HOME = ConvertOsKeyType($24)
 	// 键盘按键 方向键 左
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LEFT = ConvertOsKeyType($25)
 	// 键盘按键 方向键 上
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_UP = ConvertOsKeyType($26)
 	// 键盘按键 方向键 右
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_RIGHT = ConvertOsKeyType($27)
 	// 键盘按键 方向键 下
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_DOWN = ConvertOsKeyType($28)
 	// 键盘按键 选择键(右SHIFT)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_SELECT = ConvertOsKeyType($29)
 	// 键盘按键 PRINT 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PRINT = ConvertOsKeyType($2A)
 	// 键盘按键 EXECUTE 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_EXECUTE = ConvertOsKeyType($2B)
 	// 键盘按键 截图键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PRINTSCREEN = ConvertOsKeyType($2C)
 	//建盘 INSERT键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_INSERT = ConvertOsKeyType($2D)
 	//建盘 DELETE键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_DELETE = ConvertOsKeyType($2E)
 	// 键盘按键 帮助键(F1)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_HELP = ConvertOsKeyType($2F)
 	// 键盘按键 0键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_0 = ConvertOsKeyType($30)
 	// 键盘按键 1键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_1 = ConvertOsKeyType($31)
 	// 键盘按键 2键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_2 = ConvertOsKeyType($32)
 	// 键盘按键 3键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_3 = ConvertOsKeyType($33)
 	// 键盘按键 4键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_4 = ConvertOsKeyType($34)
 	// 键盘按键 5键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_5 = ConvertOsKeyType($35)
 	// 键盘按键 6键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_6 = ConvertOsKeyType($36)
 	// 键盘按键 7键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_7 = ConvertOsKeyType($37)
 	// 键盘按键 8键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_8 = ConvertOsKeyType($38)
 	// 键盘按键 9键(非小/数字键盘)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_9 = ConvertOsKeyType($39)
 	// 键盘按键 A键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_A = ConvertOsKeyType($41)
 	// 键盘按键 B键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_B = ConvertOsKeyType($42)
 	// 键盘按键 C键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_C = ConvertOsKeyType($43)
 	// 键盘按键 D键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_D = ConvertOsKeyType($44)
 	// 键盘按键 E键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_E = ConvertOsKeyType($45)
 	// 键盘按键 F键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F = ConvertOsKeyType($46)
 	// 键盘按键 G键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_G = ConvertOsKeyType($47)
 	// 键盘按键 H键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_H = ConvertOsKeyType($48)
 	// 键盘按键 I键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_I = ConvertOsKeyType($49)
 	// 键盘按键 J键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_J = ConvertOsKeyType($4A)
 	// 键盘按键 K键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_K = ConvertOsKeyType($4B)
 	// 键盘按键 L键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_L = ConvertOsKeyType($4C)
 	// 键盘按键 M键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_M = ConvertOsKeyType($4D)
 	// 键盘按键 N键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_N = ConvertOsKeyType($4E)
 	// 键盘按键 O键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_O = ConvertOsKeyType($4F)
 	// 键盘按键 P键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_P = ConvertOsKeyType($50)
 	// 键盘按键 Q键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_Q = ConvertOsKeyType($51)
 	// 键盘按键 R键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_R = ConvertOsKeyType($52)
 	// 键盘按键 S键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_S = ConvertOsKeyType($53)
 	// 键盘按键 T键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_T = ConvertOsKeyType($54)
 	// 键盘按键 U键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_U = ConvertOsKeyType($55)
 	// 键盘按键 V键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_V = ConvertOsKeyType($56)
 	// 键盘按键 W键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_W = ConvertOsKeyType($57)
 	// 键盘按键 X键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_X = ConvertOsKeyType($58)
 	// 键盘按键 Y键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_Y = ConvertOsKeyType($59)
 	// 键盘按键 Z键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_Z = ConvertOsKeyType($5A)
 	// 键盘按键 LMETA 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LMETA = ConvertOsKeyType($5B)
 	// 键盘按键 RMETA 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_RMETA = ConvertOsKeyType($5C)
 	// 键盘按键 APPS 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_APPS = ConvertOsKeyType($5D)
 	// 键盘按键 休眠键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_SLEEP = ConvertOsKeyType($5F)
 	// 小/数字键盘按键 0键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD0 = ConvertOsKeyType($60)
 	// 小/数字键盘按键 1键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD1 = ConvertOsKeyType($61)
 	// 小/数字键盘按键 2键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD2 = ConvertOsKeyType($62)
 	// 小/数字键盘按键 3键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD3 = ConvertOsKeyType($63)
 	// 小/数字键盘按键 4键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD4 = ConvertOsKeyType($64)
 	// 小/数字键盘按键 5键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD5 = ConvertOsKeyType($65)
 	// 小/数字键盘按键 6键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD6 = ConvertOsKeyType($66)
 	// 小/数字键盘按键 7键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD7 = ConvertOsKeyType($67)
 	// 小/数字键盘按键 8键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD8 = ConvertOsKeyType($68)
 	// 小/数字键盘按键 9键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMPAD9 = ConvertOsKeyType($69)
 	// 小/数字键盘按键 乘号键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_MULTIPLY = ConvertOsKeyType($6A)
 	// 小/数字键盘按键 加号键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ADD = ConvertOsKeyType($6B)
 	// 小/数字键盘按键 分离键/分隔符键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_SEPARATOR = ConvertOsKeyType($6C)
 	// 小/数字键盘按键 减号键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_SUBTRACT = ConvertOsKeyType($6D)
 	// 小/数字键盘按键 小数点键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_DECIMAL = ConvertOsKeyType($6E)
 	// 小/数字键盘按键 除号键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_DIVIDE = ConvertOsKeyType($6F)
 	// 键盘按键 F1键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F1 = ConvertOsKeyType($70)
 	// 键盘按键 F2键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F2 = ConvertOsKeyType($71)
 	// 键盘按键 F3键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F3 = ConvertOsKeyType($72)
 	// 键盘按键 F4键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F4 = ConvertOsKeyType($73)
 	// 键盘按键 F5键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F5 = ConvertOsKeyType($74)
 	// 键盘按键 F6键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F6 = ConvertOsKeyType($75)
 	// 键盘按键 F7键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F7 = ConvertOsKeyType($76)
 	// 键盘按键 F8键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F8 = ConvertOsKeyType($77)
 	// 键盘按键 F9键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F9 = ConvertOsKeyType($78)
 	// 键盘按键 F10键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F10 = ConvertOsKeyType($79)
 	// 键盘按键 F11键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F11 = ConvertOsKeyType($7A)
 	// 键盘按键 F12键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F12 = ConvertOsKeyType($7B)
 	// 键盘按键 F13键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F13 = ConvertOsKeyType($7C)
 	// 键盘按键 F14键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F14 = ConvertOsKeyType($7D)
 	// 键盘按键 F15键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F15 = ConvertOsKeyType($7E)
 	// 键盘按键 F16键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F16 = ConvertOsKeyType($7F)
 	// 键盘按键 F17键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F17 = ConvertOsKeyType($80)
 	// 键盘按键 F18键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F18 = ConvertOsKeyType($81)
 	// 键盘按键 F19键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F19 = ConvertOsKeyType($82)
 	// 键盘按键 F20键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F20 = ConvertOsKeyType($83)
 	// 键盘按键 F21键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F21 = ConvertOsKeyType($84)
 	// 键盘按键 F22键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F22 = ConvertOsKeyType($85)
 	// 键盘按键 F23键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F23 = ConvertOsKeyType($86)
 	// 键盘按键 F24键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_F24 = ConvertOsKeyType($87)
 	// 小/数字键盘按键 开关键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NUMLOCK = ConvertOsKeyType($90)
 	// 键盘按键 SCROLL LOCK键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_SCROLLLOCK = ConvertOsKeyType($91)
 	// 小/数字键盘按键 等号键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_NEC_EQUAL = ConvertOsKeyType($92)
 	// 键盘按键 字典键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_FJ_JISHO = ConvertOsKeyType($92)
 	// 键盘按键 取消注册 Word 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_FJ_MASSHOU = ConvertOsKeyType($93)
 	// 键盘按键 注册 Word 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_FJ_TOUROKU = ConvertOsKeyType($94)
 	// 键盘按键 左 OYAYUBI 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_FJ_LOYA = ConvertOsKeyType($95)
 	// 键盘按键 右 OYAYUBI 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_FJ_ROYA = ConvertOsKeyType($96)
 	// 键盘按键 左 SHIFT 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LSHIFT = ConvertOsKeyType($A0)
 	// 键盘按键 右 SHIFT 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_RSHIFT = ConvertOsKeyType($A1)
 	// 键盘按键 左 Ctrl 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LCONTROL = ConvertOsKeyType($A2)
 	// 键盘按键 右 Ctrl 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_RCONTROL = ConvertOsKeyType($A3)
 	// 键盘按键 左 Alt 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LALT = ConvertOsKeyType($A4)
 	// 键盘按键 右 Alt 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_RALT = ConvertOsKeyType($A5)
 	// 键盘按键 浏览器后退键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_BROWSER_BACK = ConvertOsKeyType($A6)
 	// 键盘按键 浏览器前进键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_BROWSER_FORWARD = ConvertOsKeyType($A7)
 	// 键盘按键 浏览器刷新键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_BROWSER_REFRESH = ConvertOsKeyType($A8)
 	// 键盘按键 浏览器停止键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_BROWSER_STOP = ConvertOsKeyType($A9)
 	// 键盘按键 浏览器搜索键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_BROWSER_SEARCH = ConvertOsKeyType($AA)
 	// 键盘按键 浏览器收藏键
 	constant oskeytype OSKEY_BROWSER_FAVORITES = ConvertOsKeyType($AB)
 	// 键盘按键 浏览器“开始”和“主页”键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_BROWSER_HOME = ConvertOsKeyType($AC)
 	// 键盘按键 静音键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_VOLUME_MUTE = ConvertOsKeyType($AD)
 	// 键盘按键 减小音量键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_VOLUME_DOWN = ConvertOsKeyType($AE)
 	// 键盘按键 增大音量键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_VOLUME_UP = ConvertOsKeyType($AF)
 	// 键盘按键 下一曲键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_MEDIA_NEXT_TRACK = ConvertOsKeyType($B0)
 	// 键盘按键 上一曲键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_MEDIA_PREV_TRACK = ConvertOsKeyType($B1)
 	// 键盘按键 停止播放键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_MEDIA_STOP = ConvertOsKeyType($B2)
 	// 键盘按键 暂停播放键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_MEDIA_PLAY_PAUSE = ConvertOsKeyType($B3)
 	// 键盘按键 打开邮箱键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LAUNCH_MAIL = ConvertOsKeyType($B4)
 	// 键盘按键 选择媒体键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LAUNCH_MEDIA_SELECT = ConvertOsKeyType($B5)
 	// 键盘按键 启动应用程序1键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LAUNCH_APP1 = ConvertOsKeyType($B6)
 	// 键盘按键 启动应用程序2键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_LAUNCH_APP2 = ConvertOsKeyType($B7)
 	// 小/数字键盘按键 1键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_1 = ConvertOsKeyType($BA)
 	// 键盘按键 加号键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_PLUS = ConvertOsKeyType($BB)
 	// 键盘按键 逗号键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_COMMA = ConvertOsKeyType($BC)
 	// 键盘按键 减号键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_MINUS = ConvertOsKeyType($BD)
 	// 键盘按键 句号键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_PERIOD = ConvertOsKeyType($BE)
 	// 小/数字键盘按键 2键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_2 = ConvertOsKeyType($BF)
 	// 小/数字键盘按键 3键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_3 = ConvertOsKeyType($C0)
 	// 小/数字键盘按键 4键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_4 = ConvertOsKeyType($DB)
 	// 小/数字键盘按键 5键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_5 = ConvertOsKeyType($DC)
 	// 小/数字键盘按键 6键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_6 = ConvertOsKeyType($DD)
 	// 小/数字键盘按键 7键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_7 = ConvertOsKeyType($DE)
 	// 小/数字键盘按键 8键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_8 = ConvertOsKeyType($DF)
 	// 键盘按键 AX 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_AX = ConvertOsKeyType($E1)
 	// 键盘按键 102 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_102 = ConvertOsKeyType($E2)
 	// 键盘按键  Ico帮助键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ICO_HELP = ConvertOsKeyType($E3)
 	// 键盘按键  Ico00 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ICO_00 = ConvertOsKeyType($E4)
 	// 键盘按键 Process 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PROCESSKEY = ConvertOsKeyType($E5)
 	// 键盘按键 Ico清理键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ICO_CLEAR = ConvertOsKeyType($E6)
 	// 键盘按键 格式化键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PACKET = ConvertOsKeyType($E7)
 	// 键盘按键 重置键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_RESET = ConvertOsKeyType($E9)
 	// 键盘按键 JUMP 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_JUMP = ConvertOsKeyType($EA)
 	// 键盘按键 PA1 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_PA1 = ConvertOsKeyType($EB)
 	// 键盘按键 PA2 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_PA2 = ConvertOsKeyType($EC)
 	// 键盘按键 PA3 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_PA3 = ConvertOsKeyType($ED)
 	// 键盘按键 WSCTRL 键(OEM 键，似乎是联想杀毒软件定制按键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_WSCTRL = ConvertOsKeyType($EE)
 	// 键盘按键 CUSEL 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_CUSEL = ConvertOsKeyType($EF)
 	// 键盘按键 ATTN 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_ATTN = ConvertOsKeyType($F0)
 	// 键盘按键 完成键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_FINISH = ConvertOsKeyType($F1)
 	// 键盘按键 复制键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_COPY = ConvertOsKeyType($F2)
 	// 键盘按键 自动键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_AUTO = ConvertOsKeyType($F3)
 	// 键盘按键 ENLW 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_ENLW = ConvertOsKeyType($F4)
 	// 键盘按键 BACKTAB 键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_BACKTAB = ConvertOsKeyType($F5)
 	// 键盘按键 ATTN 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ATTN = ConvertOsKeyType($F6)
 	// 键盘按键 CRSEL 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_CRSEL = ConvertOsKeyType($F7)
 	// 键盘按键 EXSEL 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_EXSEL = ConvertOsKeyType($F8)
 	// 键盘按键 EREOF 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_EREOF = ConvertOsKeyType($F9)
 	// 键盘按键 播放键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PLAY = ConvertOsKeyType($FA)
 	// 键盘按键 缩放键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_ZOOM = ConvertOsKeyType($FB)
 	// 键盘按键 留待将来使用的常数键（NONAME）
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_NONAME = ConvertOsKeyType($FC)
 	// 键盘按键 PA1 键
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_PA1 = ConvertOsKeyType($FD)
 	// 键盘按键 清理键(OEM 键)
-	// @version 1.33
+	// @since 1.33
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 	
 	
@@ -4044,7 +4044,7 @@ globals
 	// 单位实数域 移动 - 飞行高度 ('ufyh')
 	constant unitrealfield UNIT_RF_FLY_HEIGHT = ConvertUnitRealField('ufyh')
 	// 单位实数域 移动 - 最大飞行高度 ('ufmh')
-	// @version 2.03
+	// @since 2.03
 	constant unitrealfield UNIT_RF_FLY_MAX_HEIGHT = ConvertUnitRealField('ufmh')
 	// 单位实数域 移动 - 转身速度 ('umvr')
 	constant unitrealfield UNIT_RF_TURN_RATE = ConvertUnitRealField('umvr')
@@ -4697,12 +4697,23 @@ native GetPlayerName takes player whichPlayer returns string
 //
 
 // 新建计时器 [R]
+// @since 1.00
+// @see TimerStart
+// @see DestroyTimer
 // @example set t = CreateTimer()
+// @returns 新创建的计时器句柄；使用后需 DestroyTimer 释放
 native CreateTimer takes nothing returns timer
 // 销毁计时器 [R]
+// @since 1.00
+// @see CreateTimer
+// @param whichTimer 要销毁的计时器
 // @example call DestroyTimer(t)
 native DestroyTimer takes timer whichTimer returns nothing
 // 开始计时器(计时) [C]
+// @since 1.00
+// @see PauseTimer
+// @see ResumeTimer
+// @see GetExpiredTimer
 // @param whichTimer 计时器
 // @param timeout 超时/倒计时初始值
 // @param periodic 是否循环
@@ -4710,23 +4721,44 @@ native DestroyTimer takes timer whichTimer returns nothing
 // @example call TimerStart(t, 1.00, false, function OnTimer)
 native TimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
 // 获取计时器经过的时间/已倒计的时间
+// @since 1.00
+// @see TimerGetRemaining
+// @param whichTimer 计时器
 // @example set elapsed = TimerGetElapsed(t)
+// @returns 计时器已流逝时间（秒）
 native TimerGetElapsed takes timer whichTimer returns real
 // 获取计时器剩余时间
+// @since 1.00
+// @see TimerGetElapsed
+// @param whichTimer 计时器
 // @example set remaining = TimerGetRemaining(t)
+// @returns 计时器剩余时间（秒）
 native TimerGetRemaining takes timer whichTimer returns real
 // 获取计时器初始时间/倒计时初始值
+// @since 1.00
+// @see TimerStart
+// @param whichTimer 计时器
 // @example set timeout = TimerGetTimeout(t)
+// @returns 计时器最近一次启动时设置的超时值（秒）
 native TimerGetTimeout takes timer whichTimer returns real
 // 暂停计时器(计时) [R]
+// @since 1.00
+// @see ResumeTimer
+// @param whichTimer 计时器
 // @example call PauseTimer(t)
 native PauseTimer takes timer whichTimer returns nothing
 // 恢复计时器(计时) [R]
+// @since 1.00
+// @see PauseTimer
+// @param whichTimer 计时器
 // @example call ResumeTimer(t)
 native ResumeTimer takes timer whichTimer returns nothing
 // 获取到期的计时器
 // 与 TimerStart 一同使用
+// @since 1.00
+// @see TimerStart
 // @example set t = GetExpiredTimer()
+// @returns 当前回调中到期的计时器；非计时器回调上下文可能为 null
 native GetExpiredTimer takes nothing returns timer
 
 
@@ -4743,19 +4775,19 @@ native GroupAddUnit takes group whichGroup, unit whichUnit returns boolean
 // 将指定单位移出单位组 [R]
 native GroupRemoveUnit takes group whichGroup, unit whichUnit returns boolean
 // 将 whichGroup单位组 的单位添加到 addGroup单位组 [快速]
-// @version 1.33
+// @since 1.33
 native BlzGroupAddGroupFast takes group whichGroup, group addGroup returns integer
 // 将 whichGroup单位组 的单位移出 removeGroup单位组 [快速]
-// @version 1.33
+// @since 1.33
 native BlzGroupRemoveGroupFast takes group whichGroup, group removeGroup returns integer
 // 清空单位组
 // 排泄需使用销毁单位组 DestroyGroup，而非清空
 native GroupClear takes group whichGroup returns nothing
 // 获取单位组的单位数量
-// @version 1.33
+// @since 1.33
 native BlzGroupGetSize takes group whichGroup returns integer
 // 获取单位组中指定下标的单位
-// @version 1.33
+// @since 1.33
 native BlzGroupUnitAt takes group whichGroup, integer index returns unit
 // 将指定单位名称的单位加入单位组
 // @param unitname 单位名称，不区分大小写，可在 common.ai 和 记录物编的文件 找到，使用 GOLDMINE 时，会同时加入金矿、被缠绕的金矿、闹鬼金矿
@@ -4846,7 +4878,7 @@ native ForceAddPlayer takes force whichForce, player whichPlayer returns nothing
 // 从玩家组移除玩家 [R]
 native ForceRemovePlayer takes force whichForce, player whichPlayer returns nothing
 // 查询玩家是否在玩家组内
-// @version 1.33
+// @since 1.33
 native BlzForceHasPlayer takes force whichForce, player whichPlayer returns boolean
 // 清空玩家组
 // 排泄需使用销毁玩家组 DestroyForce，而非清空
@@ -5063,14 +5095,25 @@ native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, 
 // Creates it's own timer and triggers when it expires
 
 // 触发器登记计时器事件
+// @since 1.00
+// @see TriggerRegisterTimerExpireEvent
+// @param whichTrigger 触发器
+// @param timeout 间隔时间（秒）
+// @param periodic 是否循环触发
 // @example call TriggerRegisterTimerEvent(trg, 5.00, true)
+// @returns 事件句柄
 native TriggerRegisterTimerEvent takes trigger whichTrigger, real timeout, boolean periodic returns event
 
 // Triggers when the timer you tell it about expires
 // Triggers when the timer you tell it about expires
 
 // 触发器登记计时器到期事件
+// @since 1.00
+// @see TriggerRegisterTimerEvent
+// @param whichTrigger 触发器
+// @param t 要监听的计时器
 // @example call TriggerRegisterTimerExpireEvent(trg, t)
+// @returns 事件句柄
 native TriggerRegisterTimerExpireEvent takes trigger whichTrigger, timer t returns event
 
 // 触发器登记游戏状态事件
@@ -5141,19 +5184,19 @@ constant native GetClickedButton takes nothing returns button
 constant native GetClickedDialog takes nothing returns dialog
 
 // 事件响应 获取比赛剩余时间(对应比赛完成等事件)
-// @version 1.33
+// @since 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishSoonTimeRemaining takes nothing returns real
 // 事件响应 获取比赛结束规则(对应比赛完成等事件)
-// @version 1.33
+// @since 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowRule takes nothing returns integer
 // 事件响应 获取比赛结束玩家(对应比赛完成等事件)
-// @version 1.33
+// @since 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentFinishNowPlayer takes nothing returns player
 // 事件响应 获取比赛得分(对应比赛完成等事件)
-// @version 1.33
+// @since 1.33
 // EVENT_GAME_TOURNAMENT_FINISH_SOON
 constant native GetTournamentScore takes player whichPlayer returns integer
 
@@ -5356,25 +5399,25 @@ constant native GetManipulatedItem takes nothing returns item
 // 事件响应 获取被拾取的物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
 // Returns null if the item was a powerup and not a stacking item.
-// @version 1.33
+// @since 1.33
 constant native BlzGetAbsorbingItem takes nothing returns item
 // 事件响应 判断被操作的物品是否被拾取的物品(对应拾取物品等事件)
 // EVENT_PLAYER_UNIT_PICKUP_ITEM
-// @version 1.33
+// @since 1.33
 constant native BlzGetManipulatedItemWasAbsorbed takes nothing returns boolean
 
 // 事件响应 获取被堆叠的源物品(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
 // Source is the item that is losing charges, Target is the item getting charges.
-// @version 1.33
+// @since 1.33
 constant native BlzGetStackingItemSource takes nothing returns item
 // 事件响应 获取被堆叠的目标物品(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
-// @version 1.33
+// @since 1.33
 constant native BlzGetStackingItemTarget takes nothing returns item
 // 事件响应 获取堆叠物品的预期售价(对应堆叠物品等事件)
 // EVENT_PLAYER_UNIT_STACK_ITEM
-// @version 1.33
+// @since 1.33
 constant native BlzGetStackingItemTargetPreviousCharges takes nothing returns integer
 //endregion
 
@@ -6771,318 +6814,329 @@ native RestoreUnit takes gamecache cache, string missionKey, string key, player 
 
 
 // 新建哈希表 [C]
-// @version 1.24
+// @since 1.24
 native InitHashtable takes nothing returns hashtable
 
 // 保存整数到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveInteger takes hashtable table, integer parentKey, integer childKey, integer value returns nothing
 // 保存实数到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveReal takes hashtable table, integer parentKey, integer childKey, real value returns nothing
 // 保存布尔值到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveBoolean takes hashtable table, integer parentKey, integer childKey, boolean value returns nothing
 // 保存字符串到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveStr takes hashtable table, integer parentKey, integer childKey, string value returns boolean
 // 保存玩家到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SavePlayerHandle takes hashtable table, integer parentKey, integer childKey, player whichPlayer returns boolean
 // 保存微件/实体(单位/物品/可破坏物)到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveWidgetHandle takes hashtable table, integer parentKey, integer childKey, widget whichWidget returns boolean
 // 保存可破坏物到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveDestructableHandle takes hashtable table, integer parentKey, integer childKey, destructable whichDestructable returns boolean
 // 保存物品到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveItemHandle takes hashtable table, integer parentKey, integer childKey, item whichItem returns boolean
 // 保存单位到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveUnitHandle takes hashtable table, integer parentKey, integer childKey, unit whichUnit returns boolean
 // 保存技能到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveAbilityHandle takes hashtable table, integer parentKey, integer childKey, ability whichAbility returns boolean
 // 保存计时器到哈希表 [C]
-// @version 1.24
+// @since 1.24
+// @see LoadTimerHandle
+// @param table 哈希表
+// @param parentKey 父键
+// @param childKey 子键
+// @param whichTimer 要保存的计时器
 // @example call SaveTimerHandle(ht, 0, 1, t)
+// @returns true 表示保存成功
 native SaveTimerHandle takes hashtable table, integer parentKey, integer childKey, timer whichTimer returns boolean
 // 保存触发器到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveTriggerHandle takes hashtable table, integer parentKey, integer childKey, trigger whichTrigger returns boolean
 // 保存触发条件到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveTriggerConditionHandle takes hashtable table, integer parentKey, integer childKey, triggercondition whichTriggercondition returns boolean
 // 保存触发器动作到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveTriggerActionHandle takes hashtable table, integer parentKey, integer childKey, triggeraction whichTriggeraction returns boolean
 // 保存触发事件到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveTriggerEventHandle takes hashtable table, integer parentKey, integer childKey, event whichEvent returns boolean
 // 保存玩家组到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveForceHandle takes hashtable table, integer parentKey, integer childKey, force whichForce returns boolean
 // 保存单位组到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveGroupHandle takes hashtable table, integer parentKey, integer childKey, group whichGroup returns boolean
 // 保存点到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveLocationHandle takes hashtable table, integer parentKey, integer childKey, location whichLocation returns boolean
 // 保存矩形区域到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveRectHandle takes hashtable table, integer parentKey, integer childKey, rect whichRect returns boolean
 // 保存条件表达式到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveBooleanExprHandle takes hashtable table, integer parentKey, integer childKey, boolexpr whichBoolexpr returns boolean
 // 保存音效到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveSoundHandle takes hashtable table, integer parentKey, integer childKey, sound whichSound returns boolean
 // 保存特效到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveEffectHandle takes hashtable table, integer parentKey, integer childKey, effect whichEffect returns boolean
 // 保存单位池到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveUnitPoolHandle takes hashtable table, integer parentKey, integer childKey, unitpool whichUnitpool returns boolean
 // 保存物品池到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveItemPoolHandle takes hashtable table, integer parentKey, integer childKey, itempool whichItempool returns boolean
 // 保存任务到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveQuestHandle takes hashtable table, integer parentKey, integer childKey, quest whichQuest returns boolean
 // 保存任务要求到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveQuestItemHandle takes hashtable table, integer parentKey, integer childKey, questitem whichQuestitem returns boolean
 // 保存任务失败条件到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveDefeatConditionHandle takes hashtable table, integer parentKey, integer childKey, defeatcondition whichDefeatcondition returns boolean
 // 保存计时器窗口到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveTimerDialogHandle takes hashtable table, integer parentKey, integer childKey, timerdialog whichTimerdialog returns boolean
 // 保存排行榜到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveLeaderboardHandle takes hashtable table, integer parentKey, integer childKey, leaderboard whichLeaderboard returns boolean
 // 保存多面板到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveMultiboardHandle takes hashtable table, integer parentKey, integer childKey, multiboard whichMultiboard returns boolean
 // 保存多面板项目到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveMultiboardItemHandle takes hashtable table, integer parentKey, integer childKey, multiboarditem whichMultiboarditem returns boolean
 // 保存可追踪物到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveTrackableHandle takes hashtable table, integer parentKey, integer childKey, trackable whichTrackable returns boolean
 // 保存对话框到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveDialogHandle takes hashtable table, integer parentKey, integer childKey, dialog whichDialog returns boolean
 // 保存对话框按钮到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveButtonHandle takes hashtable table, integer parentKey, integer childKey, button whichButton returns boolean
 // 保存漂浮文字到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveTextTagHandle takes hashtable table, integer parentKey, integer childKey, texttag whichTexttag returns boolean
 // 保存闪电效果到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveLightningHandle takes hashtable table, integer parentKey, integer childKey, lightning whichLightning returns boolean
 // 保存图像到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveImageHandle takes hashtable table, integer parentKey, integer childKey, image whichImage returns boolean
 // 保存地面纹理变化到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveUbersplatHandle takes hashtable table, integer parentKey, integer childKey, ubersplat whichUbersplat returns boolean
 // 保存不规则区域到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveRegionHandle takes hashtable table, integer parentKey, integer childKey, region whichRegion returns boolean
 // 保存迷雾状态到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveFogStateHandle takes hashtable table, integer parentKey, integer childKey, fogstate whichFogState returns boolean
 // 保存可见度修正器到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveFogModifierHandle takes hashtable table, integer parentKey, integer childKey, fogmodifier whichFogModifier returns boolean
 // 保存句柄到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveAgentHandle takes hashtable table, integer parentKey, integer childKey, agent whichAgent returns boolean
 // 保存哈希表到哈希表 [C]
-// @version 1.24
+// @since 1.24
 native SaveHashtableHandle takes hashtable table, integer parentKey, integer childKey, hashtable whichHashtable returns boolean
 // 保存UI框架/控件句柄到哈希表 [C]
-// @version 1.29
+// @since 1.29
 native SaveFrameHandle takes hashtable table, integer parentKey, integer childKey, framehandle whichFrameHandle returns boolean
 
 
 // 从哈希表提取整数 [C]
-// @version 1.24
+// @since 1.24
 native LoadInteger takes hashtable table, integer parentKey, integer childKey returns integer
 // 从哈希表提取实数 [C]
-// @version 1.24
+// @since 1.24
 native LoadReal takes hashtable table, integer parentKey, integer childKey returns real
 // 从哈希表提取布尔值 [C]
-// @version 1.24
+// @since 1.24
 native LoadBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
 // 从哈希表提取字符串 [C]
-// @version 1.24
+// @since 1.24
 native LoadStr takes hashtable table, integer parentKey, integer childKey returns string
 // 从哈希表提取玩家 [C]
-// @version 1.24
+// @since 1.24
 native LoadPlayerHandle takes hashtable table, integer parentKey, integer childKey returns player
 // 从哈希表提取微件/实体(单位/物品/可破坏物)[C]
-// @version 1.24
+// @since 1.24
 native LoadWidgetHandle takes hashtable table, integer parentKey, integer childKey returns widget
 // 从哈希表提取可破坏物 [C]
-// @version 1.24
+// @since 1.24
 native LoadDestructableHandle takes hashtable table, integer parentKey, integer childKey returns destructable
 // 从哈希表提取物品 [C]
-// @version 1.24
+// @since 1.24
 native LoadItemHandle takes hashtable table, integer parentKey, integer childKey returns item
 // 从哈希表提取单位 [C]
-// @version 1.24
+// @since 1.24
 native LoadUnitHandle takes hashtable table, integer parentKey, integer childKey returns unit
 // 从哈希表提取技能 [C]
-// @version 1.24
+// @since 1.24
 native LoadAbilityHandle takes hashtable table, integer parentKey, integer childKey returns ability
 // 从哈希表提取计时器 [C]
 // 若仍需继续使用该计时器，请勿排泄
-// @version 1.24
+// @since 1.24
+// @see SaveTimerHandle
+// @param table 哈希表
+// @param parentKey 父键
+// @param childKey 子键
 // @example set t = LoadTimerHandle(ht, 0, 1)
+// @returns 提取到的计时器句柄；不存在时返回 null
 native LoadTimerHandle takes hashtable table, integer parentKey, integer childKey returns timer
 // 从哈希表提取触发器 [C]
-// @version 1.24
+// @since 1.24
 native LoadTriggerHandle takes hashtable table, integer parentKey, integer childKey returns trigger
 // 从哈希表提取触发条件 [C]
-// @version 1.24
+// @since 1.24
 native LoadTriggerConditionHandle	takes hashtable table, integer parentKey, integer childKey returns triggercondition
 // 从哈希表提取触发动作 [C]
-// @version 1.24
+// @since 1.24
 native LoadTriggerActionHandle takes hashtable table, integer parentKey, integer childKey returns triggeraction
 // 从哈希表提取触发事件 [C]
-// @version 1.24
+// @since 1.24
 native LoadTriggerEventHandle takes hashtable table, integer parentKey, integer childKey returns event
 // 从哈希表提取玩家组 [C]
-// @version 1.24
+// @since 1.24
 native LoadForceHandle takes hashtable table, integer parentKey, integer childKey returns force
 // 从哈希表提取单位组 [C]
 // 若仍需继续使用该单位组，请勿排泄
-// @version 1.24
+// @since 1.24
 native LoadGroupHandle takes hashtable table, integer parentKey, integer childKey returns group
 // 从哈希表提取点 [C]
 // 若仍需继续使用该点，请勿排泄
-// @version 1.24
+// @since 1.24
 native LoadLocationHandle takes hashtable table, integer parentKey, integer childKey returns location
 // 从哈希表提取矩形区域 [C]
 // 若仍需继续使用该区域，请勿排泄
-// @version 1.24
+// @since 1.24
 native LoadRectHandle takes hashtable table, integer parentKey, integer childKey returns rect
 // 从哈希表提取条件表达式 [C]
-// @version 1.24
+// @since 1.24
 native LoadBooleanExprHandle takes hashtable table, integer parentKey, integer childKey returns boolexpr
 // 从哈希表提取音效 [C]
-// @version 1.24
+// @since 1.24
 native LoadSoundHandle takes hashtable table, integer parentKey, integer childKey returns sound
 // 从哈希表提取特效 [C]
-// @version 1.24
+// @since 1.24
 native LoadEffectHandle takes hashtable table, integer parentKey, integer childKey returns effect
 // 从哈希表提取单位池 [C]
-// @version 1.24
+// @since 1.24
 native LoadUnitPoolHandle takes hashtable table, integer parentKey, integer childKey returns unitpool
 // 从哈希表提取物品池 [C]
-// @version 1.24
+// @since 1.24
 native LoadItemPoolHandle takes hashtable table, integer parentKey, integer childKey returns itempool
 // 从哈希表提取任务 [C]
-// @version 1.24
+// @since 1.24
 native LoadQuestHandle takes hashtable table, integer parentKey, integer childKey returns quest
 // 从哈希表提取任务要求 [C]
-// @version 1.24
+// @since 1.24
 native LoadQuestItemHandle takes hashtable table, integer parentKey, integer childKey returns questitem
 // 从哈希表提取任务失败条件 [C]
-// @version 1.24
+// @since 1.24
 native LoadDefeatConditionHandle	takes hashtable table, integer parentKey, integer childKey returns defeatcondition
 // 从哈希表提取计时器窗口 [C]
-// @version 1.24
+// @since 1.24
 native LoadTimerDialogHandle takes hashtable table, integer parentKey, integer childKey returns timerdialog
 // 从哈希表提取排行榜 [C]
-// @version 1.24
+// @since 1.24
 native LoadLeaderboardHandle takes hashtable table, integer parentKey, integer childKey returns leaderboard
 // 从哈希表提取多面板 [C]
-// @version 1.24
+// @since 1.24
 native LoadMultiboardHandle takes hashtable table, integer parentKey, integer childKey returns multiboard
 // 从哈希表提取多面板项目 [C]
-// @version 1.24
+// @since 1.24
 native LoadMultiboardItemHandle	takes hashtable table, integer parentKey, integer childKey returns multiboarditem
 // 从哈希表提取可追踪物 [C]
-// @version 1.24
+// @since 1.24
 native LoadTrackableHandle takes hashtable table, integer parentKey, integer childKey returns trackable
 // 从哈希表提取对话框 [C]
-// @version 1.24
+// @since 1.24
 native LoadDialogHandle takes hashtable table, integer parentKey, integer childKey returns dialog
 // 从哈希表提取对话框按钮 [C]
-// @version 1.24
+// @since 1.24
 native LoadButtonHandle takes hashtable table, integer parentKey, integer childKey returns button
 // 从哈希表提取漂浮文字 [C]
-// @version 1.24
+// @since 1.24
 native LoadTextTagHandle takes hashtable table, integer parentKey, integer childKey returns texttag
 // 从哈希表提取闪电效果 [C]
-// @version 1.24
+// @since 1.24
 native LoadLightningHandle takes hashtable table, integer parentKey, integer childKey returns lightning
 // 从哈希表提取图象 [C]
-// @version 1.24
+// @since 1.24
 native LoadImageHandle takes hashtable table, integer parentKey, integer childKey returns image
 // 从哈希表提取地面纹理变化 [C]
-// @version 1.24
+// @since 1.24
 native LoadUbersplatHandle takes hashtable table, integer parentKey, integer childKey returns ubersplat
 // 从哈希表提取不规则区域 [C]
 // 如仍需使用该区域，请勿排泄
-// @version 1.24
+// @since 1.24
 native LoadRegionHandle takes hashtable table, integer parentKey, integer childKey returns region
 // 从哈希表提取迷雾状态 [C]
-// @version 1.24
+// @since 1.24
 native LoadFogStateHandle takes hashtable table, integer parentKey, integer childKey returns fogstate
 // 从哈希表提取可见度修正器 [C]
-// @version 1.24
+// @since 1.24
 native LoadFogModifierHandle takes hashtable table, integer parentKey, integer childKey returns fogmodifier
 // 从哈希表提取哈希表 [C]
-// @version 1.24
+// @since 1.24
 native LoadHashtableHandle takes hashtable table, integer parentKey, integer childKey returns hashtable
 // 从哈希表提取UI框架/控件句柄
-// @version 1.29
+// @since 1.29
 native LoadFrameHandle takes hashtable table, integer parentKey, integer childKey returns framehandle
 // 查询指定哈希表的指定位置是否记录了整数
-// @version 1.24
+// @since 1.24
 native HaveSavedInteger takes hashtable table, integer parentKey, integer childKey returns boolean
 // 查询指定哈希表的指定位置是否记录了实数
-// @version 1.24
+// @since 1.24
 native HaveSavedReal takes hashtable table, integer parentKey, integer childKey returns boolean
 // 查询指定哈希表的指定位置是否记录了布尔值
-// @version 1.24
+// @since 1.24
 native HaveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns boolean
 // 查询指定哈希表的指定位置是否记录了字符串
-// @version 1.24
+// @since 1.24
 native HaveSavedString takes hashtable table, integer parentKey, integer childKey returns boolean
 // 查询指定哈希表的指定位置是否记录了句柄
-// @version 1.24
+// @since 1.24
 native HaveSavedHandle takes hashtable table, integer parentKey, integer childKey returns boolean
 // 删除指定哈希表的指定位置记录的整数
-// @version 1.24
+// @since 1.24
 native RemoveSavedInteger takes hashtable table, integer parentKey, integer childKey returns nothing
 // 删除指定哈希表的指定位置记录的实数
-// @version 1.24
+// @since 1.24
 native RemoveSavedReal takes hashtable table, integer parentKey, integer childKey returns nothing
 // 删除指定哈希表的指定位置记录的布尔值
-// @version 1.24
+// @since 1.24
 native RemoveSavedBoolean takes hashtable table, integer parentKey, integer childKey returns nothing
 // 删除指定哈希表的指定位置记录的字符串
-// @version 1.24
+// @since 1.24
 native RemoveSavedString takes hashtable table, integer parentKey, integer childKey returns nothing
 // 删除指定哈希表的指定位置记录的句柄
 // 删除后，在写入新内容前，查询该位置会返回null
-// @version 1.24
+// @since 1.24
 native RemoveSavedHandle takes hashtable table, integer parentKey, integer childKey returns nothing
 
 // 清空指定哈希表 [C]
 // 清空整张表，清空后表变量不会变为null且需新建表
-// @version 1.24
+// @since 1.24
 native FlushParentHashtable takes hashtable table returns nothing
 // 清空指定哈希表的指定主引索 [C]
 // 仅清空指定主引索，清空后无需新建表
-// @version 1.24
+// @since 1.24
 native FlushChildHashtable takes hashtable table, integer parentKey returns nothing
 
 
@@ -7365,31 +7419,67 @@ native ForceQuestDialogUpdate takes nothing returns nothing
 
 // 新建计时器窗口 [R]
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
+// @since 1.00
+// @see DestroyTimerDialog
+// @param t 绑定的计时器
 // @example set td = CreateTimerDialog(t)
+// @returns 新建的计时器窗口句柄
 native CreateTimerDialog takes timer t returns timerdialog
 // 销毁计时器窗口
+// @since 1.00
+// @see CreateTimerDialog
+// @param whichDialog 要销毁的计时器窗口
 // @example call DestroyTimerDialog(td)
 native DestroyTimerDialog takes timerdialog whichDialog returns nothing
 // 设置计时器窗口标题
+// @since 1.00
+// @param whichDialog 计时器窗口
+// @param title 标题文本
 // @example call TimerDialogSetTitle(td, "Wave Timer")
 native TimerDialogSetTitle takes timerdialog whichDialog, string title returns nothing
 // 设置计时器窗口文字颜色 [R]
+// @since 1.00
+// @param whichDialog 计时器窗口
+// @param red 红色通道（0-255）
+// @param green 绿色通道（0-255）
+// @param blue 蓝色通道（0-255）
+// @param alpha 透明度（0-255）
 // @example call TimerDialogSetTitleColor(td, 255, 255, 0, 255)
 native TimerDialogSetTitleColor takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置计时器窗口计时颜色 [R]
+// @since 1.00
+// @param whichDialog 计时器窗口
+// @param red 红色通道（0-255）
+// @param green 绿色通道（0-255）
+// @param blue 蓝色通道（0-255）
+// @param alpha 透明度（0-255）
 // @example call TimerDialogSetTimeColor(td, 255, 255, 255, 255)
 native TimerDialogSetTimeColor takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
 // 设置计时器窗口速率 [R]
+// @since 1.00
+// @param whichDialog 计时器窗口
+// @param speedMultFactor 显示速率倍率（1.00 为正常）
 // @example call TimerDialogSetSpeed(td, 1.00)
 native TimerDialogSetSpeed takes timerdialog whichDialog, real speedMultFactor returns nothing
 // 显示/隐藏 计时器窗口(所有玩家) [R]
+// @since 1.00
+// @see IsTimerDialogDisplayed
+// @param whichDialog 计时器窗口
+// @param display true 显示，false 隐藏
 // @example call TimerDialogDisplay(td, true)
 native TimerDialogDisplay takes timerdialog whichDialog, boolean display returns nothing
 // 查询计时器窗口是否显示
+// @since 1.00
+// @see TimerDialogDisplay
+// @param whichDialog 计时器窗口
 // @example set shown = IsTimerDialogDisplayed(td)
+// @returns true 表示当前对本地玩家可见
 native IsTimerDialogDisplayed takes timerdialog whichDialog returns boolean
 // 设置计时器窗口倒计时
 // 可创建另一个计时器(隐藏)，在其倒计时结束后，修改本窗口的倒计时，从而实现正向计时
+// @since 1.00
+// @param whichDialog 计时器窗口
+// @param timeRemaining 要显示的剩余时间（秒）
 // @example call TimerDialogSetRealTimeRemaining(td, 30.00)
 native TimerDialogSetRealTimeRemaining takes timerdialog whichDialog, real timeRemaining returns nothing
 
@@ -7605,10 +7695,10 @@ native CameraSetupApplyForceDuration takes camerasetup whichSetup, boolean doPan
 // 应用镜头(所有玩家)(限时)(指定高度) [R]
 native CameraSetupApplyForceDurationWithZ takes camerasetup whichSetup, real zDestOffset, real forceDuration returns nothing
 // 设置镜头标签
-// @version 1.33
+// @since 1.33
 native BlzCameraSetupSetLabel takes camerasetup whichSetup, string label returns nothing
 // 获取镜头标签
-// @version 1.33
+// @since 1.33
 native BlzCameraSetupGetLabel takes camerasetup whichSetup returns string
 // 摇晃镜头朝向
 native CameraSetTargetNoise takes real mag, real velocity returns nothing
@@ -7739,7 +7829,7 @@ native AttachSoundToUnit takes sound soundHandle, unit whichUnit returns nothing
 // 播放音效
 native StartSound takes sound soundHandle returns nothing
 // 播放音效(指定是否淡入)
-// @version 1.33
+// @since 1.33
 native StartSoundEx takes sound soundHandle, boolean fadeIn returns nothing
 // 停止播放音效(指定是否淡出)
 native StopSound takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
@@ -8105,7 +8195,7 @@ native Preloader takes string filename returns nothing
 
 
 // 显示/隐藏 电影面板，包括标题栏、字幕及头像框体
-// @version 1.33
+// @since 1.33
 native BlzHideCinematicPanels takes boolean enable returns nothing
 
 
@@ -8122,169 +8212,177 @@ native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
 
-// @version 1.33
+// @since 1.33
 
 // 玩家鼠标触发位置 - X 坐标
-// @version 1.33
+// @since 1.33
 native BlzGetTriggerPlayerMouseX takes nothing returns real
 // 玩家鼠标触发位置 - Y 坐标
-// @version 1.33
+// @since 1.33
 native BlzGetTriggerPlayerMouseY takes nothing returns real
 // 玩家鼠标触发位置 - 点
 // 会创建点，用完请注意排泄
-// @version 1.33
+// @since 1.33
 native BlzGetTriggerPlayerMousePosition takes nothing returns location
 // 玩家鼠标按键类型
-// @version 1.33
+// @since 1.33
 native BlzGetTriggerPlayerMouseButton takes nothing returns mousebuttontype
 // 设置技能提示信息
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityTooltip takes integer abilCode, string tooltip, integer level returns nothing
 // 设置技能提示信息(自动施法启用)
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityActivatedTooltip takes integer abilCode, string tooltip, integer level returns nothing
 // 设置技能扩展提示信息
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityExtendedTooltip takes integer abilCode, string extendedTooltip, integer level returns nothing
 // 设置技能扩展提示信息(自动施法启用)
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityActivatedExtendedTooltip takes integer abilCode, string extendedTooltip, integer level returns nothing
 // 设置提示信息(学习)
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityResearchTooltip takes integer abilCode, string researchTooltip, integer level returns nothing
 // 设置扩展提示信息(学习)
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityResearchExtendedTooltip takes integer abilCode, string researchExtendedTooltip, integer level returns nothing
 // 获取技能提示信息
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityTooltip takes integer abilCode, integer level returns string
 // 获取技能提示信息(自动施法启用)
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityActivatedTooltip takes integer abilCode, integer level returns string
 // 获取技能扩展提示信息
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityExtendedTooltip takes integer abilCode, integer level returns string
 // 获取技能扩展提示信息(自动施法启用)
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityActivatedExtendedTooltip takes integer abilCode, integer level returns string
 // 获取技能提示信息(学习文本)
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityResearchTooltip takes integer abilCode, integer level returns string
 // 获取技能扩展提示信息(学习文本)
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityResearchExtendedTooltip takes integer abilCode, integer level returns string
 // 设置技能图标
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityIcon takes integer abilCode, string iconPath returns nothing
 // 获取技能图标
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityIcon takes integer abilCode returns string
 // 设置技能图标(自动施法启用)
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityActivatedIcon takes integer abilCode, string iconPath returns nothing
 // 获取技能图标(自动施法启用)
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityActivatedIcon takes integer abilCode returns string
 // 获取技能图标位置 - X
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityPosX takes integer abilCode returns integer
 // 获取技能图标位置 - Y
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityPosY takes integer abilCode returns integer
 // 设置技能图标位置 - X
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityPosX takes integer abilCode, integer x returns nothing
 // 设置技能图标位置 - Y
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityPosY takes integer abilCode, integer y returns nothing
 // 获取技能图标位置 - X (启用自动施法)
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityActivatedPosX takes integer abilCode returns integer
 // 获取技能图标位置 - Y (启用自动施法)
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityActivatedPosY takes integer abilCode returns integer
 // 设置技能图标位置 - X (启用自动施法)
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityActivatedPosX takes integer abilCode, integer x returns nothing
 // 设置技能图标位置 - Y (启用自动施法)
-// @version 1.33
+// @since 1.33
 native BlzSetAbilityActivatedPosY takes integer abilCode, integer y returns nothing
 // 获取指定单位最大生命值
-// @version 1.33
+// @since 1.33
 native BlzGetUnitMaxHP takes unit whichUnit returns integer
 // 设置指定单位最大生命值
-// @version 1.33
+// @since 1.33
 native BlzSetUnitMaxHP takes unit whichUnit, integer hp returns nothing
 // 获取指定单位最大魔法值
-// @version 1.33
+// @since 1.33
 native BlzGetUnitMaxMana takes unit whichUnit returns integer
 // 设置指定单位最大法力值
-// @version 1.33
+// @since 1.33
 native BlzSetUnitMaxMana takes unit whichUnit, integer mana returns nothing
 // 设置指定物品名称
-// @version 1.33
+// @since 1.33
 native BlzSetItemName takes item whichItem, string name returns nothing
 // 设置指定物品介绍
-// @version 1.33
+// @since 1.33
 native BlzSetItemDescription takes item whichItem, string description returns nothing
 // 获取指定物品介绍
-// @version 1.33
+// @since 1.33
 native BlzGetItemDescription takes item whichItem returns string
 // 设置指定物品提示
-// @version 1.33
+// @since 1.33
 native BlzSetItemTooltip takes item whichItem, string tooltip returns nothing
 // 获取指定物品提示
-// @version 1.33
+// @since 1.33
 native BlzGetItemTooltip takes item whichItem returns string
 // 设置指定物品扩展提示
-// @version 1.33
+// @since 1.33
 native BlzSetItemExtendedTooltip takes item whichItem, string extendedTooltip returns nothing
 // 获取指定物品扩展提示信息
-// @version 1.33
+// @since 1.33
 native BlzGetItemExtendedTooltip takes item whichItem returns string
 // 设置指定物品图标
-// @version 1.33
+// @since 1.33
 native BlzSetItemIconPath takes item whichItem, string iconPath returns nothing
 // 获取指定物品图标
-// @version 1.33
+// @since 1.33
 native BlzGetItemIconPath takes item whichItem returns string
 // 设置指定单位名字
-// @version 1.33
+// @since 1.33
 native BlzSetUnitName takes unit whichUnit, string name returns nothing
 // 设置指定英雄称谓
-// @version 1.33
+// @since 1.33
 native BlzSetHeroProperName takes unit whichUnit, string heroProperName returns nothing
 // 获取指定单位基础伤害
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzGetUnitBaseDamage takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位基础伤害
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzSetUnitBaseDamage takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
 // 获取指定单位骰子数量
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzGetUnitDiceNumber takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子数量
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzSetUnitDiceNumber takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
 // 获取指定单位骰子面数
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzGetUnitDiceSides takes unit whichUnit, integer weaponIndex returns integer
 // 设置指定单位骰子面数
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzSetUnitDiceSides takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
 // 获取指定单位攻击间隔
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex returns real
 // 设置指定单位攻击间隔
 // @param weaponIndex 武器引索，似乎只有输入1才有效
 // 不支持攻击模式2
+// @since 1.33
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
 // 设置指定特效颜色(指定玩家的颜色)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
@@ -8337,90 +8435,159 @@ native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whic
 // 获取指定动画类型名称
 native BlzGetAnimName takes animtype whichAnim returns string
 // 获取指定单位护甲值
+// @since 1.33
+// @returns 单位当前护甲值（包含光环、技能、物品等加成）
 native BlzGetUnitArmor takes unit whichUnit returns real
 // 设置指定单位护甲值
+// @since 1.33
 native BlzSetUnitArmor takes unit whichUnit, real armorAmount returns nothing
 // 隐藏指定单位技能
+// @since 1.33
 native BlzUnitHideAbility takes unit whichUnit, integer abilId, boolean flag returns nothing
 // 禁用指定单位技能
+// @since 1.33
 native BlzUnitDisableAbility takes unit whichUnit, integer abilId, boolean flag, boolean hideUI returns nothing
 // 取消指定单位限时生命
+// @since 1.33
 native BlzUnitCancelTimedLife takes unit whichUnit returns nothing
 // 查询指定单位是否被选择
+// @since 1.33
+// @returns true 表示该单位当前可被本地玩家选中
 native BlzIsUnitSelectable takes unit whichUnit returns boolean
 // 查询指定单位是否无敌
+// @since 1.33
+// @returns true 表示单位处于无敌状态
 native BlzIsUnitInvulnerable takes unit whichUnit returns boolean
 // 打断指定单位攻击
+// @since 1.33
 native BlzUnitInterruptAttack takes unit whichUnit returns nothing
 // 获取指定单位碰撞体积
+// @since 1.33
+// @returns 单位碰撞半径（游戏坐标单位）
 native BlzGetUnitCollisionSize takes unit whichUnit returns real
 // 获取技能魔法消耗
+// @returns 指定技能在指定等级下的法力消耗
 native BlzGetAbilityManaCost takes integer abilId, integer level returns integer
 // 获取技能冷却时间
+// @returns 指定技能在指定等级下的基础冷却时间（秒）
 native BlzGetAbilityCooldown takes integer abilId, integer level returns real
 // 设置技能冷却时间
+// @since 1.33
 native BlzSetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level, real cooldown returns nothing
 // 获取单位技能冷却时间
+// @since 1.33
+// @returns 指定单位该技能在该等级配置的冷却时间（秒）
 native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level returns real
 // 获取单位技能的剩余冷却时间
 // 可获取单位拥有物品的技能剩余冷却时间，单位拥有未使用或拥有但不可用（如科技未研究）或未拥有或被动技能返回0
+// @since 1.33
+// @returns 当前剩余冷却时间（秒）；不可用或未触发冷却时通常为 0
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
 // 设置单位结束技能冷却
+// @since 1.33
 native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns nothing
 // 设置单位技能开始冷却
+// @since 1.33
 native BlzStartUnitAbilityCooldown takes unit whichUnit, integer abilCode, real cooldown returns nothing
 // 获取单位技能魔法消耗
+// @since 1.33
+// @returns 指定单位该技能在该等级下的法力消耗
 native BlzGetUnitAbilityManaCost takes unit whichUnit, integer abilId, integer level returns integer
 // 设置单位技能法力消耗
+// @since 1.33
 native BlzSetUnitAbilityManaCost takes unit whichUnit, integer abilId, integer level, integer manaCost returns nothing
 // 获取本地单位 Z 坐标
+// @since 1.33
+// @returns 本地视角下单位当前 Z 坐标（受地形高度与飞行高度影响）
 native BlzGetLocalUnitZ takes unit whichUnit returns real
 // 降低指定玩家指定科技的等级
 native BlzDecPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
 // 设置单位伤害事件的伤害
 native BlzSetEventDamage takes real damage returns nothing
 // 获取事件伤害目标
+// @returns 当前伤害事件中的受伤单位；非伤害事件中可能为 null
 native BlzGetEventDamageTarget takes nothing returns unit
 // 获取事件攻击类型
+// @returns 当前伤害事件的攻击类型（如 ATTACK_TYPE_NORMAL）
 native BlzGetEventAttackType takes nothing returns attacktype
 // 获取事件伤害类型
+// @returns 当前伤害事件的伤害类型（如 DAMAGE_TYPE_NORMAL）
 native BlzGetEventDamageType takes nothing returns damagetype
 // 获取事件武器声音类型
+// @returns 当前伤害事件的武器音效类型
 native BlzGetEventWeaponType takes nothing returns weapontype
 // 设置事件攻击类型
+// @returns true 表示设置成功
 native BlzSetEventAttackType takes attacktype attackType returns boolean
 // 设置事件伤害类型
+// @returns true 表示设置成功
 native BlzSetEventDamageType takes damagetype damageType returns boolean
 // 设置事件武器声音类型
+// @returns true 表示设置成功
 native BlzSetEventWeaponType takes weapontype weaponType returns boolean
 // 判断是否攻击事件
+// @returns true 表示当前伤害来源被判定为攻击
 native BlzGetEventIsAttack takes nothing returns boolean
 // 获取额外的整数数据
 // 2.02已移除
+// @param dataType 数据请求类型
+// @param whichPlayer 关联玩家
+// @param param1~param2 字符串参数
+// @param param3 布尔参数
+// @param param4~param6 整数参数
+// @deprecated 2.02已移除
 native RequestExtraIntegerData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns integer
 // 获取额外的布尔值数据
 // 2.02已移除
+// @param dataType 数据请求类型
+// @param whichPlayer 关联玩家
+// @param param1~param2 字符串参数
+// @param param3 布尔参数
+// @param param4~param6 整数参数
+// @deprecated 2.02已移除
 native RequestExtraBooleanData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns boolean
 // 获取额外的字符串数据
 // 2.02已移除
+// @param dataType 数据请求类型
+// @param whichPlayer 关联玩家
+// @param param1~param2 字符串参数
+// @param param3 布尔参数
+// @param param4~param6 整数参数
 native RequestExtraStringData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns string
 // 获取额外的实数数据
 // 2.02已移除
+// @param dataType 数据请求类型
+// @param whichPlayer 关联玩家
+// @param param1~param2 字符串参数
+// @param param3 布尔参数
+// @param param4~param6 整数参数
+// @deprecated 2.02已移除
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
 // 获取单位 Z 坐标
 // Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
+// @since 1.33
+// @returns 单位当前 Z 坐标（与 BlzGetLocalUnitZ 一致）
 native BlzGetUnitZ takes unit whichUnit returns real
 // 开启/关闭 选择和选择圈
 native BlzEnableSelections takes boolean enableSelection, boolean enableSelectionCircle returns nothing
 // 查询选择是否开启
+// @returns true 表示当前允许框选/点选单位
 native BlzIsSelectionEnabled takes nothing returns boolean
 // 查询选择圈是否开启
+// @returns true 表示地面选择圈可见
 native BlzIsSelectionCircleEnabled takes nothing returns boolean
 // 设置镜头平滑持续时间
+// @param whichSetup 镜头预设
+// @param doPan 是否平移镜头
+// @param forcedDuration 强制持续时间（秒）
+// @param easeInDuration 缓入时长（秒）
+// @param easeOutDuration 缓出时长（秒）
+// @param smoothFactor 平滑系数（越大过渡越平滑）
 native BlzCameraSetupApplyForceDurationSmooth takes camerasetup whichSetup, boolean doPan, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
 // 启用/禁用 目标闪烁指示器
 native BlzEnableTargetIndicator takes boolean enable returns nothing
 // 查询目标闪烁指示器是否启用
+// @returns true 表示目标闪烁指示器已启用
 native BlzIsTargetIndicatorEnabled takes nothing returns boolean
 // 显示地形
 native BlzShowTerrain takes boolean show returns nothing
@@ -8431,6 +8598,7 @@ native BlzStartRecording takes integer fps returns nothing
 // 结束录制
 native BlzEndRecording takes nothing returns nothing
 // 显示/隐藏 指定单位队伍光晕
+// @since 1.33
 native BlzShowUnitTeamGlow takes unit whichUnit, boolean show returns nothing
 
 // 获取 原生 UI框架/控件句柄
@@ -8460,7 +8628,7 @@ native BlzCreateSimpleFrame takes string name, framehandle owner, integer create
 // 创建 原生 UI框架/控件句柄(指定类型)
 // @param typeName UI框架/控件类型
 // @param name 可输入任意名称
-// @param framehandle 可使用BlzGetOriginFrame获取原生 UI框架/控件句柄，可输入任意UI框架/控件句柄
+// @param owner 可使用BlzGetOriginFrame获取原生 UI框架/控件句柄，可输入任意UI框架/控件句柄
 // @param inherits 父类UI框架/控件(模板)
 // @param createContext 引索，一般默认为0
 // 不能在游戏初始化事件的触发器内创建，必须有时间差
@@ -8522,8 +8690,9 @@ native BlzFrameGetAlpha takes framehandle frame returns integer
 // 设置 原生 UI框架/控件句柄 动画
 native BlzFrameSetSpriteAnimate takes framehandle frame, integer primaryProp, integer flags returns nothing
 // 设置 原生 UI框架/控件句柄 贴图
-// @param texFile 是否平铺
-// @param flag 是否混合
+// @param texFile 贴图路径
+// @param flag 贴图模式标志
+// @param blend 是否启用混合
 native BlzFrameSetTexture takes framehandle frame, string texFile, integer flag, boolean blend returns nothing
 // 缩放 原生 UI框架/控件句柄
 native BlzFrameSetScale takes framehandle frame, real scale returns nothing
@@ -8561,10 +8730,10 @@ native BlzFrameSetFont takes framehandle frame, string fileName, real height, in
 native BlzFrameSetTextAlignment takes framehandle frame, textaligntype vert, textaligntype horz returns nothing
 
 // 获取 原生 UI框架/控件句柄 子组件数量
-// @version 1.32.7
+// @since 1.32.7
 native BlzFrameGetChildrenCount takes framehandle frame returns integer
 // 获取 原生 UI框架/控件句柄 子组件
-// @version 1.32.7
+// @since 1.32.7
 native BlzFrameGetChild takes framehandle frame, integer index returns framehandle
 
 
@@ -8630,7 +8799,7 @@ native BlzGetUnitAbility takes unit whichUnit, integer abilId returns ability
 // 获取单位技能(指定技能引索)
 native BlzGetUnitAbilityByIndex takes unit whichUnit, integer index returns ability
 // 获取技能ID（指定技能）
-// @version 1.33
+// @since 1.33
 native BlzGetAbilityId takes ability whichAbility returns integer
 // 模拟玩家在聊天框发送聊天信息
 // @param whichPlayer 发信息的玩家
@@ -8638,11 +8807,13 @@ native BlzGetAbilityId takes ability whichAbility returns integer
 native BlzDisplayChatMessage takes player whichPlayer, integer recipient, string message returns nothing
 // 暂停单位
 native BlzPauseUnitEx takes unit whichUnit, boolean flag returns nothing
-// 转换四字符码成字符串（未启用）
-// native BlzFourCC2S                                 takes integer value returns string
 
-// 转换字符串成四字符码（未启用）
-// native BlzS2FourCC                                 takes string value returns integer
+// 转换四字符码成字符串
+// @deprecated （未启用）内部未对外开放
+native BlzFourCC2S                                 takes integer value returns string
+// 转换字符串成四字符码
+// @deprecated （未启用）内部未对外开放
+native BlzS2FourCC                                 takes string value returns integer
 
 // 设置单位朝向(角度)
 native BlzSetUnitFacingEx takes unit whichUnit, real facingAngle returns nothing
@@ -8850,43 +9021,43 @@ native BlzGetPlayerTownHallCount takes player whichPlayer returns integer
 //region 1.33
 
 // 将按ID发布的命令(无目标)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueImmediateOrderById takes unit whichUnit, integer order returns boolean
 // 将按ID发布的命令(指定坐标)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueuePointOrderById takes unit whichUnit, integer order, real x, real y returns boolean
 // 将按ID发布的命令(指定单位/物品/可破坏物)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueTargetOrderById takes unit whichUnit, integer order, widget targetWidget returns boolean
 // 将按ID发布的即时命令(指定坐标)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueInstantPointOrderById takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
 // 将按ID发布的即时命令(指定单位/物品/可破坏物)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueInstantTargetOrderById takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
 // 将按&发布的建造命令(指定坐标)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueBuildOrderById takes unit whichPeon, integer unitId, real x, real y returns boolean
 // 将按ID发布的中介命令(无目标)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueNeutralImmediateOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId returns boolean
 // 将按ID发布的中介命令(指定坐标)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueNeutralPointOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, real x, real y returns boolean
 // 将按ID发布的中介命令(指定单位/物品/可破坏物)加入队列
-// @version 1.33
+// @since 1.33
 native BlzQueueNeutralTargetOrderById takes player forWhichPlayer, unit neutralStructure, integer unitId, widget target returns boolean
 
 // 获取指定单位当前队列中的命令数量(该单位当前命令数量)
-// @version 1.33
+// @since 1.33
 // returns the number of orders the unit currently has queued up
 native BlzGetUnitOrderCount takes unit whichUnit returns integer
 // 停止指定单位所有命令或只清除队列中命令
-// @version 1.33
+// @since 1.33
 // clears either all orders or only queued up orders
 native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothing
 // 停止指定单位当前的命令，并可选清除队列中命令
-// @version 1.33
+// @since 1.33
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion

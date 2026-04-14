@@ -292,6 +292,7 @@ export class CompletionCache {
             documentation: item.documentation ? (typeof item.documentation === 'string' ? item.documentation : item.documentation.value) : undefined,
             insertText: item.insertText,
             sortText: item.sortText,
+            tags: item.tags,
             filterText: item.filterText,
             filePath: item.filePath,
             statementType: item.statement.constructor.name
@@ -323,6 +324,7 @@ export class CompletionCache {
             }
             if (itemData.insertText) item.insertText = itemData.insertText;
             if (itemData.sortText) item.sortText = itemData.sortText;
+            if (Array.isArray(itemData.tags)) item.tags = itemData.tags;
             if (itemData.filterText) item.filterText = itemData.filterText;
             
             return item;

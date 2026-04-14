@@ -41,6 +41,8 @@ import { ZincLocalScopeHelper } from './zinc/zinc-local-scope-helper';
  */
 export class CompletionProvider implements vscode.CompletionItemProvider {
     private dataEnterManager: DataEnterManager;
+    private static readonly VERSION_MISMATCH_SORT_BUCKET = '7_version_mismatch_';
+    private static readonly DEPRECATED_SORT_BUCKET = '8_deprecated_';
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
@@ -3398,6 +3400,8 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         
         // 为没有 sortText 的项设置默认值
         for (const item of items) {
+            this.applyApiVersionPreference(item);
+            this.applyDeprecatedPresentation(item);
             if (!item.sortText) {
                 const key = item.label as string;
                 item.sortText = `9_${key}`;
@@ -3412,6 +3416,99 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         });
         
         return items;
+    }
+
+    private applyDeprecatedPresentation(item: vscode.CompletionItem): void {
+        const existingTags = item.tags || [];
+        const hasDeprecatedTag = existingTags.includes(vscode.CompletionItemTag.Deprecated);
+        const docText = typeof item.documentation === 'string'
+            ? item.documentation
+            : item.documentation instanceof vscode.MarkdownString
+                ? item.documentation.value
+                : '';
+        const hasDeprecatedDoc = /~~\*\*Deprecated(?::\*\*|\*\*)/i.test(docText);
+        if (!hasDeprecatedTag && !hasDeprecatedDoc) {
+            return;
+        }
+        if (!hasDeprecatedTag) {
+            item.tags = [...existingTags, vscode.CompletionItemTag.Deprecated];
+        }
+        const originalSort = item.sortText || `${item.label}`;
+        if (!originalSort.startsWith(CompletionProvider.DEPRECATED_SORT_BUCKET)) {
+            item.sortText = `${CompletionProvider.DEPRECATED_SORT_BUCKET}${originalSort}`;
+        }
+    }
+
+    private applyApiVersionPreference(item: vscode.CompletionItem): void {
+        const configuredVersion = this.getConfiguredApiVersion();
+        if (!configuredVersion) {
+            return;
+        }
+
+        const docText = typeof item.documentation === 'string'
+            ? item.documentation
+            : item.documentation instanceof vscode.MarkdownString
+                ? item.documentation.value
+                : '';
+        if (!docText) {
+            return;
+        }
+
+        const sinceVersionText = this.extractSinceVersionFromDocumentation(docText);
+        if (!sinceVersionText) {
+            // 没有 @since/@version 信息的补全项不受影响
+            return;
+        }
+
+        if (this.compareVersions(sinceVersionText, configuredVersion) <= 0) {
+            return;
+        }
+
+        const originalSort = item.sortText || `${item.label}`;
+        if (!originalSort.startsWith(CompletionProvider.VERSION_MISMATCH_SORT_BUCKET)) {
+            item.sortText = `${CompletionProvider.VERSION_MISMATCH_SORT_BUCKET}${originalSort}`;
+        }
+    }
+
+    private getConfiguredApiVersion(): string | null {
+        const value = vscode.workspace.getConfiguration('jass').get<string>('apiVersion', 'off');
+        if (!value || value === 'off') {
+            return null;
+        }
+        return value;
+    }
+
+    private extractSinceVersionFromDocumentation(docText: string): string | null {
+        const sinceMatch = docText.match(/\*\*Since:\*\*\s*([^\n]+)/i);
+        if (!sinceMatch) {
+            return null;
+        }
+        const versionToken = sinceMatch[1].match(/(\d+\.\d+(?:\.\d+)?[a-z]?)/i);
+        return versionToken ? versionToken[1] : null;
+    }
+
+    private compareVersions(left: string, right: string): number {
+        const l = this.parseVersion(left);
+        const r = this.parseVersion(right);
+        if (!l || !r) {
+            return 0;
+        }
+        if (l.major !== r.major) return l.major - r.major;
+        if (l.minor !== r.minor) return l.minor - r.minor;
+        if (l.patch !== r.patch) return l.patch - r.patch;
+        return l.suffix - r.suffix;
+    }
+
+    private parseVersion(input: string): { major: number; minor: number; patch: number; suffix: number } | null {
+        const match = input.toLowerCase().match(/^(\d+)\.(\d+)(?:\.(\d+))?([a-z])?$/);
+        if (!match) {
+            return null;
+        }
+        const major = Number(match[1]);
+        const minor = Number(match[2]);
+        const patch = match[3] ? Number(match[3]) : 0;
+        const suffix = match[4] ? (match[4].charCodeAt(0) - 96) : 0;
+        return { major, minor, patch, suffix };
     }
 
     resolveCompletionItem?(
