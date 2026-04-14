@@ -12,15 +12,34 @@
 import * as vscode from 'vscode';
 import { DataEnterManager } from './data-enter-manager';
 import { 
+    ASTNode,
     StructDeclaration, 
     InterfaceDeclaration, 
     MethodDeclaration,
+    CallExpression,
+    AssignmentStatement,
+    FunctionDeclaration,
+    NativeDeclaration,
+    FunctionInterfaceDeclaration,
+    TypeDeclaration,
+    ModuleDeclaration,
+    DelegateDeclaration,
+    ScopeDeclaration,
+    TextMacroStatement,
+    Statement,
     Identifier,
     VariableDeclaration,
     ThistypeExpression,
     LibraryDeclaration
 } from '../vjass/ast';
 import { BlockStatement } from '../vjass/ast';
+import {
+    extractQuickFixIntents,
+    normalizeDiagnosticCode,
+    buildFixedCallLine,
+    buildLibraryDeclarationWithRequires
+} from './code-action-utils';
+import { extractLeadingComments, parseComment } from './comment-parser';
 
 export class CodeActionProvider implements vscode.CodeActionProvider {
     private dataEnterManager: DataEnterManager;
@@ -36,72 +55,184 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.CodeAction[]> {
         const actions: vscode.CodeAction[] = [];
+        const actionKeys = new Set<string>();
 
         // 检查诊断信息
         for (const diagnostic of context.diagnostics) {
             const message = diagnostic.message;
-            
-            // 1. 检查是否是接口方法未实现的错误
-            const interfaceMatch = message.match(/Struct '([^']+)' must implement method '([^']+)' from interface '([^']+)'/);
-            if (interfaceMatch) {
-                const action = this.createImplementMethodAction(
-                    document,
-                    diagnostic,
-                    interfaceMatch[1],
-                    interfaceMatch[2],
-                    interfaceMatch[3]
-                );
-                if (action) {
-                    actions.push(action);
+            const codeText = normalizeDiagnosticCode(diagnostic.code);
+            const intents = extractQuickFixIntents(message, codeText);
+
+            for (const intent of intents) {
+                let action: vscode.CodeAction | null = null;
+                if (intent.type === 'implement_interface_method') {
+                    action = this.createImplementMethodAction(
+                        document,
+                        diagnostic,
+                        intent.structName,
+                        intent.methodName,
+                        intent.interfaceName
+                    );
+                } else if (intent.type === 'remove_unused') {
+                    action = this.createRemoveUnusedAction(document, diagnostic, intent.symbolName, intent.symbolType);
+                } else if (intent.type === 'remove_constant_assignment') {
+                    action = this.createRemoveConstantAssignmentAction(document, diagnostic);
+                } else if (intent.type === 'remove_dead_code') {
+                    action = this.createRemoveDeadCodeAction(document, diagnostic);
+                } else if (intent.type === 'fix_param_count') {
+                    action = this.createFixMethodCallParamsAction(document, diagnostic, intent.expected, intent.provided);
+                } else if (intent.type === 'add_library_requires') {
+                    action = this.createAddLibraryRequiresAction(document, diagnostic, intent.libraryName);
                 }
-            }
-            
-            // 2. 检查是否是未使用的变量/函数
-            const unusedMatch = message.match(/未使用的(局部变量|函数) '([^']+)'/);
-            if (unusedMatch) {
-                const action = this.createRemoveUnusedAction(document, diagnostic, unusedMatch[2], unusedMatch[1]);
                 if (action) {
-                    actions.push(action);
-                }
-            }
-            
-            // 3. 检查是否是常量赋值错误
-            if (message.includes('不能被赋值') && message.includes('常量')) {
-                const action = this.createRemoveConstantAssignmentAction(document, diagnostic);
-                if (action) {
-                    actions.push(action);
-                }
-            }
-            
-            // 4. 检查是否是死代码
-            if (message.includes('死代码') || message.includes('dead code')) {
-                const action = this.createRemoveDeadCodeAction(document, diagnostic);
-                if (action) {
-                    actions.push(action);
-                }
-            }
-            
-            // 5. 检查是否是方法调用参数数量不匹配
-            const paramMatch = message.match(/方法调用参数数量不匹配|期望 (\d+) 个参数，但提供了 (\d+) 个/);
-            if (paramMatch) {
-                const action = this.createFixMethodCallParamsAction(document, diagnostic, message);
-                if (action) {
-                    actions.push(action);
-                }
-            }
-            
-            // 6. 检查是否是未声明的库依赖
-            const libMatch = message.match(/库 '([^']+)' 未找到|Library '([^']+)' not found/);
-            if (libMatch) {
-                const libName = libMatch[1] || libMatch[2];
-                const action = this.createAddLibraryRequiresAction(document, diagnostic, libName);
-                if (action) {
-                    actions.push(action);
+                    const key = `${action.title}|${action.kind?.value || ''}`;
+                    if (!actionKeys.has(key)) {
+                        actions.push(action);
+                        actionKeys.add(key);
+                    }
                 }
             }
         }
 
+        // 基于光标符号提供 @deprecated use XXX 一键替换（不依赖诊断）
+        const replaceDeprecatedAction = this.createReplaceDeprecatedSymbolAction(document, range);
+        if (replaceDeprecatedAction) {
+            const key = `${replaceDeprecatedAction.title}|${replaceDeprecatedAction.kind?.value || ''}`;
+            if (!actionKeys.has(key)) {
+                actions.push(replaceDeprecatedAction);
+                actionKeys.add(key);
+            }
+        }
+
         return actions;
+    }
+
+    private createReplaceDeprecatedSymbolAction(
+        document: vscode.TextDocument,
+        range: vscode.Range | vscode.Selection
+    ): vscode.CodeAction | null {
+        const symbolInfo = this.getSymbolFromRange(document, range);
+        if (!symbolInfo) {
+            return null;
+        }
+
+        const filePath = document.uri.fsPath;
+        const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+        const fileContent = this.dataEnterManager.getFileContent(filePath);
+        if (!blockStatement || !fileContent) {
+            return null;
+        }
+
+        const replacement = this.findDeprecatedReplacementInStatements(blockStatement.body, fileContent, symbolInfo.symbolName);
+        const finalReplacement = replacement || this.findDeprecatedReplacementAcrossWorkspace(symbolInfo.symbolName, filePath);
+        if (!finalReplacement || finalReplacement.toLowerCase() === symbolInfo.symbolName.toLowerCase()) {
+            return null;
+        }
+
+        const action = new vscode.CodeAction(
+            `替换为 '${finalReplacement}'（deprecated）`,
+            vscode.CodeActionKind.QuickFix
+        );
+        const edit = new vscode.WorkspaceEdit();
+        edit.replace(document.uri, symbolInfo.range, finalReplacement);
+        action.edit = edit;
+        action.isPreferred = true;
+        return action;
+    }
+
+    private findDeprecatedReplacementAcrossWorkspace(symbolName: string, currentFilePath: string): string | null {
+        const cachedFiles = this.dataEnterManager.getAllCachedFiles();
+        const normalizedCurrent = currentFilePath.replace(/\\/g, '/').toLowerCase();
+        for (const filePath of cachedFiles) {
+            const normalizedPath = filePath.replace(/\\/g, '/').toLowerCase();
+            if (normalizedPath === normalizedCurrent) {
+                continue;
+            }
+            const block = this.dataEnterManager.getBlockStatement(filePath);
+            const content = this.dataEnterManager.getFileContent(filePath);
+            if (!block || !content) {
+                continue;
+            }
+            const replacement = this.findDeprecatedReplacementInStatements(block.body, content, symbolName);
+            if (replacement) {
+                return replacement;
+            }
+        }
+        return null;
+    }
+
+    private getSymbolFromRange(
+        document: vscode.TextDocument,
+        range: vscode.Range | vscode.Selection
+    ): { symbolName: string; range: vscode.Range } | null {
+        const selectedText = document.getText(range).trim();
+        if (/^[A-Za-z_]\w*$/.test(selectedText)) {
+            return { symbolName: selectedText, range };
+        }
+
+        const wordRange = document.getWordRangeAtPosition(range.start, /\b[A-Za-z_]\w*\b/);
+        if (!wordRange) {
+            return null;
+        }
+        const symbolName = document.getText(wordRange);
+        if (!symbolName) {
+            return null;
+        }
+        return { symbolName, range: wordRange };
+    }
+
+    private findDeprecatedReplacementInStatements(
+        statements: Statement[],
+        fileContent: string,
+        symbolName: string
+    ): string | null {
+        for (const stmt of statements) {
+            const declaredName = this.getDeclaredName(stmt);
+            if (declaredName && declaredName === symbolName && stmt.start) {
+                const commentLines = extractLeadingComments(fileContent, stmt.start.line);
+                if (commentLines.length > 0) {
+                    const parsed = parseComment(commentLines);
+                    if (parsed.deprecated && parsed.deprecatedReplacement) {
+                        return parsed.deprecatedReplacement;
+                    }
+                }
+            }
+
+            // 递归进入容器语句
+            const nestedStatements: Statement[] = [];
+            if (stmt instanceof StructDeclaration || stmt instanceof InterfaceDeclaration || stmt instanceof ModuleDeclaration) {
+                nestedStatements.push(...stmt.members);
+            } else if (stmt instanceof LibraryDeclaration || stmt instanceof ScopeDeclaration) {
+                nestedStatements.push(...stmt.members);
+            } else if (stmt instanceof BlockStatement) {
+                nestedStatements.push(...stmt.body);
+            }
+
+            if (nestedStatements.length > 0) {
+                const nestedReplacement = this.findDeprecatedReplacementInStatements(nestedStatements, fileContent, symbolName);
+                if (nestedReplacement) {
+                    return nestedReplacement;
+                }
+            }
+        }
+        return null;
+    }
+
+    private getDeclaredName(stmt: Statement): string | null {
+        if (stmt instanceof FunctionDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof NativeDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof FunctionInterfaceDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof VariableDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof TypeDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof StructDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof InterfaceDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof ModuleDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof DelegateDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof MethodDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof LibraryDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof ScopeDeclaration && stmt.name) return stmt.name.name;
+        if (stmt instanceof TextMacroStatement && stmt.name) return stmt.name;
+        return null;
     }
 
     /**
@@ -381,17 +512,28 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
                 vscode.CodeActionKind.QuickFix
             );
 
-            // 获取诊断范围对应的完整行
-            const range = diagnostic.range;
-            const startLine = range.start.line;
-            const endLine = range.end.line;
-            
-            // 删除整个声明（可能跨多行）
+            // 基于 AST 精确定位声明语句，避免按行删除误伤
+            const filePath = document.uri.fsPath;
+            const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+            if (!blockStatement) {
+                return null;
+            }
+            const declarationNode = this.findDeclarationNodeByName(blockStatement, symbolName, document, diagnostic.range);
+            if (!declarationNode) {
+                return null;
+            }
+            const targetRange = this.getNodeRange(document, declarationNode, diagnostic.range);
+            if (!targetRange) {
+                return null;
+            }
+
             const edit = new vscode.WorkspaceEdit();
-            edit.delete(document.uri, new vscode.Range(
-                new vscode.Position(startLine, 0),
-                new vscode.Position(endLine + 1, 0)
-            ));
+            const deleteStart = new vscode.Position(targetRange.start.line, 0);
+            const deleteEnd = new vscode.Position(
+                Math.min(document.lineCount, targetRange.end.line + 1),
+                0
+            );
+            edit.delete(document.uri, new vscode.Range(deleteStart, deleteEnd));
             
             action.edit = edit;
             action.diagnostics = [diagnostic];
@@ -417,36 +559,30 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
                 vscode.CodeActionKind.QuickFix
             );
 
-            // 删除赋值语句
-            const range = diagnostic.range;
-            const line = document.lineAt(range.start.line);
-            const lineText = line.text;
-            
-            // 查找赋值语句的结束位置（通常是行尾或分号）
-            let endPosition = lineText.length;
-            const semicolonIndex = lineText.indexOf(';', range.start.character);
-            if (semicolonIndex >= 0) {
-                endPosition = semicolonIndex + 1;
+            // 基于 AST 精确定位赋值节点，避免复杂表达式误删
+            const filePath = document.uri.fsPath;
+            const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+            if (!blockStatement) {
+                return null;
             }
-            
-            // 如果整行都是赋值语句，删除整行
-            const trimmedLine = lineText.trim();
-            if (trimmedLine.startsWith('set ') || trimmedLine.startsWith('call ')) {
-                const edit = new vscode.WorkspaceEdit();
-                edit.delete(document.uri, new vscode.Range(
-                    new vscode.Position(range.start.line, 0),
-                    new vscode.Position(range.start.line + 1, 0)
-                ));
-                action.edit = edit;
-            } else {
-                // 只删除赋值部分
-                const edit = new vscode.WorkspaceEdit();
-                edit.delete(document.uri, new vscode.Range(
-                    range.start,
-                    new vscode.Position(range.start.line, endPosition)
-                ));
-                action.edit = edit;
+            const assignmentNode = this.findSmallestNodeCoveringRange(
+                blockStatement,
+                document,
+                diagnostic.range,
+                (node) => node instanceof AssignmentStatement
+            );
+            if (!assignmentNode) {
+                return null;
             }
+            const targetRange = this.getNodeRange(document, assignmentNode, diagnostic.range);
+            if (!targetRange) {
+                return null;
+            }
+
+            const edit = new vscode.WorkspaceEdit();
+            const expandedRange = this.expandRangeToWholeLineIfLineOnly(document, targetRange);
+            edit.delete(document.uri, expandedRange);
+            action.edit = edit;
             
             action.diagnostics = [diagnostic];
             action.isPreferred = true;
@@ -471,13 +607,22 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
                 vscode.CodeActionKind.QuickFix
             );
 
-            // 删除死代码（通常是 return 之后的代码）
-            const range = diagnostic.range;
+            // 基于 AST 精确定位死代码语句节点
+            const filePath = document.uri.fsPath;
+            const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+            if (!blockStatement) {
+                return null;
+            }
+            const deadNode = this.findSmallestNodeCoveringRange(blockStatement, document, diagnostic.range, (node) => node instanceof Statement);
+            if (!deadNode) {
+                return null;
+            }
+            const targetRange = this.getNodeRange(document, deadNode, diagnostic.range);
+            if (!targetRange) {
+                return null;
+            }
             const edit = new vscode.WorkspaceEdit();
-            
-            // 删除从诊断开始到下一个有意义语句之间的所有代码
-            // 这里简化处理，删除诊断范围内的代码
-            edit.delete(document.uri, range);
+            edit.delete(document.uri, targetRange);
             
             action.edit = edit;
             action.diagnostics = [diagnostic];
@@ -496,57 +641,42 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
     private createFixMethodCallParamsAction(
         document: vscode.TextDocument,
         diagnostic: vscode.Diagnostic,
-        message: string
+        expected: number,
+        provided: number
     ): vscode.CodeAction | null {
         try {
-            // 尝试从消息中提取期望的参数数量
-            const expectedMatch = message.match(/期望 (\d+) 个参数/);
-            const providedMatch = message.match(/提供了 (\d+) 个/);
-            
-            if (!expectedMatch || !providedMatch) {
-                return null;
-            }
-            
-            const expected = parseInt(expectedMatch[1], 10);
-            const provided = parseInt(providedMatch[1], 10);
-            
             const action = new vscode.CodeAction(
                 `修复方法调用参数（期望 ${expected} 个，当前 ${provided} 个）`,
                 vscode.CodeActionKind.QuickFix
             );
 
-            // 获取方法调用行
-            const range = diagnostic.range;
-            const line = document.lineAt(range.start.line);
-            const lineText = line.text;
-            
-            // 查找方法调用的参数部分
-            const callMatch = lineText.match(/(\w+)\.(\w+)\((.*)\)/);
-            if (!callMatch) {
+            // 基于 AST 定位 CallExpression，只替换调用表达式本身
+            const filePath = document.uri.fsPath;
+            const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+            if (!blockStatement) {
                 return null;
             }
-            
-            const paramsText = callMatch[3];
-            const params = paramsText.split(',').map(p => p.trim()).filter(p => p.length > 0);
-            
-            const edit = new vscode.WorkspaceEdit();
-            
-            if (provided > expected) {
-                // 参数过多，删除多余的参数
-                const newParams = params.slice(0, expected);
-                const newParamsText = newParams.join(', ');
-                const newCall = `${callMatch[1]}.${callMatch[2]}(${newParamsText})`;
-                edit.replace(document.uri, line.range, lineText.replace(callMatch[0], newCall));
-            } else if (provided < expected) {
-                // 参数不足，添加默认参数
-                const newParams = [...params];
-                for (let i = provided; i < expected; i++) {
-                    newParams.push('0'); // 默认使用 0
-                }
-                const newParamsText = newParams.join(', ');
-                const newCall = `${callMatch[1]}.${callMatch[2]}(${newParamsText})`;
-                edit.replace(document.uri, line.range, lineText.replace(callMatch[0], newCall));
+            const callExprNode = this.findSmallestNodeCoveringRange(
+                blockStatement,
+                document,
+                diagnostic.range,
+                (node) => node instanceof CallExpression
+            ) as CallExpression | null;
+            if (!callExprNode) {
+                return null;
             }
+            const callExprRange = this.getNodeRange(document, callExprNode, diagnostic.range);
+            if (!callExprRange) {
+                return null;
+            }
+            const callText = document.getText(callExprRange);
+            const fixedCallText = buildFixedCallLine(callText, expected, provided);
+            if (!fixedCallText) {
+                return null;
+            }
+
+            const edit = new vscode.WorkspaceEdit();
+            edit.replace(document.uri, callExprRange, fixedCallText);
             
             action.edit = edit;
             action.diagnostics = [diagnostic];
@@ -581,14 +711,19 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
                 return null;
             }
 
-            // 查找使用该库的 library 声明
-            let targetLibrary: any = null;
-            for (const stmt of blockStatement.body) {
-                if (stmt instanceof LibraryDeclaration) {
-                    // 检查这个库是否使用了未声明的库
-                    // 这里简化处理，在第一个 library 声明中添加 requires
-                    if (!targetLibrary) {
+            // 基于诊断范围定位最近的 library 声明（AST 优先）
+            let targetLibrary = this.findSmallestNodeCoveringRange(
+                blockStatement,
+                document,
+                diagnostic.range,
+                (node) => node instanceof LibraryDeclaration
+            ) as LibraryDeclaration | null;
+            // 回退：如果诊断不在 library 内，再用第一个 library 兜底
+            if (!targetLibrary) {
+                for (const stmt of blockStatement.body) {
+                    if (stmt instanceof LibraryDeclaration) {
                         targetLibrary = stmt;
+                        break;
                     }
                 }
             }
@@ -598,32 +733,22 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
             }
 
             // 在 library 声明后添加 requires
-            const libraryLine = targetLibrary.start.line - 1; // 转换为 0-based
-            if (libraryLine < 0 || libraryLine >= document.lineCount) {
+            const libraryRange = this.getNodeRange(document, targetLibrary, diagnostic.range);
+            if (!libraryRange) {
                 return null;
             }
 
-            const line = document.lineAt(libraryLine);
+            const line = document.lineAt(libraryRange.start.line);
             const lineText = line.text;
             
             // 检查是否已经有 requires
-            if (lineText.includes('requires')) {
-                // 在现有的 requires 列表中添加
-                const requiresMatch = lineText.match(/requires\s+([^\n]+)/);
-                if (requiresMatch) {
-                    const existingRequires = requiresMatch[1].trim();
-                    const newRequires = `${existingRequires}, ${libName}`;
-                    const edit = new vscode.WorkspaceEdit();
-                    edit.replace(document.uri, line.range, lineText.replace(requiresMatch[0], `requires ${newRequires}`));
-                    action.edit = edit;
-                }
-            } else {
-                // 添加新的 requires 子句
-                const edit = new vscode.WorkspaceEdit();
-                const insertPos = new vscode.Position(libraryLine + 1, 0);
-                edit.insert(document.uri, insertPos, `requires ${libName}\n`);
-                action.edit = edit;
+            const newLibraryLine = buildLibraryDeclarationWithRequires(lineText, libName);
+            if (!newLibraryLine) {
+                return null;
             }
+            const edit = new vscode.WorkspaceEdit();
+            edit.replace(document.uri, line.range, newLibraryLine);
+            action.edit = edit;
             
             action.diagnostics = [diagnostic];
             action.isPreferred = true;
@@ -633,6 +758,124 @@ export class CodeActionProvider implements vscode.CodeActionProvider {
             console.error('Error creating add library requires action:', error);
             return null;
         }
+    }
+
+    private findDeclarationNodeByName(
+        root: ASTNode,
+        symbolName: string,
+        document: vscode.TextDocument,
+        preferredRange?: vscode.Range
+    ): ASTNode | null {
+        return this.findSmallestNodeCoveringRange(
+            root,
+            document,
+            preferredRange,
+            (node) => {
+                if (node instanceof VariableDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof FunctionDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof NativeDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof MethodDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof FunctionInterfaceDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof TypeDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof StructDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof InterfaceDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof ModuleDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof DelegateDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof LibraryDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof ScopeDeclaration && node.name?.name === symbolName) return true;
+                if (node instanceof TextMacroStatement && node.name === symbolName) return true;
+                return false;
+            }
+        );
+    }
+
+    private findSmallestNodeCoveringRange(
+        root: ASTNode,
+        document: vscode.TextDocument,
+        preferredRange: vscode.Range | undefined,
+        predicate: (node: ASTNode) => boolean
+    ): ASTNode | null {
+        let bestNode: ASTNode | null = null;
+        let bestScore = Number.POSITIVE_INFINITY;
+
+        const visit = (node: ASTNode): void => {
+            const nodeRange = this.getNodeRange(document, node, preferredRange);
+            if (nodeRange && (!preferredRange || nodeRange.intersection(preferredRange))) {
+                if (predicate(node)) {
+                    const score = this.rangeLength(nodeRange);
+                    if (score < bestScore) {
+                        bestNode = node;
+                        bestScore = score;
+                    }
+                }
+                const children = (node as any).children as ASTNode[] | undefined;
+                if (children && children.length > 0) {
+                    children.forEach(visit);
+                }
+            }
+        };
+
+        visit(root);
+        return bestNode;
+    }
+
+    private rangeLength(range: vscode.Range): number {
+        return (range.end.line - range.start.line) * 100000 + (range.end.character - range.start.character);
+    }
+
+    private getNodeRange(
+        document: vscode.TextDocument,
+        node: ASTNode,
+        preferredRange?: vscode.Range
+    ): vscode.Range | null {
+        const start = (node as any).start as { line: number; position: number } | undefined;
+        const end = (node as any).end as { line: number; position: number } | undefined;
+        if (!start || !end) {
+            return null;
+        }
+
+        const candidateStarts = [start.line, start.line - 1];
+        const candidateEnds = [end.line, end.line - 1];
+        const candidates: vscode.Range[] = [];
+
+        for (const sLine of candidateStarts) {
+            for (const eLine of candidateEnds) {
+                if (sLine < 0 || eLine < 0 || sLine >= document.lineCount || eLine >= document.lineCount) {
+                    continue;
+                }
+                const startChar = Math.max(0, start.position);
+                const endChar = Math.max(0, end.position);
+                const range = new vscode.Range(
+                    new vscode.Position(sLine, startChar),
+                    new vscode.Position(Math.max(sLine, eLine), endChar)
+                );
+                candidates.push(range);
+            }
+        }
+        if (candidates.length === 0) {
+            return null;
+        }
+        if (preferredRange) {
+            const overlap = candidates.find(c => !!c.intersection(preferredRange));
+            if (overlap) {
+                return overlap;
+            }
+        }
+        return candidates[0];
+    }
+
+    private expandRangeToWholeLineIfLineOnly(document: vscode.TextDocument, range: vscode.Range): vscode.Range {
+        const lineText = document.lineAt(range.start.line).text;
+        const prefix = lineText.slice(0, range.start.character).trim();
+        const suffix = lineText.slice(range.end.character).trim();
+        if (prefix.length === 0 && suffix.length === 0) {
+            const endLine = Math.min(document.lineCount, range.end.line + 1);
+            return new vscode.Range(
+                new vscode.Position(range.start.line, 0),
+                new vscode.Position(endLine, 0)
+            );
+        }
+        return range;
     }
 }
 

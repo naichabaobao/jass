@@ -188,7 +188,8 @@ npm install
     "checkTypes": true,          // 检查类型兼容性（默认启用）
     "checkUndefined": true,      // 检查未定义的变量和函数（默认启用）
     "checkUnused": false,        // 检查未使用的变量（默认关闭）
-    "checkArrayBounds": true     // 检查数组越界（默认启用）
+    "checkArrayBounds": true,    // 检查数组越界（默认启用）
+    "checkHandleLeaks": true     // 检查句柄泄漏（timer/group/force/location，默认启用）
   }
 }
 ```
@@ -201,6 +202,7 @@ npm install
 - `checkUndefined`: `true`
 - `checkUnused`: `false`
 - `checkArrayBounds`: `true`
+- `checkHandleLeaks`: `true`
 
 #### 配置文件自动重载
 
@@ -226,6 +228,18 @@ npm install
 4. **配置验证**：如果配置文件格式错误，扩展会显示警告，并使用默认配置
 5. **自动重载**：修改配置文件并保存后，扩展会自动重新加载配置，无需重启 VS Code
 6. **配置位置**：配置文件必须放在工作区根目录，文件名为 `jass.config.json`
+
+#### 秒加载测试说明
+
+1. 在 VS Code `settings.json` 中设置：
+```json
+{
+  "jass.instantLibraryLoad": true
+}
+```
+2. Reload Window 一次，让扩展先生成标准库缓存。
+3. 再次 Reload Window，对比第二次启动日志/体感，标准库应优先从持久化加载（更快）。
+4. 将系统时间快进超过 24 小时或手动清理缓存目录后重启，缓存应失效并回退到正常解析路径。
 
 ## 📋 功能特点
 

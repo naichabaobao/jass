@@ -1,7 +1,10 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as v8 from 'v8';
+import { createHash } from 'crypto';
 import { Parser } from '../vjass/parser';
+import * as Ast from '../vjass/ast';
 import { BlockStatement } from '../vjass/ast';
 import { Subject, debounceTime } from '../extern/rxjs';
 import { TextMacroCollector } from '../vjass/text-macro-collector';
@@ -74,6 +77,8 @@ interface StandardLibrariesConfig {
     "common.ai"?: string;
     /** blizzard.j 文件路径 */
     "blizzard.j"?: string;
+    /** DzAPI.j 文件路径 */
+    "dzapi.j"?: string;
 }
 
 /**
@@ -97,6 +102,8 @@ interface DiagnosticsConfig {
     checkUnused?: boolean;
     /** 是否检查数组越界（默认开启） */
     checkArrayBounds?: boolean;
+    /** 是否检查句柄泄漏（timer/group/force/location，默认开启） */
+    checkHandleLeaks?: boolean;
 }
 
 /**
@@ -130,7 +137,43 @@ interface DataEnterOptions {
 /**
  * 标准库文件解析顺序
  */
-const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j'];
+const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j', 'dzapi.j'];
+const IMMUTABLE_MATE_SCHEMA_VERSION = 1;
+const IMMUTABLE_MATE_CACHE_KIND = 'immutable-ast';
+const IMMUTABLE_MATE_FILE_EXTENSION = '.mate';
+const IMMUTABLE_MATE_FILE_FORMAT = 1;
+const IMMUTABLE_MATE_TTL_MS = 24 * 60 * 60 * 1000; // 24 小时
+
+type ImmutableParsingOptionsSnapshot = {
+    enableTextMacro: boolean;
+    enablePreprocessor: boolean;
+    enableLuaBlocks: boolean;
+};
+
+interface ImmutableFileSignature {
+    filePath: string;
+    fileMtimeMs: number;
+    fileSize: number;
+    contentSha1?: string;
+}
+
+interface ImmutableFileMateSnapshot {
+    schemaVersion: number;
+    fileFormat: number;
+    cacheKind: string;
+    extensionVersion: string;
+    createdAt: number;
+    source: ImmutableFileSignature;
+    parseOptions: ImmutableParsingOptionsSnapshot;
+    payloadBase64: string;
+}
+
+const AST_NODE_PROTOTYPE_MAP = new Map<string, object>(
+    Object.entries(Ast)
+        .filter(([, value]) => typeof value === 'function')
+        .map(([name, ctor]) => [name, (ctor as { prototype: object }).prototype])
+);
+const MATE_OMIT_KEYS = new Set(['parent', 'previousSibling', 'nextSibling']);
 
 /**
  * 需要忽略的文件名（不处理，但需要监听变化）
@@ -177,6 +220,10 @@ export class DataEnterManager {
     private config: JassConfig | null = null;
     private configPath?: string;
     private readonly configReloadCallbacks: Array<() => void> = [];
+    private extensionVersionCache = '';
+    private immutableMateCachePrepared = false;
+    private hasInitializedWorkspace = false;
+    private hasLoggedEmptyCacheWarning = false;
 
     constructor(options: DataEnterOptions = {}) {
         this.options = {
@@ -207,6 +254,409 @@ export class DataEnterManager {
         this.loadConfig();
 
         // 不在这里设置监听器，监听器在 initializeWorkspace 中设置
+    }
+
+    private getExtensionVersion(): string {
+        if (this.extensionVersionCache) {
+            return this.extensionVersionCache;
+        }
+
+        const candidates = [
+            path.resolve(__dirname, '../../package.json'),
+            path.resolve(__dirname, '../../../package.json')
+        ];
+
+        for (const packageJsonPath of candidates) {
+            try {
+                if (!fs.existsSync(packageJsonPath)) {
+                    continue;
+                }
+                const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as { version?: string };
+                if (packageJson.version) {
+                    this.extensionVersionCache = packageJson.version;
+                    return this.extensionVersionCache;
+                }
+            } catch (error) {
+                console.warn(`Failed to read package version from ${packageJsonPath}:`, error);
+            }
+        }
+
+        this.extensionVersionCache = '0.0.0';
+        return this.extensionVersionCache;
+    }
+
+    private getCurrentParsingOptionsSnapshot(): ImmutableParsingOptionsSnapshot {
+        const parsingConfig = this.config?.parsing || {};
+        return {
+            enableTextMacro: parsingConfig.enableTextMacro !== false,
+            enablePreprocessor: parsingConfig.enablePreprocessor !== false,
+            enableLuaBlocks: parsingConfig.enableLuaBlocks !== false
+        };
+    }
+
+    private isInstantLibraryLoadEnabled(): boolean {
+        return vscode.workspace.getConfiguration('jass').get<boolean>('instantLibraryLoad', false);
+    }
+
+    private isImmutableCacheCandidate(filePath: string): boolean {
+        if (!this.isImmutableFile(filePath)) {
+            return false;
+        }
+        const ext = path.extname(filePath).toLowerCase();
+        return ['.j', '.jass', '.ai', '.zn'].includes(ext);
+    }
+
+    private shouldPersistImmutableFile(filePath: string): boolean {
+        if (!this.isInstantLibraryLoadEnabled()) {
+            return false;
+        }
+
+        // 支持 static/标准库下所有脚本文件的持久化秒加载。
+        return this.isImmutableCacheCandidate(filePath);
+    }
+
+    private getImmutableMateBaseDir(): string | null {
+        if (!this.workspaceRoot) {
+            return null;
+        }
+        return path.join(this.workspaceRoot, '.vscode', 'jass-cache', 'immutable');
+    }
+
+    private getImmutableMateVersionDir(): string | null {
+        const baseDir = this.getImmutableMateBaseDir();
+        if (!baseDir) {
+            return null;
+        }
+        return path.join(baseDir, this.getExtensionVersion());
+    }
+
+    private hashFilePath(filePath: string): string {
+        return createHash('sha1').update(filePath).digest('hex');
+    }
+
+    private getImmutableMatePath(filePath: string): string | null {
+        const versionDir = this.getImmutableMateVersionDir();
+        if (!versionDir) {
+            return null;
+        }
+        return path.join(versionDir, `${this.hashFilePath(filePath)}${IMMUTABLE_MATE_FILE_EXTENSION}`);
+    }
+
+    private prepareImmutableMateCacheDirectory(): void {
+        if (this.immutableMateCachePrepared) {
+            return;
+        }
+
+        const baseDir = this.getImmutableMateBaseDir();
+        const versionDir = this.getImmutableMateVersionDir();
+        if (!baseDir || !versionDir) {
+            return;
+        }
+
+        try {
+            fs.mkdirSync(versionDir, { recursive: true });
+            const entries = fs.readdirSync(baseDir, { withFileTypes: true });
+            const currentVersion = path.basename(versionDir);
+            for (const entry of entries) {
+                if (!entry.isDirectory() || entry.name === currentVersion) {
+                    continue;
+                }
+                const legacyPath = path.join(baseDir, entry.name);
+                fs.rmSync(legacyPath, { recursive: true, force: true });
+            }
+            this.immutableMateCachePrepared = true;
+        } catch (error) {
+            console.warn('Failed to prepare immutable .mate cache directory:', error);
+        }
+    }
+
+    private createImmutableFileSignature(filePath: string, content?: string): ImmutableFileSignature | null {
+        try {
+            const stats = fs.statSync(filePath);
+            return {
+                filePath,
+                fileMtimeMs: stats.mtimeMs,
+                fileSize: stats.size,
+                contentSha1: content ? createHash('sha1').update(content).digest('hex') : undefined
+            };
+        } catch {
+            return null;
+        }
+    }
+
+    private markAstNodeTypes(root: unknown): void {
+        const visited = new WeakSet<object>();
+        const stack: unknown[] = [root];
+
+        while (stack.length > 0) {
+            const current = stack.pop();
+            if (!current || typeof current !== 'object') {
+                continue;
+            }
+            if (visited.has(current)) {
+                continue;
+            }
+            visited.add(current);
+
+            const node = current as Record<string, unknown> & { __mateType?: string };
+            const ctorName = (current as { constructor?: { name?: string } }).constructor?.name;
+            if (ctorName) {
+                node.__mateType = ctorName;
+            }
+
+            for (const value of Object.values(node)) {
+                if (value && typeof value === 'object') {
+                    stack.push(value);
+                }
+            }
+        }
+    }
+
+    private restoreAstNodePrototypes(root: unknown): void {
+        const visited = new WeakSet<object>();
+        const stack: unknown[] = [root];
+
+        while (stack.length > 0) {
+            const current = stack.pop();
+            if (!current || typeof current !== 'object') {
+                continue;
+            }
+            if (visited.has(current)) {
+                continue;
+            }
+            visited.add(current);
+
+            const node = current as Record<string, unknown>;
+            const mateType = node.__mateType;
+            if (typeof mateType === 'string') {
+                const prototype = AST_NODE_PROTOTYPE_MAP.get(mateType);
+                if (prototype) {
+                    Object.setPrototypeOf(current, prototype);
+                }
+            }
+
+            for (const value of Object.values(node)) {
+                if (value && typeof value === 'object') {
+                    stack.push(value);
+                }
+            }
+        }
+    }
+
+    private cloneForMatePayload<T>(input: T): T {
+        if (input === null || input === undefined) {
+            return input;
+        }
+        if (typeof input !== 'object') {
+            return input;
+        }
+
+        const rootClone: any = Array.isArray(input) ? [] : {};
+        const objectMap = new Map<object, any>();
+        objectMap.set(input as object, rootClone);
+
+        const queue: Array<{ src: any; dst: any }> = [{ src: input, dst: rootClone }];
+        while (queue.length > 0) {
+            const { src, dst } = queue.shift()!;
+            const ctorName = src?.constructor?.name;
+            if (ctorName && ctorName !== 'Object' && ctorName !== 'Array') {
+                dst.__mateType = ctorName;
+            }
+
+            if (Array.isArray(src)) {
+                for (let i = 0; i < src.length; i++) {
+                    const value = src[i];
+                    if (!value || typeof value !== 'object') {
+                        dst[i] = value;
+                        continue;
+                    }
+                    if (objectMap.has(value)) {
+                        dst[i] = objectMap.get(value);
+                        continue;
+                    }
+                    const childClone: any = Array.isArray(value) ? [] : {};
+                    objectMap.set(value, childClone);
+                    dst[i] = childClone;
+                    queue.push({ src: value, dst: childClone });
+                }
+                continue;
+            }
+
+            for (const [key, value] of Object.entries(src)) {
+                if (MATE_OMIT_KEYS.has(key)) {
+                    continue;
+                }
+
+                if (!value || typeof value !== 'object') {
+                    dst[key] = value;
+                    continue;
+                }
+                if (objectMap.has(value)) {
+                    dst[key] = objectMap.get(value);
+                    continue;
+                }
+                const childClone: any = Array.isArray(value) ? [] : {};
+                objectMap.set(value, childClone);
+                dst[key] = childClone;
+                queue.push({ src: value, dst: childClone });
+            }
+        }
+
+        return rootClone as T;
+    }
+
+    private rebuildAstRelations(root: unknown): void {
+        if (!root || typeof root !== 'object') {
+            return;
+        }
+
+        const visited = new WeakSet<object>();
+        const queue: Array<{ node: any; parent: any | null }> = [{ node: root, parent: null }];
+
+        while (queue.length > 0) {
+            const { node, parent } = queue.shift()!;
+            if (!node || typeof node !== 'object') {
+                continue;
+            }
+            if (visited.has(node)) {
+                continue;
+            }
+            visited.add(node);
+
+            if (parent) {
+                node.parent = parent;
+            }
+
+            if (Array.isArray(node.children)) {
+                for (let i = 0; i < node.children.length; i++) {
+                    const child = node.children[i];
+                    if (!child || typeof child !== 'object') {
+                        continue;
+                    }
+                    child.parent = node;
+                    child.previousSibling = i > 0 ? node.children[i - 1] : null;
+                    child.nextSibling = i < node.children.length - 1 ? node.children[i + 1] : null;
+                    queue.push({ node: child, parent: node });
+                }
+            }
+        }
+    }
+
+    private saveImmutableMateCache(filePath: string, cacheItem: FileCacheItem): void {
+        if (!this.shouldPersistImmutableFile(filePath)) {
+            return;
+        }
+
+        const matePath = this.getImmutableMatePath(filePath);
+        if (!matePath) {
+            return;
+        }
+
+        this.prepareImmutableMateCacheDirectory();
+
+        const signature = this.createImmutableFileSignature(filePath, cacheItem.content);
+        if (!signature) {
+            return;
+        }
+
+        try {
+            const payloadCacheItem: FileCacheItem = {
+                ...cacheItem,
+                blockStatement: this.cloneForMatePayload(cacheItem.blockStatement),
+                zincProgram: this.cloneForMatePayload(cacheItem.zincProgram)
+            };
+            this.markAstNodeTypes(payloadCacheItem.blockStatement);
+            this.markAstNodeTypes(payloadCacheItem.zincProgram);
+            const payloadBase64 = v8.serialize(payloadCacheItem).toString('base64');
+            const snapshot: ImmutableFileMateSnapshot = {
+                schemaVersion: IMMUTABLE_MATE_SCHEMA_VERSION,
+                fileFormat: IMMUTABLE_MATE_FILE_FORMAT,
+                cacheKind: IMMUTABLE_MATE_CACHE_KIND,
+                extensionVersion: this.getExtensionVersion(),
+                createdAt: Date.now(),
+                source: signature,
+                parseOptions: this.getCurrentParsingOptionsSnapshot(),
+                payloadBase64
+            };
+            fs.writeFileSync(matePath, JSON.stringify(snapshot), 'utf-8');
+        } catch (error) {
+            console.warn(`Failed to save immutable .mate cache for ${path.basename(filePath)}:`, error);
+        }
+    }
+
+    private tryLoadImmutableMateCache(filePath: string): boolean {
+        if (!this.shouldPersistImmutableFile(filePath)) {
+            return false;
+        }
+
+        const matePath = this.getImmutableMatePath(filePath);
+        if (!matePath || !fs.existsSync(matePath)) {
+            return false;
+        }
+
+        try {
+            const raw = fs.readFileSync(matePath, 'utf-8');
+            const snapshot = JSON.parse(raw) as ImmutableFileMateSnapshot;
+            if (
+                snapshot.schemaVersion !== IMMUTABLE_MATE_SCHEMA_VERSION ||
+                snapshot.fileFormat !== IMMUTABLE_MATE_FILE_FORMAT ||
+                snapshot.cacheKind !== IMMUTABLE_MATE_CACHE_KIND ||
+                snapshot.extensionVersion !== this.getExtensionVersion()
+            ) {
+                return false;
+            }
+
+            const signature = this.createImmutableFileSignature(filePath);
+            if (!signature) {
+                return false;
+            }
+
+            const source = snapshot.source;
+            if (
+                !source ||
+                source.filePath !== signature.filePath ||
+                source.fileMtimeMs !== signature.fileMtimeMs ||
+                source.fileSize !== signature.fileSize
+            ) {
+                return false;
+            }
+
+            // 超过 24 小时直接失效，避免长期陈旧缓存。
+            if (Date.now() - snapshot.createdAt > IMMUTABLE_MATE_TTL_MS) {
+                try {
+                    fs.unlinkSync(matePath);
+                } catch {
+                    // ignore
+                }
+                return false;
+            }
+
+            const options = this.getCurrentParsingOptionsSnapshot();
+            if (
+                snapshot.parseOptions.enableTextMacro !== options.enableTextMacro ||
+                snapshot.parseOptions.enablePreprocessor !== options.enablePreprocessor ||
+                snapshot.parseOptions.enableLuaBlocks !== options.enableLuaBlocks
+            ) {
+                return false;
+            }
+
+            const cacheItem = v8.deserialize(Buffer.from(snapshot.payloadBase64, 'base64')) as FileCacheItem;
+            this.restoreAstNodePrototypes(cacheItem.blockStatement);
+            this.restoreAstNodePrototypes(cacheItem.zincProgram);
+            this.rebuildAstRelations(cacheItem.blockStatement);
+            this.rebuildAstRelations(cacheItem.zincProgram);
+            this.cache.set(filePath, cacheItem);
+            this.immutableFiles.add(filePath);
+            return true;
+        } catch (error) {
+            try {
+                fs.unlinkSync(matePath);
+            } catch {
+                // ignore
+            }
+            console.warn(`Failed to load immutable .mate cache for ${path.basename(filePath)}:`, error);
+            return false;
+        }
     }
 
     /**
@@ -344,7 +794,8 @@ export class DataEnterManager {
             }
             
             // 4. 如果解析成功且没有严重错误，进行语义分析
-            if (blockStatement && errors.errors.length === 0) {
+            // immutable/static 文件用于符号索引与跳转，跳过语义分析可显著降低冷启动耗时。
+            if (!isImmutable && blockStatement && errors.errors.length === 0) {
                 try {
                     // 获取诊断配置
                     const diagnosticsConfig = this.config?.diagnostics || {};
@@ -352,6 +803,7 @@ export class DataEnterManager {
                     const checkTypes = diagnosticsConfig.checkTypes !== false; // 默认启用
                     const checkUnused = diagnosticsConfig.checkUnused === true; // 默认不启用
                     const checkArrayBounds = diagnosticsConfig.checkArrayBounds !== false; // 默认启用
+                    const checkHandleLeaks = diagnosticsConfig.checkHandleLeaks !== false; // 默认启用
                     
                     if (checkUndefined) {
                         // 使用新的方法：先解析所有文件，再进行语义分析
@@ -370,7 +822,8 @@ export class DataEnterManager {
                                 checkUndefinedBehavior: checkUndefined,
                                 checkTypes: checkTypes,
                                 checkUnused: checkUnused,
-                                checkArrayBounds: checkArrayBounds
+                                checkArrayBounds: checkArrayBounds,
+                                checkHandleLeaks: checkHandleLeaks
                             }
                         );
                         
@@ -430,6 +883,10 @@ export class DataEnterManager {
             // 如果是不可变文件，添加到集合中
             if (isImmutable) {
                 this.immutableFiles.add(filePath);
+                const immutableCacheItem = this.cache.get(filePath);
+                if (immutableCacheItem) {
+                    this.saveImmutableMateCache(filePath, immutableCacheItem);
+                }
             }
 
             // 3. 更新补全项缓存（异步，不阻塞）
@@ -969,8 +1426,8 @@ export class DataEnterManager {
             return false;
         }
 
-        const normalizedFilePath = path.normalize(filePath);
-        const normalizedWorkspaceRoot = path.normalize(this.workspaceRoot);
+        const normalizedFilePath = path.normalize(filePath).toLowerCase();
+        const normalizedWorkspaceRoot = path.normalize(this.workspaceRoot).toLowerCase();
 
         // 检查文件路径是否以工作区根目录开头
         return normalizedFilePath.startsWith(normalizedWorkspaceRoot);
@@ -1056,9 +1513,13 @@ export class DataEnterManager {
      */
     public getAllCachedFiles(): string[] {
         const files = Array.from(this.cache.keys());
-        // 调试：如果缓存为空，输出警告
-        if (files.length === 0) {
+        // 调试：仅在工作区初始化完成后提示一次，避免 hover 期间重复刷屏
+        if (files.length === 0 && this.hasInitializedWorkspace && !this.hasLoggedEmptyCacheWarning) {
             console.warn('[DataEnterManager] getAllCachedFiles: cache is empty');
+            this.hasLoggedEmptyCacheWarning = true;
+        }
+        if (files.length > 0) {
+            this.hasLoggedEmptyCacheWarning = false;
         }
         return files;
     }
@@ -1154,8 +1615,10 @@ export class DataEnterManager {
         const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
         const hasWorkspace = !!workspaceFolder;
         const workspaceRoot = workspaceFolder?.uri.fsPath;
+        this.hasInitializedWorkspace = false;
 
         if (hasWorkspace && workspaceRoot) {
+            this.prepareImmutableMateCacheDirectory();
             console.log('📦 Phase 1: Collecting TextMacros...');
             // 阶段1：收集所有文件中的 textmacro 定义
             await this.collectAllTextMacros(workspaceRoot);
@@ -1195,6 +1658,8 @@ export class DataEnterManager {
                 }
             });
         }
+
+        this.hasInitializedWorkspace = true;
     }
 
     /**
@@ -1520,8 +1985,26 @@ export class DataEnterManager {
      * 优先使用配置中的路径，然后从工作区根目录查找，最后从扩展的 static 目录查找
      */
     private async loadStandardLibraries(workspaceRoot: string): Promise<void> {
-        // 扩展的 static 目录路径
-        const extensionStaticDir = path.resolve(__dirname, "../../../static");
+        const startTime = Date.now();
+        const instantLoadEnabled = this.isInstantLibraryLoadEnabled();
+        let totalCandidates = 0;
+        let notFoundCount = 0;
+        let loadedFromMateCount = 0;
+        let parsedFromSourceCount = 0;
+
+        // 扩展 static 目录候选路径（兼容不同编译/运行目录）
+        const extensionStaticDirCandidates = [
+            path.resolve(__dirname, "../../../static"),
+            path.resolve(__dirname, "../../../../static"),
+            path.resolve(__dirname, "../../static")
+        ];
+        const extensionStaticDir = extensionStaticDirCandidates.find((dir) => {
+            try {
+                return fs.existsSync(dir) && fs.statSync(dir).isDirectory();
+            } catch {
+                return false;
+            }
+        });
         
         console.log(`📚 Scanning for standard libraries...`);
         console.log(`   Workspace root: ${workspaceRoot}`);
@@ -1554,21 +2037,46 @@ export class DataEnterManager {
                 filePath = path.join(workspaceRoot, fileName);
                 if (!fs.existsSync(filePath)) {
                     // 3. 如果工作区不存在，从扩展的 static 目录查找
-                    filePath = path.join(extensionStaticDir, fileName);
+                    if (extensionStaticDir) {
+                        filePath = path.join(extensionStaticDir, fileName);
+                    } else {
+                        filePath = null;
+                    }
                 }
             }
             
-            if (fs.existsSync(filePath)) {
+            if (filePath && fs.existsSync(filePath)) {
+                totalCandidates++;
                 try {
-                    const content = fs.readFileSync(filePath, 'utf-8');
-                    await this.handleFileUpdate(filePath, content);
+                    const loadedFromMate = this.tryLoadImmutableMateCache(filePath);
+                    if (!loadedFromMate) {
+                        const content = fs.readFileSync(filePath, 'utf-8');
+                        await this.handleFileUpdate(filePath, content);
+                        parsedFromSourceCount++;
+                    } else {
+                        loadedFromMateCount++;
+                    }
                     console.log(`📚 Loaded standard library: ${fileName} (from ${path.dirname(filePath)})`);
                 } catch (error) {
                     console.error(`Failed to load standard library ${fileName}:`, error);
                 }
             } else {
+                notFoundCount++;
                 console.log(`ℹ️ Standard library not found: ${fileName} (checked config, workspace and extension static)`);
             }
+        }
+
+        const elapsedMs = Date.now() - startTime;
+        if (instantLoadEnabled) {
+            console.log(
+                `⚡ [InstantLibraryLoad=ON] Standard libraries loaded in ${elapsedMs}ms ` +
+                `(found=${totalCandidates}, missing=${notFoundCount}, cacheHit=${loadedFromMateCount}, parsed=${parsedFromSourceCount})`
+            );
+        } else {
+            console.log(
+                `🐢 [InstantLibraryLoad=OFF] Standard libraries loaded in ${elapsedMs}ms ` +
+                `(found=${totalCandidates}, missing=${notFoundCount}, parsed=${parsedFromSourceCount})`
+            );
         }
     }
 
@@ -1577,6 +2085,12 @@ export class DataEnterManager {
      * 从扩展的 static 目录加载（不是工作区的 static 目录）
      */
     private async loadStaticFiles(workspaceRoot: string): Promise<void> {
+        const startTime = Date.now();
+        const instantLoadEnabled = this.isInstantLibraryLoadEnabled();
+        let totalFiles = 0;
+        let loadedFromMateCount = 0;
+        let parsedFromSourceCount = 0;
+
         // 扩展的 static 目录路径（相对于扩展安装目录）
         // 尝试多个可能的路径（因为编译后的 __dirname 位置可能不同）
         const possiblePaths = [
@@ -1619,8 +2133,15 @@ export class DataEnterManager {
                         const ext = path.extname(entry.name).toLowerCase();
                         if (['.j', '.jass', '.ai', '.zn'].includes(ext) && !this.shouldIgnoreFile(fullPath)) {
                             try {
-                                const content = fs.readFileSync(fullPath, 'utf-8');
-                                await this.handleFileUpdate(fullPath, content);
+                                totalFiles++;
+                                const loadedFromMate = this.tryLoadImmutableMateCache(fullPath);
+                                if (!loadedFromMate) {
+                                    const content = fs.readFileSync(fullPath, 'utf-8');
+                                    await this.handleFileUpdate(fullPath, content);
+                                    parsedFromSourceCount++;
+                                } else {
+                                    loadedFromMateCount++;
+                                }
                             } catch (error) {
                                 console.error(`Failed to load static file ${fullPath}:`, error);
                             }
@@ -1635,6 +2156,19 @@ export class DataEnterManager {
         // 加载所有找到的 static 目录
         for (const staticDir of staticDirs) {
             await loadFilesInDir(staticDir, staticDir);
+        }
+
+        const elapsedMs = Date.now() - startTime;
+        if (instantLoadEnabled) {
+            console.log(
+                `⚡ [InstantLibraryLoad=ON] Static files loaded in ${elapsedMs}ms ` +
+                `(total=${totalFiles}, cacheHit=${loadedFromMateCount}, parsed=${parsedFromSourceCount})`
+            );
+        } else {
+            console.log(
+                `🐢 [InstantLibraryLoad=OFF] Static files loaded in ${elapsedMs}ms ` +
+                `(total=${totalFiles}, parsed=${parsedFromSourceCount})`
+            );
         }
 
         // 通知 SpecialFileManager 重新初始化（会扫描所有特殊文件，包括 static 目录下的）
@@ -1652,7 +2186,7 @@ export class DataEnterManager {
      * 加载工作区文件（可变文件）
      */
     private async loadWorkspaceFiles(workspaceRoot: string): Promise<void> {
-        const loadFilesInDir = (dir: string): void => {
+        const loadFilesInDir = async (dir: string): Promise<void> => {
             try {
                 const entries = fs.readdirSync(dir, { withFileTypes: true });
                 for (const entry of entries) {
@@ -1664,7 +2198,7 @@ export class DataEnterManager {
                         if (normalizedPath.includes('/static/') || normalizedPath.includes('\\static\\')) {
                             continue; // 跳过 static 目录
                         }
-                        loadFilesInDir(fullPath);
+                        await loadFilesInDir(fullPath);
                     } else if (entry.isFile()) {
                         const ext = path.extname(entry.name).toLowerCase();
                         if (['.j', '.jass', '.ai', '.zn'].includes(ext)) {
@@ -1674,7 +2208,7 @@ export class DataEnterManager {
                                 !this.shouldIgnoreFile(fullPath)) {
                                 try {
                                     const content = fs.readFileSync(fullPath, 'utf-8');
-                                    this.handleFileUpdate(fullPath, content);
+                                    await this.handleFileUpdate(fullPath, content);
                                     console.log(`📄 Loaded workspace file: ${path.relative(workspaceRoot, fullPath)}`);
                                 } catch (error) {
                                     console.error(`Failed to load workspace file ${fullPath}:`, error);
@@ -1689,9 +2223,10 @@ export class DataEnterManager {
         };
 
         // 递归扫描工作区目录（排除 static 目录）
-        loadFilesInDir(workspaceRoot);
+        await loadFilesInDir(workspaceRoot);
         
         // 同时处理已打开的文档（如果还没有被加载）
+        const pendingOpenDocs: Array<Promise<void>> = [];
         vscode.workspace.textDocuments.forEach(document => {
             const filePath = document.uri.fsPath;
             if (this.isWorkspaceFile(filePath) && 
@@ -1701,10 +2236,14 @@ export class DataEnterManager {
                 // 如果文件还没有被加载，使用文档内容
                 const content = document.getText();
                 if (content) {
-                    this.handleFileUpdate(filePath, content);
+                    pendingOpenDocs.push(this.handleFileUpdate(filePath, content));
                 }
             }
         });
+
+        if (pendingOpenDocs.length > 0) {
+            await Promise.allSettled(pendingOpenDocs);
+        }
     }
 
     /**

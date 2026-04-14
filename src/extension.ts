@@ -440,6 +440,40 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // 注册命令：跳转到替代符号（用于 @deprecated use XXX 的直达跳转）
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.openReplacementSymbol', async (symbolName?: string) => {
+            if (!symbolName || typeof symbolName !== 'string') {
+                vscode.window.showWarningMessage('Replacement symbol is empty');
+                return;
+            }
+
+            try {
+                const symbols = await vscode.commands.executeCommand<vscode.SymbolInformation[]>(
+                    'vscode.executeWorkspaceSymbolProvider',
+                    symbolName
+                ) || [];
+
+                if (symbols.length === 0) {
+                    vscode.window.showWarningMessage(`Replacement symbol '${symbolName}' not found in workspace`);
+                    return;
+                }
+
+                const exact = symbols.find(s => s.name === symbolName)
+                    || symbols.find(s => s.name.toLowerCase() === symbolName.toLowerCase())
+                    || symbols[0];
+
+                const doc = await vscode.workspace.openTextDocument(exact.location.uri);
+                const editor = await vscode.window.showTextDocument(doc);
+                editor.selection = new vscode.Selection(exact.location.range.start, exact.location.range.end);
+                editor.revealRange(exact.location.range, vscode.TextEditorRevealType.InCenter);
+            } catch (error) {
+                console.error('Failed to open replacement symbol:', error);
+                vscode.window.showErrorMessage(`Failed to navigate to replacement symbol '${symbolName}'`);
+            }
+        })
+    );
+
     // 注册调试命令：测试 special 解析器（使用测试数据）
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.testSpecialParsers', async () => {
@@ -545,7 +579,8 @@ export async function activate(context: vscode.ExtensionContext) {
                     "checkTypes": true,
                     "checkUndefined": true,
                     "checkUnused": false,
-                    "checkArrayBounds": true
+                    "checkArrayBounds": true,
+                    "checkHandleLeaks": true
                 }
             };
 

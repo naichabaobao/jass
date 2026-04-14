@@ -61,6 +61,11 @@
           "default": false,
           "description": "Enable hint support for function parameters and method calls. This is an experimental feature."
         },
+        "jass.instantLibraryLoad": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable instant standard-library load from persisted cache (.mate). Only applies to common.j/common.ai/blizzard.j (.j/.ai) with 24-hour TTL."
+        },
         "jass.apiVersion": {
           "type": "string",
           "default": "off",
@@ -140,6 +145,10 @@
       {
         "command": "jass.createConfigFile",
         "title": "create jass.config.json"
+      },
+      {
+        "command": "jass.openReplacementSymbol",
+        "title": "JASS: Open Replacement Symbol"
       }
     ],
     "menus": {
@@ -170,6 +179,7 @@
     "test": "npm run test:parser && npm run test:analyzer",
     "test:parser": "node out/vjass/parser.test.js",
     "test:analyzer": "node -e \"const { runAnalyzerTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTests();\"",
+    "test:codeaction": "node -e \"const { runCodeActionUtilsTests } = require('./out/provider/code-action-utils.test.js'); runCodeActionUtilsTests();\"",
     "test:type": "node -e \"const { runAnalyzerTypeTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTypeTests();\"",
     "package": "vsce package",
     "publish:skip-duplicate": "vsce publish --skip-duplicate",

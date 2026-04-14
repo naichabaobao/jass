@@ -51,6 +51,8 @@ export interface SemanticAnalyzerOptions {
     checkUnused?: boolean;
     /** 是否检查数组越界（默认开启） */
     checkArrayBounds?: boolean;
+    /** 是否检查句柄资源泄漏（timer/group/force/location 等，默认开启） */
+    checkHandleLeaks?: boolean;
     /** 标准库文件列表（如 common.j, blizzard.j, common.ai），用于多文件检测 */
     standardLibraries?: string[];
     /** 外部符号表（来自标准库和工程目录的其他 jass 文件），用于检查函数是否在其他文件中声明 */
@@ -179,6 +181,51 @@ interface ObjectTypeInfo {
     isInterface: boolean;
 }
 
+type HandleResourceKind = "timer" | "group" | "force" | "location";
+
+interface HandleResourceSpec {
+    kind: HandleResourceKind;
+    createFns: Set<string>;
+    destroyFns: Set<string>;
+    typeNames: Set<string>;
+}
+
+interface HandleResourceState {
+    kind: HandleResourceKind;
+    createdNode: ASTNode;
+    destroyed: boolean;
+    escapedByReturn: boolean;
+    assignedToGlobal: boolean;
+    assignedToMember: boolean;
+}
+
+const HANDLE_RESOURCE_SPECS: HandleResourceSpec[] = [
+    {
+        kind: "timer",
+        createFns: new Set(["createtimer"]),
+        destroyFns: new Set(["destroytimer"]),
+        typeNames: new Set(["timer"])
+    },
+    {
+        kind: "group",
+        createFns: new Set(["creategroup"]),
+        destroyFns: new Set(["destroygroup"]),
+        typeNames: new Set(["group"])
+    },
+    {
+        kind: "force",
+        createFns: new Set(["createforce"]),
+        destroyFns: new Set(["destroyforce"]),
+        typeNames: new Set(["force"])
+    },
+    {
+        kind: "location",
+        createFns: new Set(["location"]),
+        destroyFns: new Set(["removelocation"]),
+        typeNames: new Set(["location"])
+    }
+];
+
 /**
  * common.j / Blizzard.j 中「未在当前工程声明」时的 handle 类型名回退集合。
  * 仅当类型未在符号表/外部符号表中声明时使用，用于单独解析 blizzard.j 时避免误报。
@@ -257,6 +304,7 @@ export class SemanticAnalyzer {
             checkTypes: options.checkTypes ?? true, // 默认启用类型检查
             checkUnused: options.checkUnused ?? false, // 默认不检查未使用符号
             checkArrayBounds: options.checkArrayBounds ?? true, // 默认启用数组越界检查
+            checkHandleLeaks: options.checkHandleLeaks ?? true, // 默认启用句柄泄漏检查
             standardLibraries: options.standardLibraries ?? [],
             externalSymbols: options.externalSymbols
         };
@@ -1416,6 +1464,7 @@ export class SemanticAnalyzer {
                 }
                 // 然后检查函数的所有代码路径是否都有返回值
                 this.checkFunctionReturns(node);
+                this.checkHandleResourceLeaks(node.body);
                 this.scopeStack.pop();
             } else {
                 this.checkFunctionReturns(node);
@@ -1469,6 +1518,7 @@ export class SemanticAnalyzer {
                 }
                 // 然后检查方法的所有代码路径是否都有返回值
                 this.checkMethodReturns(node);
+                this.checkHandleResourceLeaks(node.body);
                 this.scopeStack.pop();
             } else {
                 // 对于没有 body 的方法（接口中的方法声明），也需要递归处理子节点
@@ -5367,6 +5417,145 @@ export class SemanticAnalyzer {
         return null;
     }
 
+    private checkHandleResourceLeaks(body: BlockStatement): void {
+        if (!this.options.checkHandleLeaks) {
+            return;
+        }
+
+        const tracked = new Map<string, HandleResourceState>();
+        this.walkHandleLeakNodes(body, tracked);
+
+        for (const [varName, state] of tracked.entries()) {
+            if (state.destroyed) {
+                continue;
+            }
+
+            const kindLabel = state.kind;
+            if (state.escapedByReturn) {
+                this.addCheckError(
+                    state.createdNode,
+                    `Handle '${varName}' (${kindLabel}) is created and returned without local cleanup. Ensure the caller eventually releases it`,
+                    CheckErrorType.VALIDATION_ERROR,
+                    "hint"
+                );
+                continue;
+            }
+
+            if (state.assignedToGlobal || state.assignedToMember) {
+                this.addCheckError(
+                    state.createdNode,
+                    `Handle '${varName}' (${kindLabel}) is assigned outside local scope before cleanup. Verify ownership and release it to avoid leaks`,
+                    CheckErrorType.VALIDATION_ERROR,
+                    "hint"
+                );
+                continue;
+            }
+
+            this.addCheckError(
+                state.createdNode,
+                `Potential handle leak: '${varName}' (${kindLabel}) is created but not destroyed in current function/method`,
+                CheckErrorType.VALIDATION_ERROR,
+                "warning"
+            );
+        }
+    }
+
+    private walkHandleLeakNodes(node: ASTNode, tracked: Map<string, HandleResourceState>): void {
+        if (node instanceof VariableDeclaration) {
+            this.handlePotentialCreateFromExpression(node.initializer, node.name, tracked);
+        } else if (node instanceof AssignmentStatement) {
+            this.trackHandleOwnershipTransfer(node, tracked);
+            if (node.target instanceof Identifier) {
+                this.handlePotentialCreateFromExpression(node.value, node.target, tracked);
+            }
+        } else if (node instanceof ReturnStatement && node.argument instanceof Identifier) {
+            const state = tracked.get(node.argument.name);
+            if (state && !state.destroyed) {
+                state.escapedByReturn = true;
+            }
+        } else if (node instanceof CallExpression) {
+            this.trackDestroyCall(node, tracked);
+        }
+
+        for (const child of node.children) {
+            this.walkHandleLeakNodes(child, tracked);
+        }
+    }
+
+    private trackHandleOwnershipTransfer(node: AssignmentStatement, tracked: Map<string, HandleResourceState>): void {
+        if (!(node.value instanceof Identifier)) {
+            return;
+        }
+        const state = tracked.get(node.value.name);
+        if (!state || state.destroyed) {
+            return;
+        }
+
+        if (node.target instanceof Identifier) {
+            const targetSymbol = this.findSymbol(node.target.name);
+            if (targetSymbol && targetSymbol.type === SymbolType.GLOBAL_VARIABLE) {
+                state.assignedToGlobal = true;
+            }
+        } else if (node.target instanceof BinaryExpression && node.target.operator === OperatorType.Dot) {
+            state.assignedToMember = true;
+        }
+    }
+
+    private handlePotentialCreateFromExpression(
+        expr: Expression | null,
+        targetIdentifier: Identifier,
+        tracked: Map<string, HandleResourceState>
+    ): void {
+        if (!(expr instanceof CallExpression) || !(expr.callee instanceof Identifier)) {
+            return;
+        }
+
+        const callee = expr.callee.name.toLowerCase();
+        const spec = HANDLE_RESOURCE_SPECS.find(item => item.createFns.has(callee));
+        if (!spec) {
+            return;
+        }
+
+        const symbol = this.findSymbol(targetIdentifier.name);
+        if (!symbol || symbol.type !== SymbolType.LOCAL_VARIABLE) {
+            return;
+        }
+
+        if (!symbol.valueType || !spec.typeNames.has(symbol.valueType.toLowerCase())) {
+            return;
+        }
+
+        tracked.set(targetIdentifier.name, {
+            kind: spec.kind,
+            createdNode: targetIdentifier,
+            destroyed: false,
+            escapedByReturn: false,
+            assignedToGlobal: false,
+            assignedToMember: false
+        });
+    }
+
+    private trackDestroyCall(node: CallExpression, tracked: Map<string, HandleResourceState>): void {
+        if (!(node.callee instanceof Identifier) || node.arguments.length === 0) {
+            return;
+        }
+        const arg0 = node.arguments[0];
+        if (!(arg0 instanceof Identifier)) {
+            return;
+        }
+
+        const state = tracked.get(arg0.name);
+        if (!state || state.destroyed) {
+            return;
+        }
+
+        const callee = node.callee.name.toLowerCase();
+        const spec = HANDLE_RESOURCE_SPECS.find(item => item.kind === state.kind);
+        if (spec && spec.destroyFns.has(callee)) {
+            state.destroyed = true;
+        }
+    }
+
     /**
      * 添加错误
      */
@@ -5397,7 +5586,7 @@ export class SemanticAnalyzer {
         node: ASTNode,
         message: string,
         checkType: CheckErrorType = CheckErrorType.SEMANTIC_ERROR,
-        severity: "error" | "warning" | "info" = "error"
+        severity: "error" | "warning" | "info" | "hint" = "error"
     ): void {
         this.checkErrors.push({
             start: node.start,

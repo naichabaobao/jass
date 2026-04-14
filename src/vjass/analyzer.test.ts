@@ -2050,6 +2050,55 @@ endfunction`,
         }
     );
 
+    // ========== 测试 49: 句柄泄漏检测 ==========
+    console.log("\n【测试 49】句柄泄漏检测");
+
+    testSemantic(
+        "未销毁 timer 应该产生 warning 级检查",
+        `function LeakTimer takes nothing returns nothing
+    local timer t = CreateTimer()
+endfunction`,
+        (errors) => {
+            const checks = errors.checkValidationErrors || [];
+            return checks.some((e) =>
+                e.severity === "warning" &&
+                e.message.includes("Potential handle leak") &&
+                e.message.includes("timer")
+            );
+        }
+    );
+
+    testSemantic(
+        "赋值到全局后未销毁应降级为 hint",
+        `globals
+    timer g_timer = null
+endglobals
+
+function TransferTimer takes nothing returns nothing
+    local timer t = CreateTimer()
+    set g_timer = t
+endfunction`,
+        (errors) => {
+            const checks = errors.checkValidationErrors || [];
+            return checks.some((e) =>
+                e.severity === "hint" &&
+                e.message.includes("assigned outside local scope")
+            );
+        }
+    );
+
+    testSemantic(
+        "正常销毁不应触发句柄泄漏告警",
+        `function CleanGroup takes nothing returns nothing
+    local group g = CreateGroup()
+    call DestroyGroup(g)
+endfunction`,
+        (errors) => {
+            const checks = errors.checkValidationErrors || [];
+            return !checks.some((e) => e.message.includes("Potential handle leak"));
+        }
+    );
+
     // ========== 输出测试结果 ==========
     console.log("\n========== 测试结果 ==========");
     console.log(`总计: ${totalPassed + totalFailed} 个测试`);

@@ -24,6 +24,8 @@ export interface ParsedComment {
     deprecated: boolean;
     /** 废弃说明 */
     deprecatedMessage?: string;
+    /** 替代符号（来自 @deprecated use XXX） */
+    deprecatedReplacement?: string;
 }
 
 /**
@@ -42,7 +44,8 @@ export function parseComment(commentLines: string[]): ParsedComment {
         examples: [],
         providers: [],
         deprecated: false,
-        deprecatedMessage: undefined
+        deprecatedMessage: undefined,
+        deprecatedReplacement: undefined
     };
 
     let currentTag: 'description' | 'param' | 'returns' | 'provider' | 'deprecated' | 'example' | 'see' | 'since' | 'version' = 'description';
@@ -129,6 +132,7 @@ export function parseComment(commentLines: string[]): ParsedComment {
             result.deprecated = true;
             const deprecatedDesc = trimmed.replace(/^@deprecated\s*/, '').trim();
             result.deprecatedMessage = deprecatedDesc || undefined;
+            result.deprecatedReplacement = extractDeprecatedReplacement(result.deprecatedMessage);
             currentTag = 'deprecated';
             currentParamName = null;
             continue;
@@ -153,6 +157,7 @@ export function parseComment(commentLines: string[]): ParsedComment {
             result.deprecatedMessage = result.deprecatedMessage
                 ? `${result.deprecatedMessage} ${trimmed}`
                 : trimmed;
+            result.deprecatedReplacement = extractDeprecatedReplacement(result.deprecatedMessage);
             continue;
         }
         if (currentTag === 'example') {
@@ -268,6 +273,9 @@ export function formatCommentAsMarkdown(comment: ParsedComment): string {
             ? `**Deprecated:** ${comment.deprecatedMessage}`
             : '**Deprecated**';
         parts.push(`~~${deprecatedText}~~`);
+        if (comment.deprecatedReplacement) {
+            parts.push(`**Replacement:** \`${comment.deprecatedReplacement}\``);
+        }
     }
 
     // 描述部分
@@ -367,5 +375,28 @@ function normalizeBlockCommentLines(blockLines: string[]): string[] {
     }
 
     return result;
+}
+
+function extractDeprecatedReplacement(message?: string): string | undefined {
+    if (!message) {
+        return undefined;
+    }
+    const normalized = message.trim();
+    if (!normalized) {
+        return undefined;
+    }
+
+    const patterns = [
+        /\b(?:use|replace\s+with)\s+`?([A-Za-z_]\w*)`?/i,
+        /(?:使用|改用|替代(?:为)?|替换为)\s*`?([A-Za-z_]\w*)`?/i
+    ];
+
+    for (const pattern of patterns) {
+        const match = normalized.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
+    return undefined;
 }
 

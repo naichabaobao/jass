@@ -68,7 +68,7 @@ export enum CheckErrorType {
 export interface CheckValidationError extends SimpleError {
     nodeType: string;
     checkType: CheckErrorType;
-    severity: "error" | "warning" | "info";
+    severity: "error" | "warning" | "info" | "hint";
 }
 
 export interface ErrorCollection {

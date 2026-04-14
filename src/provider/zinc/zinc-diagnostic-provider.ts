@@ -242,6 +242,8 @@ export class ZincDiagnosticProvider {
                 return vscode.DiagnosticSeverity.Warning;
             case 'info':
                 return vscode.DiagnosticSeverity.Information;
+            case 'hint':
+                return vscode.DiagnosticSeverity.Hint;
             default:
                 return vscode.DiagnosticSeverity.Error;
         }

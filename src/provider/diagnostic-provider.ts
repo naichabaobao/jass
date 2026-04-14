@@ -22,6 +22,7 @@ interface DiagnosticsConfig {
     checkUndefined?: boolean;
     checkUnused?: boolean;
     checkArrayBounds?: boolean;
+    checkHandleLeaks?: boolean;
 }
 
 /**
@@ -183,7 +184,8 @@ export class DiagnosticProvider {
                 checkTypes: config.checkTypes,
                 checkUndefined: config.checkUndefined,
                 checkUnused: config.checkUnused,
-                checkArrayBounds: config.checkArrayBounds
+                checkArrayBounds: config.checkArrayBounds,
+                checkHandleLeaks: config.checkHandleLeaks
             };
             // 如果配置中明确设置了 enable，使用配置值；否则保持当前状态
             if (typeof config.enable === 'boolean') {
@@ -378,6 +380,8 @@ export class DiagnosticProvider {
                 return vscode.DiagnosticSeverity.Warning;
             case 'info':
                 return vscode.DiagnosticSeverity.Information;
+            case 'hint':
+                return vscode.DiagnosticSeverity.Hint;
             default:
                 return vscode.DiagnosticSeverity.Error;
         }

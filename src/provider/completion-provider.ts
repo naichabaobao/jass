@@ -43,6 +43,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     private dataEnterManager: DataEnterManager;
     private static readonly VERSION_MISMATCH_SORT_BUCKET = '7_version_mismatch_';
     private static readonly DEPRECATED_SORT_BUCKET = '8_deprecated_';
+    private static readonly REPLACEMENT_SORT_BUCKET = '0_replacement_';
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
@@ -3407,6 +3408,9 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 item.sortText = `9_${key}`;
             }
         }
+
+        // 为带有 @deprecated use XXX 的项补充“替代项直达补全/跳转”
+        this.appendDeprecatedReplacementItems(items);
         
         // 按 sortText 排序
         items.sort((a, b) => {
@@ -3416,6 +3420,67 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         });
         
         return items;
+    }
+
+    private appendDeprecatedReplacementItems(items: vscode.CompletionItem[]): void {
+        const extraItems: vscode.CompletionItem[] = [];
+        const dedup = new Set<string>();
+
+        for (const item of items) {
+            const docText = typeof item.documentation === 'string'
+                ? item.documentation
+                : item.documentation instanceof vscode.MarkdownString
+                    ? item.documentation.value
+                    : '';
+            const replacement = this.extractReplacementSymbolFromDocumentation(docText);
+            if (!replacement) {
+                continue;
+            }
+
+            const deprecatedName = this.normalizeCompletionLabel(item.label);
+            if (!deprecatedName || replacement.toLowerCase() === deprecatedName.toLowerCase()) {
+                continue;
+            }
+
+            const replaceKey = `replace:${deprecatedName}->${replacement}`.toLowerCase();
+            if (!dedup.has(replaceKey)) {
+                const replaceItem = new vscode.CompletionItem(
+                    `${deprecatedName} -> ${replacement}`,
+                    vscode.CompletionItemKind.Reference
+                );
+                replaceItem.detail = `Replacement for deprecated symbol '${deprecatedName}'`;
+                replaceItem.insertText = replacement;
+                replaceItem.filterText = `${deprecatedName} ${replacement} replacement`;
+                replaceItem.sortText = `${CompletionProvider.REPLACEMENT_SORT_BUCKET}${replacement}_${deprecatedName}`;
+                replaceItem.documentation = `Deprecated symbol '${deprecatedName}'. Use '${replacement}' instead.`;
+                extraItems.push(replaceItem);
+                dedup.add(replaceKey);
+            }
+
+            const jumpKey = `jump:${replacement}`.toLowerCase();
+            if (!dedup.has(jumpKey)) {
+                const jumpItem = new vscode.CompletionItem(
+                    `Go to replacement: ${replacement}`,
+                    vscode.CompletionItemKind.Event
+                );
+                jumpItem.detail = 'Navigate to replacement symbol definition';
+                jumpItem.insertText = '';
+                jumpItem.filterText = `${replacement} go to replacement`;
+                jumpItem.sortText = `${CompletionProvider.REPLACEMENT_SORT_BUCKET}jump_${replacement}`;
+                jumpItem.command = {
+                    command: 'jass.openReplacementSymbol',
+                    title: 'Go to replacement symbol',
+                    arguments: [replacement]
+                };
+                jumpItem.documentation = `Jump to replacement symbol '${replacement}'.`;
+                extraItems.push(jumpItem);
+                dedup.add(jumpKey);
+            }
+        }
+
+        if (extraItems.length > 0) {
+            items.push(...extraItems);
+        }
     }
 
     private applyDeprecatedPresentation(item: vscode.CompletionItem): void {
@@ -3485,6 +3550,28 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         }
         const versionToken = sinceMatch[1].match(/(\d+\.\d+(?:\.\d+)?[a-z]?)/i);
         return versionToken ? versionToken[1] : null;
+    }
+
+    private extractReplacementSymbolFromDocumentation(docText: string): string | null {
+        if (!docText) {
+            return null;
+        }
+        const replacementMatch = docText.match(/\*\*Replacement:\*\*\s*`([A-Za-z_]\w*)`/i);
+        if (replacementMatch?.[1]) {
+            return replacementMatch[1];
+        }
+        const deprecatedUseMatch = docText.match(/Deprecated:\s*[^]*?\buse\s+`?([A-Za-z_]\w*)`?/i);
+        if (deprecatedUseMatch?.[1]) {
+            return deprecatedUseMatch[1];
+        }
+        return null;
+    }
+
+    private normalizeCompletionLabel(label: vscode.CompletionItemLabel | string): string {
+        if (typeof label === 'string') {
+            return label;
+        }
+        return label?.label || '';
     }
 
     private compareVersions(left: string, right: string): number {

@@ -2,6 +2,29 @@
 - 语法高亮标准化：细分 token scope（如 `storage.type`、`storage.modifier`、`keyword.declaration.*`、`entity.name.function`），提升主题兼容性
 - `@deprecated` 与补全项联动：自动标记 `CompletionItemTag.Deprecated`（统一删除线），并在排序中降权到靠后位置
 - 新增 `jass.apiVersion` 选项：可按魔兽常用版本偏好调整补全排序；基于 `@since`（兼容 `@version`）对高于目标版本的 API 降权，未标注版本的不受影响
+- 新增句柄泄漏静态分析：检测 `timer/group/force/location` 的创建与销毁配对（`CreateTimer/DestroyTimer`、`CreateGroup/DestroyGroup`、`CreateForce/DestroyForce`、`Location/RemoveLocation`）
+- 泄漏提示分级优化：本地创建后未销毁记为 `warning`；已转移所有权（赋值给全局/成员）或直接返回的场景降级为 `hint`，减少误报噪音
+- 新增配置项 `diagnostics.checkHandleLeaks`（默认 `true`），可在 `jass.config.json` 中开关句柄泄漏检测
+- 诊断严重程度扩展：`checkValidationErrors` 支持 `hint`，并在 VS Code 诊断中正确显示为 Hint
+- `@deprecated` 增强：支持从注释中解析 `@deprecated use XXX`（兼容中英文替代描述），提取替代符号
+- Hover 增强：废弃说明下新增 `Replacement` 区块，明确展示建议替代项（如 `XXX`）
+- 补全增强：为废弃符号自动追加“`旧符号 -> 替代符号`”直达补全项，支持一键替换为替代 API
+- 新增替代项跳转能力：补全项提供 `Go to replacement: XXX`，并新增命令 `jass.openReplacementSymbol` 直接跳转替代符号定义
+- Quick Fix 升级：增强中英文诊断消息兼容（未使用符号、常量赋值、死代码、参数数量不匹配、库依赖缺失等场景）
+- 参数修复增强：参数数量不匹配的快速修复同时支持 `foo(...)` 与 `obj.foo(...)` 两种调用形式
+- 库依赖修复增强：添加 `requires` 时自动去重，且在无 `requires` 时改为直接追加到 `library` 声明行，避免插入无效语法
+- Quick Fix 架构预留：新增基于 `diagnostic.code` 的兼容入口，为后续从文本匹配迁移到 code 驱动做准备
+- Quick Fix 路由升级：提取 `code-action-utils` 统一解析 `diagnostic.code + message` 到修复意图（intent），`CodeActionProvider` 按 intent 分发执行
+- 新增 Quick Fix 解析单测：增加 `test:codeaction`，覆盖 code 归一化、参数数量解析、中英文未使用与库依赖意图提取等核心逻辑
+- 新增 deprecated 一键替换 Quick Fix：光标位于已标记 `@deprecated use XXX` 的符号时，提供“替换为 `XXX`”快速修复（无需依赖诊断）
+- deprecated 一键替换增强：支持跨缓存文件查找声明注释（不局限当前文件），可跨文件解析 `@deprecated use XXX` 替代项
+- Quick Fix 去重优化：同一上下文下相同标题/类型的修复项自动去重，避免重复显示
+- Quick Fix 可测试性增强：抽离参数修复与 `library requires` 文本改写逻辑到 `code-action-utils`，新增行级输入/输出断言测试，降低回归风险
+- Code Action 安全性增强（AST 优先）：`remove_unused`、`remove_dead_code`、`fix_param_count` 改为 AST 节点定位 + 精确 Range 编辑，减少复杂语句误删/误改风险
+- Code Action 安全性彻底统一：`remove_constant_assignment` 同步迁移到 AST 节点定位 + 精确 Range 编辑，四类高风险修复统一为 AST 驱动
+- `add_library_requires` 精度提升：由“默认首个 library”改为“按诊断范围 AST 就近定位目标 library”，降低多库文件误改风险
+- 新增标准库秒加载开关：`jass.instantLibraryLoad`（默认 `false`）；开启后仅对标准库 `.j/.ai` 使用 `.mate` 持久化，优先走持久化读取并设置 24 小时缓存时效
+- 补充秒加载测试说明：文档新增开关启用、二次启动验证与 24 小时过期回退测试步骤
 
 #### 1.9.8
 - hint默认false
