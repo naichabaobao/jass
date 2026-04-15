@@ -1417,19 +1417,18 @@ endfunction
 // @param locB 目标点位置
 // @returns 角度值（0-360度），0度表示正东方向
 // @example AngleBetweenPoints(Location(0,0), Location(100,0)) = 0 (正东)
-//       AngleBetweenPoints(Location(0,0), Location(0,100)) = 90 (正北)
+// @example AngleBetweenPoints(Location(0,0), Location(0,100)) = 90 (正北)
 function AngleBetweenPoints takes location locA, location locB returns real
     return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
 endfunction
 
 
 // 获取两点之间的距离
-// 计算两个位置点之间的直线距离
+// 计算两个位置点之间的直线距离，两个点仍会保留，如不再使用用完请注意排泄
 // @param locA 第一个点位置
 // @param locB 第二个点位置
 // @returns 两点之间的距离（游戏单位）
 // @example DistanceBetweenPoints(Location(0,0), Location(3,4)) = 5 (勾股定理)
-// 注意: 两个点仍会保留，如不再使用用完请注意排泄
 function DistanceBetweenPoints takes location locA, location locB returns real
     local real dx = GetLocationX(locB) - GetLocationX(locA)
     local real dy = GetLocationY(locB) - GetLocationY(locA)
@@ -1444,7 +1443,7 @@ endfunction
 // @param angle 移动角度（度）
 // @returns 新位置点
 // @example PolarProjectionBJ(Location(0,0), 100, 0) = Location(100,0) (向东100单位)
-//       PolarProjectionBJ(Location(0,0), 100, 90) = Location(0,100) (向北100单位)
+// @example PolarProjectionBJ(Location(0,0), 100, 90) = Location(0,100) (向北100单位)
 // 注意: 会创建点，用完请注意排泄
 function PolarProjectionBJ takes location source, real dist, real angle returns location
     local real x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
@@ -1475,7 +1474,7 @@ endfunction
 
 // 取余数（整数）
 // Calculate the modulus/remainder of (dividend) divided by (divisor).
-// Examples:  18 mod 5 = 3.  15 mod 5 = 0.  -8 mod 5 = 2.
+// @example 18 mod 5 = 3.  15 mod 5 = 0.  -8 mod 5 = 2.
 function ModuloInteger takes integer dividend, integer divisor returns integer
     local integer modulus = dividend -(dividend / divisor) * divisor
 
@@ -1492,7 +1491,7 @@ endfunction
 
 // 取余数（实数）
 // Calculate the modulus/remainder of (dividend) divided by (divisor).
-// Examples:  13.000 mod 2.500 = 0.500.  -6.000 mod 2.500 = 1.500.
+// @example 13.000 mod 2.500 = 0.500.  -6.000 mod 2.500 = 1.500.
 function ModuloReal takes real dividend, real divisor returns real
     local real modulus = dividend - I2R(R2I(dividend / divisor)) * divisor
 
@@ -1508,13 +1507,12 @@ endfunction
 
 
 // 点位移
-// 将指定点按给定的偏移量移动，返回新位置
+// 将指定点按给定的偏移量移动，返回新位置，使用后会创建点，用完请注意排泄
 // @param loc 原始位置点
 // @param dx X轴偏移量
 // @param dy Y轴偏移量
 // @returns 新位置点
 // @example OffsetLocation(Location(100, 200), 50, -30) = Location(150, 170)
-// 注意: 会创建点，用完请注意排泄
 function OffsetLocation takes location loc, real dx, real dy returns location
     return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
 endfunction
