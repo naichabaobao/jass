@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: elseif</title>
+</head>
+<body>
+  <h1><code>elseif</code></h1>
+  <p><code>if</code> 的中间分支，用于多条件链式判断。</p>
+  <h2>示例</h2>
+  <pre><code>if level &lt; 10 then
+    call BJDebugMsg("low")
+elseif level &lt; 20 then
+    call BJDebugMsg("mid")
+else
+    call BJDebugMsg("high")
+endif</code></pre>
+  <h2>建议</h2>
+  <ul>
+    <li>超过 4 个 <code>elseif</code> 时考虑表驱动或拆函数。</li>
+  </ul>
+</body>
+</html>

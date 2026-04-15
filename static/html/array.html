@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: array</title>
+</head>
+<body>
+  <h1><code>array</code></h1>
+  <p>声明数组变量，可用于全局或局部（取决于编译器/方言支持）。</p>
+  <h2>语法</h2>
+  <pre><code>integer array score</code></pre>
+  <h2>示例</h2>
+  <pre><code>globals
+    integer array score
+endglobals
+
+function SetScore takes integer pid, integer value returns nothing
+    set score[pid] = value
+endfunction</code></pre>
+  <h2>注意</h2>
+  <ul>
+    <li>JASS 原生数组索引通常是非负整数。</li>
+    <li>访问前请确认索引范围，避免逻辑越界。</li>
+  </ul>
+</body>
+</html>

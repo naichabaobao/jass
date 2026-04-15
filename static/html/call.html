@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: call</title>
+</head>
+<body>
+  <h1><code>call</code></h1>
+  <p>执行函数调用语句。常用于无返回值函数。</p>
+  <h2>语法</h2>
+  <pre><code>call FunctionName(args)</code></pre>
+  <h2>示例</h2>
+  <pre><code>call BJDebugMsg("Hello")
+call KillUnit(u)</code></pre>
+  <h2>建议</h2>
+  <ul>
+    <li>有返回值且要使用结果时，优先用 <code>set</code> 接收。</li>
+    <li>调试日志建议统一封装，便于后续关闭。</li>
+  </ul>
+</body>
+</html>

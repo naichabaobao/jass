@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: function</title>
+  <style>
+    body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; }
+    h1 { margin-bottom: 8px; }
+    pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; }
+    code { font-family: Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <h1><code>function</code></h1>
+  <p>定义函数，是 JASS 最核心的组织单元。函数可包含参数、返回值、局部变量与流程控制。</p>
+  <h2>语法模板</h2>
+  <pre><code>function name takes params returns returnType
+    // body
+endfunction</code></pre>
+  <h2>完整示例</h2>
+  <pre><code>function Add takes integer a, integer b returns integer
+    if a == 0 and b == 0 then
+        return 0
+    endif
+    return a + b
+endfunction</code></pre>
+  <h2>建议</h2>
+  <ul>
+    <li>参数和返回值写清晰，避免“万能函数”。</li>
+    <li>异常条件建议前置并提前返回。</li>
+    <li>保证所有返回路径显式 <code>return</code>，避免历史兼容歧义。</li>
+  </ul>
+</body>
+</html>

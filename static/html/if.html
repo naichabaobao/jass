@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: if</title>
+  <style>
+    body {
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      max-width: 920px;
+      margin: 24px auto;
+      padding: 0 16px;
+      line-height: 1.75;
+    }
+    h1, h2, h3 { margin-bottom: 8px; }
+    .lead { opacity: 0.92; }
+    .tip {
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.12);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    .warn {
+      border-left: 4px solid #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    pre {
+      background: #111;
+      color: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    code { font-family: Consolas, monospace; }
+    ul { margin-top: 6px; }
+    hr {
+      border: none;
+      border-top: 1px solid rgba(125, 125, 125, 0.35);
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1><code>if</code></h1>
+  <p class="lead">条件分支语句，根据布尔表达式结果执行不同路径。JASS 中最常见的控制流关键字之一。</p>
+
+  <h2>1) 基础语法</h2>
+  <pre><code>if condition then
+    // branch A
+elseif otherCondition then
+    // branch B
+else
+    // branch C
+endif</code></pre>
+
+  <div class="tip">
+    <strong>说明：</strong><code>elseif</code> 和 <code>else</code> 都是可选的。<br />
+    只写 <code>if ... then ... endif</code> 也完全合法。
+  </div>
+
+  <h2>2) 最小示例</h2>
+  <pre><code>if hp &lt;= 0.405 then
+    call BJDebugMsg("dead")
+endif</code></pre>
+
+  <h2>3) 通过 <code>return</code> 提前退出（推荐）</h2>
+  <p>在函数开头用 <code>if + return</code> 过滤非法输入，是最常见也最清晰的写法。</p>
+  <pre><code>function CastSpellSafe takes unit caster, integer abilId returns nothing
+    if caster == null then
+        return
+    endif
+    if abilId &lt;= 0 then
+        return
+    endif
+
+    call UnitAddAbility(caster, abilId)
+endfunction</code></pre>
+
+  <h2>4) 多条件提前返回（减少嵌套）</h2>
+  <pre><code>function GetReward takes integer level returns integer
+    if level &lt;= 0 then
+        return 0
+    endif
+    if level &gt; 100 then
+        return 5000
+    endif
+    return level * 10
+endfunction</code></pre>
+
+  <h2>5) 分支组织建议</h2>
+  <ul>
+    <li>把“异常/非法状态”写在前面并提前返回。</li>
+    <li>把“主流程”放在后面，减少层层嵌套。</li>
+    <li>分支超过 3 层时，优先拆函数，不要继续嵌套。</li>
+  </ul>
+
+  <hr />
+
+  <h2>6) 常见错误与规避</h2>
+  <h3>错误 A：漏写 <code>endif</code></h3>
+  <pre><code>// bad
+if cond then
+    call Foo()
+// 忘记 endif</code></pre>
+
+  <h3>错误 B：条件不是布尔表达式</h3>
+  <pre><code>// bad
+if 1 then
+    call Foo()
+endif
+
+// good
+if x == 1 then
+    call Foo()
+endif</code></pre>
+
+  <h3>错误 C：把“函数提前退出”和“循环退出”混淆</h3>
+  <div class="warn">
+    在循环中，<code>return</code> 会结束整个函数；<code>exitwhen</code> 只退出循环。<br />
+    需要“退出 loop 但继续函数后续逻辑”时，请用 <code>exitwhen</code>。
+  </div>
+
+  <h2>7) 实战模板（可直接复用）</h2>
+  <pre><code>function ProcessUnit takes unit u returns nothing
+    // Guard 1: 输入合法性
+    if u == null then
+        return
+    endif
+
+    // Guard 2: 状态合法性
+    if GetWidgetLife(u) &lt;= 0.405 then
+        return
+    endif
+
+    // Main path
+    if IsUnitType(u, UNIT_TYPE_HERO) then
+        call BJDebugMsg("hero")
+    elseif IsUnitType(u, UNIT_TYPE_STRUCTURE) then
+        call BJDebugMsg("building")
+    else
+        call BJDebugMsg("normal unit")
+    endif
+endfunction</code></pre>
+
+  <h2>8) 相关阅读</h2>
+  <ul>
+    <li><code>return</code>：函数提前退出与 return bug 注意事项。</li>
+    <li><code>loop</code> / <code>exitwhen</code>：循环控制与提前退出策略。</li>
+  </ul>
+</body>
+</html>

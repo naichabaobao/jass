@@ -74,6 +74,39 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
         }
     }
 
+    private getKeywordDocName(symbolName: string): string | null {
+        const keyword = symbolName.toLowerCase();
+        const docMap: Record<string, string> = {
+            function: 'function.html',
+            endfunction: 'endfunction.html',
+            constant: 'constant.html',
+            native: 'native.html',
+            local: 'local.html',
+            type: 'type.html',
+            set: 'set.html',
+            call: 'call.html',
+            takes: 'takes.html',
+            returns: 'returns.html',
+            extends: 'extends.html',
+            array: 'array.html',
+            if: 'if.html',
+            else: 'else.html',
+            elseif: 'elseif.html',
+            endif: 'endif.html',
+            then: 'then.html',
+            loop: 'loop.html',
+            endloop: 'endloop.html',
+            exitwhen: 'exitwhen.html',
+            return: 'return.html',
+            and: 'and.html',
+            or: 'or.html',
+            not: 'not.html',
+            globals: 'globals.html',
+            endglobals: 'endglobals.html'
+        };
+        return docMap[keyword] || null;
+    }
+
     async provideDefinition(
         document: vscode.TextDocument,
         position: vscode.Position,
@@ -141,6 +174,13 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
 
             const symbolName = document.getText(wordRange);
             if (!symbolName) {
+                return null;
+            }
+
+            // 关键字文档展示（当前先支持 function / if / loop）
+            const keywordDocName = this.getKeywordDocName(symbolName);
+            if (keywordDocName) {
+                await vscode.commands.executeCommand('jass.openKeywordDocWebview', keywordDocName);
                 return null;
             }
 

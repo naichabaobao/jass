@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: return</title>
+  <style>
+    body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 920px; margin: 24px auto; padding: 0 16px; line-height: 1.75; }
+    h1, h2 { margin-bottom: 8px; }
+    .tip { border-left: 4px solid #f59e0b; padding: 8px 12px; background: rgba(245, 158, 11, 0.1); border-radius: 6px; }
+    .ok { border-left: 4px solid #10b981; padding: 8px 12px; background: rgba(16, 185, 129, 0.1); border-radius: 6px; }
+    pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; }
+    code { font-family: Consolas, monospace; }
+    ul { margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <h1><code>return</code></h1>
+  <p><code>return</code> 用于结束当前函数执行，并返回值（或直接返回）。</p>
+
+  <h2>基础语法</h2>
+  <pre><code>// returns nothing
+return
+
+// returns integer
+return 0</code></pre>
+
+  <h2>常见用法：提前退出（Guard Clause）</h2>
+  <p>当参数不合法、状态不满足时，推荐在函数前部直接 <code>return</code>，减少嵌套层级。</p>
+  <pre><code>function SafeKill takes unit u returns nothing
+    if u == null then
+        return
+    endif
+    if GetWidgetLife(u) &lt;= 0.405 then
+        return
+    endif
+    call KillUnit(u)
+endfunction</code></pre>
+
+  <h2>Return Bug 教程（War3 旧版本历史问题）</h2>
+  <div class="tip">
+    <strong>背景：</strong>在较老环境中，某些“并非所有路径都显式 return”的写法可能被接受，形成所谓 return bug 相关历史习惯。<br />
+    这类写法在不同工具链/版本下行为不一致，容易造成隐藏问题。
+  </div>
+
+  <h3>不推荐写法（依赖历史行为）</h3>
+  <pre><code>function Foo takes boolean ok returns integer
+    if ok then
+        return 1
+    endif
+    // 这里没有明确 return，行为依赖环境
+endfunction</code></pre>
+
+  <h3>推荐写法（稳定、可移植）</h3>
+  <div class="ok">
+    无论目标版本如何，始终保证所有路径显式返回，避免依赖历史兼容行为。
+  </div>
+  <pre><code>function Foo takes boolean ok returns integer
+    if ok then
+        return 1
+    endif
+    return 0
+endfunction</code></pre>
+
+  <h2>实践建议</h2>
+  <ul>
+    <li><code>returns T</code> 的函数：保证所有路径都 <code>return T</code>。</li>
+    <li><code>returns nothing</code>：可在任意位置用 <code>return</code> 提前结束。</li>
+    <li>不要把 return 放在难以触达的位置，保持分支清晰可读。</li>
+  </ul>
+</body>
+</html>

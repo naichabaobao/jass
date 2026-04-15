@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: else</title>
+</head>
+<body>
+  <h1><code>else</code></h1>
+  <p><code>if</code> 的兜底分支，当上面条件都不满足时执行。</p>
+  <h2>示例</h2>
+  <pre><code>if hp &lt;= 0.405 then
+    call BJDebugMsg("dead")
+else
+    call BJDebugMsg("alive")
+endif</code></pre>
+  <h2>建议</h2>
+  <ul>
+    <li>只有明确兜底逻辑时再写 <code>else</code>。</li>
+    <li>避免在 <code>else</code> 中放过重逻辑，可抽函数。</li>
+  </ul>
+</body>
+</html>

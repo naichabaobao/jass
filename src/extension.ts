@@ -43,6 +43,267 @@ const jassZincSelector = { scheme: 'file', language: 'jass-zinc' };
 // 全局 DataEnterManager 实例
 let dataEnterManager: DataEnterManager | undefined;
 
+const SUPPORT_PROMPT_SNOOZE_UNTIL_KEY = 'supportPrompt.snoozeUntil';
+const SUPPORT_PROMPT_RETRY_UNTIL_KEY = 'supportPrompt.retryUntil';
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const HALF_DAY_MS = 12 * 60 * 60 * 1000;
+
+function renderSupportWebview(panel: vscode.WebviewPanel, context: vscode.ExtensionContext): void {
+    const webview = panel.webview;
+    const toWebviewUri = (segments: string[]): string => {
+        const uri = vscode.Uri.joinPath(context.extensionUri, ...segments);
+        return webview.asWebviewUri(uri).toString();
+    };
+
+    const imageStore = toWebviewUri(['static', 'images', '渴望可乐.png']);
+    const imageCoding = toWebviewUri(['static', 'images', '零食充足才有精力修BUG.png']);
+    const imageQQ = toWebviewUri(['static', 'images', 'qrcode.png']);
+    const imageWechat = toWebviewUri(['static', 'images', 'wechatqrcode.png']);
+
+    panel.webview.html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>支持作者</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: var(--vscode-foreground);
+      background: var(--vscode-editor-background);
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .hero {
+      border: 1px solid var(--vscode-panel-border);
+      border-radius: 14px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(255,145,77,0.12), rgba(255,80,120,0.08));
+    }
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .desc {
+      margin: 10px 0 0;
+      opacity: 0.85;
+      line-height: 1.6;
+    }
+    .tip {
+      margin: 10px 0 0;
+      font-size: 12px;
+      opacity: 0.75;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid var(--vscode-panel-border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--vscode-editorWidget-background);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .card img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .label {
+      padding: 10px 12px;
+      font-size: 13px;
+      opacity: 0.9;
+      border-top: 1px solid var(--vscode-panel-border);
+    }
+    .qr .label {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1 class="title">如果项目帮到你，欢迎请我喝杯奶茶 ❤️</h1>
+      <p class="desc">你的支持会用于持续维护、修复问题和更新文档。完全自愿，不影响功能使用。</p>
+      <p class="tip">每一份支持，都会优先转化成更快的修复与更稳的版本。</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <img src="${imageStore}" alt="support-image-1" />
+        <div class="label">渴望可乐</div>
+      </div>
+      <div class="card">
+        <img src="${imageCoding}" alt="support-image-2" />
+        <div class="label">零食充足才有精力修 BUG</div>
+      </div>
+      <div class="card qr">
+        <img src="${imageQQ}" alt="qq-qrcode" />
+        <div class="label">QQ 扫码支持</div>
+      </div>
+      <div class="card qr">
+        <img src="${imageWechat}" alt="wechat-qrcode" />
+        <div class="label">微信扫码支持</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+async function showSupportPrompt(context: vscode.ExtensionContext): Promise<void> {
+    const now = Date.now();
+    const snoozeUntil = context.globalState.get<number>(SUPPORT_PROMPT_SNOOZE_UNTIL_KEY, 0);
+    const retryUntil = context.globalState.get<number>(SUPPORT_PROMPT_RETRY_UNTIL_KEY, 0);
+    if (now < snoozeUntil || now < retryUntil) {
+        return;
+    }
+
+    const choice = await vscode.window.showInformationMessage(
+        '如果这个扩展帮到了你，欢迎支持作者持续维护 ❤️（温馨提示）',
+        '去支持',
+        '不再提示',
+        '稍后提醒',
+        '狠心拒绝'
+    );
+
+    if (choice === '去支持') {
+        const panel = vscode.window.createWebviewPanel(
+            'jassSupportAuthor',
+            '支持 JASS 扩展作者',
+            vscode.ViewColumn.Beside,
+            {
+                enableScripts: false,
+                localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'static', 'images')]
+            }
+        );
+        renderSupportWebview(panel, context);
+        // 点开支持页后，给半天冷静期，避免过于频繁
+        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, now + HALF_DAY_MS);
+        return;
+    }
+
+    if (choice === '不再提示') {
+        // 按产品策略：这里不是永久不提示，而是冷却 7 天
+        await context.globalState.update(SUPPORT_PROMPT_SNOOZE_UNTIL_KEY, now + WEEK_MS);
+        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, 0);
+        return;
+    }
+
+    if (choice === '稍后提醒') {
+        // 稍后提醒：半天后再提醒
+        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, now + HALF_DAY_MS);
+        return;
+    }
+
+    if (choice === '狠心拒绝') {
+        // 狠心拒绝：这次不处理，下次打开继续提醒
+        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, 0);
+    }
+}
+
+async function openKeywordDocWebview(context: vscode.ExtensionContext, docFileName?: string): Promise<void> {
+    if (!docFileName || typeof docFileName !== 'string') {
+        vscode.window.showWarningMessage('Keyword document is empty');
+        return;
+    }
+
+    const safeName = path.basename(docFileName);
+    const htmlPath = path.join(context.extensionPath, 'static', 'html', safeName);
+    if (!fs.existsSync(htmlPath)) {
+        vscode.window.showWarningMessage(`Keyword doc not found: ${safeName}`);
+        return;
+    }
+
+    const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+    const enhancedHtmlContent = enhanceKeywordDocHtml(htmlContent);
+    const panel = vscode.window.createWebviewPanel(
+        'jassKeywordDoc',
+        `JASS Keyword: ${safeName.replace('.html', '')}`,
+        vscode.ViewColumn.Beside,
+        {
+            enableScripts: true,
+            localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'static', 'html')]
+        }
+    );
+    panel.webview.html = enhancedHtmlContent;
+}
+
+function enhanceKeywordDocHtml(html: string): string {
+    const highlightStyle = `
+<style id="jass-keyword-highlight-style">
+  .jass-kw { color: #c586c0; font-weight: 600; }
+  .jass-ty { color: #4ec9b0; font-weight: 600; }
+  .jass-num { color: #b5cea8; }
+  .jass-comment { color: #6a9955; }
+</style>`;
+
+    const highlightScript = `
+<script id="jass-keyword-highlight-script">
+(function () {
+  const keywords = [
+    'endfunction','endglobals','endloop','exitwhen','function','constant','native','local','type','set','call',
+    'takes','returns','extends','array','elseif','endif','then','loop','return','globals','if','else','and','or','not'
+  ];
+  const typeWords = ['integer','real','boolean','string','handle','code','nothing','true','false','null'];
+  const kwPattern = new RegExp('\\\\b(' + keywords.join('|') + ')\\\\b', 'g');
+  const tyPattern = new RegExp('\\\\b(' + typeWords.join('|') + ')\\\\b', 'g');
+  const numPattern = /\\b\\d+(?:\\.\\d+)?\\b/g;
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function highlightCode(raw) {
+    const lines = raw.split('\\n');
+    return lines.map((line) => {
+      const commentIndex = line.indexOf('//');
+      let codePart = line;
+      let commentPart = '';
+      if (commentIndex >= 0) {
+        codePart = line.slice(0, commentIndex);
+        commentPart = line.slice(commentIndex);
+      }
+
+      let out = escapeHtml(codePart);
+      out = out.replace(kwPattern, '<span class="jass-kw">$1</span>');
+      out = out.replace(tyPattern, '<span class="jass-ty">$1</span>');
+      out = out.replace(numPattern, '<span class="jass-num">$&</span>');
+
+      if (commentPart) {
+        out += '<span class="jass-comment">' + escapeHtml(commentPart) + '</span>';
+      }
+      return out;
+    }).join('\\n');
+  }
+
+  document.querySelectorAll('pre code').forEach((node) => {
+    const text = node.textContent || '';
+    node.innerHTML = highlightCode(text);
+  });
+})();
+</script>`;
+
+    const withStyle = html.includes('</head>')
+        ? html.replace('</head>', `${highlightStyle}\n</head>`)
+        : `${highlightStyle}\n${html}`;
+    const withScript = withStyle.includes('</body>')
+        ? withStyle.replace('</body>', `${highlightScript}\n</body>`)
+        : `${withStyle}\n${highlightScript}`;
+    return withScript;
+}
+
 export async function activate(context: vscode.ExtensionContext) {
     console.log('JASS Extension is activating...');
 
@@ -474,6 +735,13 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // 注册命令：打开关键字文档 Webview（供 DefinitionProvider 调用）
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.openKeywordDocWebview', async (docFileName?: string) => {
+            await openKeywordDocWebview(context, docFileName);
+        })
+    );
+
     // 注册调试命令：测试 special 解析器（使用测试数据）
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.testSpecialParsers', async () => {
@@ -612,6 +880,13 @@ export async function activate(context: vscode.ExtensionContext) {
             DocumentInfoManager.resetInstance();
         }
     });
+
+    // 每次打开编辑器温和提示一次（受冷却策略控制），避免强打断用户
+    setTimeout(() => {
+        showSupportPrompt(context).catch((error) => {
+            console.error('Failed to show support prompt:', error);
+        });
+    }, 2800);
 
     console.log('✅ JASS Extension activated successfully');
 }

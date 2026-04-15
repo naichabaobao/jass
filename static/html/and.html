@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: and</title>
+</head>
+<body>
+  <h1><code>and</code></h1>
+  <p>逻辑与。左右条件都为真时结果才为真。</p>
+  <h2>语法</h2>
+  <pre><code>condA and condB</code></pre>
+  <h2>示例</h2>
+  <pre><code>if u != null and GetWidgetLife(u) &gt; 0.405 then
+    call KillUnit(u)
+endif</code></pre>
+  <h2>建议</h2>
+  <ul>
+    <li>复杂条件请分行或拆变量，避免一行过长。</li>
+    <li>含空对象判断时，把判空放前面可读性更好。</li>
+  </ul>
+</body>
+</html>

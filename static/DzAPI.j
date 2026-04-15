@@ -1,3 +1,4 @@
+// @ignore-file-errors
 #ifndef DZAPIINCLUDE
 #define DZAPIINCLUDE
 

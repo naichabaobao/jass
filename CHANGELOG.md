@@ -8,6 +8,10 @@
   - 忽略下一行语法错误：`// @ignore-next-line-syntax`
   - 也可用片段快速输入：`ignore-file` / `ignore-next-line` / `ignore`
 - Quick Fix / Code Action 覆盖更全，修复更稳。看到报错后按 `Ctrl+.`（或点灯泡）直接套用建议。
+- 新增关键字文档跳转：对 JASS 26 个关键字执行“转到定义”可直接打开对应 HTML 教程页面（Webview 展示，不再打开源码）。
+- 文档阅读体验增强：关键字教程页支持代码块关键字高亮，示例可读性更好。
+- 关键字教程补全：`function/if/loop/return` 等核心页面升级为“全而美”教程结构（语法、示例、易错点、实践建议）。
+- 新增赞助入口优化：编辑器内提供温和提示与四按钮交互（去支持 / 不再提示 / 稍后提醒 / 狠心拒绝），并配套图文赞助页展示。
 
 #### 1.9.8
 - 注释标签能力补强：`@param`、`@returns`、`@deprecated`、`@provider`、`@since`、`@see`、`@example` 都能被更好识别。
