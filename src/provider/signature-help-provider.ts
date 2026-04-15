@@ -16,6 +16,7 @@ import {
     ImplementStatement,
     VariableDeclaration
 } from '../vjass/ast';
+import { extractLeadingComments, parseComment, formatCommentAsMarkdown } from './comment-parser';
 
 /**
  * 函数调用信息
@@ -46,6 +47,17 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
+    }
+
+    private toDisplayPath(filePath?: string): string | null {
+        if (!filePath) {
+            return null;
+        }
+        try {
+            return vscode.workspace.asRelativePath(filePath, false) || filePath;
+        } catch {
+            return filePath;
+        }
     }
 
     provideSignatureHelp(
@@ -267,7 +279,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
 
             // 查找函数声明（包括 native 函数）
             if (!callInfo.isMethod) {
-                this.findFunctionsInBlock(blockStatement, callInfo.name, signatures);
+                this.findFunctionsInBlock(blockStatement, callInfo.name, filePath, signatures);
             }
 
             // 查找方法声明
@@ -277,6 +289,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                     callInfo.name,
                     callInfo.structName,
                     callInfo.isStatic,
+                    filePath,
                     signatures
                 );
             }
@@ -291,20 +304,21 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
     private findFunctionsInBlock(
         block: BlockStatement,
         functionName: string,
+        filePath: string,
         signatures: vscode.SignatureInformation[]
     ): void {
         for (const stmt of block.body) {
             // 函数声明
             if (stmt instanceof FunctionDeclaration) {
                 if (stmt.name && stmt.name.name === functionName) {
-                    const signature = this.createFunctionSignature(stmt);
+                    const signature = this.createFunctionSignature(stmt, filePath);
                     signatures.push(signature);
                 }
             }
             // Native 函数声明
             else if (stmt instanceof NativeDeclaration) {
                 if (stmt.name && stmt.name.name === functionName) {
-                    const signature = this.createNativeSignature(stmt);
+                    const signature = this.createNativeSignature(stmt, filePath);
                     signatures.push(signature);
                 }
             }
@@ -314,16 +328,16 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 for (const member of stmt.members) {
                     if (member instanceof FunctionDeclaration) {
                         if (member.name && member.name.name === functionName) {
-                            const signature = this.createFunctionSignature(member);
+                            const signature = this.createFunctionSignature(member, filePath);
                             signatures.push(signature);
                         }
                     } else if (member instanceof NativeDeclaration) {
                         if (member.name && member.name.name === functionName) {
-                            const signature = this.createNativeSignature(member);
+                            const signature = this.createNativeSignature(member, filePath);
                             signatures.push(signature);
                         }
                     } else if (member instanceof BlockStatement) {
-                        this.findFunctionsInBlock(member, functionName, signatures);
+                        this.findFunctionsInBlock(member, functionName, filePath, signatures);
                     }
                 }
             }
@@ -333,16 +347,16 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 for (const member of stmt.members) {
                     if (member instanceof FunctionDeclaration) {
                         if (member.name && member.name.name === functionName) {
-                            const signature = this.createFunctionSignature(member);
+                            const signature = this.createFunctionSignature(member, filePath);
                             signatures.push(signature);
                         }
                     } else if (member instanceof NativeDeclaration) {
                         if (member.name && member.name.name === functionName) {
-                            const signature = this.createNativeSignature(member);
+                            const signature = this.createNativeSignature(member, filePath);
                             signatures.push(signature);
                         }
                     } else if (member instanceof BlockStatement) {
-                        this.findFunctionsInBlock(member, functionName, signatures);
+                        this.findFunctionsInBlock(member, functionName, filePath, signatures);
                     }
                 }
             }
@@ -352,22 +366,22 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 for (const member of stmt.members) {
                     if (member instanceof FunctionDeclaration) {
                         if (member.name && member.name.name === functionName) {
-                            const signature = this.createFunctionSignature(member);
+                            const signature = this.createFunctionSignature(member, filePath);
                             signatures.push(signature);
                         }
                     } else if (member instanceof NativeDeclaration) {
                         if (member.name && member.name.name === functionName) {
-                            const signature = this.createNativeSignature(member);
+                            const signature = this.createNativeSignature(member, filePath);
                             signatures.push(signature);
                         }
                     } else if (member instanceof BlockStatement) {
-                        this.findFunctionsInBlock(member, functionName, signatures);
+                        this.findFunctionsInBlock(member, functionName, filePath, signatures);
                     }
                 }
             }
             // 递归查找嵌套的 BlockStatement（如模块、结构体等）
             else if (stmt instanceof BlockStatement) {
-                this.findFunctionsInBlock(stmt, functionName, signatures);
+                this.findFunctionsInBlock(stmt, functionName, filePath, signatures);
             }
         }
     }
@@ -380,6 +394,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
         methodName: string,
         structName: string | undefined,
         isStatic: boolean | undefined,
+        filePath: string,
         signatures: vscode.SignatureInformation[]
     ): void {
         // 首先在当前块中查找结构体
@@ -411,7 +426,9 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                             
                             const signature = this.createMethodSignature(
                                 member,
-                                stmt.name?.name
+                                stmt.name?.name,
+                                undefined,
+                                filePath
                             );
                             signatures.push(signature);
                         }
@@ -419,7 +436,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 }
                 
                 // 查找实现的 module 中的方法
-                this.findModuleMethods(stmt, methodName, isStatic, signatures);
+                this.findModuleMethods(stmt, methodName, isStatic, filePath, signatures);
                 
                 // 查找内置方法
                 this.findBuiltinMethods(stmt, methodName, isStatic, signatures);
@@ -427,7 +444,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
 
             // 递归查找嵌套的 BlockStatement
             if (stmt instanceof BlockStatement) {
-                this.findMethodsInBlock(stmt, methodName, structName, isStatic, signatures);
+                this.findMethodsInBlock(stmt, methodName, structName, isStatic, filePath, signatures);
             }
         }
         
@@ -464,7 +481,9 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                                 
                                 const signature = this.createMethodSignature(
                                     member,
-                                    struct.name?.name
+                                    struct.name?.name,
+                                    undefined,
+                                    filePath
                                 );
                                 signatures.push(signature);
                             }
@@ -472,7 +491,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                     }
                     
                     // 查找实现的 module 中的方法
-                    this.findModuleMethods(struct, methodName, isStatic, signatures);
+                    this.findModuleMethods(struct, methodName, isStatic, filePath, signatures);
                     
                     // 查找内置方法
                     this.findBuiltinMethods(struct, methodName, isStatic, signatures);
@@ -488,6 +507,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
         struct: StructDeclaration,
         methodName: string,
         isStatic: boolean | undefined,
+        filePath: string,
         signatures: vscode.SignatureInformation[]
     ): void {
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
@@ -523,7 +543,8 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                                     const signature = this.createMethodSignature(
                                         moduleMember,
                                         struct.name?.name,
-                                        module.name?.name
+                                        module.name?.name,
+                                        filePath
                                     );
                                     signatures.push(signature);
                                 }
@@ -545,7 +566,8 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                                                     const signature = this.createMethodSignature(
                                                         nestedMember,
                                                         struct.name?.name,
-                                                        nestedModule.name?.name
+                                                        nestedModule.name?.name,
+                                                        filePath
                                                     );
                                                     signatures.push(signature);
                                                 }
@@ -635,9 +657,8 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             }) : [];
             
             const doc = new vscode.MarkdownString();
-            doc.appendMarkdown(`### private static method allocate\n\n`);
             doc.appendCodeblock(`private static method allocate takes ${paramsStr} returns ${structName}`, 'jass');
-            doc.appendMarkdown(`\n**内置方法** - 为该结构分配唯一的实例 ID\n\n`);
+            doc.appendMarkdown(`\n**Built-in Method** - Allocates a unique instance id for this struct.\n\n`);
             signature.documentation = doc;
             
             signatures.push(signature);
@@ -659,9 +680,8 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 );
                 signature.parameters = [];
                 const doc = new vscode.MarkdownString();
-                doc.appendMarkdown(`### static method create\n\n`);
                 doc.appendCodeblock(`static method create takes nothing returns ${structName}`, 'jass');
-                doc.appendMarkdown(`\n**内置方法** - 创建结构实例（默认调用 allocate）\n\n`);
+                doc.appendMarkdown(`\n**Built-in Method** - Creates a struct instance (calls allocate by default).\n\n`);
                 signature.documentation = doc;
                 signatures.push(signature);
             }
@@ -684,9 +704,8 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 );
                 signature.parameters = [];
                 const doc = new vscode.MarkdownString();
-                doc.appendMarkdown(`### method destroy\n\n`);
                 doc.appendCodeblock(`method destroy takes nothing returns nothing`, 'jass');
-                doc.appendMarkdown(`\n**内置方法** - 销毁结构实例\n\n`);
+                doc.appendMarkdown(`\n**Built-in Method** - Destroys the struct instance.\n\n`);
                 signature.documentation = doc;
                 signatures.push(signature);
             }
@@ -699,9 +718,8 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             );
             signature.parameters = [];
             const doc = new vscode.MarkdownString();
-            doc.appendMarkdown(`### method deallocate\n\n`);
             doc.appendCodeblock(`method deallocate takes nothing returns nothing`, 'jass');
-            doc.appendMarkdown(`\n**内置方法** - 调用默认的 destroy 方法\n\n`);
+            doc.appendMarkdown(`\n**Built-in Method** - Calls the default destroy method.\n\n`);
             signature.documentation = doc;
             signatures.push(signature);
         }
@@ -710,7 +728,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
     /**
      * 创建函数签名信息
      */
-    private createFunctionSignature(func: FunctionDeclaration): vscode.SignatureInformation {
+    private createFunctionSignature(func: FunctionDeclaration, filePath?: string): vscode.SignatureInformation {
         const name = func.name?.name || 'unknown';
         const params = func.parameters.map(p => {
             const typeStr = p.type ? p.type.toString() : 'unknown';
@@ -734,9 +752,17 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
 
         // 创建文档
         const doc = new vscode.MarkdownString();
-        doc.appendMarkdown(`### function ${name}\n\n`);
         doc.appendCodeblock(label, 'jass');
-        doc.appendMarkdown(`\n**Returns:** \`${returnType}\`\n\n`);
+        const displayPath = this.toDisplayPath(filePath);
+        if (displayPath) {
+            doc.appendMarkdown(`\n**File:** \`${displayPath}\`\n\n`);
+        }
+        const comment = filePath ? this.extractCommentForStatement(func, filePath) : null;
+        if (comment) {
+            doc.appendMarkdown(`\n${comment}\n`);
+        } else {
+            doc.appendMarkdown(`\n**Returns:** \`${returnType}\`\n\n`);
+        }
 
         if (func.parameters.length > 0) {
             func.parameters.forEach((param, index) => {
@@ -753,7 +779,7 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
     /**
      * 创建 Native 函数签名信息
      */
-    private createNativeSignature(native: NativeDeclaration): vscode.SignatureInformation {
+    private createNativeSignature(native: NativeDeclaration, filePath?: string): vscode.SignatureInformation {
         const name = native.name?.name || 'unknown';
         const params = native.parameters.map(p => {
             const typeStr = p.type ? p.type.toString() : 'unknown';
@@ -779,10 +805,17 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
 
         // 创建文档
         const doc = new vscode.MarkdownString();
-        // native 本身就等价于 function，不需要额外的 function 关键字
-        doc.appendMarkdown(`### ${constantStr}native ${name}\n\n`);
         doc.appendCodeblock(label, 'jass');
-        doc.appendMarkdown(`\n**Returns:** \`${returnType}\`\n\n`);
+        const displayPath = this.toDisplayPath(filePath);
+        if (displayPath) {
+            doc.appendMarkdown(`\n**File:** \`${displayPath}\`\n\n`);
+        }
+        const comment = filePath ? this.extractCommentForStatement(native, filePath) : null;
+        if (comment) {
+            doc.appendMarkdown(`\n${comment}\n`);
+        } else {
+            doc.appendMarkdown(`\n**Returns:** \`${returnType}\`\n\n`);
+        }
 
         if (native.parameters.length > 0) {
             native.parameters.forEach((param, index) => {
@@ -802,7 +835,8 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
     private createMethodSignature(
         method: MethodDeclaration,
         structName?: string,
-        moduleName?: string
+        moduleName?: string,
+        filePath?: string
     ): vscode.SignatureInformation {
         const name = method.name?.name || 'unknown';
         const params = method.parameters.map(p => {
@@ -830,12 +864,20 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
 
         // 创建文档
         const doc = new vscode.MarkdownString();
-        doc.appendMarkdown(`### method ${structPrefix}${name}\n\n`);
         doc.appendCodeblock(label, 'jass');
-        doc.appendMarkdown(`\n**Returns:** \`${returnType}\`\n\n`);
+        const displayPath = this.toDisplayPath(filePath);
+        if (displayPath) {
+            doc.appendMarkdown(`\n**File:** \`${displayPath}\`\n\n`);
+        }
+        const comment = filePath ? this.extractCommentForStatement(method, filePath) : null;
+        if (comment) {
+            doc.appendMarkdown(`\n${comment}\n`);
+        } else {
+            doc.appendMarkdown(`\n**Returns:** \`${returnType}\`\n\n`);
+        }
         
         if (moduleName) {
-            doc.appendMarkdown(`**来自模块:** \`${moduleName}\`\n\n`);
+            doc.appendMarkdown(`**From Module:** \`${moduleName}\`\n\n`);
         }
 
         if (method.parameters.length > 0) {
@@ -848,6 +890,23 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
         signature.documentation = doc;
 
         return signature;
+    }
+
+    private extractCommentForStatement(stmt: Statement, filePath: string): string | null {
+        if (!stmt.start) {
+            return null;
+        }
+        const fileContent = this.dataEnterManager.getFileContent(filePath);
+        if (!fileContent) {
+            return null;
+        }
+        const commentLines = extractLeadingComments(fileContent, stmt.start.line);
+        if (commentLines.length === 0) {
+            return null;
+        }
+        const parsedComment = parseComment(commentLines);
+        const markdown = formatCommentAsMarkdown(parsedComment);
+        return markdown || null;
     }
     
     /**

@@ -54,6 +54,17 @@ export class ZincSignatureHelpProvider implements vscode.SignatureHelpProvider {
         this.disposables.push(watcher);
     }
 
+    private toDisplayPath(filePath?: string): string | null {
+        if (!filePath) {
+            return null;
+        }
+        try {
+            return vscode.workspace.asRelativePath(filePath, false) || filePath;
+        } catch {
+            return filePath;
+        }
+    }
+
     dispose() {
         this.disposables.forEach(d => d.dispose());
         this.disposables = [];
@@ -464,8 +475,11 @@ export class ZincSignatureHelpProvider implements vscode.SignatureHelpProvider {
 
         // 创建文档
         const doc = new vscode.MarkdownString();
-        doc.appendMarkdown(`### function ${name}\n\n`);
         doc.appendCodeblock(label, 'zinc');
+        const displayPath = this.toDisplayPath(filePath);
+        if (displayPath) {
+            doc.appendMarkdown(`\n**File:** \`${displayPath}\`\n\n`);
+        }
 
         // 添加注释作为文档（注释中可能包含 @param 和 @returns）
         const comment = this.extractCommentForStatement(func, filePath);
@@ -540,8 +554,11 @@ export class ZincSignatureHelpProvider implements vscode.SignatureHelpProvider {
 
         // 创建文档
         const doc = new vscode.MarkdownString();
-        doc.appendMarkdown(`### method ${structPrefix}${name}\n\n`);
         doc.appendCodeblock(label, 'zinc');
+        const displayPath = this.toDisplayPath(filePath);
+        if (displayPath) {
+            doc.appendMarkdown(`\n**File:** \`${displayPath}\`\n\n`);
+        }
 
         // 添加注释作为文档（注释中可能包含 @param 和 @returns）
         if (filePath) {

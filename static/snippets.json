@@ -211,6 +211,24 @@
     "description": "私有化",
     "scope": "source.jass"
   },
+  "ignore-file-errors": {
+    "prefix": ["ignore-file", "ignore-file-errors"],
+    "body": "// @ignore-file-errors",
+    "description": "忽略当前文件所有 error 级别错误",
+    "scope": "source.jass"
+  },
+  "ignore-next-line-syntax": {
+    "prefix": ["ignore-next-line", "ignore-next-line-syntax"],
+    "body": "// @ignore-next-line-syntax",
+    "description": "忽略下一行语法错误",
+    "scope": "source.jass"
+  },
+  "ignore-directive": {
+    "prefix": "ignore",
+    "body": "// @ignore ${1|file,next-line|}",
+    "description": "通用忽略注解模板（file / next-line）",
+    "scope": "source.jass"
+  },
   "lua-value": {
     "prefix": "lua-value",
     "body": "<?=${0:}?>",

@@ -1,137 +1,90 @@
 #### 1.9.9
-- 语法高亮标准化：细分 token scope（如 `storage.type`、`storage.modifier`、`keyword.declaration.*`、`entity.name.function`），提升主题兼容性
-- `@deprecated` 与补全项联动：自动标记 `CompletionItemTag.Deprecated`（统一删除线），并在排序中降权到靠后位置
-- 新增 `jass.apiVersion` 选项：可按魔兽常用版本偏好调整补全排序；基于 `@since`（兼容 `@version`）对高于目标版本的 API 降权，未标注版本的不受影响
-- 新增句柄泄漏静态分析：检测 `timer/group/force/location` 的创建与销毁配对（`CreateTimer/DestroyTimer`、`CreateGroup/DestroyGroup`、`CreateForce/DestroyForce`、`Location/RemoveLocation`）
-- 泄漏提示分级优化：本地创建后未销毁记为 `warning`；已转移所有权（赋值给全局/成员）或直接返回的场景降级为 `hint`，减少误报噪音
-- 新增配置项 `diagnostics.checkHandleLeaks`（默认 `true`），可在 `jass.config.json` 中开关句柄泄漏检测
-- 诊断严重程度扩展：`checkValidationErrors` 支持 `hint`，并在 VS Code 诊断中正确显示为 Hint
-- `@deprecated` 增强：支持从注释中解析 `@deprecated use XXX`（兼容中英文替代描述），提取替代符号
-- Hover 增强：废弃说明下新增 `Replacement` 区块，明确展示建议替代项（如 `XXX`）
-- 补全增强：为废弃符号自动追加“`旧符号 -> 替代符号`”直达补全项，支持一键替换为替代 API
-- 新增替代项跳转能力：补全项提供 `Go to replacement: XXX`，并新增命令 `jass.openReplacementSymbol` 直接跳转替代符号定义
-- Quick Fix 升级：增强中英文诊断消息兼容（未使用符号、常量赋值、死代码、参数数量不匹配、库依赖缺失等场景）
-- 参数修复增强：参数数量不匹配的快速修复同时支持 `foo(...)` 与 `obj.foo(...)` 两种调用形式
-- 库依赖修复增强：添加 `requires` 时自动去重，且在无 `requires` 时改为直接追加到 `library` 声明行，避免插入无效语法
-- Quick Fix 架构预留：新增基于 `diagnostic.code` 的兼容入口，为后续从文本匹配迁移到 code 驱动做准备
-- Quick Fix 路由升级：提取 `code-action-utils` 统一解析 `diagnostic.code + message` 到修复意图（intent），`CodeActionProvider` 按 intent 分发执行
-- 新增 Quick Fix 解析单测：增加 `test:codeaction`，覆盖 code 归一化、参数数量解析、中英文未使用与库依赖意图提取等核心逻辑
-- 新增 deprecated 一键替换 Quick Fix：光标位于已标记 `@deprecated use XXX` 的符号时，提供“替换为 `XXX`”快速修复（无需依赖诊断）
-- deprecated 一键替换增强：支持跨缓存文件查找声明注释（不局限当前文件），可跨文件解析 `@deprecated use XXX` 替代项
-- Quick Fix 去重优化：同一上下文下相同标题/类型的修复项自动去重，避免重复显示
-- Quick Fix 可测试性增强：抽离参数修复与 `library requires` 文本改写逻辑到 `code-action-utils`，新增行级输入/输出断言测试，降低回归风险
-- Code Action 安全性增强（AST 优先）：`remove_unused`、`remove_dead_code`、`fix_param_count` 改为 AST 节点定位 + 精确 Range 编辑，减少复杂语句误删/误改风险
-- Code Action 安全性彻底统一：`remove_constant_assignment` 同步迁移到 AST 节点定位 + 精确 Range 编辑，四类高风险修复统一为 AST 驱动
-- `add_library_requires` 精度提升：由“默认首个 library”改为“按诊断范围 AST 就近定位目标 library”，降低多库文件误改风险
-- 新增标准库秒加载开关：`jass.instantLibraryLoad`（默认 `false`）；开启后仅对标准库 `.j/.ai` 使用 `.mate` 持久化，优先走持久化读取并设置 24 小时缓存时效
-- 补充秒加载测试说明：文档新增开关启用、二次启动验证与 24 小时过期回退测试步骤
+- 这版重点是“稳定 + 好用”：语法高亮更一致，跨文件跳转更稳，重命名/删除/移动后的缓存一致性明显提升。
+- 增加 `jass.apiVersion` 行为策略：补全会更贴近目标版本；同时兼容 return bug 场景。
+  - 常见设置：`"jass.apiVersion": "1.20"`（偏旧版本兼容）
+  - 温和模式：`"jass.apiVersion": "off"`（提示更保守）
+- 诊断体验继续升级：支持错误忽略注解，临时屏蔽噪音更方便。
+  - 忽略整文件错误：`// @ignore-file-errors`
+  - 忽略下一行语法错误：`// @ignore-next-line-syntax`
+  - 也可用片段快速输入：`ignore-file` / `ignore-next-line` / `ignore`
+- Quick Fix / Code Action 覆盖更全，修复更稳。看到报错后按 `Ctrl+.`（或点灯泡）直接套用建议。
 
 #### 1.9.8
-- hint默认false
-- 修复hover缓存刷新问题
-- 增强标签支持：`@param`（兼容 `{type}` 写法）、`@returns/@return`、`@deprecated`、`@provider`、`@since`、`@see`、`@example`
-- 版本标签策略调整：建议使用 `@since`；`@version` 仅为兼容旧写法保留，展示时统一按 `Since` 输出，后续逐步迁移到 `@since`
-- 废弃展示优化：`@deprecated` 在 hover/completion 文档中支持删除线展示
-- 新增 provider 信息区块：支持 `@provider` 并在文档中以 `Providers` 分组展示
+- 注释标签能力补强：`@param`、`@returns`、`@deprecated`、`@provider`、`@since`、`@see`、`@example` 都能被更好识别。
+- `@version` 仍兼容，但展示上统一按 `Since` 处理，便于团队规范化。
+- `@deprecated` 的展示更直观（hover/completion 中删除线与说明更明确）。
+- 怎么用：给接口或函数补上结构化注释，例如 `// @since 1.26`、`// @provider Blizzard`、`// @deprecated use NewFoo`。
 
 #### 1.9.7
-- 数组结构（extends array）误报修复：允许静态数组成员与静态成员默认值；修复 `private static integer array xxx` 等成员解析，不再误报「cannot have array members」「cannot have default values」
-- 类型查询优先级：类型语法检查按顺序解析——基本类型 → type 声明 → struct/interface → function interface → vjass type（见 docs/type-system.md）
-- 新增 function interface 符号：收集 `function interface Name takes ... returns ...`，参与类型合法性判断
-- 类型解析测试与调试：新增 `npm run test:type` 仅跑 type/thistype 相关测试，支持 `DEBUG_TYPE=1` 打印失败代码片段；文档补充 type 解析测试说明
-- 修复「not all code paths return a value」误报：then 分支为单条嵌套 if（如 BJ 风格 if/elseif/else 内层 if）时正确识别所有路径都有返回值
-- 修复「Return type 'integer' does not match function return type 'string'」误报：`+` 在 JASS 中用于字符串拼接时若任一侧为 string 则结果为 string；两侧类型均未知（如函数调用）时不再假定为 integer
-- 允许 struct 的 `private method onDestroy`：按 vjass.docs.txt 仅规定模块中不能使用 private，结构体 onDestroy 可为 private
-- takes 参数体验：takes 内参数名支持 hover、跳转定义；递归进入 library/scope/struct 与 NativeDeclaration 参数；completion 支持多行 takes 与 library/scope 内类型与签名
-- 未声明变量：由 error 改为 warning（如 `gg_trg_xxx` 可能为其他文件全局变量，仅提示警告）
+- 类型与返回值相关误报做了重点修复：包括 `not all code paths return`、字符串拼接推断等高频问题。
+- `function interface` 进入类型检查链路；takes 参数的 hover/跳转/补全体验更完整。
+- 数组结构（extends array）相关误报减少，`private static integer array xxx` 这类写法更稳。
+- 怎么用：类型问题排查建议先跑 `npm run test:type`，再配合编辑器里的 hover 与跳转快速定位。
 
 #### 1.9.6
-- 修复 hint 功能性能问题：现在只处理可见范围内的代码，大幅提升大文件性能
-- 修复 hint 功能取消支持：添加取消令牌检查，避免在用户快速滚动时造成性能问题
-- 修复 hint 位置计算：确保 hint 位置在可见范围内，避免显示在不可见区域
-- 拆分 literal 配置项：将 `jass.literal` 拆分为 `jass.literal.completion`（默认 false）和 `jass.literal.hover`（默认 true），解决用户反馈的补全提示项太乱的问题
-- 添加 hint 功能开关：新增 `jass.hint` 配置项（默认 true hint 功能的启用/禁用
+- hint 性能优化，主要针对大文件与滚动场景：可见区优先、噪音更低。
+- 配置拆分为 `jass.literal.completion` / `jass.literal.hover`，并新增 `jass.hint` 开关。
+- 怎么用：如果提示过多，先关补全提示保留悬停提示，例如：
+  - `"jass.hint": true`
+  - `"jass.literal.completion": false`
+  - `"jass.literal.hover": true`
 
 #### 1.9.5
-- 添加字符代码 hover 支持：对 'az09' 这样的字符代码显示10进制和16进制值
-- 添加 vJASS 内置常量、时间、随机数等的特殊 hover 支持，从 vjass.docs.txt 读取信息
-- 完善 jass.config.json 配置加载：修复配置加载问题，现在会正确加载所有配置项（excludes, includes, parsing, standardLibraries, diagnostics）
-- 完善 jass.config.json 配置使用：修复所有诊断选项（checkTypes, checkUndefined, checkUnused, checkArrayBounds）的传递和使用
-- 完善 README.md：添加完整的 jass.config.json 配置说明，包括所有配置项的详细说明、默认值和注意事项
+- hover 信息更实用：字符码（如 `'az09'`）可直接看到数值解释，常见 vJASS 内置信息补全。
+- `jass.config.json` 的加载与生效链路更稳定，诊断配置更容易按预期工作。
+- 怎么用：悬停字符码或常见内置符号即可查看说明；调整 `diagnostics.*` 后保存配置会自动重载。
 
 #### 1.9.4
-- 修复struct一个public修饰解析错误问题
-- 完善set hint功能，完善caller嵌套hint功能
-- 支持所有语法情况下的caller hint（return、exitwhen、if、elseif、set、local、数组下标等）
-- 支持函数对象方法调用hint（func.evaluate()、func.execute()）
-- 支持方法对象方法调用hint（method.evaluate()、method.execute()）
-- 完善function、native、globals的全局查找hint支持（包括library和scope中的）
-- 完善嵌套调用的参数提示支持
-- 修复hover，跳转跨文件bug
-- 修复一些警告问题
-- 添加无限循环检测：检测没有 exitwhen 的 loop 语句
-- 添加方法调用链长度检测：警告过长的方法调用链（超过5个调用）
-- 添加多返回值语法错误检测框架（函数声明和 return 语句）
-- 修复诊断提供者：文件删除后诊断未清除的问题
-- 修复诊断提供者：文件重命名后旧诊断未清除的问题
-- 使用 rxjs 替代 setTimeout，改进异步事件处理
+- hint 与参数提示覆盖更多语法场景（包含 caller 嵌套、return/if/loop 等常见分支）。
+- 跨文件 hover/跳转修复一批稳定性问题；并加入更多流程诊断（如无 `exitwhen` 的 loop）。
+- 怎么用：调用函数时直接看参数提示；收到流程类诊断后按提示先补 `exitwhen` 或拆分调用链。
 
 #### 1.9.3
-- 修复结构体成员识别问题：方法体内的局部变量不再被误识别为结构体成员
-- 修复结构体成员收集逻辑，确保只有非局部变量才被识别为结构体成员
-- 修复数组成员大小检查和数组结构限制检查，避免将方法体内的变量误判为结构体成员
+- 结构体成员识别逻辑修正，方法体局部变量不再误判为成员。
+- 怎么用：若旧工程曾出现这类误报，升级后保存一次文件触发重诊断即可验证。
 
 #### 1.9.2
-- 使用 VSCode 内置的 glob 实现替代 src\extern\glob，提升兼容性
-- 修复解析器无法解析 library 块中 globals 块的问题
-- 完善 jass.config.json 配置文件支持，包括 excludes 和 includes 模式匹配
-- 修复 vjass 关键字语法高亮问题，确保所有 vjass 关键字正确显示为 keyword 类型
+- 文件匹配与解析兼容性提升，library 中 globals 解析问题修复，关键字高亮更准。
+- 怎么用：在 `jass.config.json` 用 `includes/excludes` 控制扫描范围，混合 library/globals 场景可直接写。
 
 #### 1.9.1
-- 修复vjass格式化问题
-- .zn后缀文件格式化可能还是存在BUG
+- 格式化稳定性修复（`.zn` 仍有少量边界样例待持续优化）。
+- 怎么用：在 `.j/.jass/.zn` 文件直接执行格式化；若异常，建议反馈最小复现代码片段。
 
 #### 1.9.0
-- 完整的vJass抽象语法树解析
-- 使用流式词法解析，而非一次性全部解析
-- 增加初版hint功能支持，也就是你输入参数时，显示的不可选取类型（Test）
+- 上线 vJASS AST + 流式词法解析，初版 hint 可用。
+- 怎么用：函数调用输入参数时可见基础提示；大型工程建议配合 `jass.config.json` 使用。
 
 #### 1.8.44
-- <??>跟<?=?>预处理
+- 增加预处理表达式支持（`<??>`、`<?=?>`）。
+- 怎么用：在脚本预处理插值场景直接使用上述语法。
 
 #### 1.8.38
-- 初步支持module
-- 修复一些错误提示问题
+- 初步支持 module，并修复一批错误提示。
+- 怎么用：vJASS 里声明 `module` 后可获得基础语法识别与提示。
 
 #### 1.8.37
-- 数组定义bug修复
-- 修复end tag后面注释报错问题
-- 增加reference方法计数
+- 修复数组定义与 `end` 后注释误报，增加 reference 计数能力。
+- 怎么用：相关场景可按标准写法直接使用，误报相较此前明显减少。
 
 #### 1.8.31
-- 修复结构体数组定义问题
-- 修复布尔表达式 '&&' '||' 操作
+- 修复结构体数组定义与布尔表达式 `&&` / `||` 的处理问题。
+- 怎么用：复杂条件可直接组合使用 `&&` 与 `||`。
 
 #### 1.8.30
-- 增加TypeHierarchyProvider支持,需求vscode>=1.6,提供类型层级支持
-- 增加类型定义跳转
-- 修复vjass数组定义
-- 修复zinc局部变量不提示问题
+- 新增类型层级与类型定义跳转，修复 vjass 数组与 zinc 局部变量提示问题。
+- 怎么用：在符号上使用“转到类型定义 / 类型层级”追踪关系。
 
 #### 1.8.29
-- 修复vjass变量数组定义
-
-#### 1.8.29
-- 修复zinc变量数组定义
-- 修复关键字提示
-- 重新实现mark,number,string提示，废弃jass.config.json,当创建文件名称为presets.jass、numbers.jass、strings.jass时,插件会走另一套解析。
-- 从新实现type功能
+- 修复 vjass 变量数组定义；同阶段也包含 zinc 数组与关键字提示优化。
+- 怎么用：数组变量按标准声明后，结合补全与诊断确认是否符合预期。
 
 #### 1.8.26
-- 修复变量名称解析错误问题
-  
+- 修复变量名称解析错误。
+- 怎么用：旧项目中的命名边界场景，建议重新触发一次诊断确认。
+
 #### 1.8.25
-- 优化解析时机
-- 错误检测时机更及时
+- 优化解析与错误检测时机。
+- 怎么用：保存后可更快看到语法/语义反馈。
 
 

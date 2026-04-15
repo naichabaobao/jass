@@ -1,6 +1,3 @@
-import * as fs from "fs";
-import * as path from "path";
-
 /**
  * 跳转信息项
  */
@@ -41,39 +38,10 @@ export class JumpCache {
      * key: symbolName (string), value: JumpCacheItem[]
      */
     private nameIndex: Map<string, JumpCacheItem[]>;
-    private cacheDir: string;
-    /**
-     * 延迟保存定时器
-     */
-    private saveTimer: NodeJS.Timeout | null = null;
-    /**
-     * 待保存的文件集合
-     */
-    private pendingSaves: Set<string> = new Set();
-    /**
-     * 延迟保存的时间间隔（毫秒）
-     */
-    private readonly SAVE_DELAY = 1000;
 
     private constructor() {
         this.cache = new Map();
         this.nameIndex = new Map();
-        // 使用 VSCode 的全局存储目录
-        const workspaceFolder = require('vscode').workspace.workspaceFolders?.[0];
-        if (workspaceFolder) {
-            this.cacheDir = path.join(workspaceFolder.uri.fsPath, '.vscode', 'jass-cache', 'jump');
-        } else {
-            this.cacheDir = path.join(process.env.HOME || process.env.USERPROFILE || '', '.vscode', 'jass-cache', 'jump');
-        }
-        
-        // 确保缓存目录存在
-        this.ensureCacheDir();
-        
-        // 尝试从磁盘加载缓存
-        this.loadFromDisk();
-        
-        // 重建索引
-        this.rebuildIndexes();
     }
 
     public static getInstance(): JumpCache {
@@ -83,80 +51,6 @@ export class JumpCache {
         return JumpCache.instance;
     }
 
-    /**
-     * 确保缓存目录存在
-     */
-    private ensureCacheDir(): void {
-        try {
-            if (!fs.existsSync(this.cacheDir)) {
-                fs.mkdirSync(this.cacheDir, { recursive: true });
-            }
-        } catch (error) {
-            console.error('Failed to create jump cache directory:', error);
-        }
-    }
-
-    /**
-     * 获取缓存文件路径
-     */
-    private getCacheFilePath(filePath: string): string {
-        // 使用文件路径的哈希值作为文件名，避免路径问题
-        const hash = this.hashFilePath(filePath);
-        return path.join(this.cacheDir, `${hash}.json`);
-    }
-
-    /**
-     * 对文件路径进行哈希
-     */
-    private hashFilePath(filePath: string): string {
-        let hash = 0;
-        for (let i = 0; i < filePath.length; i++) {
-            const char = filePath.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return Math.abs(hash).toString(36);
-    }
-    
-    /**
-     * 从磁盘加载缓存
-     */
-    private loadFromDisk(): void {
-        try {
-            if (!fs.existsSync(this.cacheDir)) {
-                return;
-            }
-
-            const files = fs.readdirSync(this.cacheDir);
-            let loadedCount = 0;
-
-            for (const file of files) {
-                if (!file.endsWith('.json')) {
-                    continue;
-                }
-
-                try {
-                    const cacheFilePath = path.join(this.cacheDir, file);
-                    const content = fs.readFileSync(cacheFilePath, 'utf-8');
-                    const data = JSON.parse(content);
-                    
-                    if (data.filePath && Array.isArray(data.items)) {
-                        this.cache.set(data.filePath, data.items);
-                        loadedCount++;
-                    }
-                } catch (error) {
-                    // 忽略损坏的缓存文件
-                    console.warn(`Failed to load jump cache file ${file}:`, error);
-                }
-            }
-
-            if (loadedCount > 0) {
-                console.log(`📦 Loaded ${loadedCount} jump cache files from disk`);
-            }
-        } catch (error) {
-            console.error('Failed to load jump cache from disk:', error);
-        }
-    }
     /**
      * 重建索引
      * 在加载缓存后或批量更新后调用
@@ -207,62 +101,6 @@ export class JumpCache {
     }
 
     /**
-     * 保存缓存到磁盘（立即保存）
-     */
-    private saveToDisk(filePath: string, items: JumpCacheItem[]): void {
-        try {
-            const cacheFilePath = this.getCacheFilePath(filePath);
-            const data = {
-                filePath,
-                items,
-                timestamp: Date.now()
-            };
-            
-            fs.writeFileSync(cacheFilePath, JSON.stringify(data, null, 2), 'utf-8');
-        } catch (error) {
-            console.error(`Failed to save jump cache for ${filePath}:`, error);
-        }
-    }
-
-    /**
-     * 延迟保存到磁盘（批量保存，减少I/O）
-     */
-    private scheduleSave(filePath: string): void {
-        this.pendingSaves.add(filePath);
-
-        // 清除之前的定时器
-        if (this.saveTimer) {
-            clearTimeout(this.saveTimer);
-        }
-
-        // 设置新的定时器
-        this.saveTimer = setTimeout(() => {
-            this.flushPendingSaves();
-        }, this.SAVE_DELAY);
-    }
-
-    /**
-     * 立即保存所有待保存的文件
-     */
-    private flushPendingSaves(): void {
-        if (this.pendingSaves.size === 0) {
-            return;
-        }
-
-        const filesToSave = Array.from(this.pendingSaves);
-        this.pendingSaves.clear();
-
-        for (const filePath of filesToSave) {
-            const items = this.cache.get(filePath);
-            if (items) {
-                this.saveToDisk(filePath, items);
-            }
-        }
-
-        this.saveTimer = null;
-    }
-
-    /**
      * 获取指定文件的缓存项
      */
     public get(filePath: string): JumpCacheItem[] | undefined {
@@ -286,9 +124,6 @@ export class JumpCache {
         
         // 更新索引
         this.updateIndexesForFile(filePath, oldItems, items);
-        
-        // 延迟保存到磁盘
-        this.scheduleSave(filePath);
     }
 
     /**
@@ -299,27 +134,39 @@ export class JumpCache {
         if (oldItems.length > 0) {
             this.cache.delete(filePath);
             this.updateIndexesForFile(filePath, oldItems, []);
-            
-            // 删除磁盘上的缓存文件
-            try {
-                const cacheFilePath = this.getCacheFilePath(filePath);
-                if (fs.existsSync(cacheFilePath)) {
-                    fs.unlinkSync(cacheFilePath);
-                }
-            } catch (error) {
-                console.error(`Failed to delete jump cache file for ${filePath}:`, error);
-            }
         }
+    }
+
+    /**
+     * 清除“跳转目标”指向指定文件的所有缓存项
+     * 例如：定义所在文件被重命名/删除时，需要把所有引用旧路径的位置清理掉
+     */
+    public clearByTargetFile(targetFilePath: string): void {
+        for (const [sourceFilePath, items] of this.cache.entries()) {
+            const filtered = items.filter(item => {
+                const target = item.location?.uri || item.filePath;
+                return target !== targetFilePath;
+            });
+            if (filtered.length === items.length) {
+                continue;
+            }
+            this.cache.set(sourceFilePath, filtered);
+            this.updateIndexesForFile(sourceFilePath, items, filtered);
+        }
+    }
+
+    /**
+     * 清除所有缓存（内存 + 磁盘）
+     */
+    public clearAll(): void {
+        this.cache.clear();
+        this.nameIndex.clear();
     }
 
     /**
      * 强制立即保存所有待保存的文件
      */
     public flush(): void {
-        if (this.saveTimer) {
-            clearTimeout(this.saveTimer);
-            this.saveTimer = null;
-        }
-        this.flushPendingSaves();
+        // 内存缓存模式下不需要落盘
     }
 }

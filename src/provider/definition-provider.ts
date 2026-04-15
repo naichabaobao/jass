@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 import { DataEnterManager } from './data-enter-manager';
 import { JumpCache, JumpCacheItem } from './jump-cache';
 import {
@@ -39,6 +40,38 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
         this.dataEnterManager = dataEnterManager;
         this.zincDefinitionProvider = new ZincDefinitionProvider(dataEnterManager);
         this.jumpCache = JumpCache.getInstance();
+    }
+
+    private isCachedLocationStillValid(symbolName: string, item: JumpCacheItem): boolean {
+        try {
+            const filePath = item.location?.uri || item.filePath;
+            if (!filePath || !fs.existsSync(filePath)) {
+                return false;
+            }
+            const range = item.location?.range;
+            if (!range) {
+                return false;
+            }
+            const content = this.dataEnterManager.getFileContent(filePath) ?? fs.readFileSync(filePath, 'utf-8');
+            const lines = content.split('\n');
+            if (range.start.line < 0 || range.start.line >= lines.length) {
+                return false;
+            }
+
+            const lineText = lines[range.start.line];
+            const start = Math.max(0, range.start.character);
+            const end = Math.max(start, range.end.character);
+            const exact = lineText.slice(start, end);
+            if (exact === symbolName) {
+                return true;
+            }
+
+            const winStart = Math.max(0, start - 24);
+            const winEnd = Math.min(lineText.length, end + 24);
+            return lineText.slice(winStart, winEnd).includes(symbolName);
+        } catch {
+            return false;
+        }
     }
 
     async provideDefinition(
@@ -116,9 +149,10 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
 
             // 检查缓存
             const cachedLocations = this.jumpCache.getBySymbolName(symbolName);
-            if (cachedLocations.length > 0) {
+            const validCachedLocations = cachedLocations.filter(item => this.isCachedLocationStillValid(symbolName, item));
+            if (validCachedLocations.length > 0) {
                 // 从缓存恢复跳转位置
-                for (const cachedLocation of cachedLocations) {
+                for (const cachedLocation of validCachedLocations) {
                     locations.push(new vscode.Location(
                         vscode.Uri.file(cachedLocation.filePath),
                         new vscode.Range(

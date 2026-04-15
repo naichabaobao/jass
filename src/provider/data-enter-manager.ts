@@ -1,10 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as v8 from 'v8';
-import { createHash } from 'crypto';
 import { Parser } from '../vjass/parser';
-import * as Ast from '../vjass/ast';
 import { BlockStatement } from '../vjass/ast';
 import { Subject, debounceTime } from '../extern/rxjs';
 import { TextMacroCollector } from '../vjass/text-macro-collector';
@@ -18,6 +15,7 @@ import { ErrorCollection } from '../vjass/error';
 import { InnerZincParser } from '../vjass/inner-zinc-parser';
 import { ZincProgram } from '../vjass/zinc-ast';
 import { analyzeSemantics, analyzeSemanticsWithAllFiles, SemanticAnalyzerOptions } from '../vjass/analyzer';
+import { CheckErrorType } from '../vjass/error';
 import { JumpCache, JumpCacheItem } from './jump-cache';
 import { HoverCache } from './hover-cache';
 
@@ -134,46 +132,15 @@ interface DataEnterOptions {
     enableFileWatcher?: boolean;
 }
 
+interface IgnoreDirectives {
+    ignoreFileErrors: boolean;
+    ignoreNextLineSyntaxErrors: Set<number>;
+}
+
 /**
  * 标准库文件解析顺序
  */
 const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j', 'dzapi.j'];
-const IMMUTABLE_MATE_SCHEMA_VERSION = 1;
-const IMMUTABLE_MATE_CACHE_KIND = 'immutable-ast';
-const IMMUTABLE_MATE_FILE_EXTENSION = '.mate';
-const IMMUTABLE_MATE_FILE_FORMAT = 1;
-const IMMUTABLE_MATE_TTL_MS = 24 * 60 * 60 * 1000; // 24 小时
-
-type ImmutableParsingOptionsSnapshot = {
-    enableTextMacro: boolean;
-    enablePreprocessor: boolean;
-    enableLuaBlocks: boolean;
-};
-
-interface ImmutableFileSignature {
-    filePath: string;
-    fileMtimeMs: number;
-    fileSize: number;
-    contentSha1?: string;
-}
-
-interface ImmutableFileMateSnapshot {
-    schemaVersion: number;
-    fileFormat: number;
-    cacheKind: string;
-    extensionVersion: string;
-    createdAt: number;
-    source: ImmutableFileSignature;
-    parseOptions: ImmutableParsingOptionsSnapshot;
-    payloadBase64: string;
-}
-
-const AST_NODE_PROTOTYPE_MAP = new Map<string, object>(
-    Object.entries(Ast)
-        .filter(([, value]) => typeof value === 'function')
-        .map(([name, ctor]) => [name, (ctor as { prototype: object }).prototype])
-);
-const MATE_OMIT_KEYS = new Set(['parent', 'previousSibling', 'nextSibling']);
 
 /**
  * 需要忽略的文件名（不处理，但需要监听变化）
@@ -220,8 +187,6 @@ export class DataEnterManager {
     private config: JassConfig | null = null;
     private configPath?: string;
     private readonly configReloadCallbacks: Array<() => void> = [];
-    private extensionVersionCache = '';
-    private immutableMateCachePrepared = false;
     private hasInitializedWorkspace = false;
     private hasLoggedEmptyCacheWarning = false;
 
@@ -256,406 +221,99 @@ export class DataEnterManager {
         // 不在这里设置监听器，监听器在 initializeWorkspace 中设置
     }
 
-    private getExtensionVersion(): string {
-        if (this.extensionVersionCache) {
-            return this.extensionVersionCache;
+    // 已移除 .mate 持久化功能，缓存仅保留内存态。
+
+    private parseApiVersionParts(version: string): { major: number; minor: number } | null {
+        const match = version.trim().match(/^(\d+)\.(\d+)/);
+        if (!match) {
+            return null;
         }
-
-        const candidates = [
-            path.resolve(__dirname, '../../package.json'),
-            path.resolve(__dirname, '../../../package.json')
-        ];
-
-        for (const packageJsonPath of candidates) {
-            try {
-                if (!fs.existsSync(packageJsonPath)) {
-                    continue;
-                }
-                const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as { version?: string };
-                if (packageJson.version) {
-                    this.extensionVersionCache = packageJson.version;
-                    return this.extensionVersionCache;
-                }
-            } catch (error) {
-                console.warn(`Failed to read package version from ${packageJsonPath}:`, error);
-            }
-        }
-
-        this.extensionVersionCache = '0.0.0';
-        return this.extensionVersionCache;
-    }
-
-    private getCurrentParsingOptionsSnapshot(): ImmutableParsingOptionsSnapshot {
-        const parsingConfig = this.config?.parsing || {};
         return {
-            enableTextMacro: parsingConfig.enableTextMacro !== false,
-            enablePreprocessor: parsingConfig.enablePreprocessor !== false,
-            enableLuaBlocks: parsingConfig.enableLuaBlocks !== false
+            major: Number(match[1]),
+            minor: Number(match[2])
         };
     }
 
-    private isInstantLibraryLoadEnabled(): boolean {
-        return vscode.workspace.getConfiguration('jass').get<boolean>('instantLibraryLoad', false);
-    }
-
-    private isImmutableCacheCandidate(filePath: string): boolean {
-        if (!this.isImmutableFile(filePath)) {
+    private isReturnBugCompatibleApiVersion(version: string): boolean {
+        const parsed = this.parseApiVersionParts(version);
+        if (!parsed) {
             return false;
         }
-        const ext = path.extname(filePath).toLowerCase();
-        return ['.j', '.jass', '.ai', '.zn'].includes(ext);
-    }
-
-    private shouldPersistImmutableFile(filePath: string): boolean {
-        if (!this.isInstantLibraryLoadEnabled()) {
-            return false;
-        }
-
-        // 支持 static/标准库下所有脚本文件的持久化秒加载。
-        return this.isImmutableCacheCandidate(filePath);
-    }
-
-    private getImmutableMateBaseDir(): string | null {
-        if (!this.workspaceRoot) {
-            return null;
-        }
-        return path.join(this.workspaceRoot, '.vscode', 'jass-cache', 'immutable');
-    }
-
-    private getImmutableMateVersionDir(): string | null {
-        const baseDir = this.getImmutableMateBaseDir();
-        if (!baseDir) {
-            return null;
-        }
-        return path.join(baseDir, this.getExtensionVersion());
-    }
-
-    private hashFilePath(filePath: string): string {
-        return createHash('sha1').update(filePath).digest('hex');
-    }
-
-    private getImmutableMatePath(filePath: string): string | null {
-        const versionDir = this.getImmutableMateVersionDir();
-        if (!versionDir) {
-            return null;
-        }
-        return path.join(versionDir, `${this.hashFilePath(filePath)}${IMMUTABLE_MATE_FILE_EXTENSION}`);
-    }
-
-    private prepareImmutableMateCacheDirectory(): void {
-        if (this.immutableMateCachePrepared) {
-            return;
-        }
-
-        const baseDir = this.getImmutableMateBaseDir();
-        const versionDir = this.getImmutableMateVersionDir();
-        if (!baseDir || !versionDir) {
-            return;
-        }
-
-        try {
-            fs.mkdirSync(versionDir, { recursive: true });
-            const entries = fs.readdirSync(baseDir, { withFileTypes: true });
-            const currentVersion = path.basename(versionDir);
-            for (const entry of entries) {
-                if (!entry.isDirectory() || entry.name === currentVersion) {
-                    continue;
-                }
-                const legacyPath = path.join(baseDir, entry.name);
-                fs.rmSync(legacyPath, { recursive: true, force: true });
-            }
-            this.immutableMateCachePrepared = true;
-        } catch (error) {
-            console.warn('Failed to prepare immutable .mate cache directory:', error);
-        }
-    }
-
-    private createImmutableFileSignature(filePath: string, content?: string): ImmutableFileSignature | null {
-        try {
-            const stats = fs.statSync(filePath);
-            return {
-                filePath,
-                fileMtimeMs: stats.mtimeMs,
-                fileSize: stats.size,
-                contentSha1: content ? createHash('sha1').update(content).digest('hex') : undefined
-            };
-        } catch {
-            return null;
-        }
-    }
-
-    private markAstNodeTypes(root: unknown): void {
-        const visited = new WeakSet<object>();
-        const stack: unknown[] = [root];
-
-        while (stack.length > 0) {
-            const current = stack.pop();
-            if (!current || typeof current !== 'object') {
-                continue;
-            }
-            if (visited.has(current)) {
-                continue;
-            }
-            visited.add(current);
-
-            const node = current as Record<string, unknown> & { __mateType?: string };
-            const ctorName = (current as { constructor?: { name?: string } }).constructor?.name;
-            if (ctorName) {
-                node.__mateType = ctorName;
-            }
-
-            for (const value of Object.values(node)) {
-                if (value && typeof value === 'object') {
-                    stack.push(value);
-                }
-            }
-        }
-    }
-
-    private restoreAstNodePrototypes(root: unknown): void {
-        const visited = new WeakSet<object>();
-        const stack: unknown[] = [root];
-
-        while (stack.length > 0) {
-            const current = stack.pop();
-            if (!current || typeof current !== 'object') {
-                continue;
-            }
-            if (visited.has(current)) {
-                continue;
-            }
-            visited.add(current);
-
-            const node = current as Record<string, unknown>;
-            const mateType = node.__mateType;
-            if (typeof mateType === 'string') {
-                const prototype = AST_NODE_PROTOTYPE_MAP.get(mateType);
-                if (prototype) {
-                    Object.setPrototypeOf(current, prototype);
-                }
-            }
-
-            for (const value of Object.values(node)) {
-                if (value && typeof value === 'object') {
-                    stack.push(value);
-                }
-            }
-        }
-    }
-
-    private cloneForMatePayload<T>(input: T): T {
-        if (input === null || input === undefined) {
-            return input;
-        }
-        if (typeof input !== 'object') {
-            return input;
-        }
-
-        const rootClone: any = Array.isArray(input) ? [] : {};
-        const objectMap = new Map<object, any>();
-        objectMap.set(input as object, rootClone);
-
-        const queue: Array<{ src: any; dst: any }> = [{ src: input, dst: rootClone }];
-        while (queue.length > 0) {
-            const { src, dst } = queue.shift()!;
-            const ctorName = src?.constructor?.name;
-            if (ctorName && ctorName !== 'Object' && ctorName !== 'Array') {
-                dst.__mateType = ctorName;
-            }
-
-            if (Array.isArray(src)) {
-                for (let i = 0; i < src.length; i++) {
-                    const value = src[i];
-                    if (!value || typeof value !== 'object') {
-                        dst[i] = value;
-                        continue;
-                    }
-                    if (objectMap.has(value)) {
-                        dst[i] = objectMap.get(value);
-                        continue;
-                    }
-                    const childClone: any = Array.isArray(value) ? [] : {};
-                    objectMap.set(value, childClone);
-                    dst[i] = childClone;
-                    queue.push({ src: value, dst: childClone });
-                }
-                continue;
-            }
-
-            for (const [key, value] of Object.entries(src)) {
-                if (MATE_OMIT_KEYS.has(key)) {
-                    continue;
-                }
-
-                if (!value || typeof value !== 'object') {
-                    dst[key] = value;
-                    continue;
-                }
-                if (objectMap.has(value)) {
-                    dst[key] = objectMap.get(value);
-                    continue;
-                }
-                const childClone: any = Array.isArray(value) ? [] : {};
-                objectMap.set(value, childClone);
-                dst[key] = childClone;
-                queue.push({ src: value, dst: childClone });
-            }
-        }
-
-        return rootClone as T;
-    }
-
-    private rebuildAstRelations(root: unknown): void {
-        if (!root || typeof root !== 'object') {
-            return;
-        }
-
-        const visited = new WeakSet<object>();
-        const queue: Array<{ node: any; parent: any | null }> = [{ node: root, parent: null }];
-
-        while (queue.length > 0) {
-            const { node, parent } = queue.shift()!;
-            if (!node || typeof node !== 'object') {
-                continue;
-            }
-            if (visited.has(node)) {
-                continue;
-            }
-            visited.add(node);
-
-            if (parent) {
-                node.parent = parent;
-            }
-
-            if (Array.isArray(node.children)) {
-                for (let i = 0; i < node.children.length; i++) {
-                    const child = node.children[i];
-                    if (!child || typeof child !== 'object') {
-                        continue;
-                    }
-                    child.parent = node;
-                    child.previousSibling = i > 0 ? node.children[i - 1] : null;
-                    child.nextSibling = i < node.children.length - 1 ? node.children[i + 1] : null;
-                    queue.push({ node: child, parent: node });
-                }
-            }
-        }
-    }
-
-    private saveImmutableMateCache(filePath: string, cacheItem: FileCacheItem): void {
-        if (!this.shouldPersistImmutableFile(filePath)) {
-            return;
-        }
-
-        const matePath = this.getImmutableMatePath(filePath);
-        if (!matePath) {
-            return;
-        }
-
-        this.prepareImmutableMateCacheDirectory();
-
-        const signature = this.createImmutableFileSignature(filePath, cacheItem.content);
-        if (!signature) {
-            return;
-        }
-
-        try {
-            const payloadCacheItem: FileCacheItem = {
-                ...cacheItem,
-                blockStatement: this.cloneForMatePayload(cacheItem.blockStatement),
-                zincProgram: this.cloneForMatePayload(cacheItem.zincProgram)
-            };
-            this.markAstNodeTypes(payloadCacheItem.blockStatement);
-            this.markAstNodeTypes(payloadCacheItem.zincProgram);
-            const payloadBase64 = v8.serialize(payloadCacheItem).toString('base64');
-            const snapshot: ImmutableFileMateSnapshot = {
-                schemaVersion: IMMUTABLE_MATE_SCHEMA_VERSION,
-                fileFormat: IMMUTABLE_MATE_FILE_FORMAT,
-                cacheKind: IMMUTABLE_MATE_CACHE_KIND,
-                extensionVersion: this.getExtensionVersion(),
-                createdAt: Date.now(),
-                source: signature,
-                parseOptions: this.getCurrentParsingOptionsSnapshot(),
-                payloadBase64
-            };
-            fs.writeFileSync(matePath, JSON.stringify(snapshot), 'utf-8');
-        } catch (error) {
-            console.warn(`Failed to save immutable .mate cache for ${path.basename(filePath)}:`, error);
-        }
-    }
-
-    private tryLoadImmutableMateCache(filePath: string): boolean {
-        if (!this.shouldPersistImmutableFile(filePath)) {
-            return false;
-        }
-
-        const matePath = this.getImmutableMatePath(filePath);
-        if (!matePath || !fs.existsSync(matePath)) {
-            return false;
-        }
-
-        try {
-            const raw = fs.readFileSync(matePath, 'utf-8');
-            const snapshot = JSON.parse(raw) as ImmutableFileMateSnapshot;
-            if (
-                snapshot.schemaVersion !== IMMUTABLE_MATE_SCHEMA_VERSION ||
-                snapshot.fileFormat !== IMMUTABLE_MATE_FILE_FORMAT ||
-                snapshot.cacheKind !== IMMUTABLE_MATE_CACHE_KIND ||
-                snapshot.extensionVersion !== this.getExtensionVersion()
-            ) {
-                return false;
-            }
-
-            const signature = this.createImmutableFileSignature(filePath);
-            if (!signature) {
-                return false;
-            }
-
-            const source = snapshot.source;
-            if (
-                !source ||
-                source.filePath !== signature.filePath ||
-                source.fileMtimeMs !== signature.fileMtimeMs ||
-                source.fileSize !== signature.fileSize
-            ) {
-                return false;
-            }
-
-            // 超过 24 小时直接失效，避免长期陈旧缓存。
-            if (Date.now() - snapshot.createdAt > IMMUTABLE_MATE_TTL_MS) {
-                try {
-                    fs.unlinkSync(matePath);
-                } catch {
-                    // ignore
-                }
-                return false;
-            }
-
-            const options = this.getCurrentParsingOptionsSnapshot();
-            if (
-                snapshot.parseOptions.enableTextMacro !== options.enableTextMacro ||
-                snapshot.parseOptions.enablePreprocessor !== options.enablePreprocessor ||
-                snapshot.parseOptions.enableLuaBlocks !== options.enableLuaBlocks
-            ) {
-                return false;
-            }
-
-            const cacheItem = v8.deserialize(Buffer.from(snapshot.payloadBase64, 'base64')) as FileCacheItem;
-            this.restoreAstNodePrototypes(cacheItem.blockStatement);
-            this.restoreAstNodePrototypes(cacheItem.zincProgram);
-            this.rebuildAstRelations(cacheItem.blockStatement);
-            this.rebuildAstRelations(cacheItem.zincProgram);
-            this.cache.set(filePath, cacheItem);
-            this.immutableFiles.add(filePath);
+        if (parsed.major < 1) {
             return true;
-        } catch (error) {
-            try {
-                fs.unlinkSync(matePath);
-            } catch {
-                // ignore
+        }
+        return parsed.major === 1 && parsed.minor <= 20;
+    }
+
+    private getReturnBehaviorMode(): "strict" | "legacy" | "adaptive" {
+        const apiVersion = vscode.workspace.getConfiguration('jass').get<string>('apiVersion', 'off');
+        if (apiVersion === 'off') {
+            // off 表示用户未明确指定版本：采用友好模式，减少误报并给出提示
+            return "adaptive";
+        }
+        if (this.isReturnBugCompatibleApiVersion(apiVersion)) {
+            return "legacy";
+        }
+        return "strict";
+    }
+
+    private parseIgnoreDirectives(content: string): IgnoreDirectives {
+        const directives: IgnoreDirectives = {
+            ignoreFileErrors: false,
+            ignoreNextLineSyntaxErrors: new Set<number>()
+        };
+        const lines = content.split(/\r?\n/);
+
+        for (let index = 0; index < lines.length; index++) {
+            const line = lines[index].trim().toLowerCase();
+            if (!line.startsWith("//")) {
+                continue;
             }
-            console.warn(`Failed to load immutable .mate cache for ${path.basename(filePath)}:`, error);
-            return false;
+
+            const isIgnoreFile =
+                /^\/\/\s*@ignore-file-errors\b/.test(line) ||
+                /^\/\/\s*@ignore\s+file-errors\b/.test(line) ||
+                /^\/\/\s*@ignore\s+file\b/.test(line);
+            if (isIgnoreFile) {
+                directives.ignoreFileErrors = true;
+            }
+
+            const isIgnoreNextLineSyntax =
+                /^\/\/\s*@ignore-next-line-syntax\b/.test(line) ||
+                /^\/\/\s*@ignore\s+next-line-syntax\b/.test(line) ||
+                /^\/\/\s*@ignore\s+next-line\b/.test(line);
+            if (isIgnoreNextLineSyntax) {
+                directives.ignoreNextLineSyntaxErrors.add(index + 1);
+            }
+        }
+
+        return directives;
+    }
+
+    private applyIgnoreDirectivesToSyntaxErrors(errors: ErrorCollection, directives: IgnoreDirectives): void {
+        if (directives.ignoreNextLineSyntaxErrors.size === 0) {
+            return;
+        }
+
+        errors.errors = errors.errors.filter((error) => !directives.ignoreNextLineSyntaxErrors.has(error.start.line));
+        if (errors.checkValidationErrors && errors.checkValidationErrors.length > 0) {
+            errors.checkValidationErrors = errors.checkValidationErrors.filter((error) => {
+                if (error.checkType !== CheckErrorType.SYNTAX_ERROR) {
+                    return true;
+                }
+                return !directives.ignoreNextLineSyntaxErrors.has(error.start.line);
+            });
+        }
+    }
+
+    private applyIgnoreDirectivesToAllErrors(errors: ErrorCollection, directives: IgnoreDirectives): void {
+        if (!directives.ignoreFileErrors) {
+            return;
+        }
+
+        errors.errors = [];
+        if (errors.checkValidationErrors && errors.checkValidationErrors.length > 0) {
+            errors.checkValidationErrors = errors.checkValidationErrors.filter((error) => error.severity !== 'error');
         }
     }
 
@@ -738,6 +396,7 @@ export class DataEnterManager {
                 return;
             }
         }
+        const ignoreDirectives = this.parseIgnoreDirectives(content);
 
         const ext = path.extname(filePath).toLowerCase();
         const isZinc = ext === '.zn';
@@ -787,6 +446,7 @@ export class DataEnterManager {
             
             blockStatement = result.blockStatement;
             errors = result.errors;
+            this.applyIgnoreDirectivesToSyntaxErrors(errors, ignoreDirectives);
             
             // 3. 注册 #define 宏到注册表
             if (enablePreprocessor && result.preprocessCollection.defines.length > 0) {
@@ -804,6 +464,7 @@ export class DataEnterManager {
                     const checkUnused = diagnosticsConfig.checkUnused === true; // 默认不启用
                     const checkArrayBounds = diagnosticsConfig.checkArrayBounds !== false; // 默认启用
                     const checkHandleLeaks = diagnosticsConfig.checkHandleLeaks !== false; // 默认启用
+                    const returnBehaviorMode = this.getReturnBehaviorMode();
                     
                     if (checkUndefined) {
                         // 使用新的方法：先解析所有文件，再进行语义分析
@@ -823,7 +484,8 @@ export class DataEnterManager {
                                 checkTypes: checkTypes,
                                 checkUnused: checkUnused,
                                 checkArrayBounds: checkArrayBounds,
-                                checkHandleLeaks: checkHandleLeaks
+                                checkHandleLeaks: checkHandleLeaks,
+                                returnBehaviorMode: returnBehaviorMode
                             }
                         );
                         
@@ -845,7 +507,8 @@ export class DataEnterManager {
                     } else {
                         // 如果未启用未定义检查，使用旧的简单方法
                         const semanticOptions: SemanticAnalyzerOptions = {
-                            checkUndefinedBehavior: false
+                            checkUndefinedBehavior: false,
+                            returnBehaviorMode: returnBehaviorMode
                         };
                         const semanticErrors = analyzeSemantics(blockStatement, semanticOptions);
                         
@@ -865,6 +528,8 @@ export class DataEnterManager {
                 }
             }
         }
+
+        this.applyIgnoreDirectivesToAllErrors(errors, ignoreDirectives);
         
         // 存储到缓存
         if (blockStatement || zincProgram) {
@@ -883,10 +548,6 @@ export class DataEnterManager {
             // 如果是不可变文件，添加到集合中
             if (isImmutable) {
                 this.immutableFiles.add(filePath);
-                const immutableCacheItem = this.cache.get(filePath);
-                if (immutableCacheItem) {
-                    this.saveImmutableMateCache(filePath, immutableCacheItem);
-                }
             }
 
             // 3. 更新补全项缓存（异步，不阻塞）
@@ -952,12 +613,14 @@ export class DataEnterManager {
         
         this.cache.delete(filePath);
         this.parserCache.delete(filePath);
+        this.jumpCache.clear(filePath);
+        this.jumpCache.clearByTargetFile(filePath);
         
         // 从补全项缓存中删除
         const completionCache = CompletionCache.getInstance();
         completionCache.delete(filePath);
-        // 清除 hover 缓存，避免保留已删除文件的旧 hover 内容
-        this.hoverCache.clearAll();
+        // 只清理该文件的 hover 缓存，避免旧路径命中
+        this.hoverCache.clear(filePath);
         
         console.log(`🗑️ Removed cache for ${path.basename(filePath)}`);
     }
@@ -1008,8 +671,13 @@ export class DataEnterManager {
             const completionCache = CompletionCache.getInstance();
             const oldItems = completionCache.get(oldPath);
             completionCache.delete(oldPath);
-            // 路径变更可能导致 hover 文件来源失效，清空后由后续请求重建
-            this.hoverCache.clearAll();
+            // 路径变更后清理 old/new 路径的跳转与 hover 缓存，避免命中旧位置
+            this.jumpCache.clear(oldPath);
+            this.jumpCache.clear(newPath);
+            this.jumpCache.clearByTargetFile(oldPath);
+            this.jumpCache.clearByTargetFile(newPath);
+            this.hoverCache.clear(oldPath);
+            this.hoverCache.clear(newPath);
             if (oldItems.length > 0) {
                 // 更新文件路径并重新保存
                 oldItems.forEach(item => {
@@ -1582,7 +1250,10 @@ export class DataEnterManager {
     public clearCache(): void {
         this.cache.clear();
         this.parserCache.clear();
-        this.jumpCache.flush(); // 清除跳转缓存
+        this.jumpCache.clearAll();
+        this.hoverCache.clearAll();
+        const completionCache = CompletionCache.getInstance();
+        completionCache.clear();
         console.log('🧹 Cleared all cache');
     }
 
@@ -1618,7 +1289,6 @@ export class DataEnterManager {
         this.hasInitializedWorkspace = false;
 
         if (hasWorkspace && workspaceRoot) {
-            this.prepareImmutableMateCacheDirectory();
             console.log('📦 Phase 1: Collecting TextMacros...');
             // 阶段1：收集所有文件中的 textmacro 定义
             await this.collectAllTextMacros(workspaceRoot);
@@ -1986,10 +1656,8 @@ export class DataEnterManager {
      */
     private async loadStandardLibraries(workspaceRoot: string): Promise<void> {
         const startTime = Date.now();
-        const instantLoadEnabled = this.isInstantLibraryLoadEnabled();
         let totalCandidates = 0;
         let notFoundCount = 0;
-        let loadedFromMateCount = 0;
         let parsedFromSourceCount = 0;
 
         // 扩展 static 目录候选路径（兼容不同编译/运行目录）
@@ -2048,14 +1716,9 @@ export class DataEnterManager {
             if (filePath && fs.existsSync(filePath)) {
                 totalCandidates++;
                 try {
-                    const loadedFromMate = this.tryLoadImmutableMateCache(filePath);
-                    if (!loadedFromMate) {
-                        const content = fs.readFileSync(filePath, 'utf-8');
-                        await this.handleFileUpdate(filePath, content);
-                        parsedFromSourceCount++;
-                    } else {
-                        loadedFromMateCount++;
-                    }
+                    const content = fs.readFileSync(filePath, 'utf-8');
+                    await this.handleFileUpdate(filePath, content);
+                    parsedFromSourceCount++;
                     console.log(`📚 Loaded standard library: ${fileName} (from ${path.dirname(filePath)})`);
                 } catch (error) {
                     console.error(`Failed to load standard library ${fileName}:`, error);
@@ -2067,17 +1730,10 @@ export class DataEnterManager {
         }
 
         const elapsedMs = Date.now() - startTime;
-        if (instantLoadEnabled) {
-            console.log(
-                `⚡ [InstantLibraryLoad=ON] Standard libraries loaded in ${elapsedMs}ms ` +
-                `(found=${totalCandidates}, missing=${notFoundCount}, cacheHit=${loadedFromMateCount}, parsed=${parsedFromSourceCount})`
-            );
-        } else {
-            console.log(
-                `🐢 [InstantLibraryLoad=OFF] Standard libraries loaded in ${elapsedMs}ms ` +
-                `(found=${totalCandidates}, missing=${notFoundCount}, parsed=${parsedFromSourceCount})`
-            );
-        }
+        console.log(
+            `📚 Standard libraries loaded in ${elapsedMs}ms ` +
+            `(found=${totalCandidates}, missing=${notFoundCount}, parsed=${parsedFromSourceCount})`
+        );
     }
 
     /**
@@ -2086,9 +1742,7 @@ export class DataEnterManager {
      */
     private async loadStaticFiles(workspaceRoot: string): Promise<void> {
         const startTime = Date.now();
-        const instantLoadEnabled = this.isInstantLibraryLoadEnabled();
         let totalFiles = 0;
-        let loadedFromMateCount = 0;
         let parsedFromSourceCount = 0;
 
         // 扩展的 static 目录路径（相对于扩展安装目录）
@@ -2134,14 +1788,9 @@ export class DataEnterManager {
                         if (['.j', '.jass', '.ai', '.zn'].includes(ext) && !this.shouldIgnoreFile(fullPath)) {
                             try {
                                 totalFiles++;
-                                const loadedFromMate = this.tryLoadImmutableMateCache(fullPath);
-                                if (!loadedFromMate) {
-                                    const content = fs.readFileSync(fullPath, 'utf-8');
-                                    await this.handleFileUpdate(fullPath, content);
-                                    parsedFromSourceCount++;
-                                } else {
-                                    loadedFromMateCount++;
-                                }
+                                const content = fs.readFileSync(fullPath, 'utf-8');
+                                await this.handleFileUpdate(fullPath, content);
+                                parsedFromSourceCount++;
                             } catch (error) {
                                 console.error(`Failed to load static file ${fullPath}:`, error);
                             }
@@ -2159,17 +1808,10 @@ export class DataEnterManager {
         }
 
         const elapsedMs = Date.now() - startTime;
-        if (instantLoadEnabled) {
-            console.log(
-                `⚡ [InstantLibraryLoad=ON] Static files loaded in ${elapsedMs}ms ` +
-                `(total=${totalFiles}, cacheHit=${loadedFromMateCount}, parsed=${parsedFromSourceCount})`
-            );
-        } else {
-            console.log(
-                `🐢 [InstantLibraryLoad=OFF] Static files loaded in ${elapsedMs}ms ` +
-                `(total=${totalFiles}, parsed=${parsedFromSourceCount})`
-            );
-        }
+        console.log(
+            `📦 Static files loaded in ${elapsedMs}ms ` +
+            `(total=${totalFiles}, parsed=${parsedFromSourceCount})`
+        );
 
         // 通知 SpecialFileManager 重新初始化（会扫描所有特殊文件，包括 static 目录下的）
         try {

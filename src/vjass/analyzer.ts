@@ -57,6 +57,13 @@ export interface SemanticAnalyzerOptions {
     standardLibraries?: string[];
     /** 外部符号表（来自标准库和工程目录的其他 jass 文件），用于检查函数是否在其他文件中声明 */
     externalSymbols?: Map<string, SymbolInfo>;
+    /**
+     * 返回值检查行为模式
+     * - strict: 严格模式，缺少返回路径时报错
+     * - legacy: 兼容 return bug，跳过该检查
+     * - adaptive: 友好模式，降级为 warning（用于 apiVersion=off）
+     */
+    returnBehaviorMode?: "strict" | "legacy" | "adaptive";
 }
 
 /**
@@ -306,7 +313,8 @@ export class SemanticAnalyzer {
             checkArrayBounds: options.checkArrayBounds ?? true, // 默认启用数组越界检查
             checkHandleLeaks: options.checkHandleLeaks ?? true, // 默认启用句柄泄漏检查
             standardLibraries: options.standardLibraries ?? [],
-            externalSymbols: options.externalSymbols
+            externalSymbols: options.externalSymbols,
+            returnBehaviorMode: options.returnBehaviorMode ?? "strict"
         };
         if (options.externalSymbols) {
             this.externalSymbols = options.externalSymbols;
@@ -4885,12 +4893,24 @@ export class SemanticAnalyzer {
         // 检查函数体是否所有代码路径都有返回值
         const hasReturn = this.checkBlockReturns(node.body);
         if (!hasReturn) {
-            this.addError(
-                node.body.start,
-                node.body.end,
-                `Function '${node.name?.name || "unknown"}' return type is '${returnType}', but not all code paths return a value`,
-                `Ensure all code paths have a return statement`
-            );
+            const message = `Function '${node.name?.name || "unknown"}' return type is '${returnType}', but not all code paths return a value`;
+            if (this.options.returnBehaviorMode === "legacy") {
+                return;
+            }
+            if (this.options.returnBehaviorMode === "adaptive") {
+                this.addWarning(
+                    node.body.start,
+                    node.body.end,
+                    `${message} (compatibility mode: apiVersion=off)`
+                );
+            } else {
+                this.addError(
+                    node.body.start,
+                    node.body.end,
+                    message,
+                    `Ensure all code paths have a return statement`
+                );
+            }
         }
     }
 
@@ -4919,12 +4939,24 @@ export class SemanticAnalyzer {
         const hasReturn = this.checkBlockReturns(node.body);
         if (!hasReturn) {
             const methodName = node.name ? node.name.name : (node.operatorName || "unknown");
-            this.addError(
-                node.body.start,
-                node.body.end,
-                `Method '${methodName}' return type is '${returnType}', but not all code paths return a value`,
-                `Ensure all code paths have a return statement`
-            );
+            const message = `Method '${methodName}' return type is '${returnType}', but not all code paths return a value`;
+            if (this.options.returnBehaviorMode === "legacy") {
+                return;
+            }
+            if (this.options.returnBehaviorMode === "adaptive") {
+                this.addWarning(
+                    node.body.start,
+                    node.body.end,
+                    `${message} (compatibility mode: apiVersion=off)`
+                );
+            } else {
+                this.addError(
+                    node.body.start,
+                    node.body.end,
+                    message,
+                    `Ensure all code paths have a return statement`
+                );
+            }
         }
     }
 

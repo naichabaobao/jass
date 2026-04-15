@@ -229,18 +229,6 @@ npm install
 5. **自动重载**：修改配置文件并保存后，扩展会自动重新加载配置，无需重启 VS Code
 6. **配置位置**：配置文件必须放在工作区根目录，文件名为 `jass.config.json`
 
-#### 秒加载测试说明
-
-1. 在 VS Code `settings.json` 中设置：
-```json
-{
-  "jass.instantLibraryLoad": true
-}
-```
-2. Reload Window 一次，让扩展先生成标准库缓存。
-3. 再次 Reload Window，对比第二次启动日志/体感，标准库应优先从持久化加载（更快）。
-4. 将系统时间快进超过 24 小时或手动清理缓存目录后重启，缓存应失效并回退到正常解析路径。
-
 ## 📋 功能特点
 
 ### 核心功能
@@ -560,49 +548,37 @@ endstruct
 
 ## 📝 版本信息
 
-- **当前版本**: 1.9.7
+- **当前版本**: 1.9.9
 - **VS Code 版本要求**: 1.63+
 - **common.j 版本**: 2.03
 - **物编数据版本**: 2.03
 
-### 最新更新 (v1.9.7)
+### 近期重要更新（最近 5 次）
 
-- 类型查询优先级与 function interface 符号支持（见 docs/type-system.md）
-- 修复「not all code paths return a value」与返回类型 string 误报
-- 允许 struct 的 `private method onDestroy`
-- takes 参数 hover/跳转/补全体验优化
-- 未声明变量由 error 改为 warning
-- 修复数组结构（extends array）误报：允许静态数组成员、静态成员默认值；修复 `private static integer array xxx` 解析
+#### v1.9.9
+- 新增 `jass.apiVersion` 行为策略：补全排序版本感知 + return bug 兼容分支
+- 诊断增强：句柄泄漏检测分级、`hint` 级别展示、错误忽略注解（文件级/下一行语法级）
+- 工程体验增强：Quick Fix 与 Code Action 精度提升，跨文件缓存一致性与定义跳转稳定性提升
 
-### 历史更新 (v1.9.6)
+#### v1.9.8
+- 注释标签体系增强：`@param/@returns/@deprecated/@provider/@since/@see/@example`
+- 文档渲染统一：`@version` 兼容展示为 `Since`
+- hover/completion 废弃信息展示优化（删除线与分组展示）
 
-- 修复 hint 功能性能问题，现在只处理可见范围内的代码
-- 拆分 literal 配置项，解决补全提示项太乱的问题
-- 添加 hint 功能开关，允许用户控制 hint 功能的启用/禁用
+#### v1.9.7
+- 类型系统修复：`function interface` 参与类型合法性判定
+- 返回路径与字符串拼接相关误报修复（`not all code paths return` / `+` 推断）
+- takes 参数符号链路增强：hover、跳转定义、补全同步优化
 
-### 历史更新 (v1.9.5)
+#### v1.9.6
+- hint 渲染优化：仅处理可见范围并支持取消，降低大文件开销
+- 配置项拆分：`jass.literal.completion` 与 `jass.literal.hover`
+- 新增 `jass.hint` 全局开关，便于不同项目按需控制提示噪音
 
-- 添加字符代码 hover 支持：对 'az09' 这样的字符代码显示10进制和16进制值
-- 添加 vJASS 内置常量、时间、随机数等的特殊 hover 支持
-- 完善 jass.config.json 配置加载和使用，修复配置相关问题
-
-### 历史更新 (v1.9.4)
-
-- 修复 struct 一个 public 修饰解析错误问题
-- 完善 set hint 功能，完善 caller 嵌套 hint 功能
-- 支持所有语法情况下的 caller hint（return、exitwhen、if、elseif、set、local、数组下标等）
-- 支持函数对象方法调用 hint（func.evaluate()、func.execute()）
-- 支持方法对象方法调用 hint（method.evaluate()、method.execute()）
-- 完善 function、native、globals 的全局查找 hint 支持（包括 library 和 scope 中的）
-- 完善嵌套调用的参数提示支持
-- 修复 hover、跳转跨文件 bug
-- 修复一些警告问题
-- 添加无限循环检测：检测没有 exitwhen 的 loop 语句
-- 添加方法调用链长度检测：警告过长的方法调用链（超过5个调用）
-- 添加多返回值语法错误检测框架（函数声明和 return 语句）
-- 修复诊断提供者：文件删除后诊断未清除的问题
-- 修复诊断提供者：文件重命名后旧诊断未清除的问题
-- 使用 rxjs 替代 setTimeout，改进异步事件处理
+#### v1.9.5
+- hover 能力扩展：字符码（如 `'az09'`）数值解释与 vJASS 常量信息展示
+- `jass.config.json` 读取与诊断配置链路修复（解析/生效一致性提升）
+- 配置文档完善：补充 `excludes/includes/parsing/standardLibraries/diagnostics` 说明
 
 查看完整的更新日志，请参考 [CHANGELOG.md](CHANGELOG.md)
 
