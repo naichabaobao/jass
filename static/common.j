@@ -502,11 +502,11 @@ constant native GetPlayerNeutralPassive takes nothing returns integer
 constant native GetPlayerNeutralAggressive takes nothing returns integer
 
 globals
-	
-	
+
+
 	// Game Constants
-	
-	
+
+
 	// 假(false)
 	constant boolean FALSE = false
 	// 真(true)
@@ -545,30 +545,30 @@ globals
 	// 玩家颜色 绿色
 	// 代码：|Cff21BF00|r , 三色值：32, 192, 0
 	constant playercolor PLAYER_COLOR_GREEN = ConvertPlayerColor(6)
-	// 玩家颜色 粉色
+	// 玩家颜色 粉红色
 	// 代码：|CffE45CAF|r , 三色值：229, 91, 176
 	constant playercolor PLAYER_COLOR_PINK = ConvertPlayerColor(7)
-	// 玩家颜色 深灰色
+	// 玩家颜色 灰色
 	// 代码：|Cff949696|r , 三色值：149, 150, 151
 	constant playercolor PLAYER_COLOR_LIGHT_GRAY = ConvertPlayerColor(8)
-	// 玩家颜色 深蓝色
+	// 玩家颜色 淡蓝色
 	// 代码：|Cff7EBFF1|r , 三色值：126, 191, 241
 	constant playercolor PLAYER_COLOR_LIGHT_BLUE = ConvertPlayerColor(9)
-	// 玩家颜色 浅绿色
+	// 玩家颜色 暗绿色
 	// 代码：|Cff106247|r , 三色值：16, 98, 70
 	constant playercolor PLAYER_COLOR_AQUA = ConvertPlayerColor(10)
 	// 玩家颜色 棕色
 	// 代码：|Cff4F2B05|r , 三色值：78, 42, 3
 	constant playercolor PLAYER_COLOR_BROWN = ConvertPlayerColor(11)
-	// 玩家颜色 褐红色
+	// 玩家颜色 粟色
 	// 代码：|Cff9C0000|r , 三色值：155, 0, 0
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_MAROON = ConvertPlayerColor(12)
-	// 玩家颜色 深蓝色
+	// 玩家颜色 海军蓝
 	// 代码：|Cff0000C3|r , 三色值：0, 0, 195
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_NAVY = ConvertPlayerColor(13)
-	// 玩家颜色 蓝绿色
+	// 玩家颜色 青绿色
 	// 代码：|Cff00EBFF|r , 三色值：0, 234, 255
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_TURQUOISE = ConvertPlayerColor(14)
@@ -580,7 +580,7 @@ globals
 	// 代码：|CffECCD87|r , 三色值：235, 205, 135
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_WHEAT = ConvertPlayerColor(16)
-	// 玩家颜色 桃色
+	// 玩家颜色 桃红色
 	// 代码：|CffF7A58B|r , 三色值：248, 164, 139
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_PEACH = ConvertPlayerColor(17)
@@ -588,11 +588,11 @@ globals
 	// 代码：|CffBFFF81|r , 三色值：191, 255, 128
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_MINT = ConvertPlayerColor(18)
-	// 玩家颜色 淡紫色
+	// 玩家颜色 薰衣草色
 	// 代码：|CffDBB9EB|r , 三色值：220, 185, 235
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_LAVENDER = ConvertPlayerColor(19)
-	// 玩家颜色 煤焦油色
+	// 玩家颜色 碳色
 	// 代码：|Cff4F5055|r , 三色值：80, 79, 85
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_COAL = ConvertPlayerColor(20)
@@ -600,7 +600,7 @@ globals
 	// 代码：|CffECF0FF|r , 三色值：235, 240, 255
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_SNOW = ConvertPlayerColor(21)
-	// 玩家颜色 祖母绿色
+	// 玩家颜色 祖母绿
 	// 代码：|Cff00781E|r , 三色值：0, 120, 30
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_EMERALD = ConvertPlayerColor(22)
@@ -666,7 +666,7 @@ globals
 	constant attacktype ATTACK_TYPE_CHAOS = ConvertAttackType(5)
 	// 攻击类型 英雄
 	constant attacktype ATTACK_TYPE_HERO = ConvertAttackType(6)
-	
+
 	// 伤害类型 未知
 	constant damagetype DAMAGE_TYPE_UNKNOWN = ConvertDamageType(0)
 	// 伤害类型 普通
@@ -711,7 +711,7 @@ globals
 	constant damagetype DAMAGE_TYPE_SHADOW_STRIKE = ConvertDamageType(25)
 	// 伤害类型 通用
 	constant damagetype DAMAGE_TYPE_UNIVERSAL = ConvertDamageType(26)
-	
+
 	// 武器声音类型 无
 	constant weapontype WEAPON_TYPE_WHOKNOWS = ConvertWeaponType(0)
 	// 武器声音类型 金属轻砍
@@ -908,10 +908,10 @@ globals
 	constant subanimtype SUBANIM_TYPE_ENTANGLE = ConvertSubAnimType(61)
 	// 子动画类型 - 狂暴
 	constant subanimtype SUBANIM_TYPE_BERSERK = ConvertSubAnimType(62)
-	
-	
+
+
 	// Map Setup Constants
-	
+
 	// 预设种族 人类
 	constant racepreference RACE_PREF_HUMAN = ConvertRacePref(1)
 	// 预设种族 兽人
@@ -1019,7 +1019,7 @@ globals
 	constant mapdensity MAP_DENSITY_MEDIUM = ConvertMapDensity(2)
 	// 地图密度 高密度
 	constant mapdensity MAP_DENSITY_HEAVY = ConvertMapDensity(3)
-	
+
 	// 游戏难度 简单
 	constant gamedifficulty MAP_DIFFICULTY_EASY = ConvertGameDifficulty(0)
 	// 游戏难度 普通
@@ -1044,8 +1044,8 @@ globals
 	constant playerslotstate PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
 	// 玩家槽状态 玩家已离开游戏
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
-	
-	
+
+
 	// Sound Constants
 	
 	// 声道 单位移动音效
@@ -1066,7 +1066,7 @@ globals
 	constant volumegroup SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
 
 	//region Cinematic Sound Constants 1.33
-	
+
 	// 声道 背景声
 	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_GENERAL = ConvertVolumeGroup(8)
@@ -1089,13 +1089,13 @@ globals
 	// @since 1.33
 	constant volumegroup SOUND_VOLUMEGROUP_CINEMATIC_SOUND_EFFECTS_3 = ConvertVolumeGroup(14)
 	//endregion
-	
-	
+
+
 	// Game, Player, and Unit States
 	//
 	// For use with TriggerRegister<X>StateEvent
 	//
-	
+
 	// 游戏整点状态 神圣干涉
 	constant igamestate GAME_STATE_DIVINE_INTERVENTION = ConvertIGameState(0)
 	// 游戏整点状态 断开连接
@@ -2442,13 +2442,13 @@ globals
 	// 键盘按键 清理键(OEM 键)
 	// @since 1.33
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
-	
-	
+
+
 	// Instanced Object Operation API constants
-	
-	
+
+
 	// Ability
-	
+
 	// 技能整数域 美术 - （技能）按钮位置 X 坐标(激活) ('abpx')
 	constant abilityintegerfield ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
 	// 技能整数域 美术 - （技能）按钮位置 Y 坐标(激活) ('abpy')
@@ -2500,7 +2500,7 @@ globals
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND = ConvertAbilityStringField('aefs')
 	// 技能字符串域 声音 - 音效(循环) ('aefl')
 	constant abilitystringfield ABILITY_SF_EFFECT_SOUND_LOOPING = ConvertAbilityStringField('aefl')
-	
+
 	// 技能随等级改变的整数域 魔法消耗 ('amcs')
 	constant abilityintegerlevelfield ABILITY_ILF_MANA_COST = ConvertAbilityIntegerLevelField('amcs')
 	// 技能随等级改变的整数域 波次数量 ('Hbz1')
@@ -2869,7 +2869,7 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_DESTRUCTIBLE_ID = ConvertAbilityIntegerLevelField('Nvcu')
 	 // 技能随等级改变的整数域 科技类型 ('Iglu')
 	constant abilityintegerlevelfield ABILITY_ILF_UPGRADE_TYPE = ConvertAbilityIntegerLevelField('Iglu')
-	
+
 	// 技能随等级改变的实数域 魔法释放时间 ('acas')
 	constant abilityreallevelfield ABILITY_RLF_CASTING_TIME = ConvertAbilityRealLevelField('acas')
 	// 技能随等级改变的实数域 持续时间 - 普通 ('adur')
@@ -3698,7 +3698,7 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_FACTOR = ConvertAbilityRealLevelField('Nvc6')
 	// 技能随等级改变的实数域 增量间隔 ('Tau5')
 	constant abilityreallevelfield ABILITY_RLF_INTERVAL_BETWEEN_PULSES = ConvertAbilityRealLevelField('Tau5')
-	
+
 	// 技能随等级改变的布尔值域 百分比奖励 ('Hab2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENT_BONUS_HAB2 = ConvertAbilityBooleanLevelField('Hab2')
 	// 技能随等级改变的布尔值域 传送单位聚集 ('Hmt3')
@@ -3827,7 +3827,7 @@ globals
 	constant abilitybooleanlevelfield ABILITY_BLF_DISABLE_OTHER_ABILITIES = ConvertAbilityBooleanLevelField('Ncl5')
 	// 技能随等级改变的布尔值域 附加杀敌奖励 ('Ntm4')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALLOW_BOUNTY = ConvertAbilityBooleanLevelField('Ntm4')
-	
+
 	// 技能随等级改变的字符串域 美术 - 图标 - 普通 ('aart')
 	constant abilitystringlevelfield ABILITY_SLF_ICON_NORMAL = ConvertAbilityStringLevelField('aart')
 	// 技能随等级改变的字符串域 美术 - 效果 - 施法者 ('acat')
@@ -3914,10 +3914,9 @@ globals
 	constant abilitystringlevelfield ABILITY_SLF_ABILITY_UPGRADE_4 = ConvertAbilityStringLevelField('Neg6')
 	// 技能随等级改变的字符串域 生产单位ID ('Nsy2')
 	constant abilitystringlevelfield ABILITY_SLF_SPAWN_UNIT_ID_NSY2 = ConvertAbilityStringLevelField('Nsy2')
-	
+
 	// Item
-	// Item
-	
+
 	// 物品整数域 状态 - 等级 ('ilev')
  constant itemintegerfield ITEM_IF_LEVEL = ConvertItemIntegerField('ilev')
 	// 物品整数域 状态 - 使用次数 ('iuse')
@@ -3958,8 +3957,7 @@ globals
 	constant itembooleanfield ITEM_BF_ACTIVELY_USED = ConvertItemBooleanField('iusa')
 	// 物品字符串域 美术 - 使用模型 ('ifil')
 	constant itemstringfield ITEM_SF_MODEL_USED = ConvertItemStringField('ifil')
-	
-	// Unit
+
 	// Unit
 
  	// 单位整数域 战斗 - 防御类型(普通/小型/中型/大型/城墙/英雄/神圣/无装甲) ('udty')
@@ -4028,7 +4026,7 @@ globals
 	constant unitintegerfield UNIT_IF_PLACEMENT_PREVENTED_BY = ConvertUnitIntegerField('upar')
 	// 单位整数域 状态 - 英雄 - 主要属性 ('upra')
 	constant unitintegerfield UNIT_IF_PRIMARY_ATTRIBUTE = ConvertUnitIntegerField('upra')
-	
+
 	// 单位实数域 状态 - 英雄 - 每等级提升力量（成长值） ('ustp')
 	constant unitrealfield UNIT_RF_STRENGTH_PER_LEVEL = ConvertUnitRealField('ustp')
 	// 单位实数域 状态 - 英雄 - 每等级提升敏捷（成长值） ('uagp')
@@ -4130,10 +4128,9 @@ globals
 	constant unitstringfield UNIT_SF_GROUND_TEXTURE = ConvertUnitStringField('uubs')
 	// 单位字符串域 美术 - 阴影图像(单位) ('ushu')
 	constant unitstringfield UNIT_SF_SHADOW_IMAGE_UNIT = ConvertUnitStringField('ushu')
-	
+
 	// Unit Weapon
-	// Unit Weapon
-	
+
 	// 单位武器整数域 战斗 - 攻击1 - 伤害骰子数量 ('ua1d')
  constant unitweaponintegerfield UNIT_WEAPON_IF_ATTACK_DAMAGE_NUMBER_OF_DICE = ConvertUnitWeaponIntegerField('ua1d')
 	// 单位武器整数域 战斗 - 攻击1 - 基础伤害 ('ua1b')
@@ -4187,10 +4184,9 @@ globals
 	constant unitweaponbooleanfield UNIT_WEAPON_BF_ATTACK_PROJECTILE_HOMING_ENABLED = ConvertUnitWeaponBooleanField('umh1')
 	// 单位武器字符串域 战斗 - 攻击1 - 投射物图像 ('ua1m')
 	constant unitweaponstringfield UNIT_WEAPON_SF_ATTACK_PROJECTILE_ART = ConvertUnitWeaponStringField('ua1m')
-	
+
 	// Move Type
-	// Move Type
-	
+
 	// 移动类型 没有/未知
  constant movetype MOVE_TYPE_UNKNOWN = ConvertMoveType(0)
 	// 移动类型 步行
@@ -4207,10 +4203,9 @@ globals
 	constant movetype MOVE_TYPE_AMPHIBIOUS = ConvertMoveType(32)
 	// 移动类型 可建造地面
 	constant movetype MOVE_TYPE_UNBUILDABLE = ConvertMoveType(64)
-	
+
 	// Target Flag
-	// Target Flag
-	
+
 	// 目标类型 无
  constant targetflag TARGET_FLAG_NONE = ConvertTargetFlag(1)
 	// 目标类型 地面
@@ -4233,10 +4228,9 @@ globals
 	constant targetflag TARGET_FLAG_DECORATION = ConvertTargetFlag(512)
 	// 目标类型 桥
 	constant targetflag TARGET_FLAG_BRIDGE = ConvertTargetFlag(1024)
-	
+
 	// defense type
-	// defense type
-	
+
 	// 防御类型 轻型/小型，在低版本似乎为 small ，并没有 light
  constant defensetype DEFENSE_TYPE_LIGHT = ConvertDefenseType(0)
 	// 防御类型 中型
@@ -4253,20 +4247,18 @@ globals
 	constant defensetype DEFENSE_TYPE_DIVINE = ConvertDefenseType(6)
 	// 防御类型 无装甲
 	constant defensetype DEFENSE_TYPE_NONE = ConvertDefenseType(7)
-	
+
 	// Hero Attribute
-	// Hero Attribute
-	
+
 	// 英雄属性 力量
  constant heroattribute HERO_ATTRIBUTE_STR = ConvertHeroAttribute(1)
 	// 英雄属性 智力
 	constant heroattribute HERO_ATTRIBUTE_INT = ConvertHeroAttribute(2)
 	// 英雄属性 敏捷
 	constant heroattribute HERO_ATTRIBUTE_AGI = ConvertHeroAttribute(3)
-	
+
 	// Armor Type
-	// Armor Type
-	
+
 	// 装甲类型 没有/未知
  constant armortype ARMOR_TYPE_WHOKNOWS = ConvertArmorType(0)
 	// 装甲类型 肉体
@@ -4279,10 +4271,9 @@ globals
 	constant armortype ARMOR_TYPE_ETHREAL = ConvertArmorType(4)
 	// 装甲类型 石头
 	constant armortype ARMOR_TYPE_STONE = ConvertArmorType(5)
-	
+
 	// Regeneration Type
-	// Regeneration Type
-	
+
 	// 生命恢复类型 无（不会恢复）
  constant regentype REGENERATION_TYPE_NONE = ConvertRegenType(0)
 	// 生命恢复类型 总是
@@ -4293,10 +4284,9 @@ globals
 	constant regentype REGENERATION_TYPE_DAY = ConvertRegenType(3)
 	// 生命恢复类型 只在夜晚
 	constant regentype REGENERATION_TYPE_NIGHT = ConvertRegenType(4)
-	
+
 	// Unit Category
-	// Unit Category
-	
+
 	// 单位类别 泰坦族
  constant unitcategory UNIT_CATEGORY_GIANT = ConvertUnitCategory(1)
 	// 单位类别 不死族
@@ -4321,11 +4311,11 @@ globals
 	constant unitcategory UNIT_CATEGORY_STANDON = ConvertUnitCategory(1024)
 	// 单位类别 牛头人
 	constant unitcategory UNIT_CATEGORY_TAUREN = ConvertUnitCategory(2048)
-	
+
 	// Pathing Flag
-	
+
 	// 放置要求 地面可通行
- constant pathingflag PATHING_FLAG_UNWALKABLE = ConvertPathingFlag(2)
+	constant pathingflag PATHING_FLAG_UNWALKABLE = ConvertPathingFlag(2)
 	// 放置要求 空中可通行
 	constant pathingflag PATHING_FLAG_UNFLYABLE = ConvertPathingFlag(4)
 	// 放置要求 可建造
@@ -4340,7 +4330,7 @@ globals
 	constant pathingflag PATHING_FLAG_UNAMPHIBIOUS = ConvertPathingFlag(128)
 	// 放置要求 物品可通行
 	constant pathingflag PATHING_FLAG_UNITEMPLACABLE = ConvertPathingFlag(256)
-	
+
 endglobals
 
 
@@ -4350,56 +4340,56 @@ endglobals
 // 将角度值从度数转换为弧度
 // @param degrees 角度值（度）
 // @returns 对应的弧度值
-// 示例: Deg2Rad(90) = 1.5708 (π/2), Deg2Rad(180) = 3.1416 (π)
+// @example Deg2Rad(90) = 1.5708 (π/2), Deg2Rad(180) = 3.1416 (π)
 native Deg2Rad takes real degrees returns real
 
 // 转换 弧度 为 度
 // 将弧度值转换为角度值
 // @param radians 弧度值
 // @returns 对应的角度值（度）
-// 示例: Rad2Deg(1.5708) = 90 (π/2), Rad2Deg(3.1416) = 180 (π)
+// @example Rad2Deg(1.5708) = 90 (π/2), Rad2Deg(3.1416) = 180 (π)
 native Rad2Deg takes real radians returns real
 
 // 正弦(弧度) [R]
 // 计算给定弧度的正弦值
 // @param radians 弧度值
 // @returns 正弦值 (-1 到 1 之间)
-// 示例: Sin(0) = 0, Sin(1.5708) ≈ 1 (π/2)
+// @example Sin(0) = 0, Sin(1.5708) ≈ 1 (π/2)
 native Sin takes real radians returns real
 
 // 余弦(弧度) [R]
 // 计算给定弧度的余弦值
 // @param radians 弧度值
 // @returns 余弦值 (-1 到 1 之间)
-// 示例: Cos(0) = 1, Cos(1.5708) ≈ 0 (π/2)
+// @example Cos(0) = 1, Cos(1.5708) ≈ 0 (π/2)
 native Cos takes real radians returns real
 
 // 正切(弧度) [R]
 // 计算给定弧度的正切值
 // @param radians 弧度值
 // @returns 正切值
-// 示例: Tan(0) = 0, Tan(0.7854) ≈ 1 (π/4)
+// @example Tan(0) = 0, Tan(0.7854) ≈ 1 (π/4)
 native Tan takes real radians returns real
 
 // 反正弦(弧度) [R]
 // 计算给定值的反正弦值
 // @param y 输入值，应在 -1 到 1 之间
 // @returns 反正弦值（弧度），输入无效时返回 0
-// 示例: Asin(1) = 1.5708 (π/2), Asin(0) = 0
+// @example Asin(1) = 1.5708 (π/2), Asin(0) = 0
 native Asin takes real y returns real
 
 // 反余弦(弧度) [R]
 // 计算给定值的反余弦值
 // @param x 输入值，应在 -1 到 1 之间
 // @returns 反余弦值（弧度）
-// 示例: Acos(1) = 0, Acos(0) = 1.5708 (π/2)
+// @example Acos(1) = 0, Acos(0) = 1.5708 (π/2)
 native Acos takes real x returns real
 
 // 反正切(弧度) [R]
 // 计算给定值的反正切值
 // @param x 输入值
 // @returns 反正切值（弧度），范围 -π/2 到 π/2
-// 示例: Atan(1) = 0.7854 (π/4), Atan(0) = 0
+// @example Atan(1) = 0.7854 (π/4), Atan(0) = 0
 native Atan takes real x returns real
 
 // 反正切(Y:X)(弧度) [R]
@@ -4407,14 +4397,14 @@ native Atan takes real x returns real
 // @param y Y 坐标值
 // @param x X 坐标值
 // @returns 反正切值（弧度），范围 -π 到 π
-// 示例: Atan2(1, 1) = 0.7854 (π/4), Atan2(0, 0) = 0
+// @example Atan2(1, 1) = 0.7854 (π/4), Atan2(0, 0) = 0
 native Atan2 takes real y, real x returns real
 
 // 平方根
 // 计算给定数值的平方根
 // @param x 输入数值
 // @returns 平方根值，如果 x <= 0 则返回 0
-// 示例: SquareRoot(16) = 4, SquareRoot(25) = 5, SquareRoot(-4) = 0
+// @example SquareRoot(16) = 4, SquareRoot(25) = 5, SquareRoot(-4) = 0
 native SquareRoot takes real x returns real
 
 // 求幂
@@ -4423,14 +4413,14 @@ native SquareRoot takes real x returns real
 // @param power 指数
 // @returns x 的 power 次方
 // 特殊情况: power == 0.0 时返回 1，x == 0.0 且 power < 0 时返回 0
-// 示例: Pow(2, 3) = 8, Pow(5, 2) = 25, Pow(10, 0) = 1
+// @example Pow(2, 3) = 8, Pow(5, 2) = 25, Pow(10, 0) = 1
 native Pow takes real x, real power returns real
 
 // 小数位四舍五入
 // 将实数四舍五入为最接近的整数
 // @param r 要四舍五入的实数
 // @returns 四舍五入后的整数值
-// 示例: MathRound(3.4) = 3, MathRound(3.6) = 4, MathRound(-2.3) = -2
+// @example MathRound(3.4) = 3, MathRound(3.6) = 4, MathRound(-2.3) = -2
 constant native MathRound takes real r returns integer
 
 
@@ -4440,28 +4430,28 @@ constant native MathRound takes real r returns integer
 // 将整数值转换为实数值
 // @param i 要转换的整数
 // @returns 对应的实数值
-// 示例: I2R(5) = 5.0, I2R(-3) = -3.0
+// @example I2R(5) = 5.0, I2R(-3) = -3.0
 native I2R takes integer i returns real
 
 // 转换实数成整数
 // 将实数值转换为整数值（截断小数部分）
 // @param r 要转换的实数
 // @returns 截断小数后的整数值（大于0时向下取整，小于0时向上取整）
-// 示例: R2I(7.9) = 7, R2I(-7.9) = -7, R2I(3.2) = 3
+// @example R2I(7.9) = 7, R2I(-7.9) = -7, R2I(3.2) = 3
 native R2I takes real r returns integer
 
 // 转换整数成字符串
 // 将整数值转换为字符串
 // @param i 要转换的整数
 // @returns 对应的字符串
-// 示例: I2S(123) = "123", I2S(-45) = "-45"
+// @example I2S(123) = "123", I2S(-45) = "-45"
 native I2S takes integer i returns string
 
 // 转换实数成字符串
 // 将实数值转换为字符串（默认精度）
 // @param r 要转换的实数
 // @returns 对应的字符串
-// 示例: R2S(3.14) = "3.14", R2S(-2.5) = "-2.5"
+// @example R2S(3.14) = "3.14", R2S(-2.5) = "-2.5"
 native R2S takes real r returns string
 
 // 转换实数成字符串（指定格式）
@@ -4470,28 +4460,27 @@ native R2S takes real r returns string
 // @param width 字符串总宽度（不足时用空格填充）
 // @param precision 保留的小数位数
 // @returns 格式化后的字符串
-// 示例: R2SW(3.14159, 6, 2) = "  3.14"
+// @example R2SW(3.14159, 6, 2) = "  3.14"
 native R2SW takes real r, integer width, integer precision returns string
 
 // 转换字符串成整数
 // 将字符串转换为整数值
 // @param s 要转换的字符串
 // @returns 对应的整数值，如果无法转换则返回 0
-// 示例: S2I("123") = 123, S2I("-45") = -45, S2I("abc") = 0
+// @example S2I("123") = 123, S2I("-45") = -45, S2I("abc") = 0
 native S2I takes string s returns integer
 
 // 转换字符串成实数
 // 将字符串转换为实数值
 // @param s 要转换的字符串
 // @returns 对应的实数值，如果无法转换则返回 0.0
-// 示例: S2R("3.14") = 3.14, S2R("-2.5") = -2.5, S2R("abc") = 0.0
+// @example S2R("3.14") = 3.14, S2R("-2.5") = -2.5, S2R("abc") = 0.0
 native S2R takes string s returns real
 // 获取句柄ID
-// 获取任意句柄对象的唯一标识符
+// 获取任意句柄对象的唯一标识符,一般用于哈希表键值（hashtable key）
 // @param h 任意handle子类型（单位、物品、特效等）
 // @returns 句柄的唯一ID
-// 示例: GetHandleId(GetTriggerUnit()) = 单位的唯一ID
-// 注意: 一般用于哈希表键值（hashtable key）
+// @example GetHandleId(GetTriggerUnit()) = 单位的唯一ID
 native GetHandleId takes handle h returns integer
 
 // 截取字符串
@@ -4500,31 +4489,30 @@ native GetHandleId takes handle h returns integer
 // @param start 起始位置（下标从0开始）
 // @param end 结束位置（不包含该位置）
 // @returns 截取后的子字符串
-// 示例: SubString("Hello World", 0, 5) = "Hello"
-//       SubString("Hello World", 6, 11) = "World"
+// @example SubString("Hello World", 0, 5) = "Hello"
+// @example SubString("Hello World", 6, 11) = "World"
 native SubString takes string source, integer start, integer end returns string
 
 // 获取字符串长度
 // 计算字符串的字符数量
 // @param s 要计算长度的字符串
 // @returns 字符串的字符数量
-// 示例: StringLength("Hello") = 5, StringLength("") = 0
+// @example StringLength("Hello") = 5, StringLength("") = 0
 native StringLength takes string s returns integer
 // 转换字符串英文的大小写
 // 将字符串中的英文字母转换为大写或小写
 // @param source 源字符串
 // @param upper 是否转换为大写（true=大写，false=小写）
 // @returns 转换后的字符串
-// 示例: StringCase("Hello World", true) = "HELLO WORLD"
-//       StringCase("Hello World", false) = "hello world"
+// @example StringCase("Hello World", true) = "HELLO WORLD"
+// @example StringCase("Hello World", false) = "hello world"
 native StringCase takes string source, boolean upper returns string
 
 // 转换字符串成哈希码
-// 将字符串转换为哈希码（用于快速比较和查找）
+// 将字符串转换为哈希码（用于快速比较和查找）,相同字符串总是产生相同的哈希码
 // @param s 要转换的字符串
 // @returns 字符串的哈希码
-// 示例: StringHash("Hello") = 哈希码值
-// 注意: 相同字符串总是产生相同的哈希码
+// @example StringHash("Hello") = 哈希码值
 native StringHash takes string s returns integer
 
 // 获取外部字符串的译文 [R]
@@ -4697,20 +4685,19 @@ native GetPlayerName takes player whichPlayer returns string
 //
 
 // 新建计时器 [R]
-// @since 1.00
 // @see TimerStart
 // @see DestroyTimer
 // @example set t = CreateTimer()
 // @returns 新创建的计时器句柄；使用后需 DestroyTimer 释放
+// @since 1.00
 native CreateTimer takes nothing returns timer
 // 销毁计时器 [R]
-// @since 1.00
 // @see CreateTimer
 // @param whichTimer 要销毁的计时器
 // @example call DestroyTimer(t)
+// @since 1.00
 native DestroyTimer takes timer whichTimer returns nothing
 // 开始计时器(计时) [C]
-// @since 1.00
 // @see PauseTimer
 // @see ResumeTimer
 // @see GetExpiredTimer
@@ -4719,46 +4706,47 @@ native DestroyTimer takes timer whichTimer returns nothing
 // @param periodic 是否循环
 // @param handlerFunc 到期后运行的函数
 // @example call TimerStart(t, 1.00, false, function OnTimer)
+// @since 1.00
 native TimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
 // 获取计时器经过的时间/已倒计的时间
-// @since 1.00
 // @see TimerGetRemaining
 // @param whichTimer 计时器
 // @example set elapsed = TimerGetElapsed(t)
 // @returns 计时器已流逝时间（秒）
+// @since 1.00
 native TimerGetElapsed takes timer whichTimer returns real
 // 获取计时器剩余时间
-// @since 1.00
 // @see TimerGetElapsed
 // @param whichTimer 计时器
 // @example set remaining = TimerGetRemaining(t)
 // @returns 计时器剩余时间（秒）
+// @since 1.00
 native TimerGetRemaining takes timer whichTimer returns real
 // 获取计时器初始时间/倒计时初始值
-// @since 1.00
 // @see TimerStart
 // @param whichTimer 计时器
 // @example set timeout = TimerGetTimeout(t)
 // @returns 计时器最近一次启动时设置的超时值（秒）
+// @since 1.00
 native TimerGetTimeout takes timer whichTimer returns real
 // 暂停计时器(计时) [R]
-// @since 1.00
 // @see ResumeTimer
 // @param whichTimer 计时器
 // @example call PauseTimer(t)
+// @since 1.00
 native PauseTimer takes timer whichTimer returns nothing
 // 恢复计时器(计时) [R]
-// @since 1.00
 // @see PauseTimer
 // @param whichTimer 计时器
 // @example call ResumeTimer(t)
+// @since 1.00
 native ResumeTimer takes timer whichTimer returns nothing
 // 获取到期的计时器
 // 与 TimerStart 一同使用
-// @since 1.00
 // @see TimerStart
 // @example set t = GetExpiredTimer()
 // @returns 当前回调中到期的计时器；非计时器回调上下文可能为 null
+// @since 1.00
 native GetExpiredTimer takes nothing returns timer
 
 
@@ -4988,33 +4976,33 @@ native GetWorldBounds takes nothing returns rect
 // 创建触发器
 // 创建一个新的触发器对象
 // @returns 新创建的触发器
-// 示例: set t = CreateTrigger() // 创建触发器
+// @example set t = CreateTrigger() // 创建触发器
 native CreateTrigger takes nothing returns trigger
 // 销毁触发器 [R]
 // 销毁指定的触发器并释放其内存
 // @param whichTrigger 要销毁的触发器
-// 示例: call DestroyTrigger(t) // 销毁触发器t
+// @example call DestroyTrigger(t) // 销毁触发器t
 native DestroyTrigger takes trigger whichTrigger returns nothing
 // 重置触发器
 // 重置触发器的执行状态，清除所有条件和动作
 // @param whichTrigger 要重置的触发器
-// 示例: call ResetTrigger(t) // 重置触发器t
+// @example call ResetTrigger(t) // 重置触发器t
 native ResetTrigger takes trigger whichTrigger returns nothing
 // 开启触发器
 // 启用指定的触发器，使其能够响应注册的事件
 // @param whichTrigger 要启用的触发器
-// 示例: call EnableTrigger(t) // 启用触发器t
+// @example call EnableTrigger(t) // 启用触发器t
 native EnableTrigger takes trigger whichTrigger returns nothing
 // 关闭触发器
 // 禁用指定的触发器，使其不再响应注册的事件
 // @param whichTrigger 要禁用的触发器
-// 示例: call DisableTrigger(t) // 禁用触发器t
+// @example call DisableTrigger(t) // 禁用触发器t
 native DisableTrigger takes trigger whichTrigger returns nothing
 // 查询触发器是否开启
 // 检查指定触发器是否处于启用状态
 // @param whichTrigger 要检查的触发器
 // @returns 如果触发器启用则返回true，否则返回false
-// 示例: if IsTriggerEnabled(t) then // 检查触发器t是否启用
+// @example if IsTriggerEnabled(t) then // 检查触发器t是否启用
 native IsTriggerEnabled takes trigger whichTrigger returns boolean
 
 // 挂起/释放 触发器
@@ -5095,25 +5083,25 @@ native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, 
 // Creates it's own timer and triggers when it expires
 
 // 触发器登记计时器事件
-// @since 1.00
 // @see TriggerRegisterTimerExpireEvent
 // @param whichTrigger 触发器
 // @param timeout 间隔时间（秒）
 // @param periodic 是否循环触发
 // @example call TriggerRegisterTimerEvent(trg, 5.00, true)
 // @returns 事件句柄
+// @since 1.00
 native TriggerRegisterTimerEvent takes trigger whichTrigger, real timeout, boolean periodic returns event
 
 // Triggers when the timer you tell it about expires
 // Triggers when the timer you tell it about expires
 
 // 触发器登记计时器到期事件
-// @since 1.00
 // @see TriggerRegisterTimerEvent
 // @param whichTrigger 触发器
 // @param t 要监听的计时器
 // @example call TriggerRegisterTimerExpireEvent(trg, t)
 // @returns 事件句柄
+// @since 1.00
 native TriggerRegisterTimerExpireEvent takes trigger whichTrigger, timer t returns event
 
 // 触发器登记游戏状态事件
@@ -5134,7 +5122,7 @@ constant native GetEventGameState takes nothing returns gamestate
 // @param whichTrigger 要注册事件的触发器
 // @param whichGameEvent 游戏事件类型 (EVENT_GAME_VICTORY, EVENT_GAME_END_LEVEL, EVENT_GAME_VARIABLE_LIMIT, EVENT_GAME_STATE_LIMIT, EVENT_GAME_TIMER_EXPIRED, EVENT_GAME_ENTER_REGION, EVENT_GAME_LEAVE_REGION, EVENT_GAME_TRACKABLE_HIT, EVENT_GAME_TRACKABLE_TRACK, EVENT_GAME_SHOW_SKILL, EVENT_GAME_BUILD_SUBMENU)
 // @returns 注册的事件对象
-// 示例: call TriggerRegisterGameEvent(t, EVENT_GAME_VICTORY) // 注册游戏胜利事件
+// @example call TriggerRegisterGameEvent(t, EVENT_GAME_VICTORY) // 注册游戏胜利事件
 native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameEvent returns event
 
 
@@ -5214,7 +5202,7 @@ constant native GetSaveBasicFilename takes nothing returns string
 // @param whichPlayer 要监听的玩家
 // @param whichPlayerEvent 玩家事件类型 (EVENT_PLAYER_STATE_LIMIT, EVENT_PLAYER_ALLIANCE_CHANGED, EVENT_PLAYER_DEFEAT, EVENT_PLAYER_VICTORY, EVENT_PLAYER_LEAVE, EVENT_PLAYER_CHAT, EVENT_PLAYER_END_CINEMATIC)
 // @returns 注册的事件对象
-// 示例: call TriggerRegisterPlayerEvent(t, Player(0), EVENT_PLAYER_CHAT) // 注册玩家1的聊天事件
+// @example call TriggerRegisterPlayerEvent(t, Player(0), EVENT_PLAYER_CHAT) // 注册玩家1的聊天事件
 native TriggerRegisterPlayerEvent takes trigger whichTrigger, player whichPlayer, playerevent whichPlayerEvent returns event
 
 // 事件响应 获取触发玩家(对应玩家失败和玩家胜利等事件)
@@ -5230,7 +5218,7 @@ constant native GetTriggerPlayer takes nothing returns player
 // @param whichPlayerUnitEvent 玩家单位事件类型 (EVENT_PLAYER_UNIT_ATTACKED, EVENT_PLAYER_UNIT_RESCUED, EVENT_PLAYER_UNIT_DEATH, EVENT_PLAYER_UNIT_DECAY, EVENT_PLAYER_UNIT_DETECTED, EVENT_PLAYER_UNIT_HIDDEN, EVENT_PLAYER_UNIT_SELECTED, EVENT_PLAYER_UNIT_DESELECTED, EVENT_PLAYER_UNIT_CONSTRUCT_START, EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL, EVENT_PLAYER_UNIT_CONSTRUCT_FINISH, EVENT_PLAYER_UNIT_UPGRADE_START, EVENT_PLAYER_UNIT_UPGRADE_CANCEL, EVENT_PLAYER_UNIT_UPGRADE_FINISH, EVENT_PLAYER_UNIT_TRAIN_START, EVENT_PLAYER_UNIT_TRAIN_CANCEL, EVENT_PLAYER_UNIT_TRAIN_FINISH, EVENT_PLAYER_UNIT_RESEARCH_START, EVENT_PLAYER_UNIT_RESEARCH_CANCEL, EVENT_PLAYER_UNIT_RESEARCH_FINISH, EVENT_PLAYER_UNIT_ISSUED_ORDER, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, EVENT_PLAYER_UNIT_SUMMON, EVENT_PLAYER_UNIT_DROP_ITEM, EVENT_PLAYER_UNIT_PICKUP_ITEM, EVENT_PLAYER_UNIT_USE_ITEM, EVENT_PLAYER_UNIT_LOADED, EVENT_PLAYER_UNIT_DAMAGED, EVENT_PLAYER_UNIT_DAMAGING)
 // @param filter 过滤条件，null表示不过滤
 // @returns 注册的事件对象
-// 示例: call TriggerRegisterPlayerUnitEvent(t, Player(0), EVENT_PLAYER_UNIT_DEATH, null) // 注册玩家1的单位死亡事件
+// @example call TriggerRegisterPlayerUnitEvent(t, Player(0), EVENT_PLAYER_UNIT_DEATH, null) // 注册玩家1的单位死亡事件
 native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPlayer, playerunitevent whichPlayerUnitEvent, boolexpr filter returns event
 
 
@@ -5240,7 +5228,7 @@ native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPl
 // 获取升级单位
 // 获取触发升级事件的单位
 // @returns 升级的单位
-// 示例: set u = GetLevelingUnit() // 获取升级单位
+// @example set u = GetLevelingUnit() // 获取升级单位
 constant native GetLevelingUnit takes nothing returns unit
 
 // 事件响应 获取学习技能的英雄(对应英雄学习技能和英雄学习技能等事件)
@@ -5249,7 +5237,7 @@ constant native GetLevelingUnit takes nothing returns unit
 // 获取学习技能单位
 // 获取触发学习技能事件的单位
 // @returns 学习技能的单位
-// 示例: set u = GetLearningUnit() // 获取学习技能单位
+// @example set u = GetLearningUnit() // 获取学习技能单位
 constant native GetLearningUnit takes nothing returns unit
 // 事件响应 获取学习的技能 [R](对应英雄学习技能和英雄学习技能等事件)
 // EVENT_PLAYER_HERO_SKILL
@@ -5290,14 +5278,14 @@ constant native GetRescuer takes nothing returns unit
 // 获取死亡单位
 // 获取触发死亡事件的单位
 // @returns 死亡的单位
-// 示例: set u = GetDyingUnit() // 获取死亡单位
+// @example set u = GetDyingUnit() // 获取死亡单位
 constant native GetDyingUnit takes nothing returns unit
 // 事件响应 获取凶手单位(对应单位死亡等事件)
 // EVENT_PLAYER_UNIT_DEATH
 // 获取凶手单位
 // 获取造成单位死亡的凶手单位
 // @returns 凶手单位
-// 示例: set killer = GetKillingUnit() // 获取凶手单位
+// @example set killer = GetKillingUnit() // 获取凶手单位
 constant native GetKillingUnit takes nothing returns unit
 
 // 事件响应 获取尸体腐烂单位(对应单位尸体腐烂等事件)
@@ -5525,7 +5513,7 @@ native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget 
 // 获取触发单位
 // 获取触发当前事件的单位
 // @returns 触发事件的单位
-// 示例: set u = GetTriggerUnit() // 获取触发单位
+// @example set u = GetTriggerUnit() // 获取触发单位
 constant native GetTriggerUnit takes nothing returns unit
 
 // 触发器登记单位状态事件
@@ -5543,7 +5531,7 @@ constant native GetEventUnitState takes nothing returns unitstate
 // @param whichUnit 要监听的单位
 // @param whichEvent 单位事件类型 (EVENT_UNIT_DAMAGED, EVENT_UNIT_DAMAGING, EVENT_UNIT_DEATH, EVENT_UNIT_DECAY, EVENT_UNIT_DETECTED, EVENT_UNIT_HIDDEN, EVENT_UNIT_SELECTED, EVENT_UNIT_DESELECTED, EVENT_UNIT_STATE_LIMIT, EVENT_UNIT_ACQUIRED_TARGET, EVENT_UNIT_TARGET_IN_RANGE, EVENT_UNIT_ATTACKED, EVENT_UNIT_RESCUED, EVENT_UNIT_CONSTRUCT_CANCEL, EVENT_UNIT_CONSTRUCT_FINISH, EVENT_UNIT_UPGRADE_START, EVENT_UNIT_UPGRADE_CANCEL, EVENT_UNIT_UPGRADE_FINISH)
 // @returns 注册的事件对象
-// 示例: call TriggerRegisterUnitEvent(t, u, EVENT_UNIT_DEATH) // 注册单位u的死亡事件
+// @example call TriggerRegisterUnitEvent(t, u, EVENT_UNIT_DEATH) // 注册单位u的死亡事件
 native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
 
 // 事件响应 获取被伤害后损失的生命值(对应单位受到伤害等事件)
@@ -5610,13 +5598,13 @@ native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, re
 // @param whichTrigger 要添加条件的触发器
 // @param condition 布尔表达式条件函数
 // @returns 添加的条件对象
-// 示例: call TriggerAddCondition(t, Condition(function MyCondition)) // 添加条件
+// @example call TriggerAddCondition(t, Condition(function MyCondition)) // 添加条件
 native TriggerAddCondition takes trigger whichTrigger, boolexpr condition returns triggercondition
 // 删除触发器条件方法
 // 从触发器中移除指定的条件
 // @param whichTrigger 要移除条件的触发器
 // @param whichCondition 要移除的条件对象
-// 示例: call TriggerRemoveCondition(t, tc) // 移除条件tc
+// @example call TriggerRemoveCondition(t, tc) // 移除条件tc
 native TriggerRemoveCondition takes trigger whichTrigger, triggercondition whichCondition returns nothing
 // 清空触发器条件方法
 // 清空触发器的所有条件（不推荐使用，应使用TriggerRemoveCondition逐个移除）
@@ -5629,13 +5617,13 @@ native TriggerClearConditions takes trigger whichTrigger returns nothing
 // @param whichTrigger 要添加动作的触发器
 // @param actionFunc 动作函数
 // @returns 添加的动作对象
-// 示例: call TriggerAddAction(t, function MyAction) // 添加动作
+// @example call TriggerAddAction(t, function MyAction) // 添加动作
 native TriggerAddAction takes trigger whichTrigger, code actionFunc returns triggeraction
 // 删除触发器动作
 // 从触发器中移除指定的动作
 // @param whichTrigger 要移除动作的触发器
 // @param whichAction 要移除的动作对象
-// 示例: call TriggerRemoveAction(t, ta) // 移除动作ta
+// @example call TriggerRemoveAction(t, ta) // 移除动作ta
 native TriggerRemoveAction takes trigger whichTrigger, triggeraction whichAction returns nothing
 // 清空触发器动作
 // 清空触发器的所有动作（不推荐使用，应使用TriggerRemoveAction逐个移除）
@@ -5645,7 +5633,7 @@ native TriggerClearActions takes trigger whichTrigger returns nothing
 // 等待实际时间(指定时间)
 // 在触发器中暂停执行指定的时间
 // @param timeout 等待时间（秒）
-// 示例: call TriggerSleepAction(2.0) // 等待2秒
+// @example call TriggerSleepAction(2.0) // 等待2秒
 native TriggerSleepAction takes real timeout returns nothing
 // 等到指定音效结束前N秒（指定时间）
 // @deprecated 弃用函数
@@ -5654,12 +5642,12 @@ native TriggerWaitForSound takes sound s, real offset returns nothing
 // 评估触发器的条件，但不执行动作
 // @param whichTrigger 要评估的触发器
 // @returns 如果条件满足则返回true，否则返回false
-// 示例: if TriggerEvaluate(t) then // 检查触发器t的条件
+// @example if TriggerEvaluate(t) then // 检查触发器t的条件
 native TriggerEvaluate takes trigger whichTrigger returns boolean
 // 运行触发器 (忽略条件)
 // 立即执行触发器的动作，忽略条件检查
 // @param whichTrigger 要执行的触发器
-// 示例: call TriggerExecute(t) // 立即执行触发器t的动作
+// @example call TriggerExecute(t) // 立即执行触发器t的动作
 native TriggerExecute takes trigger whichTrigger returns nothing
 // 等待运行触发器 (忽略条件)
 // @deprecated 弃用函数
@@ -5883,7 +5871,7 @@ native ShowUnit takes unit whichUnit, boolean show returns nothing
 // @param whichUnit 要设置的单位
 // @param whichUnitState 单位状态类型 (UNIT_STATE_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_LIFE, UNIT_STATE_MAX_MANA等)
 // @param newVal 新的状态值
-// @example call SetUnitState(u, UNIT_STATE_LIFE, 100.0)
+// @example call SetUnitState(u, UNIT_STATE_LIFE, 100.0) // 设置单位生命值为100
 native SetUnitState takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
 // 设置指定单位 X 坐标 [R]
 // @example call SetUnitX(u, 256.0)
@@ -5897,19 +5885,19 @@ native SetUnitY takes unit whichUnit, real newY returns nothing
 // @param whichUnit 要移动的单位
 // @param newX 新的X坐标
 // @param newY 新的Y坐标
-// @example call SetUnitPosition(u, 100.0, 200.0)
+// @example call SetUnitPosition(u, 100.0, 200.0) // 将单位移动到(100,200)
 native SetUnitPosition takes unit whichUnit, real newX, real newY returns nothing
 // 移动指定单位(立即)(指定点)
 // 立即将单位移动到指定位置点
 // @param whichUnit 要移动的单位
 // @param whichLocation 目标位置点
-// @example call SetUnitPositionLoc(u, loc)
+// @example call SetUnitPositionLoc(u, loc) // 将单位移动到位置点
 native SetUnitPositionLoc takes unit whichUnit, location whichLocation returns nothing
 // 设置指定单位朝向 [R]
 // 设置单位的面向角度
 // @param whichUnit 要设置的单位
 // @param facingAngle 面向角度（弧度）
-// @example call SetUnitFacing(u, 1.57)
+// @example call SetUnitFacing(u, 1.57) // 设置单位面向90度
 native SetUnitFacing takes unit whichUnit, real facingAngle returns nothing
 // 设置指定单位朝向(指定转身持续时间)
 // @example call SetUnitFacingTimed(u, 3.14, 0.5)
@@ -5918,7 +5906,7 @@ native SetUnitFacingTimed takes unit whichUnit, real facingAngle, real duration 
 // 设置单位的移动速度
 // @param whichUnit 要设置的单位
 // @param newSpeed 新的移动速度（游戏单位/秒）
-// @example call SetUnitMoveSpeed(u, 300.0)
+// @example call SetUnitMoveSpeed(u, 300.0) // 设置单位移动速度为300
 native SetUnitMoveSpeed takes unit whichUnit, real newSpeed returns nothing
 // 设置指定单位飞行高度
 // @example call SetUnitFlyHeight(u, 300.0, 0.0)
@@ -5934,7 +5922,7 @@ native SetUnitPropWindow takes unit whichUnit, real newPropWindowAngle returns n
 // 设置单位的自动攻击获取范围
 // @param whichUnit 要设置的单位
 // @param newAcquireRange 新的攻击获取范围
-// @example call SetUnitAcquireRange(u, 500.0)
+// @example call SetUnitAcquireRange(u, 500.0) // 设置单位攻击范围为500
 native SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
 // 锁定指定单位警戒职责 [R]
 native SetUnitCreepGuard takes unit whichUnit, boolean creepGuard returns nothing
@@ -5964,7 +5952,7 @@ native GetUnitDefaultFlyHeight takes unit whichUnit returns real
 // @param whichUnit 要改变拥有者的单位
 // @param whichPlayer 新的拥有者玩家
 // @param changeColor 是否改变单位颜色
-// @example call SetUnitOwner(u, Player(1), true)
+// @example call SetUnitOwner(u, Player(1), true) // 将单位转移给玩家2并改变颜色
 native SetUnitOwner takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
 // 设置指定单位颜色(指定玩家颜色)
 native SetUnitColor takes unit whichUnit, playercolor whichColor returns nothing
@@ -6015,7 +6003,7 @@ native GetHeroInt takes unit whichHero, boolean includeBonuses returns integer
 
 // 降低指定英雄等级 [R]
 // @param howManyLevels 降级数
-// 降级时到0或以下时技能会变为未学习状态
+// 降级到0或以下时设为1级
 native UnitStripHeroLevel takes unit whichHero, integer howManyLevels returns boolean
 
 // 获取指定英雄经验值
@@ -6035,7 +6023,7 @@ native UnitModifySkillPoints takes unit whichHero, integer skillPointDelta retur
 native AddHeroXP takes unit whichHero, integer xpToAdd, boolean showEyeCandy returns nothing
 // 设置指定英雄等级
 // @param showEyeCandy 因此操作升级时是否显示升级特效，该设置对降级无效
-// 降级时到0或以下时技能会变为未学习状态
+// 降级到0或以下时设为1级
 native SetHeroLevel takes unit whichHero, integer level, boolean showEyeCandy returns nothing
 // 获取指定英雄等级
 constant native GetHeroLevel takes unit whichHero returns integer
@@ -6055,11 +6043,14 @@ native SelectHeroSkill takes unit whichHero, integer abilcode returns nothing
 // 对于触发器添加的技能，在AI脚本中似乎只返回0，不论技能是否存在
 // 某些技能本身的等级为0，但在AI脚本中，只要单位拥有技能，也会返回等级大于0，比如'Apit'
 native GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 降低指定英雄技能等级 [R]
+// 降低指定单位技能等级 [R]
+// 每次降低1级，最低只能降到1级
 native DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 提升指定英雄技能等级 [R]
+// 提升指定单位技能等级 [R]
+// 每次提升1级
 native IncUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-// 设置指定英雄技能等级 [R]
+// 设置指定单位技能等级 [R]
+// @param level 技能等级,小于1时设为1级
 native SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level returns integer
 // 立即复活指定英雄(指定坐标) [R]
 native ReviveHero takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
@@ -6143,14 +6134,14 @@ native UnitUseItemTarget takes unit whichUnit, item whichItem, widget target ret
 // 获取指定单位的X坐标位置
 // @param whichUnit 要获取坐标的单位
 // @returns 单位的X坐标
-// 示例: set x = GetUnitX(u) // 获取单位u的X坐标
+// @example set x = GetUnitX(u) // 获取单位u的X坐标
 constant native GetUnitX takes unit whichUnit returns real
 // 获取指定单位 Y 坐标 [R]
 // 获取单位Y坐标
 // 获取指定单位的Y坐标位置
 // @param whichUnit 要获取坐标的单位
 // @returns 单位的Y坐标
-// 示例: set y = GetUnitY(u) // 获取单位u的Y坐标
+// @example set y = GetUnitY(u) // 获取单位u的Y坐标
 constant native GetUnitY takes unit whichUnit returns real
 // 获取指定单位位置
 // 会创建点，用完请注意排泄
@@ -6168,13 +6159,13 @@ constant native GetUnitDefaultMoveSpeed takes unit whichUnit returns real
 // @param whichUnit 要获取状态的单位
 // @param whichUnitState 单位状态类型 (UNIT_STATE_LIFE, UNIT_STATE_MANA, UNIT_STATE_MAX_LIFE, UNIT_STATE_MAX_MANA等)
 // @returns 对应的状态值
-// 示例: set life = GetUnitState(u, UNIT_STATE_LIFE) // 获取单位生命值
+// @example set life = GetUnitState(u, UNIT_STATE_LIFE) // 获取单位生命值
 constant native GetUnitState takes unit whichUnit, unitstate whichUnitState returns real
 // 获取指定单位所属玩家
 // 获取单位的拥有者玩家
 // @param whichUnit 要获取拥有者的单位
 // @returns 单位的拥有者玩家
-// 示例: set p = GetOwningPlayer(u) // 获取单位u的拥有者
+// @example set p = GetOwningPlayer(u) // 获取单位u的拥有者
 constant native GetOwningPlayer takes unit whichUnit returns player
 // 获取指定单位类型(返回四字符码)
 constant native GetUnitTypeId takes unit whichUnit returns integer
@@ -6271,6 +6262,7 @@ native UnitRemoveType takes unit whichUnit, unittype whichUnitType returns boole
 // 添加的技能默认为非永久性，会在单位变身恢复时消失，若要不消失，需设置技能永久性 UnitMakeAbilityPermanent
 native UnitAddAbility takes unit whichUnit, integer abilityId returns boolean
 // 删除指定单位的指定技能 [R]
+// 删除物编自带技能英雄技能会变为未学习状态
 native UnitRemoveAbility takes unit whichUnit, integer abilityId returns boolean
 // 允许/禁止 指定单位技能永久性 [R]
 native UnitMakeAbilityPermanent takes unit whichUnit, boolean permanent, integer abilityId returns boolean
@@ -7148,8 +7140,7 @@ native FlushChildHashtable takes hashtable table, integer parentKey returns noth
 // @param lowBound 最小值（包含）
 // @param highBound 最大值（包含）
 // @returns 范围内的随机整数
-// 示例: GetRandomInt(1, 10) = 1到10之间的随机整数
-//       GetRandomInt(0, 1) = 0或1（模拟布尔值）
+// @example GetRandomInt(1, 10) // 1到10之间的随机整数
 native GetRandomInt takes integer lowBound, integer highBound returns integer
 
 // 获取随机实数(指定区间)
@@ -7157,8 +7148,7 @@ native GetRandomInt takes integer lowBound, integer highBound returns integer
 // @param lowBound 最小值（包含）
 // @param highBound 最大值（包含）
 // @returns 范围内的随机实数
-// 示例: GetRandomReal(0.0, 1.0) = 0.0到1.0之间的随机实数
-//       GetRandomReal(-1.0, 1.0) = -1.0到1.0之间的随机实数
+// @example GetRandomReal(0.0, 1.0) // 0.0到1.0之间的随机实数
 native GetRandomReal takes real lowBound, real highBound returns real
 
 // 新建单位池 [R]
@@ -8211,7 +8201,6 @@ native AutomationTestEnd takes nothing returns nothing
 native AutomationTestingFinished takes nothing returns nothing
 
 // JAPI Functions
-
 // @since 1.33
 
 // 玩家鼠标触发位置 - X 坐标
@@ -8435,8 +8424,8 @@ native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whic
 // 获取指定动画类型名称
 native BlzGetAnimName takes animtype whichAnim returns string
 // 获取指定单位护甲值
-// @since 1.33
 // @returns 单位当前护甲值（包含光环、技能、物品等加成）
+// @since 1.33
 native BlzGetUnitArmor takes unit whichUnit returns real
 // 设置指定单位护甲值
 // @since 1.33
@@ -8451,19 +8440,19 @@ native BlzUnitDisableAbility takes unit whichUnit, integer abilId, boolean flag,
 // @since 1.33
 native BlzUnitCancelTimedLife takes unit whichUnit returns nothing
 // 查询指定单位是否被选择
-// @since 1.33
 // @returns true 表示该单位当前可被本地玩家选中
+// @since 1.33
 native BlzIsUnitSelectable takes unit whichUnit returns boolean
 // 查询指定单位是否无敌
-// @since 1.33
 // @returns true 表示单位处于无敌状态
+// @since 1.33
 native BlzIsUnitInvulnerable takes unit whichUnit returns boolean
 // 打断指定单位攻击
 // @since 1.33
 native BlzUnitInterruptAttack takes unit whichUnit returns nothing
 // 获取指定单位碰撞体积
-// @since 1.33
 // @returns 单位碰撞半径（游戏坐标单位）
+// @since 1.33
 native BlzGetUnitCollisionSize takes unit whichUnit returns real
 // 获取技能魔法消耗
 // @returns 指定技能在指定等级下的法力消耗
@@ -8475,13 +8464,13 @@ native BlzGetAbilityCooldown takes integer abilId, integer level returns real
 // @since 1.33
 native BlzSetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level, real cooldown returns nothing
 // 获取单位技能冷却时间
-// @since 1.33
 // @returns 指定单位该技能在该等级配置的冷却时间（秒）
+// @since 1.33
 native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level returns real
 // 获取单位技能的剩余冷却时间
 // 可获取单位拥有物品的技能剩余冷却时间，单位拥有未使用或拥有但不可用（如科技未研究）或未拥有或被动技能返回0
-// @since 1.33
 // @returns 当前剩余冷却时间（秒）；不可用或未触发冷却时通常为 0
+// @since 1.33
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
 // 设置单位结束技能冷却
 // @since 1.33
@@ -8490,15 +8479,15 @@ native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns 
 // @since 1.33
 native BlzStartUnitAbilityCooldown takes unit whichUnit, integer abilCode, real cooldown returns nothing
 // 获取单位技能魔法消耗
-// @since 1.33
 // @returns 指定单位该技能在该等级下的法力消耗
+// @since 1.33
 native BlzGetUnitAbilityManaCost takes unit whichUnit, integer abilId, integer level returns integer
 // 设置单位技能法力消耗
 // @since 1.33
 native BlzSetUnitAbilityManaCost takes unit whichUnit, integer abilId, integer level, integer manaCost returns nothing
 // 获取本地单位 Z 坐标
-// @since 1.33
 // @returns 本地视角下单位当前 Z 坐标（受地形高度与飞行高度影响）
+// @since 1.33
 native BlzGetLocalUnitZ takes unit whichUnit returns real
 // 降低指定玩家指定科技的等级
 native BlzDecPlayerTechResearched takes player whichPlayer, integer techid, integer levels returns nothing
@@ -8529,7 +8518,6 @@ native BlzSetEventWeaponType takes weapontype weaponType returns boolean
 // @returns true 表示当前伤害来源被判定为攻击
 native BlzGetEventIsAttack takes nothing returns boolean
 // 获取额外的整数数据
-// 2.02已移除
 // @param dataType 数据请求类型
 // @param whichPlayer 关联玩家
 // @param param1~param2 字符串参数
@@ -8538,7 +8526,6 @@ native BlzGetEventIsAttack takes nothing returns boolean
 // @deprecated 2.02已移除
 native RequestExtraIntegerData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns integer
 // 获取额外的布尔值数据
-// 2.02已移除
 // @param dataType 数据请求类型
 // @param whichPlayer 关联玩家
 // @param param1~param2 字符串参数
@@ -8547,15 +8534,14 @@ native RequestExtraIntegerData takes integer dataType, player whichPlayer, strin
 // @deprecated 2.02已移除
 native RequestExtraBooleanData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns boolean
 // 获取额外的字符串数据
-// 2.02已移除
 // @param dataType 数据请求类型
 // @param whichPlayer 关联玩家
 // @param param1~param2 字符串参数
 // @param param3 布尔参数
 // @param param4~param6 整数参数
+// @deprecated 2.02已移除
 native RequestExtraStringData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns string
 // 获取额外的实数数据
-// 2.02已移除
 // @param dataType 数据请求类型
 // @param whichPlayer 关联玩家
 // @param param1~param2 字符串参数
@@ -8565,8 +8551,8 @@ native RequestExtraStringData takes integer dataType, player whichPlayer, string
 native RequestExtraRealData takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
 // 获取单位 Z 坐标
 // Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
-// @since 1.33
 // @returns 单位当前 Z 坐标（与 BlzGetLocalUnitZ 一致）
+// @since 1.33
 native BlzGetUnitZ takes unit whichUnit returns real
 // 开启/关闭 选择和选择圈
 native BlzEnableSelections takes boolean enableSelection, boolean enableSelectionCircle returns nothing
@@ -9061,9 +9047,3 @@ native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothi
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
 //endregion
-
-
-
-
-
-
