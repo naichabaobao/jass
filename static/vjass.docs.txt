@@ -3757,3 +3757,25 @@ HTTP://WWW.GAMESDEITY.COM/ JOYWOON
  requires and uses also work in the place of needs
  For WEHelper 1.5
  0.2: (initial public release)
+
+
+==============================
+vJass 关键字补充速查（扩展）
+==============================
+以下关键字在扩展中支持文档跳转（HTML Webview）：
+library, initializer, needs, uses, requires, endlibrary
+scope, endscope, private, public, static
+interface, endinterface, implement
+struct, endstruct, method, endmethod, this
+delegate, operator, debug
+module, endmodule, optional, stub
+key, thistype, onInit, onDestroy
+hook, defaults, execute
+create, destroy, size, name, allocate, deallocate
+
+补充说明：
+1) requires / needs / uses：依赖语义等价，均用于声明库依赖。
+2) create / destroy：常见于结构体实例生命周期管理。
+3) allocate / deallocate：底层分配与回收入口，通常在结构体系统中使用。
+4) onInit / onDestroy：初始化与析构阶段钩子。
+5) execute / name / size：常见于方法对象、反射信息或数组结构扩展语义。

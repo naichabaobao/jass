@@ -44,9 +44,7 @@ const jassZincSelector = { scheme: 'file', language: 'jass-zinc' };
 let dataEnterManager: DataEnterManager | undefined;
 
 const SUPPORT_PROMPT_SNOOZE_UNTIL_KEY = 'supportPrompt.snoozeUntil';
-const SUPPORT_PROMPT_RETRY_UNTIL_KEY = 'supportPrompt.retryUntil';
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-const HALF_DAY_MS = 12 * 60 * 60 * 1000;
 
 function renderSupportWebview(panel: vscode.WebviewPanel, context: vscode.ExtensionContext): void {
     const webview = panel.webview;
@@ -162,8 +160,7 @@ function renderSupportWebview(panel: vscode.WebviewPanel, context: vscode.Extens
 async function showSupportPrompt(context: vscode.ExtensionContext): Promise<void> {
     const now = Date.now();
     const snoozeUntil = context.globalState.get<number>(SUPPORT_PROMPT_SNOOZE_UNTIL_KEY, 0);
-    const retryUntil = context.globalState.get<number>(SUPPORT_PROMPT_RETRY_UNTIL_KEY, 0);
-    if (now < snoozeUntil || now < retryUntil) {
+    if (now < snoozeUntil) {
         return;
     }
 
@@ -186,27 +183,23 @@ async function showSupportPrompt(context: vscode.ExtensionContext): Promise<void
             }
         );
         renderSupportWebview(panel, context);
-        // 点开支持页后，给半天冷静期，避免过于频繁
-        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, now + HALF_DAY_MS);
         return;
     }
 
     if (choice === '不再提示') {
         // 按产品策略：这里不是永久不提示，而是冷却 7 天
         await context.globalState.update(SUPPORT_PROMPT_SNOOZE_UNTIL_KEY, now + WEEK_MS);
-        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, 0);
         return;
     }
 
     if (choice === '稍后提醒') {
-        // 稍后提醒：半天后再提醒
-        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, now + HALF_DAY_MS);
+        // 每次打开都询问，因此“稍后提醒”不写入冷却状态
         return;
     }
 
     if (choice === '狠心拒绝') {
-        // 狠心拒绝：这次不处理，下次打开继续提醒
-        await context.globalState.update(SUPPORT_PROMPT_RETRY_UNTIL_KEY, 0);
+        // 每次打开都询问，因此“狠心拒绝”不写入冷却状态
+        return;
     }
 }
 
@@ -218,16 +211,14 @@ async function openKeywordDocWebview(context: vscode.ExtensionContext, docFileNa
 
     const safeName = path.basename(docFileName);
     const htmlPath = path.join(context.extensionPath, 'static', 'html', safeName);
-    if (!fs.existsSync(htmlPath)) {
-        vscode.window.showWarningMessage(`Keyword doc not found: ${safeName}`);
-        return;
-    }
-
-    const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
+    const keywordName = safeName.replace('.html', '');
+    const htmlContent = fs.existsSync(htmlPath)
+        ? fs.readFileSync(htmlPath, 'utf-8')
+        : buildFallbackKeywordDocHtml(keywordName);
     const enhancedHtmlContent = enhanceKeywordDocHtml(htmlContent);
     const panel = vscode.window.createWebviewPanel(
         'jassKeywordDoc',
-        `JASS Keyword: ${safeName.replace('.html', '')}`,
+        `JASS Keyword: ${keywordName}`,
         vscode.ViewColumn.Beside,
         {
             enableScripts: true,
@@ -251,7 +242,11 @@ function enhanceKeywordDocHtml(html: string): string {
 (function () {
   const keywords = [
     'endfunction','endglobals','endloop','exitwhen','function','constant','native','local','type','set','call',
-    'takes','returns','extends','array','elseif','endif','then','loop','return','globals','if','else','and','or','not'
+    'takes','returns','extends','array','elseif','endif','then','loop','return','globals','if','else','and','or','not',
+    'library','initializer','needs','uses','requires','endlibrary','scope','endscope','private','public','static',
+    'interface','endinterface','implement','struct','endstruct','method','endmethod','this','delegate','operator',
+    'debug','module','endmodule','optional','stub','key','thistype','oninit','ondestroy','hook','defaults','execute',
+    'create','destroy','size','name','allocate','deallocate'
   ];
   const typeWords = ['integer','real','boolean','string','handle','code','nothing','true','false','null'];
   const kwPattern = new RegExp('\\\\b(' + keywords.join('|') + ')\\\\b', 'g');
@@ -302,6 +297,54 @@ function enhanceKeywordDocHtml(html: string): string {
         ? withStyle.replace('</body>', `${highlightScript}\n</body>`)
         : `${withStyle}\n${highlightScript}`;
     return withScript;
+}
+
+function buildFallbackKeywordDocHtml(keyword: string): string {
+    const shownKeyword = keyword || 'keyword';
+    return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${shownKeyword} - JASS/vJass 文档</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #1e1e1e; color: #d4d4d4; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 28px 24px; }
+    h1 { margin: 0 0 12px; color: #4ec9b0; font-size: 30px; }
+    .tip { margin: 0 0 18px; color: #9cdcfe; }
+    .card { background: #252526; border: 1px solid #333; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+    h2 { margin: 0 0 10px; color: #c586c0; font-size: 18px; }
+    p { margin: 0 0 10px; line-height: 1.7; }
+    pre { margin: 0; background: #1b1b1c; border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+    code { font-family: Consolas, "Courier New", monospace; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>${shownKeyword}</h1>
+    <p class="tip">该关键字已支持文档跳转；当前显示的是内置通用文档模板。</p>
+    <section class="card">
+      <h2>用途</h2>
+      <p>用于 vJass/JASS 语法结构中的关键语义节点。请结合上下文（函数、结构、模块、库）理解该关键字的作用域与执行时机。</p>
+    </section>
+    <section class="card">
+      <h2>示例</h2>
+      <pre><code>// 示例（按上下文调整）
+library Demo initializer init
+    private static method init takes nothing returns nothing
+        // keyword: ${shownKeyword}
+    endmethod
+endlibrary</code></pre>
+    </section>
+    <section class="card">
+      <h2>注意事项</h2>
+      <p>1) 保持关键字与语法块成对出现（如 library/endlibrary、struct/endstruct）。</p>
+      <p>2) 避免与标识符重名（如变量名、方法名）。</p>
+      <p>3) 关注可见性（public/private）与静态语义（static）。</p>
+    </section>
+  </div>
+</body>
+</html>`;
 }
 
 export async function activate(context: vscode.ExtensionContext) {

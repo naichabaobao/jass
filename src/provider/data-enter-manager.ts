@@ -461,7 +461,7 @@ export class DataEnterManager {
                     const diagnosticsConfig = this.config?.diagnostics || {};
                     const checkUndefined = diagnosticsConfig.checkUndefined !== false; // 默认启用
                     const checkTypes = diagnosticsConfig.checkTypes !== false; // 默认启用
-                    const checkUnused = diagnosticsConfig.checkUnused === true; // 默认不启用
+                    const checkUnused = diagnosticsConfig.checkUnused !== false; // 默认启用（仅显式 false 才关闭）
                     const checkArrayBounds = diagnosticsConfig.checkArrayBounds !== false; // 默认启用
                     const checkHandleLeaks = diagnosticsConfig.checkHandleLeaks !== false; // 默认启用
                     const returnBehaviorMode = this.getReturnBehaviorMode();

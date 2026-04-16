@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: library</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>library</code></h1>
+  <h2>语法</h2>
+  <pre><code>library 名称 [initializer InitFunc] [requires|needs|uses [optional] 依赖, ...]
+    // 内容
+endlibrary</code></pre>
+  <h2>说明</h2>
+  <p>定义库并参与编译期排序。文档说明库可声明依赖，JassHelper 会按依赖调整顺序，并可配合 initializer 在初始化阶段执行。</p>
+  <h2>示例</h2>
+  <pre><code>library Core initializer InitCore requires optional Utils
+function InitCore takes nothing returns nothing
+endfunction
+endlibrary</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>库名区分大小写；禁止循环依赖；requires/needs/uses 在文档中语义等价。</li></ul>
+</body>
+</html>

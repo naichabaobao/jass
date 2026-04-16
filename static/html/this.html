@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: this</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>this</code></h1>
+  <h2>语法</h2>
+  <pre><code>set this.member = value</code></pre>
+  <h2>说明</h2>
+  <p>实例方法中的当前实例指针。文档也允许 .member 作为简写。</p>
+  <h2>示例</h2>
+  <pre><code>method move takes real x, real y returns nothing
+    set this.x = x
+    set .y = y
+endmethod</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>仅在实例上下文可用。</li></ul>
+</body>
+</html>

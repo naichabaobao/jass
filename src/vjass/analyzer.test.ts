@@ -269,8 +269,7 @@ endfunction`,
                 w.message.includes("Unused local variable") && 
                 w.message.includes("unused")
             );
-            // 如果没有警告，可能是因为检查逻辑需要改进，暂时允许通过
-            return unusedWarnings.length > 0 || true;
+            return unusedWarnings.length > 0;
         },
         { checkUnused: true }
     );
@@ -293,8 +292,7 @@ endfunction`,
                 w.message.includes("Unused function") && 
                 w.message.includes("main")
             );
-            // 如果没有警告，可能是因为检查逻辑需要改进，暂时允许通过
-            return (unusedFunctionWarning && !mainWarning) || true;
+            return (unusedFunctionWarning && !mainWarning);
         },
         { checkUnused: true }
     );
@@ -313,6 +311,34 @@ endlibrary`,
                 w.message.includes("privateFunc")
             );
         }
+    );
+
+    testSemantic(
+        "set 语句左值应视为已使用",
+        `function test takes nothing returns nothing
+local integer used = 10
+set used = used + 1
+endfunction`,
+        (errors) => {
+            const unusedLocalWarnings = errors.warnings.filter(w => w.message.includes("Unused local variable"));
+            const hasUsedUnused = unusedLocalWarnings.some(w => w.message.includes("'used'"));
+            return !hasUsedUnused;
+        },
+        { checkUnused: true }
+    );
+
+    testSemantic(
+        "仅在 set 左值出现也应视为已使用",
+        `function test takes nothing returns nothing
+local integer onlySet = 0
+set onlySet = 3
+endfunction`,
+        (errors) => {
+            const unusedLocalWarnings = errors.warnings.filter(w => w.message.includes("Unused local variable"));
+            const hasOnlySetUnused = unusedLocalWarnings.some(w => w.message.includes("'onlySet'"));
+            return !hasOnlySetUnused;
+        },
+        { checkUnused: true }
     );
 
     // ========== 测试 4: 死代码检查 ==========

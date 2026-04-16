@@ -1197,6 +1197,7 @@ export class SemanticAnalyzer {
                 isPublic: true,
                 returnType: returnType || undefined
             };
+            currentScope.children.push(functionScope);
 
             // 收集函数参数作为局部变量
             for (const param of node.parameters) {
@@ -1447,6 +1448,7 @@ export class SemanticAnalyzer {
                     isPublic: true,
                     returnType: returnType  // undefined 表示 returns nothing，否则是返回类型名称
                 };
+                currentScope.children.push(functionScope);
                 // 收集函数参数作为局部变量
                 for (const param of node.parameters) {
                     const paramName = param.name.name;
@@ -1498,6 +1500,7 @@ export class SemanticAnalyzer {
                     isPublic: true,
                     returnType: returnType || undefined
                 };
+                currentScope.children.push(methodScope);
                 
                 // 收集方法参数作为局部变量
                 for (const param of node.parameters) {
@@ -5835,22 +5838,14 @@ export class SemanticAnalyzer {
         // 跟踪符号的使用情况
         const symbolUsage = new Map<string, { symbol: SymbolInfo; used: boolean; location: { line: number; position: number } }>();
 
-        // 收集所有符号
-        for (const [name, symbol] of this.globalSymbols) {
-            if (symbol.node.start) {
-                symbolUsage.set(name, {
-                    symbol,
-                    used: false,
-                    location: symbol.node.start
-                });
-            }
-        }
-
         // 遍历所有作用域
         const checkScope = (scope: ScopeInfo): void => {
             for (const [name, symbol] of scope.symbols) {
                 if (symbol.node.start) {
-                    const key = `${scope.name}::${name}`;
+                    const key = scope.name ? `${scope.name}::${name}` : name;
+                    if (symbolUsage.has(key)) {
+                        continue;
+                    }
                     symbolUsage.set(key, {
                         symbol,
                         used: false,
@@ -5895,17 +5890,35 @@ export class SemanticAnalyzer {
 
                 // 报告未使用的局部变量
                 if (info.symbol.type === SymbolType.LOCAL_VARIABLE) {
+                    let warningStart = info.location;
+                    let warningEnd = info.symbol.node.end || info.location;
+                    if (info.symbol.node instanceof VariableDeclaration && info.symbol.node.name) {
+                        warningStart = info.symbol.node.name.start || warningStart;
+                        warningEnd = info.symbol.node.name.end || warningEnd;
+                    }
                     this.addWarning(
-                        info.location,
-                        info.symbol.node.end || info.location,
+                        warningStart,
+                        warningEnd,
                         `Unused local variable '${symbolName}'`
                     );
                 }
                 // 报告未使用的函数（非 main/config）
                 else if (info.symbol.type === SymbolType.FUNCTION) {
+                    let warningStart = info.location;
+                    let warningEnd = info.symbol.node.end || info.location;
+                    if (
+                        (info.symbol.node instanceof FunctionDeclaration ||
+                            info.symbol.node instanceof NativeDeclaration ||
+                            info.symbol.node instanceof MethodDeclaration ||
+                            info.symbol.node instanceof FunctionInterfaceDeclaration) &&
+                        info.symbol.node.name
+                    ) {
+                        warningStart = info.symbol.node.name.start || warningStart;
+                        warningEnd = info.symbol.node.name.end || warningEnd;
+                    }
                     this.addWarning(
-                        info.location,
-                        info.symbol.node.end || info.location,
+                        warningStart,
+                        warningEnd,
                         `Unused function '${symbolName}'`
                     );
                 }
@@ -5918,6 +5931,13 @@ export class SemanticAnalyzer {
      */
     private markUsedSymbols(node: ASTNode, symbolUsage: Map<string, { symbol: SymbolInfo; used: boolean; location: { line: number; position: number } }>): void {
         if (node instanceof Identifier) {
+            if (this.isDeclarationIdentifier(node)) {
+                // 声明位置的标识符不应计为“使用”，否则未使用检测会失效
+                for (const child of node.children) {
+                    this.markUsedSymbols(child, symbolUsage);
+                }
+                return;
+            }
             const name = node.name;
             // 查找符号（优先匹配作用域内的变量，然后匹配全局变量）
             for (const [key, info] of symbolUsage) {
@@ -5955,6 +5975,53 @@ export class SemanticAnalyzer {
         for (const child of node.children) {
             this.markUsedSymbols(child, symbolUsage);
         }
+    }
+
+    /**
+     * 判断一个 Identifier 是否位于“声明位”
+     * 例如变量名、函数名、参数名、返回类型、类型声明名等。
+     */
+    private isDeclarationIdentifier(node: Identifier): boolean {
+        const parent = node.parent;
+        if (!parent) {
+            return false;
+        }
+
+        // 变量声明：变量名与类型名属于声明位；初始化表达式中的标识符不是声明位
+        if (parent instanceof VariableDeclaration) {
+            return parent.name === node || parent.type === node;
+        }
+
+        // 各类可命名声明
+        if (parent instanceof FunctionDeclaration ||
+            parent instanceof NativeDeclaration ||
+            parent instanceof FunctionInterfaceDeclaration ||
+            parent instanceof MethodDeclaration) {
+            const p = parent as FunctionDeclaration | NativeDeclaration | FunctionInterfaceDeclaration | MethodDeclaration;
+            if (p.name === node || p.returnType === node) {
+                return true;
+            }
+            return p.parameters.some(param => param.name === node || param.type === node);
+        }
+
+        if (parent instanceof TypeDeclaration) {
+            return parent.name === node || parent.baseType === node || parent.elementSize === node || parent.storageSize === node;
+        }
+
+        if (parent instanceof StructDeclaration) {
+            return parent.name === node || parent.extendsType === node;
+        }
+
+        if (parent instanceof InterfaceDeclaration) {
+            return parent.name === node;
+        }
+
+        if (parent instanceof LibraryDeclaration || parent instanceof ScopeDeclaration || parent instanceof ModuleDeclaration || parent instanceof DelegateDeclaration) {
+            const p = parent as LibraryDeclaration | ScopeDeclaration | ModuleDeclaration | DelegateDeclaration;
+            return p.name === node;
+        }
+
+        return false;
     }
 
     /**

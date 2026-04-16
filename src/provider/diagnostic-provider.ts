@@ -41,10 +41,21 @@ export class DiagnosticProvider {
     private isEnabled: boolean = true;
     private diagnosticsConfig: DiagnosticsConfig = {};
     private renameEventSubject: Subject<RenameEvent> = new Subject();
+    private unusedDecorationType: vscode.TextEditorDecorationType;
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection('jass');
+        // 未使用符号浅色显示（标准装饰器实现）
+        this.unusedDecorationType = vscode.window.createTextEditorDecorationType({
+            opacity: '0.4',
+            dark: {
+                opacity: '0.3'
+            },
+            light: {
+                opacity: '0.5'
+            }
+        });
         
         // 监听配置变化
         this.updateConfiguration();
@@ -91,6 +102,7 @@ export class DiagnosticProvider {
                     if (this.isSupportedFile(file.fsPath)) {
                         // 清除已删除文件的诊断
                         this.diagnosticCollection.delete(file);
+                        this.applyUnusedDecorations(file, []);
                     }
                 });
             })
@@ -124,6 +136,7 @@ export class DiagnosticProvider {
                     // 清除旧文件的诊断
                     if (this.isSupportedFile(oldUri.fsPath)) {
                         this.diagnosticCollection.delete(oldUri);
+                        this.applyUnusedDecorations(oldUri, []);
                     }
                     
                     // 通过 Subject 发送重命名事件（会经过 debounceTime 延迟处理）
@@ -151,6 +164,36 @@ export class DiagnosticProvider {
             initialSubscription.unsubscribe();
             initialUpdateSubject.complete();
         }});
+
+        this.disposables.push(
+            vscode.window.onDidChangeVisibleTextEditors((editors) => {
+                editors.forEach((editor) => {
+                    if (!this.isSupportedFile(editor.document.uri.fsPath)) {
+                        return;
+                    }
+                    const diagnostics = this.diagnosticCollection.get(editor.document.uri) || [];
+                    this.applyUnusedDecorations(editor.document.uri, diagnostics);
+                });
+            })
+        );
+    }
+
+    /**
+     * 判断诊断是否属于“未使用”类别
+     * 命中后会打上 Unnecessary tag，让编辑器将代码灰显
+     */
+    private isUnusedDiagnostic(message: string): boolean {
+        const normalized = message.toLowerCase();
+        return normalized.includes('unused') || normalized.includes('未使用');
+    }
+
+    private applyUnusedDecorations(uri: vscode.Uri, diagnostics: readonly vscode.Diagnostic[]): void {
+        const ranges = diagnostics
+            .filter((d) => this.isUnusedDiagnostic(d.message) || (d.tags || []).includes(vscode.DiagnosticTag.Unnecessary))
+            .map((d) => d.range);
+        vscode.window.visibleTextEditors
+            .filter((editor) => editor.document.uri.toString() === uri.toString())
+            .forEach((editor) => editor.setDecorations(this.unusedDecorationType, ranges));
     }
 
     /**
@@ -211,6 +254,7 @@ export class DiagnosticProvider {
     private updateDiagnostics(document: vscode.TextDocument): void {
         if (!this.isEnabled) {
             this.diagnosticCollection.delete(document.uri);
+            this.applyUnusedDecorations(document.uri, []);
             return;
         }
 
@@ -257,9 +301,11 @@ export class DiagnosticProvider {
 
             // 设置诊断
             this.diagnosticCollection.set(document.uri, diagnostics);
+            this.applyUnusedDecorations(document.uri, diagnostics);
         } catch (error) {
             console.error(`Error updating diagnostics for ${document.uri.fsPath}:`, error);
             this.diagnosticCollection.delete(document.uri);
+            this.applyUnusedDecorations(document.uri, []);
         }
     }
 
@@ -311,9 +357,17 @@ export class DiagnosticProvider {
                 message = `${message}\n💡 建议: ${warning.fix}`;
             }
 
-            const diagnostic = new vscode.Diagnostic(range, message, severity);
+            const isUnused = this.isUnusedDiagnostic(message);
+            const diagnostic = new vscode.Diagnostic(
+                range,
+                message,
+                isUnused ? vscode.DiagnosticSeverity.Hint : severity
+            );
             diagnostic.source = 'jass';
             diagnostic.code = 'warning';
+            if (isUnused) {
+                diagnostic.tags = [vscode.DiagnosticTag.Unnecessary];
+            }
 
             return diagnostic;
         } catch (error) {
@@ -340,9 +394,17 @@ export class DiagnosticProvider {
                 message = `${message}\n💡 建议: ${checkError.fix}`;
             }
 
-            const diagnostic = new vscode.Diagnostic(range, message, severity);
+            const isUnused = this.isUnusedDiagnostic(message);
+            const diagnostic = new vscode.Diagnostic(
+                range,
+                message,
+                isUnused ? vscode.DiagnosticSeverity.Hint : severity
+            );
             diagnostic.source = 'jass';
             diagnostic.code = checkError.checkType || 'validation_error';
+            if (isUnused) {
+                diagnostic.tags = [vscode.DiagnosticTag.Unnecessary];
+            }
 
             return diagnostic;
         } catch (error) {
@@ -452,6 +514,7 @@ export class DiagnosticProvider {
         
         // 清理诊断集合
         this.diagnosticCollection.dispose();
+        this.unusedDecorationType.dispose();
     }
 }
 

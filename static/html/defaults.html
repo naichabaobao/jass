@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: defaults</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>defaults</code></h1>
+  <h2>语法</h2>
+  <pre><code>method m takes ... returns T defaults <常量>|nothing</code></pre>
+  <h2>说明</h2>
+  <p>接口方法的默认实现声明。子结构可不显式实现该方法。</p>
+  <h2>示例</h2>
+  <pre><code>interface whattodo
+method onStrike takes real x, real y returns boolean defaults false
+endinterface</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>defaults 仅支持常量值。</li></ul>
+</body>
+</html>

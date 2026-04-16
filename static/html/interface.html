@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: interface</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>interface</code></h1>
+  <h2>语法</h2>
+  <pre><code>interface I
+    method m takes nothing returns nothing
+endinterface</code></pre>
+  <h2>说明</h2>
+  <p>定义接口规则；子结构需实现接口方法（除 defaults 允许缺省的项）。</p>
+  <h2>示例</h2>
+  <pre><code>interface printable
+method toString takes nothing returns string
+endinterface</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>接口变量可多态调用；接口内声明 onDestroy 非法。</li></ul>
+</body>
+</html>

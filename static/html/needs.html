@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: needs</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>needs</code></h1>
+  <h2>语法</h2>
+  <pre><code>library X needs A, B</code></pre>
+  <h2>说明</h2>
+  <p>声明库依赖，语义与 requires/uses 等价。</p>
+  <h2>示例</h2>
+  <pre><code>library C needs A, B, D
+endlibrary</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>可配合 optional 前缀声明可选依赖。</li></ul>
+</body>
+</html>
