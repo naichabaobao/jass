@@ -762,11 +762,7 @@ export class Parser {
      * 解析方法声明（用于结构、接口等）
      * method [static] [operator <operatorName>] <name> takes ... returns ...
      */
-    private parseMethod(): MethodDeclaration | null {
-        // 检查是否有 private 关键字（在 method 之前）
-        // 注意：private 关键字在解析结构成员时可能已经被消费，所以这里不处理
-        // 如果需要支持 private，应该在 MethodDeclaration 中添加 isPrivate 属性
-        
+    private parseMethod(isPrivate: boolean = false, isPublic: boolean = false): MethodDeclaration | null {
         // 检查是否有 static 关键字（在 method 之前，根据文档 static method 的语法）
         let isStatic = false;
         if (this.checkValue("static")) {
@@ -956,6 +952,8 @@ export class Parser {
             body,
             isStatic,
             isStub,
+            isPrivate,
+            isPublic,
             isOperator,
             operatorName,
             defaultsValue,
@@ -1445,13 +1443,8 @@ export class Parser {
                 continue;
             }
 
-            // 检查是否有 private 或 public 关键字（在 method 之前）
-            // 注意：private/public 关键字会被消费，但 parseMethod 不处理它
-            // 如果需要支持 private/public，应该在 MethodDeclaration 中添加 isPrivate/isPublic 属性
             let isPrivateMethod = false;
             let isPublicMethod = false;
-            let isPublicStaticMethod = false;
-            let isPrivateStaticMethod = false;
             
             if (this.checkValue("private")) {
                 const peekToken = this.lexer.peek();
@@ -1460,8 +1453,9 @@ export class Parser {
                     // 消费 private 关键字，但不消费 method，让 parseMethod 处理
                     this.lexer.next(); // 消费 private
                 } else if (peekToken && peekToken.value?.toLowerCase() === "static") {
-                    // 不在此处消费 static：可能是 private static method 或 private static integer array xxx
-                    // static 留到后面：变量声明会消费 static（并设 isStatic），或 static+method 分支会消费
+                    // private static XXX：先消费 private，后续根据 static 后的 token 判断是 method 还是变量
+                    isPrivateMethod = true;
+                    this.lexer.next(); // 消费 private
                 }
             } else if (this.checkValue("public")) {
                 const peekToken = this.lexer.peek();
@@ -1470,30 +1464,26 @@ export class Parser {
                     // 消费 public 关键字，但不消费 method，让 parseMethod 处理
                     this.lexer.next(); // 消费 public
                 } else if (peekToken && peekToken.value?.toLowerCase() === "static") {
-                    // 不在此处消费 static：可能是 public static method 或 public static integer array xxx
+                    // public static XXX：先消费 public，后续根据 static 后的 token 判断是 method 还是变量
+                    isPublicMethod = true;
+                    this.lexer.next(); // 消费 public
                 }
             }
 
             // 尝试解析为方法声明（支持 stub method、public method、private method、public static method、private static method）
             if (this.checkValue("method") || (this.checkValue("stub") && this.lexer.peek()?.value?.toLowerCase() === "method")) {
-                const member = this.parseMethod();
+                const member = this.parseMethod(isPrivateMethod, isPublicMethod);
                 if (member) {
-                    // 根据 vjass.docs.txt，仅规定模块中不能使用 private；结构体的 onDestroy 可为 private，由生成的 destroy() 在同一结构内调用
-                    // 如果是 public static method 或 private static method，设置 isStatic
-                    if (isPublicStaticMethod || isPrivateStaticMethod) {
-                        member.isStatic = true;
-                    }
                     members.push(member);
                     continue;
                 }
-            } else if (this.checkValue("static") && !isPublicStaticMethod && !isPrivateStaticMethod) {
+            } else if (this.checkValue("static")) {
                 // 检查是否是 static method 或 static stub method（而不是 static if）
-                // 注意：如果已经是 public static method 或 private static method，static 已经被消费了
                 const peekToken = this.lexer.peek();
                 if (peekToken && peekToken.value?.toLowerCase() === "method") {
                     // 消费 static 关键字，然后解析 method
                     this.lexer.next();
-                    const member = this.parseMethod();
+                    const member = this.parseMethod(isPrivateMethod, isPublicMethod);
                     if (member) {
                         member.isStatic = true;
                         members.push(member);
@@ -1502,7 +1492,7 @@ export class Parser {
                 } else if (peekToken && peekToken.value?.toLowerCase() === "stub") {
                     // 检查 static stub method：先消费 static，然后解析 stub method
                     this.lexer.next();
-                    const member = this.parseMethod();
+                    const member = this.parseMethod(isPrivateMethod, isPublicMethod);
                     if (member) {
                         member.isStatic = true;
                         members.push(member);
@@ -1646,7 +1636,10 @@ export class Parser {
                 const peekVal = this.lexer.peek()?.value?.toLowerCase();
                 const isStaticMethodOrStub = isStaticKeyword && (peekVal === "method" || peekVal === "stub");
                 if ((isTypeKeyword || isIdentifier || isStaticKeyword) && !isStaticMethodOrStub) {
-                    const varDecl = this.parseVariableDeclaration(false, isReadonlyVar);
+                    // 兼容 private/public static 变量：可见性关键字可能已在前面的 method 预判阶段被消费
+                    const effectivePrivateVar = isPrivateVar || (isPrivateMethod && isStaticKeyword);
+                    const effectivePublicVar = isPublicVar || (isPublicMethod && isStaticKeyword);
+                    const varDecl = this.parseVariableDeclaration(false, isReadonlyVar, effectivePrivateVar, effectivePublicVar);
                     if (varDecl) {
                         members.push(varDecl);
                         continue;
@@ -3087,10 +3080,8 @@ export class Parser {
             }
 
             // 尝试解析变量声明
-            const varDecl = this.parseVariableDeclaration(false);
+            const varDecl = this.parseVariableDeclaration(false, false, isPrivateVar, isPublicVar);
             if (varDecl) {
-                // 注意：private/public 修饰符在 VariableDeclaration 中没有字段存储
-                // 这些修饰符在编译时会被处理（重命名等），所以这里只解析，不存储
                 statements.push(varDecl);
             } else {
                 if (!this.isAtEnd() && !this.check(TokenType.keywordEndglobals)) {
@@ -3134,7 +3125,12 @@ export class Parser {
      * - type array name[100] (数组成员)
      * - static type array name[100] (静态数组成员)
      */
-    private parseVariableDeclaration(isLocal: boolean, isReadonly: boolean = false): VariableDeclaration | null {
+    private parseVariableDeclaration(
+        isLocal: boolean,
+        isReadonly: boolean = false,
+        isPrivate: boolean = false,
+        isPublic: boolean = false
+    ): VariableDeclaration | null {
         const startToken = this.lexer.current();
         if (!startToken) return null;
 
@@ -3357,7 +3353,9 @@ export class Parser {
             isStatic,
             isReadonly,
             startPos,
-            endPos
+            endPos,
+            isPrivate,
+            isPublic
         );
     }
 

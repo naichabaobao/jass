@@ -44,6 +44,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
     private static readonly VERSION_MISMATCH_SORT_BUCKET = '7_version_mismatch_';
     private static readonly DEPRECATED_SORT_BUCKET = '8_deprecated_';
     private static readonly REPLACEMENT_SORT_BUCKET = '0_replacement_';
+    private static readonly KEYWORD_SET_PREFIX = '__kw__::';
 
     constructor(dataEnterManager: DataEnterManager) {
         this.dataEnterManager = dataEnterManager;
@@ -119,11 +120,13 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
 
                 // 1. 添加关键字
                 AllKeywords.forEach(keyword => {
-                    if (!itemSet.has(keyword)) {
+                    const keywordKey = `${CompletionProvider.KEYWORD_SET_PREFIX}${keyword}`;
+                    if (!itemSet.has(keywordKey)) {
                         const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
                         item.sortText = `0_keyword_${keyword}`;
                         items.push(item);
-                        itemSet.add(keyword);
+                        // 关键字与符号（函数/变量等）允许同名，不占用普通符号去重键
+                        itemSet.add(keywordKey);
                     }
                 });
 
@@ -295,6 +298,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                             vscode.CompletionItemKind.Variable
                         );
                         item.detail = 'Global Variable';
+                        const visibilityStr = stmt.isPrivate ? 'private ' : (stmt.isPublic ? 'public ' : '');
                         const typeStr = stmt.type ? stmt.type.toString() : 'unknown';
                         const constantStr = stmt.isConstant ? 'constant ' : '';
                         const arrayStr = stmt.isArray 
@@ -304,7 +308,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                                     ? ` array[${stmt.arraySize}]`
                                     : ' array')
                             : '';
-                        const doc = `${constantStr}${typeStr}${arrayStr} ${stmt.name.name}`;
+                        const doc = `${visibilityStr}${constantStr}${typeStr}${arrayStr} ${stmt.name.name}`;
                         
                         // 添加注释
                         const comment = this.extractCommentForStatement(stmt, filePath);
@@ -454,6 +458,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     vscode.CompletionItemKind.Variable
                 );
                 item.detail = 'Global Variable';
+                const visibilityStr = stmt.isPrivate ? 'private ' : (stmt.isPublic ? 'public ' : '');
                 const typeStr = stmt.type ? stmt.type.toString() : 'unknown';
                 const constantStr = stmt.isConstant ? 'constant ' : '';
                 const arrayStr = stmt.isArray 
@@ -463,7 +468,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                             ? ` array[${stmt.arraySize}]`
                             : ' array')
                     : '';
-                const doc = `${constantStr}${typeStr}${arrayStr} ${stmt.name.name}`;
+                const doc = `${visibilityStr}${constantStr}${typeStr}${arrayStr} ${stmt.name.name}`;
                 
                 // 添加注释
                 const comment = this.extractCommentForStatement(stmt, filePath);
@@ -1152,6 +1157,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
      */
     private formatMethodSignature(method: MethodDeclaration): string {
         const name = method.name?.name || 'unknown';
+        const visibilityStr = method.isPrivate ? 'private ' : (method.isPublic ? 'public ' : '');
         const params = method.parameters
             .map(p => {
                 const typeStr = p.type ? p.type.toString() : 'unknown';
@@ -1160,7 +1166,9 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             .join(', ');
         const returnType = method.returnType ? method.returnType.toString() : 'nothing';
         const staticStr = method.isStatic ? 'static ' : '';
-        return `${staticStr}method ${name} takes ${params || 'nothing'} returns ${returnType}`;
+        const stubStr = method.isStub ? 'stub ' : '';
+        const operatorStr = method.isOperator ? `operator ${method.operatorName || ''} ` : '';
+        return `${visibilityStr}${staticStr}${stubStr}method ${operatorStr}${name} takes ${params || 'nothing'} returns ${returnType}`;
     }
 
     /**
@@ -2746,6 +2754,10 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         for (const member of struct.members) {
             if (member instanceof MethodDeclaration) {
                 if (member.name && (!itemSet.has(member.name.name))) {
+                    // private 成员仅在 this/thistype 上下文中可见
+                    if (member.isPrivate && !(isThis || isThistype)) {
+                        continue;
+                    }
                     // 前缀过滤
                     if (prefix && !member.name.name.toLowerCase().startsWith(prefix.toLowerCase())) {
                         continue;
@@ -2764,7 +2776,12 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                         member.name.name,
                         vscode.CompletionItemKind.Method
                     );
-                    item.detail = member.isStatic ? 'Static Method' : 'Method';
+                    const methodModifiers: string[] = [];
+                    if (member.isPrivate) methodModifiers.push('private');
+                    else if (member.isPublic) methodModifiers.push('public');
+                    if (member.isStatic) methodModifiers.push('static');
+                    if (member.isStub) methodModifiers.push('stub');
+                    item.detail = `${methodModifiers.join(' ')}${methodModifiers.length > 0 ? ' ' : ''}method`;
                     
                     const doc = this.formatMethodSignature(member);
                     const comment = this.extractCommentForStatement(member, filePath);
@@ -2790,6 +2807,10 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 }
             } else if (member instanceof VariableDeclaration) {
                 if (!itemSet.has(member.name.name)) {
+                    // private 字段仅在 this/thistype 上下文中可见
+                    if (member.isPrivate && !(isThis || isThistype)) {
+                        continue;
+                    }
                     // 前缀过滤
                     if (prefix && !member.name.name.toLowerCase().startsWith(prefix.toLowerCase())) {
                         continue;
@@ -2810,6 +2831,8 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     );
                     const typeStr = member.type ? member.type.toString() : 'unknown';
                     const modifiers: string[] = [];
+                    if (member.isPrivate) modifiers.push('private');
+                    else if (member.isPublic) modifiers.push('public');
                     if (member.isStatic) modifiers.push('static');
                     if (member.isReadonly) modifiers.push('readonly');
                     if (member.isConstant) modifiers.push('constant');
@@ -3714,11 +3737,13 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
         try {
             // 1. 添加 Zinc 关键字
             ZincKeywords.forEach(keyword => {
-                if (!itemSet.has(keyword)) {
+                const keywordKey = `${CompletionProvider.KEYWORD_SET_PREFIX}${keyword}`;
+                if (!itemSet.has(keywordKey)) {
                     const item = new vscode.CompletionItem(keyword, vscode.CompletionItemKind.Keyword);
                     item.sortText = `0_keyword_${keyword}`;
                     items.push(item);
-                    itemSet.add(keyword);
+                    // 关键字与符号（函数/变量等）允许同名，不占用普通符号去重键
+                    itemSet.add(keywordKey);
                 }
             });
 

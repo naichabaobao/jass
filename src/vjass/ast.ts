@@ -719,6 +719,8 @@ class VariableDeclaration extends Statement {
     public readonly arrayHeight: number | null = null; // 二维数组的高度，如 integer array mat1 [10][20] 中的 20
     public readonly isStatic: boolean = false; // 是否是静态成员（用于 struct）
     public readonly isReadonly: boolean = false; // 是否是只读成员（用于 struct，允许外部读取但不能赋值）
+    public readonly isPrivate: boolean = false; // 是否是私有成员（用于 struct）
+    public readonly isPublic: boolean = false; // 是否是显式 public 成员（用于 struct）
     
     constructor(
         name: Identifier, 
@@ -733,7 +735,9 @@ class VariableDeclaration extends Statement {
         isStatic: boolean = false,
         isReadonly: boolean = false,
         start?: { line: number, position: number }, 
-        end?: { line: number, position: number }
+        end?: { line: number, position: number },
+        isPrivate: boolean = false,
+        isPublic: boolean = false
     ) {
         super(start, end);
         this.name = name;
@@ -747,6 +751,8 @@ class VariableDeclaration extends Statement {
         this.arrayHeight = arrayHeight;
         this.isStatic = isStatic;
         this.isReadonly = isReadonly;
+        this.isPrivate = isPrivate;
+        this.isPublic = isPublic;
         
         // 添加子节点
         this.addChild(name);
@@ -756,6 +762,7 @@ class VariableDeclaration extends Statement {
     
     public toString(): string {
         const prefix = this.isLocal ? "local" : "";
+        const visibility = this.isPrivate ? "private" : (this.isPublic ? "public" : "");
         const constant = this.isConstant ? " constant" : "";
         const staticStr = this.isStatic ? "static" : "";
         const readonlyStr = this.isReadonly ? "readonly" : "";
@@ -771,7 +778,7 @@ class VariableDeclaration extends Statement {
         }
         const initStr = this.initializer ? ` = ${this.initializer.toString()}` : "";
         
-        const parts = [prefix, staticStr, readonlyStr, constant, typeStr, arrayStr, this.name.toString(), sizeStr, initStr]
+        const parts = [prefix, visibility, staticStr, readonlyStr, constant, typeStr, arrayStr, this.name.toString(), sizeStr, initStr]
             .filter(p => p !== "").join(" ");
         
         return parts;
@@ -1520,6 +1527,8 @@ class MethodDeclaration extends Statement {
     public body: BlockStatement;
     public isStatic: boolean = false;
     public isStub: boolean = false; // 是否是存根方法
+    public isPrivate: boolean = false; // 是否是私有方法（用于 struct）
+    public isPublic: boolean = false; // 是否是显式 public 方法（用于 struct）
     public isOperator: boolean = false; // 是否是运算符重载
     public operatorName: string | null = null; // 运算符名称（如 [], []=, <, >, x, x= 等）
     public defaultsValue: Expression | null = null; // defaults 关键字的值（用于接口方法）
@@ -1531,6 +1540,8 @@ class MethodDeclaration extends Statement {
         body?: BlockStatement;
         isStatic?: boolean;
         isStub?: boolean;
+        isPrivate?: boolean;
+        isPublic?: boolean;
         isOperator?: boolean;
         operatorName?: string | null;
         defaultsValue?: Expression | null;
@@ -1544,6 +1555,8 @@ class MethodDeclaration extends Statement {
             body = new BlockStatement(),
             isStatic = false,
             isStub = false,
+            isPrivate = false,
+            isPublic = false,
             isOperator = false,
             operatorName = null,
             defaultsValue = null,
@@ -1558,6 +1571,8 @@ class MethodDeclaration extends Statement {
         this.body = body;
         this.isStatic = isStatic;
         this.isStub = isStub;
+        this.isPrivate = isPrivate;
+        this.isPublic = isPublic;
         this.isOperator = isOperator;
         this.operatorName = operatorName;
         this.defaultsValue = defaultsValue;
@@ -1570,6 +1585,7 @@ class MethodDeclaration extends Statement {
     }
     
     public toString(): string {
+        const visibilityStr = this.isPrivate ? "private " : (this.isPublic ? "public " : "");
         const staticStr = this.isStatic ? "static " : "";
         const stubStr = this.isStub ? "stub " : "";
         const operatorStr = this.isOperator ? `operator ${this.operatorName || ""} ` : "";
@@ -1580,7 +1596,7 @@ class MethodDeclaration extends Statement {
         const defaultsStr = this.defaultsValue ? ` defaults ${this.defaultsValue.toString()}` : "";
         const bodyStr = `\n${this.body.toString()}\nendmethod`;
         
-        return `${staticStr}${stubStr}method ${operatorStr}${nameStr}${takesStr}${returnsStr}${defaultsStr}${bodyStr}`;
+        return `${visibilityStr}${staticStr}${stubStr}method ${operatorStr}${nameStr}${takesStr}${returnsStr}${defaultsStr}${bodyStr}`;
     }
 }
 

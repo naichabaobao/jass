@@ -177,6 +177,34 @@ export class CompletionExtractor {
                 items.push(item);
                 itemSet.add(stmt.name.name);
             }
+
+            // 递归处理 struct 成员（如 method / static method / 成员变量等）
+            for (const member of stmt.members) {
+                if (member instanceof BlockStatement) {
+                    const nestedItems = CompletionExtractor.extractCompletionItems(
+                        member,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                    nestedItems.forEach(item => {
+                        const key = item.label as string;
+                        if (!itemSet.has(key)) {
+                            items.push(item);
+                            itemSet.add(key);
+                        }
+                    });
+                } else {
+                    CompletionExtractor.extractFromStatement(
+                        member,
+                        items,
+                        itemSet,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                }
+            }
         }
         // 接口声明
         else if (stmt instanceof InterfaceDeclaration) {
@@ -190,11 +218,80 @@ export class CompletionExtractor {
                 items.push(item);
                 itemSet.add(stmt.name.name);
             }
+
+            // 递归处理 interface 成员（如 method）
+            for (const member of stmt.members) {
+                if (member instanceof BlockStatement) {
+                    const nestedItems = CompletionExtractor.extractCompletionItems(
+                        member,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                    nestedItems.forEach(item => {
+                        const key = item.label as string;
+                        if (!itemSet.has(key)) {
+                            items.push(item);
+                            itemSet.add(key);
+                        }
+                    });
+                } else {
+                    CompletionExtractor.extractFromStatement(
+                        member,
+                        items,
+                        itemSet,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                }
+            }
         }
         // 模块声明
         else if (stmt instanceof ModuleDeclaration) {
             if (stmt.name && !itemSet.has(stmt.name.name)) {
                 const item = CompletionExtractor.createModuleItem(
+                    stmt,
+                    filePath,
+                    getFileContent,
+                    getRelativePath
+                );
+                items.push(item);
+                itemSet.add(stmt.name.name);
+            }
+
+            // 递归处理 module 成员（如 function / method / native）
+            for (const member of stmt.members) {
+                if (member instanceof BlockStatement) {
+                    const nestedItems = CompletionExtractor.extractCompletionItems(
+                        member,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                    nestedItems.forEach(item => {
+                        const key = item.label as string;
+                        if (!itemSet.has(key)) {
+                            items.push(item);
+                            itemSet.add(key);
+                        }
+                    });
+                } else {
+                    CompletionExtractor.extractFromStatement(
+                        member,
+                        items,
+                        itemSet,
+                        filePath,
+                        getFileContent,
+                        getRelativePath
+                    );
+                }
+            }
+        }
+        // 方法声明（包含 struct/interface/module 内 method）
+        else if (stmt instanceof MethodDeclaration) {
+            if (stmt.name && !itemSet.has(stmt.name.name)) {
+                const item = CompletionExtractor.createMethodItem(
                     stmt,
                     filePath,
                     getFileContent,
@@ -436,6 +533,9 @@ export class CompletionExtractor {
             stmt
         );
         item.detail = 'Global Variable';
+        const visibilityStr = stmt.isPrivate ? 'private ' : (stmt.isPublic ? 'public ' : '');
+        const staticStr = stmt.isStatic ? 'static ' : '';
+        const readonlyStr = stmt.isReadonly ? 'readonly ' : '';
         const typeStr = stmt.type ? stmt.type.toString() : 'unknown';
         const constantStr = stmt.isConstant ? 'constant ' : '';
         const arrayStr = stmt.isArray 
@@ -445,7 +545,7 @@ export class CompletionExtractor {
                     ? ` array[${stmt.arraySize}]`
                     : ' array')
             : '';
-        const doc = `${constantStr}${typeStr}${arrayStr} ${stmt.name.name}`;
+        const doc = `${visibilityStr}${staticStr}${readonlyStr}${constantStr}${typeStr}${arrayStr} ${stmt.name.name}`.trim();
         const commentData = CompletionExtractor.extractCommentData(stmt, filePath, getFileContent);
         
         const documentation = new vscode.MarkdownString();
@@ -633,6 +733,40 @@ export class CompletionExtractor {
     }
 
     /**
+     * 创建方法补全项
+     */
+    private static createMethodItem(
+        method: MethodDeclaration,
+        filePath: string,
+        getFileContent: (filePath: string) => string | null,
+        getRelativePath: (filePath: string) => string
+    ): CustomCompletionItem<MethodDeclaration> {
+        const methodName = method.name?.name || 'unknown';
+        const item = new CustomCompletionItem<MethodDeclaration>(
+            methodName,
+            vscode.CompletionItemKind.Method,
+            filePath,
+            method
+        );
+        item.detail = 'Method';
+        const doc = CompletionExtractor.formatMethodSignature(method);
+        const commentData = CompletionExtractor.extractCommentData(method, filePath, getFileContent);
+
+        const documentation = new vscode.MarkdownString();
+        documentation.appendCodeblock(doc, 'jass');
+        if (commentData.markdown) {
+            documentation.appendMarkdown('\n\n---\n\n');
+            documentation.appendMarkdown(commentData.markdown);
+        }
+        documentation.appendMarkdown(`\n\n**_>:** \`${getRelativePath(filePath)}\``);
+
+        item.documentation = documentation;
+        item.sortText = `1_method_${methodName}`;
+        CompletionExtractor.applyDeprecatedTagAndSort(item, commentData.deprecated);
+        return item;
+    }
+
+    /**
      * 创建 TextMacro 补全项
      */
     private static createTextMacroItem(
@@ -713,6 +847,25 @@ export class CompletionExtractor {
             .join(', ');
         const returnType = func.returnType ? func.returnType.toString() : 'nothing';
         return `function interface ${name} takes ${params || 'nothing'} returns ${returnType}`;
+    }
+
+    /**
+     * 格式化方法签名
+     */
+    private static formatMethodSignature(method: MethodDeclaration): string {
+        const name = method.name?.name || 'unknown';
+        const visibilityStr = method.isPrivate ? 'private ' : (method.isPublic ? 'public ' : '');
+        const staticStr = method.isStatic ? 'static ' : '';
+        const stubStr = method.isStub ? 'stub ' : '';
+        const operatorStr = method.isOperator ? `operator ${method.operatorName || ''} ` : '';
+        const params = method.parameters
+            .map(p => {
+                const typeStr = p.type ? p.type.toString() : 'unknown';
+                return `${typeStr} ${p.name.name}`;
+            })
+            .join(', ');
+        const returnType = method.returnType ? method.returnType.toString() : 'nothing';
+        return `${visibilityStr}${staticStr}${stubStr}method ${operatorStr}${name} takes ${params || 'nothing'} returns ${returnType}`;
     }
 
     /**

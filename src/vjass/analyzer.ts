@@ -548,8 +548,8 @@ export class SemanticAnalyzer {
             name,
             type: SymbolType.GLOBAL_VARIABLE,
             node,
-            isPrivate: false,
-            isPublic: true,
+            isPrivate: node.isPrivate || false,
+            isPublic: node.isPublic || false,
             scope: currentScope.name || undefined,
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
@@ -802,8 +802,8 @@ export class SemanticAnalyzer {
             name,
             type: node.isStatic ? SymbolType.STATIC_MEMBER : SymbolType.INSTANCE_MEMBER,
             node,
-            isPrivate: false, // 默认公共，需要从语法中判断
-            isPublic: true,
+            isPrivate: node.isPrivate || false,
+            isPublic: node.isPublic || false,
             scope: structName,
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
@@ -882,8 +882,8 @@ export class SemanticAnalyzer {
                 name: methodName,
                 type: SymbolType.METHOD,
                 node,
-                isPrivate: false,
-                isPublic: true,
+                isPrivate: node.isPrivate || false,
+                isPublic: node.isPublic || false,
                 scope: structName,
                 returnType: returnType || undefined,
                 parameters
@@ -3210,15 +3210,12 @@ export class SemanticAnalyzer {
                         const structName = targetNode instanceof StructDeclaration && targetNode.name ?
                             targetNode.name.name :
                             (targetNode instanceof InterfaceDeclaration && targetNode.name ? targetNode.name.name : "");
-                        // 注意：MethodDeclaration 目前没有 isPrivate 属性
-                        // 暂时假设所有方法都是公共的，私有方法的可见性检查将在后续版本中实现
-                        // TODO: 当 MethodDeclaration 添加 isPrivate 属性后，应该使用 member.isPrivate
                         return {
                             name: methodName,
                             type: SymbolType.METHOD,
                             node: member,
-                            isPrivate: false, // TODO: 从 member.isPrivate 读取
-                            isPublic: true,
+                            isPrivate: member.isPrivate || false,
+                            isPublic: member.isPublic || false,
                             scope: structName,
                             returnType: returnType || undefined,
                             parameters
@@ -5875,8 +5872,8 @@ export class SemanticAnalyzer {
                     continue;
                 }
 
-                // 跳过私有符号（它们可能被外部使用）
-                if (info.symbol.isPrivate) {
+                // 对外可见符号（显式 public）可能被其他文件/触发器入口使用，避免误报
+                if (info.symbol.isPublic) {
                     continue;
                 }
 
