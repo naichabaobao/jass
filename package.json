@@ -4,7 +4,7 @@
   "description": "完整的 JASS/vJass/Zinc 语言支持，包括语法高亮、代码补全、跳转定义、悬停提示、错误诊断、代码格式化等功能。支持 vJass 的库、结构、接口、模块、委托等特性，以及 Zinc 的 C-like 语法。QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.9.12",
+  "version": "1.9.13",
   "keywords": [
     "jass",
     "vjass",
@@ -186,8 +186,8 @@
     "test:version-gates": "node out/provider/version-gates.test.js",
     "test:type": "node -e \"const { runAnalyzerTypeTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTypeTests();\"",
     "package": "npx @vscode/vsce package",
-    "publish:skip-duplicate": "npx @vscode/vsce publish --skip-duplicate",
-    "publish": "npx @vscode/vsce publish",
+    "publish:skip-duplicate": "npx @vscode/vsce publish --skip-duplicate --no-dependencies",
+    "publish": "npx @vscode/vsce publish --no-dependencies",
     "prepublishOnly": "npm run compile",
     "fix-dependencies": "npm install --production"
   },
