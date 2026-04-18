@@ -1,0 +1,312 @@
+make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i686-pc-mingw32
+ 
+
+# Make data base, printed on Tue Jun 22 22:30:49 2021
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+HOMEDRIVE = C:
+# automatic
+@F = $(notdir $@)
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# makefile
+CURDIR := d:/projects/jass
+# default
+SHELL := sh.exe
+# environment
+WINDIR = C:\Windows
+# environment
+VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{},"_languagePackSupport":true}
+# environment
+ONEDRIVE = C:\Users\Administrator\OneDrive
+# environment
+PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+# makefile
+MAKEFILE_LIST := 
+# environment
+VSCODE_NODE_CACHED_DATA_DIR = C:\Users\Administrator\AppData\Roaming\Code\CachedData\507ce72a4466fbb27b715c3722558bb15afa9f48
+# environment
+TMP = C:\Users\Administrator\AppData\Local\Temp
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+PROGRAMW6432 = C:\Program Files
+# environment
+PROGRAMDATA = C:\ProgramData
+# environment
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-8adb92c8-a2c3-4f28-9299-c04804c1f4f5-sock
+# environment
+VSCODE_CWD = C:\Users\Administrator\AppData\Local\Programs\Microsoft VS Code
+# environment
+PATH = C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files (x86)\Git\cmd;C:\Program Files\Java\jdk-11.0.8\bin;D:\hadoop\hadoop-3.3.0\hadoop-3.3.0\bin;D:\hadoop\hadoop-3.3.0\hadoop-3.3.0\sbin;C:\Users\Administrator\AppData\Roaming\npm;C:\Program Files\Go\bin;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\Llvm\bin;C:\Program Files\make-4.3\WinRel;C:\Program Files\Common Files\Autodesk Shared\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Huawei QuickApp IDE\bin;C:\Program Files\flutter\bin;C:\Program Files\ffmpeg-n4.3.1-18-g6d886b6586-win64-gpl\bin;C:\Program Files\CMake\bin;C:\Program Files\MinGW\bin;C:\Program Files\NASM;C:\Users\Administrator\.cargo\bin;C:\Users\Administrator\AppData\Local\Programs\Python\Python38\Scripts\;C:\Users\Administrator\AppData\Local\Programs\Python\Python38\;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;;C:\Users\Administrator\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Administrator\go\bin
+# environment
+COMMONPROGRAMW6432 = C:\Program Files\Common Files
+# environment
+PROCESSOR_ARCHITECTURE = x86
+# environment
+USERPROFILE = C:\Users\Administrator
+# environment
+ALLUSERSPROFILE = C:\ProgramData
+# environment
+GOPATH = C:\Users\Administrator\go
+# environment
+VSCODE_LOG_STACK = false
+# environment
+NUMBER_OF_PROCESSORS = 8
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives
+# automatic
+%F = $(notdir $%)
+# environment
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_214368_SVPGDAJTCHAFTHGU
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+COMPUTERNAME = DESKTOP-HI8MJPF
+# environment
+PROGRAMFILES = C:\Program Files (x86)
+# environment
+DRIVERDATA = C:\Windows\System32\Drivers\DriverData
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+HADOOP_HOME = D:\hadoop\hadoop-3.3.0\hadoop-3.3.0
+# environment
+USERNAME = Administrator
+# environment
+PUBLIC = C:\Users\Public
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
+# environment
+LOGONSERVER = \\DESKTOP-HI8MJPF
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+USERDOMAIN = DESKTOP-HI8MJPF
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+PUB_HOSTED_URL = https://pub.flutter-io.cn
+# environment
+JAVA_HOME = C:\Program Files\Java\jdk-11.0.8
+# default
+MAKE_VERSION := 3.81
+# makefile
+.DEFAULT_GOAL := 
+# environment
+GOROOT = C:\Program Files\Go
+# environment
+PROGRAMFILES(X86) = C:\Program Files (x86)
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+LOCALAPPDATA = C:\Users\Administrator\AppData\Local
+# environment
+PSMODULEPATH = C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules
+# default
+MAKE_COMMAND := make.exe
+# environment
+PROCESSOR_ARCHITEW6432 = AMD64
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 94 Stepping 3, GenuineIntel
+# environment
+OS = Windows_NT
+# environment
+VSCODE_IPC_HOOK = \\.\pipe\9e7283c68e6159fd1e9872b65f264be5-1.57.1-main-sock
+# environment
+HOMEPATH = \Users\Administrator
+# environment
+COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
+# environment
+PROMPT = $P$G
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+SYSTEMROOT = C:\Windows
+# environment
+FLUTTER_STORAGE_BASE_URL = https://storage.flutter-io.cn
+# automatic
++F = $(notdir $+)
+# environment
+APPDATA = C:\Users\Administrator\AppData\Roaming
+# environment
+TEMP = C:\Users\Administrator\AppData\Local\Temp
+# environment
+COMSPEC = C:\Windows\system32\cmd.exe
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+DXSDK_DIR = C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\
+# environment
+LC_ALL = C
+# environment
+ADSK_3DSMAX_X64_2021 = C:\Program Files\Autodesk\3ds Max 2021\
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+SYSTEMDRIVE = C:
+# environment
+SESSIONNAME = Console
+# environment
+PROCESSOR_REVISION = 5e03
+# environment
+VS140COMNTOOLS = C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\
+# environment
+MAKELEVEL := 0
+# environment
+LANG = C
+# environment
+PROCESSOR_LEVEL = 6
+# environment
+VSCODE_PID = 214368
+# environment
+USERDOMAIN_ROAMINGPROFILE = DESKTOP-HI8MJPF
+# variable set hash-table stats:
+# Load=95/1024=9%, Rehash=0, Collisions=10/112=9%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# : could not be stat'd.
+# C:\Users\Administrator\.cargo\bin (key C:/Users/Administrator/.cargo/bin, mtime 1602049662): 17 files, no impossibilities.
+# C:\Program Files\Common Files\Oracle\Java\javapath (key C:/Program Files/Common Files/Oracle/Java/javapath, mtime 1595086011): 6 files, no impossibilities.
+# C:\Program Files\Go\bin (key C:/Program Files/Go/bin, mtime 1595254332): 4 files, no impossibilities.
+# D:\hadoop\hadoop-3.3.0\hadoop-3.3.0\sbin (key D:/hadoop/hadoop-3.3.0/hadoop-3.3.0/sbin, mtime 1595089939): 29 files, no impossibilities.
+# C:\Users\Administrator\AppData\Local\Programs\Python\Python38\ (key C:/Users/Administrator/AppData/Local/Programs/Python/Python38/, mtime 1595786932): 18 files, no impossibilities.
+# C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps (key C:/Users/Administrator/AppData/Local/Microsoft/WindowsApps, mtime 1619904418): 8 files, no impossibilities.
+# C:\Users\Administrator\AppData\Local\Programs\Python\Python38\Scripts\ (key C:/Users/Administrator/AppData/Local/Programs/Python/Python38/Scripts/, mtime 1595786934): 7 files, no impossibilities.
+# C:\Windows\System32\WindowsPowerShell\v1.0\ (key C:/Windows/System32/WindowsPowerShell/v1.0/, mtime 1575729975): 31 files, no impossibilities.
+# C:\Windows\System32\Wbem (key C:/Windows/System32/Wbem, mtime 1575730013): 171 files, no impossibilities.
+# . (key d:/projects/jass, mtime 1624116368): 40 files, no impossibilities.
+# C:\Program Files\flutter\bin (key C:/Program Files/flutter/bin, mtime 1600191267): 9 files, no impossibilities.
+# C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\Llvm\bin (key C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/Llvm/bin, mtime 1595938838): 104 files, no impossibilities.
+# C:\Program Files (x86)\Git\cmd (key C:/Program Files (x86)/Git/cmd, mtime 1594588926): 8 files, no impossibilities.
+# C:\Users\Administrator\go\bin: could not be stat'd.
+# C:\Program Files\nodejs\ (key C:/Program Files/nodejs/, mtime 1594586203): 11 files, no impossibilities.
+# C:\Windows\System32\OpenSSH\: could not be stat'd.
+# C:\Program Files\ffmpeg-n4.3.1-18-g6d886b6586-win64-gpl\bin (key C:/Program Files/ffmpeg-n4.3.1-18-g6d886b6586-win64-gpl/bin, mtime 1601296041): 5 files, no impossibilities.
+# C:\Program Files\NASM (key C:/Program Files/NASM, mtime 1623228149): 18 files, no impossibilities.
+# C:\Windows (key C:/Windows, mtime 1623941104): 113 files, no impossibilities.
+# C:\Program Files\MinGW\bin (key C:/Program Files/MinGW/bin, mtime 1607505826): 64 files, no impossibilities.
+# C:\Program Files\Huawei QuickApp IDE\bin (key C:/Program Files/Huawei QuickApp IDE/bin, mtime 1600919933): 4 files, no impossibilities.
+# C:\Program Files\Common Files\Autodesk Shared\ (key C:/Program Files/Common Files/Autodesk Shared/, mtime 1597350208): 54 files, no impossibilities.
+# C:\Program Files\Java\jdk-11.0.8\bin (key C:/Program Files/Java/jdk-11.0.8/bin, mtime 1595086010): 125 files, no impossibilities.
+# C:\Program Files\Microsoft SQL Server\120\Tools\Binn\ (key C:/Program Files/Microsoft SQL Server/120/Tools/Binn/, mtime 1597349829): 4 files, no impossibilities.
+# C:\Users\Administrator\AppData\Local\Programs\Microsoft VS Code\bin (key C:/Users/Administrator/AppData/Local/Programs/Microsoft VS Code/bin, mtime 1624020993): 4 files, no impossibilities.
+# C:\Program Files\make-4.3\WinRel (key C:/Program Files/make-4.3/WinRel, mtime 1595937144): 9 files, no impossibilities.
+# C:\Windows\system32 (key C:/Windows/system32, mtime 1623856022): 3102 files, no impossibilities.
+# D:\hadoop\hadoop-3.3.0\hadoop-3.3.0\bin (key D:/hadoop/hadoop-3.3.0/hadoop-3.3.0/bin, mtime 1595095205): 24 files, no impossibilities.
+# C:\Users\Administrator\AppData\Roaming\npm (key C:/Users/Administrator/AppData/Roaming/npm, mtime 1614850941): 36 files, no impossibilities.
+# C:\Program Files\CMake\bin (key C:/Program Files/CMake/bin, mtime 1607503561): 7 files, no impossibilities.
+
+# 4032 files, no impossibilities in 31 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+all:
+#  Command-line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+makefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+GNUmakefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# files hash-table stats:
+# Load=5/1024=0%, Rehash=0, Collisions=0/16=0%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 0
+# # of strcache buffers: 0
+# strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
+# strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
+
+# Finished Make data base on Tue Jun 22 22:30:49 2021
+
+ 
+make.exe: *** No rule to make target `all'.  Stop.
+ 
