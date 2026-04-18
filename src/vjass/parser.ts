@@ -175,7 +175,9 @@ export class Parser {
     }
 
     /**
-     * 检查是否到达文件末尾
+     * 是否已无更多词法单元（null 或 EndOfInput）。
+     * 表达式解析里必须用本方法结束循环，不能仅写 `!current()`：
+     * 否则会把 EndOfInput 当成“还有一个 token”，从而漏报或误报。
      */
     private isAtEnd(): boolean {
         const token = this.lexer.current();
@@ -373,10 +375,7 @@ export class Parser {
             return null;
         }
 
-        const token = this.lexer.current();
-        if (!token) {
-            return null;
-        }
+        const token = this.lexer.current()!;
 
         // 检查是否是结束关键字（不应该在这里被解析为语句）
         if (this.isEndKeyword()) {
@@ -2544,8 +2543,7 @@ export class Parser {
         let lastLine = startPos.line;
         
         while (!this.isAtEnd()) {
-            const token = this.lexer.current();
-            if (!token) break;
+            const token = this.lexer.current()!;
             
             // 检查是否是 //! endinject
             if (this.isComment()) {
@@ -2637,8 +2635,7 @@ export class Parser {
         let zincEndLineIndex = -1;
         
         while (!this.isAtEnd()) {
-            const token = this.lexer.current();
-            if (!token) break;
+            const token = this.lexer.current()!;
             
             // 检查是否是 //! endzinc
             if (this.isComment()) {
@@ -2751,8 +2748,7 @@ export class Parser {
         let lastLineNumber = startPos.line;
         
         while (!this.isAtEnd()) {
-            const token = this.lexer.current();
-            if (!token) break;
+            const token = this.lexer.current()!;
             
             // 检查是否是 //! endtextmacro
             if (this.isTextMacroDirective()) {
@@ -3700,9 +3696,13 @@ export class Parser {
         this.consume(TokenType.OperatorAssign, "Expected '=' after target expression");
 
         // 解析值表达式
+        const valueErrorsBefore = this.errors.errors.length;
         const value = this.parseExpression();
         if (!value) {
-            this.error("Expected value expression after '='");
+            // 例如二元运算符后缺右操作数时，parseBinaryExpression 已给出更精确的诊断
+            if (this.errors.errors.length === valueErrorsBefore) {
+                this.error("Expected value expression after '='");
+            }
             return null;
         }
 
@@ -3734,11 +3734,11 @@ export class Parser {
         let callee: Identifier | Expression;
         
         // 解析基本表达式（标识符、成员访问等），但不包括函数调用
-        const token = this.lexer.current();
-        if (!token) {
+        if (this.isAtEnd()) {
             this.error("Expected function name or expression after 'call'");
             return null;
         }
+        const token = this.lexer.current()!;
         
         // call .method()：隐式 this 的方法调用
         if (token.type === TokenType.Dot) {
@@ -3919,7 +3919,8 @@ export class Parser {
     }
 
     /**
-     * 解析表达式
+     * 解析表达式。
+     * 返回 null 时，调用方应检查 errors：残缺二元式通常已在运算符处记录诊断。
      */
     private parseExpression(): Expression | null {
         return this.parseBinaryExpression(0);
@@ -3936,8 +3937,10 @@ export class Parser {
         }
 
         while (true) {
-            const token = this.lexer.current();
-            if (!token) break;
+            if (this.isAtEnd()) {
+                break;
+            }
+            const token = this.lexer.current()!;
             // vJass: 不将 "then" 当作表达式的一部分，以便 if condition then 正确收尾
             if (this.checkValue("then")) break;
 
@@ -3957,11 +3960,21 @@ export class Parser {
             // 对于右结合运算符，使用相同的优先级；对于左结合运算符，使用 precedence + 1
             const nextPrecedence = isRightAssociative ? precedence : precedence + 1;
 
+            const operatorToken = token;
+            const errorsBeforeRhs = this.errors.errors.length;
             this.lexer.next();
             const right = this.parseBinaryExpression(nextPrecedence);
             if (!right) {
-                this.error("Expected expression after operator");
-                break;
+                // 若深层解析（例如更内层运算符后缺操作数）已报错，则不在外层重复标注
+                if (this.errors.errors.length === errorsBeforeRhs) {
+                    this.error(
+                        "Expected expression after operator",
+                        operatorToken.start,
+                        operatorToken.end,
+                        "Provide the right-hand operand, or move the operator to a valid position."
+                    );
+                }
+                return null;
             }
 
             left = new BinaryExpression(
@@ -3989,8 +4002,10 @@ export class Parser {
      * 解析一元表达式
      */
     private parseUnaryExpression(): Expression | null {
-        const token = this.lexer.current();
-        if (!token) return null;
+        if (this.isAtEnd()) {
+            return null;
+        }
+        const token = this.lexer.current()!;
 
         // 处理一元运算符
         if (token.type === TokenType.OperatorMinus || 
@@ -4021,8 +4036,10 @@ export class Parser {
      * 解析基本表达式
      */
     private parsePrimaryExpression(): Expression | null {
-        const token = this.lexer.current();
-        if (!token) return null;
+        if (this.isAtEnd()) {
+            return null;
+        }
+        const token = this.lexer.current()!;
 
         // 字面量
         if (token.type === TokenType.IntegerLiteral) {
@@ -4553,8 +4570,11 @@ export class Parser {
      * 解析函数调用表达式
      */
     private parseCallExpression(): CallExpression | null {
-        const token = this.lexer.current();
-        if (!token || token.type !== TokenType.Identifier) {
+        if (this.isAtEnd()) {
+            return null;
+        }
+        const token = this.lexer.current()!;
+        if (token.type !== TokenType.Identifier) {
             return null;
         }
 

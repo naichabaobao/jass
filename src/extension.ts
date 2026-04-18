@@ -9,6 +9,7 @@ import { SignatureHelpProvider } from './provider/signature-help-provider';
 import { OutlineProvider } from './provider/outline-provider';
 import { HoverProvider } from './provider/hover-provider';
 import { DefinitionProvider } from './provider/definition-provider';
+import { KeywordDefinitionProvider } from './provider/keyword-definition-provider';
 import { TypeDefinitionProvider } from './provider/type-definition-provider';
 import { ReferenceProvider } from './provider/reference-provider';
 import { InlayHintsProvider } from './provider/inlay-hints-provider';
@@ -500,12 +501,21 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    // 创建并注册 DefinitionProvider（跳转到定义支持）
+    // 创建并注册 DefinitionProvider（跳转到定义支持，不含关键字文档）
     const definitionProvider = new DefinitionProvider(dataEnterManager);
     context.subscriptions.push(
         vscode.languages.registerDefinitionProvider(
             jassSelector,
             definitionProvider
+        )
+    );
+
+    // 关键字文档跳转（独立 Provider，由 jass.keywordDefinition 控制，默认关闭）
+    const keywordDefinitionProvider = new KeywordDefinitionProvider(dataEnterManager);
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider(
+            jassSelector,
+            keywordDefinitionProvider
         )
     );
 
@@ -778,7 +788,7 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    // 注册命令：打开关键字文档 Webview（供 DefinitionProvider 调用）
+    // 注册命令：打开关键字文档 Webview（供 KeywordDefinitionProvider 在启用 jass.keywordDefinition 时调用）
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.openKeywordDocWebview', async (docFileName?: string) => {
             await openKeywordDocWebview(context, docFileName);

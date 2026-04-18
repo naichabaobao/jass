@@ -386,6 +386,78 @@ interface IBuffInterface=
         if (!expr || !(expr instanceof BinaryExpression)) return false;
         return expr.operator === OperatorType.Plus;
     })) exprPassed++; else exprFailed++;
+
+    // 残缺二元表达式：须在运算符所在行报告错误（且不得静默接受错误 AST）
+    function testIncompleteRhs(name: string, code: string, expectErrorSubstring: string, errorLine1Based: number): boolean {
+        const parser = new Parser(code);
+        parser.parse();
+        const errs = parser.errors.errors.filter((e) => e.message.includes(expectErrorSubstring));
+        if (errs.length === 0) {
+            console.log(`✗ ${name}: 未找到包含 “${expectErrorSubstring}” 的诊断`);
+            parser.errors.errors.forEach((e, i) => {
+                const line = e.start?.line !== undefined ? e.start.line + 1 : "?";
+                console.log(`  已有错误 ${i + 1} (行 ${line}): ${e.message}`);
+            });
+            return false;
+        }
+        const e0 = errs[0];
+        const line = e0.start.line + 1;
+        if (line !== errorLine1Based) {
+            console.log(`✗ ${name}: 期望错误在第 ${errorLine1Based} 行，实际第 ${line} 行`);
+            return false;
+        }
+        console.log(`✓ ${name} (行 ${line})`);
+        return true;
+    }
+
+    if (testIncompleteRhs(
+        "set 行末残缺 +（下一行为注释）",
+        `function F takes nothing returns nothing
+    local integer used = 10
+    set used = used +
+    // next
+endfunction`,
+        "Expected expression after operator",
+        3
+    )) exprPassed++; else exprFailed++;
+
+    if (testIncompleteRhs(
+        "set 行末残缺 + 后无换行即文件结束（仅 EndOfInput）",
+        `function F takes nothing returns nothing
+    set used = used +`,
+        "Expected expression after operator",
+        2
+    )) exprPassed++; else exprFailed++;
+
+    if (testIncompleteRhs(
+        "struct method 内 set 行末残缺 +",
+        `struct S
+    method m takes nothing returns nothing
+        local integer used = 10
+        set used = used +
+        // c
+    endmethod
+endstruct`,
+        "Expected expression after operator",
+        4
+    )) exprPassed++; else exprFailed++;
+
+    if (testIncompleteRhs(
+        "内层运算符后缺操作数时仅标内层",
+        `function G takes nothing returns nothing
+    local integer a = 1
+    local integer b = 2
+    set a = a + b *
+endfunction`,
+        "Expected expression after operator",
+        4
+    )) exprPassed++; else exprFailed++;
+
+    if (testExpression("尾随点实数字面量 (x * 1000.)", "x * 1000.", (expr) => {
+        if (!expr || !(expr instanceof BinaryExpression)) return false;
+        if (expr.operator !== OperatorType.Multiply) return false;
+        return expr.right instanceof RealLiteral && Math.abs((expr.right as RealLiteral).value - 1000) < 1e-9;
+    })) exprPassed++; else exprFailed++;
     
     console.log(`\n表达式测试结果: 通过 ${exprPassed}, 失败 ${exprFailed}`);
     
@@ -4014,10 +4086,9 @@ public function xxx takes nothing returns nothing
 endfunction
 endscope`, (r, p) => {
         if (r.body.length === 0 || p.errors.errors.length > 0) return false;
-        // scope 被解析为 BlockStatement，查找其中的函数
-        const scope = r.body.find((s: Statement) => s instanceof BlockStatement);
-        if (!(scope instanceof BlockStatement)) return false;
-        const func = scope.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "xxx");
+        const scope = r.body.find((s: Statement) => s instanceof ScopeDeclaration);
+        if (!(scope instanceof ScopeDeclaration)) return false;
+        const func = scope.members.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "xxx");
         if (!(func instanceof FunctionDeclaration)) return false;
         const callStmt = func.body.body.find((s: Statement) => s instanceof CallStatement);
         if (!(callStmt instanceof CallStatement)) return false;
@@ -4035,18 +4106,12 @@ endscope`, (r, p) => {
         return false;
     })) functionObjectPassed++; else functionObjectFailed++;
 
-    // 测试函数对象的 .evaluate 用于相互递归
+    // 测试函数对象的 .evaluate 用于相互递归（避免 if 内 return 被顶层 find 误匹配为 return x）
     if (testFunctionObject("函数对象的 .evaluate 用于相互递归", `function A takes real x returns real
-    if (GetRandomInt(0,1) == 0) then
-        return B.evaluate(x * 0.02)
-    endif
-    return x
+    return B.evaluate(x * 0.02)
 endfunction
 function B takes real x returns real
-    if (GetRandomInt(0,1) == 1) then
-        return A(x * 1000.)
-    endif
-    return x
+    return A(x * 1000.)
 endfunction`, (r, p) => {
         if (r.body.length < 2 || p.errors.errors.length > 0) return false;
         const funcA = r.body.find((s: Statement) => s instanceof FunctionDeclaration && s.name?.toString() === "A");

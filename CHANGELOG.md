@@ -1,3 +1,9 @@
+#### 1.9.12
+- 修复未使用BUG
+- 关键字跳转默认关闭
+- 参数未使用支持
+- 支持this跳转
+
 #### 1.9.11
 - 补全跨文件索引修复：`struct/interface/module` 内成员会被完整收集，`public function/method/native` 在其他文件可正常提示。
 - 修饰符语义增强：`public/private/static/stub/readonly` 在 AST、补全文档与成员提示链路中保持一致。

@@ -275,6 +275,38 @@ endfunction`,
     );
 
     testSemantic(
+        "检测未使用的形参",
+        `function test takes integer unusedParam returns nothing
+local integer used = 10
+set used = used + 1
+endfunction`,
+        (errors) => {
+            return errors.warnings.some(w =>
+                w.message.includes("Unused parameter") &&
+                w.message.includes("unusedParam")
+            );
+        },
+        { checkUnused: true }
+    );
+
+    testSemantic(
+        "未使用形参不因其他函数同名局部被误判为已使用",
+        `function a takes integer x returns nothing
+endfunction
+function b takes nothing returns nothing
+local integer x = 1
+set x = x + 1
+endfunction`,
+        (errors) => {
+            return errors.warnings.some(w =>
+                w.message.includes("Unused parameter") &&
+                w.message.includes("'x'")
+            );
+        },
+        { checkUnused: true }
+    );
+
+    testSemantic(
         "检测未使用的函数",
         `function unusedFunction takes nothing returns nothing
 endfunction
@@ -461,6 +493,30 @@ endfunction`,
             return errors.errors.some(e => 
                 e.message.includes("参数") || 
                 e.message.includes("parameter")
+            );
+        }
+    );
+
+    testSemantic(
+        "this. 误用为库内全局函数时应单条报错并提示 call 全局名",
+        `library LibX
+function GlobalFn takes integer a returns nothing
+endfunction
+struct S
+    method m takes nothing returns nothing
+        call this.GlobalFn()
+    endmethod
+endstruct
+endlibrary`,
+        (errors) => {
+            if (errors.errors.length !== 1) {
+                return false;
+            }
+            const m = errors.errors[0].message;
+            return (
+                m.includes("not found in struct instance") &&
+                m.includes("exists in scope") &&
+                m.includes("GlobalFn")
             );
         }
     );

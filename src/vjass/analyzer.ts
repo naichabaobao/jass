@@ -74,6 +74,8 @@ enum SymbolType {
     GLOBAL_VARIABLE = "global_variable",
     /** 局部变量 */
     LOCAL_VARIABLE = "local_variable",
+    /** 函数/方法形参（takes 子句） */
+    PARAMETER = "parameter",
     /** 函数 */
     FUNCTION = "function",
     /** 结构 */
@@ -492,7 +494,8 @@ export class SemanticAnalyzer {
         if (scope.symbols.has(name)) {
             // 检查是否是同一个作用域内的重复声明
             const existingSymbol = scope.symbols.get(name);
-            if (existingSymbol && existingSymbol.type === SymbolType.LOCAL_VARIABLE) {
+            if (existingSymbol &&
+                (existingSymbol.type === SymbolType.LOCAL_VARIABLE || existingSymbol.type === SymbolType.PARAMETER)) {
                 // 只有在同一个方法作用域内重复声明局部变量时才报错
                 this.addError(
                     node.start,
@@ -913,12 +916,13 @@ export class SemanticAnalyzer {
 
                 methodScope.symbols.set(paramName, {
                     name: paramName,
-                    type: SymbolType.LOCAL_VARIABLE,
+                    type: SymbolType.PARAMETER,
                     node: param,
                     isPrivate: false,
                     isPublic: true,
                     scope: methodScope.name,
-                    valueType: paramType || undefined
+                    valueType: paramType || undefined,
+                    isInitialized: true
                 });
             }
 
@@ -1207,12 +1211,13 @@ export class SemanticAnalyzer {
 
                 functionScope.symbols.set(paramName, {
                     name: paramName,
-                    type: SymbolType.LOCAL_VARIABLE,
+                    type: SymbolType.PARAMETER,
                     node: param,
                     isPrivate: false,
                     isPublic: true,
                     scope: name,
-                    valueType: paramType || undefined
+                    valueType: paramType || undefined,
+                    isInitialized: true
                 });
             }
 
@@ -1394,8 +1399,10 @@ export class SemanticAnalyzer {
         } else if (node instanceof LibraryDeclaration) {
             this.checkLibrary(node);
         } else if (node instanceof CallStatement) {
-            // CallStatement 包含 CallExpression，需要检查表达式
+            // CallStatement 的唯一子节点即 expression；必须在末尾 return，
+            // 否则默认子树递归会对同一 CallExpression 再跑一遍 checkCallExpression（重复报错）。
             this.checkCallExpression(node.expression);
+            return;
         } else if (node instanceof CallExpression) {
             this.checkCallExpression(node);
         } else if (node instanceof AssignmentStatement) {
@@ -1456,12 +1463,13 @@ export class SemanticAnalyzer {
                         (param.type instanceof Identifier ? param.type.name : "thistype") : "nothing";
                     functionScope.symbols.set(paramName, {
                         name: paramName,
-                        type: SymbolType.LOCAL_VARIABLE,
+                        type: SymbolType.PARAMETER,
                         node: param,
                         isPrivate: false,
                         isPublic: true,
                         scope: functionScope.name,
-                        valueType: paramType || undefined
+                        valueType: paramType || undefined,
+                        isInitialized: true
                     });
                 }
                 this.scopeStack.push(functionScope);
@@ -1509,12 +1517,13 @@ export class SemanticAnalyzer {
                         (param.type instanceof Identifier ? param.type.name : "thistype") : "nothing";
                     methodScope.symbols.set(paramName, {
                         name: paramName,
-                        type: SymbolType.LOCAL_VARIABLE,
+                        type: SymbolType.PARAMETER,
                         node: param,
                         isPrivate: false,
                         isPublic: true,
                         scope: methodScope.name,
-                        valueType: paramType || undefined
+                        valueType: paramType || undefined,
+                        isInitialized: true
                     });
                 }
                 
@@ -2543,6 +2552,11 @@ export class SemanticAnalyzer {
             // 如果类型来自外部文件，可能方法的详细信息不完整，只报告警告
             // 如果类型在当前文件中，则报告错误
             const isExternalType = this.externalSymbols.has(objectType.typeName);
+            const globalFunc = this.findSymbol(methodName, SymbolType.FUNCTION);
+            const thisReceiver =
+                objectExpr instanceof Identifier && objectExpr.name.toLowerCase() === "this";
+            const suggestCallGlobal =
+                globalFunc && thisReceiver && !objectType.isStatic;
             if (isExternalType) {
                 // 类型来自外部文件，方法可能在其他文件中，只报告警告
                 this.addWarning(
@@ -2552,11 +2566,15 @@ export class SemanticAnalyzer {
                 );
             } else {
                 // 类型在当前文件中，应该能找到方法，报告错误
+                const base = `Method '${methodName}' not found in ${objectType.isStatic ? "struct" : "struct instance"} '${objectType.typeName}'`;
+                const fix = suggestCallGlobal
+                    ? `Use 'call ${methodName}(...)' for the library/global function, not 'call this.${methodName}(...)'`
+                    : `Check if the method name is correct or if the method is declared`;
                 this.addError(
                     methodNameExpr.start,
                     methodNameExpr.end,
-                    `Method '${methodName}' not found in ${objectType.isStatic ? "struct" : "struct instance"} '${objectType.typeName}'`,
-                    `Check if the method name is correct or if the method is declared`
+                    suggestCallGlobal ? `${base}. A function '${methodName}' exists in scope.` : base,
+                    fix
                 );
             }
             return;
@@ -3753,7 +3771,9 @@ export class SemanticAnalyzer {
 
             if (symbol) {
                 // 标记变量为已初始化（赋值语句会初始化变量）
-                if (symbol.type === SymbolType.LOCAL_VARIABLE || symbol.type === SymbolType.GLOBAL_VARIABLE) {
+                if (symbol.type === SymbolType.LOCAL_VARIABLE ||
+                    symbol.type === SymbolType.PARAMETER ||
+                    symbol.type === SymbolType.GLOBAL_VARIABLE) {
                     symbol.isInitialized = true;
                 }
 
@@ -3762,6 +3782,7 @@ export class SemanticAnalyzer {
                     // 根据变量类型提供更具体的错误消息
                     const varType = symbol.type === SymbolType.GLOBAL_VARIABLE ? "global variable" :
                                    symbol.type === SymbolType.LOCAL_VARIABLE ? "local variable" :
+                                   symbol.type === SymbolType.PARAMETER ? "parameter" :
                                    "variable";
                     this.addError(
                         node.target.start,
@@ -4413,7 +4434,8 @@ export class SemanticAnalyzer {
         // 如果数组表达式是标识符，查找数组变量
         if (arrayExpr instanceof Identifier) {
             const arraySymbol = this.findSymbol(arrayExpr.name);
-            if (arraySymbol && (arraySymbol.type === SymbolType.LOCAL_VARIABLE || 
+            if (arraySymbol && (arraySymbol.type === SymbolType.LOCAL_VARIABLE ||
+                                arraySymbol.type === SymbolType.PARAMETER ||
                                 arraySymbol.type === SymbolType.GLOBAL_VARIABLE ||
                                 arraySymbol.type === SymbolType.INSTANCE_MEMBER ||
                                 arraySymbol.type === SymbolType.STATIC_MEMBER)) {
@@ -5549,7 +5571,8 @@ export class SemanticAnalyzer {
         }
 
         const symbol = this.findSymbol(targetIdentifier.name);
-        if (!symbol || symbol.type !== SymbolType.LOCAL_VARIABLE) {
+        if (!symbol ||
+            (symbol.type !== SymbolType.LOCAL_VARIABLE && symbol.type !== SymbolType.PARAMETER)) {
             return;
         }
 
@@ -5714,8 +5737,8 @@ export class SemanticAnalyzer {
             }
         } else {
             // 变量已声明，检查作用域是否正确
-            // 局部变量应该在当前作用域或父作用域中
-            if (symbol.type === SymbolType.LOCAL_VARIABLE) {
+            // 局部变量与形参应在当前作用域或父作用域中
+            if (symbol.type === SymbolType.LOCAL_VARIABLE || symbol.type === SymbolType.PARAMETER) {
                 // 检查变量是否在当前作用域链中
                 const currentScope = this.scopeStack[this.scopeStack.length - 1];
                 let foundInScope = false;
@@ -5872,8 +5895,12 @@ export class SemanticAnalyzer {
                     continue;
                 }
 
-                // 对外可见符号（显式 public）可能被其他文件/触发器入口使用，避免误报
-                if (info.symbol.isPublic) {
+                // 显式 public 的全局变量、方法、成员等可能被跨文件引用，跳过未使用误报。
+                // 局部变量、形参、顶层函数在符号表里 isPublic 常为占位或仍应对单文件内未使用做提示，不因 isPublic 跳过。
+                if (info.symbol.isPublic &&
+                    info.symbol.type !== SymbolType.LOCAL_VARIABLE &&
+                    info.symbol.type !== SymbolType.PARAMETER &&
+                    info.symbol.type !== SymbolType.FUNCTION) {
                     continue;
                 }
 
@@ -5885,18 +5912,19 @@ export class SemanticAnalyzer {
                     continue;
                 }
 
-                // 报告未使用的局部变量
-                if (info.symbol.type === SymbolType.LOCAL_VARIABLE) {
+                // 报告未使用的局部变量 / 形参
+                if (info.symbol.type === SymbolType.LOCAL_VARIABLE || info.symbol.type === SymbolType.PARAMETER) {
                     let warningStart = info.location;
                     let warningEnd = info.symbol.node.end || info.location;
                     if (info.symbol.node instanceof VariableDeclaration && info.symbol.node.name) {
                         warningStart = info.symbol.node.name.start || warningStart;
                         warningEnd = info.symbol.node.name.end || warningEnd;
                     }
+                    const label = info.symbol.type === SymbolType.PARAMETER ? "parameter" : "local variable";
                     this.addWarning(
                         warningStart,
                         warningEnd,
-                        `Unused local variable '${symbolName}'`
+                        `Unused ${label} '${symbolName}'`
                     );
                 }
                 // 报告未使用的函数（非 main/config）
@@ -5924,6 +5952,66 @@ export class SemanticAnalyzer {
     }
 
     /**
+     * 未使用检测：标识符所在函数/方法在 symbolUsage 中的作用域前缀（与 collect 阶段 ScopeInfo.name 一致）
+     */
+    private getUnusedCheckCallableScopeKey(node: ASTNode): string | null {
+        let n: ASTNode | null | undefined = node;
+        while (n) {
+            if (n instanceof FunctionDeclaration && n.name) {
+                return n.name.name;
+            }
+            if (n instanceof MethodDeclaration) {
+                const rawMethodName = n.name ? n.name.name : (n.operatorName || "");
+                let structName: string | null = null;
+                let p: ASTNode | null | undefined = n.parent;
+                while (p) {
+                    if (p instanceof StructDeclaration && p.name) {
+                        structName = p.name.name;
+                        break;
+                    }
+                    p = p.parent;
+                }
+                return rawMethodName || (structName ? `${structName}.method` : "method");
+            }
+            n = n.parent;
+        }
+        return null;
+    }
+
+    /**
+     * 将一次标识符引用标记为已使用；与 `callableScope::name` 键对齐，避免跨函数同名误标记。
+     */
+    private markIdentifierUsedInUnusedCheck(
+        id: Identifier,
+        name: string,
+        symbolUsage: Map<string, { symbol: SymbolInfo; used: boolean; location: { line: number; position: number } }>
+    ): void {
+        const scopePrefix = this.getUnusedCheckCallableScopeKey(id);
+        if (scopePrefix) {
+            const scopedKey = `${scopePrefix}::${name}`;
+            if (symbolUsage.has(scopedKey)) {
+                symbolUsage.get(scopedKey)!.used = true;
+                return;
+            }
+            const suffix = `::${name}`;
+            for (const key of symbolUsage.keys()) {
+                if (key.endsWith(suffix) && key.slice(0, -suffix.length) === scopePrefix) {
+                    symbolUsage.get(key)!.used = true;
+                    return;
+                }
+            }
+        }
+        if (symbolUsage.has(name)) {
+            const entry = symbolUsage.get(name)!;
+            // 在函数/方法体内，裸键名可能对应「其他顶层函数」；普通标识符引用不应算作调用了该函数（调用由 CallExpression 分支标记）。
+            if (scopePrefix && entry.symbol.type === SymbolType.FUNCTION) {
+                return;
+            }
+            entry.used = true;
+        }
+    }
+
+    /**
      * 标记使用的符号
      */
     private markUsedSymbols(node: ASTNode, symbolUsage: Map<string, { symbol: SymbolInfo; used: boolean; location: { line: number; position: number } }>): void {
@@ -5936,21 +6024,7 @@ export class SemanticAnalyzer {
                 return;
             }
             const name = node.name;
-            // 查找符号（优先匹配作用域内的变量，然后匹配全局变量）
-            for (const [key, info] of symbolUsage) {
-                const symbolName = key.split('::').pop() || key;
-                if (symbolName === name) {
-                    // 如果键包含作用域信息（如 "functionName::varName"），需要检查作用域
-                    if (key.includes('::')) {
-                        // 检查当前节点是否在该作用域内（通过检查符号的声明位置）
-                        // 对于局部变量，我们匹配作用域内的变量
-                        info.used = true;
-                    } else {
-                        // 全局变量或函数，直接匹配
-                        info.used = true;
-                    }
-                }
-            }
+            this.markIdentifierUsedInUnusedCheck(node, name, symbolUsage);
         } else if (node instanceof CallExpression) {
             // 函数调用：标记被调用的函数为已使用
             if (node.callee instanceof Identifier) {

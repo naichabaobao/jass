@@ -562,46 +562,87 @@ export class Lexer implements ILexer {
             this.advance();
         }
 
-        // 检查是否有小数点
-        if (this.currentChar() === '.' && this.isNumber(this.peekChar(1))) {
-            value += this.currentChar();
-            this.advance();
-            // 读取小数部分
-            while (this.isNumber(this.currentChar())) {
+        // 检查是否有小数点（含 `1000.` 仅尾随小数点，仍为实数字面量；`123.foo` 保留为整数 + 成员访问）
+        if (this.currentChar() === '.') {
+            const afterDot = this.peekChar(1);
+            if (this.isNumber(afterDot)) {
                 value += this.currentChar();
                 this.advance();
-            }
-            // 检查科学计数法
-            if (this.currentChar() === 'e' || this.currentChar() === 'E') {
-                value += this.currentChar();
-                this.advance();
-                if (this.currentChar() === '+' || this.currentChar() === '-') {
-                    value += this.currentChar();
-                    this.advance();
-                }
+                // 读取小数部分
                 while (this.isNumber(this.currentChar())) {
                     value += this.currentChar();
                     this.advance();
                 }
+                // 检查科学计数法
+                if (this.currentChar() === 'e' || this.currentChar() === 'E') {
+                    value += this.currentChar();
+                    this.advance();
+                    if (this.currentChar() === '+' || this.currentChar() === '-') {
+                        value += this.currentChar();
+                        this.advance();
+                    }
+                    while (this.isNumber(this.currentChar())) {
+                        value += this.currentChar();
+                        this.advance();
+                    }
+                }
+                const endLine = this.line;
+                const endColumn = this.column;
+                return new Token(
+                    TokenType.RealLiteral,
+                    value,
+                    { line: startLine, position: startColumn },
+                    { line: endLine, position: endColumn }
+                );
             }
-            const endLine = this.line;
-            const endColumn = this.column;
-            return new Token(
-                TokenType.RealLiteral,
-                value,
-                { line: startLine, position: startColumn },
-                { line: endLine, position: endColumn }
-            );
-        } else {
-            const endLine = this.line;
-            const endColumn = this.column;
-            return new Token(
-                TokenType.IntegerLiteral,
-                value,
-                { line: startLine, position: startColumn },
-                { line: endLine, position: endColumn }
-            );
+            // `digits.e+10`：小数点后无小数位但紧跟指数
+            if (afterDot === 'e' || afterDot === 'E') {
+                value += this.currentChar();
+                this.advance();
+                if (this.currentChar() === 'e' || this.currentChar() === 'E') {
+                    value += this.currentChar();
+                    this.advance();
+                    if (this.currentChar() === '+' || this.currentChar() === '-') {
+                        value += this.currentChar();
+                        this.advance();
+                    }
+                    while (this.isNumber(this.currentChar())) {
+                        value += this.currentChar();
+                        this.advance();
+                    }
+                }
+                const endLine = this.line;
+                const endColumn = this.column;
+                return new Token(
+                    TokenType.RealLiteral,
+                    value,
+                    { line: startLine, position: startColumn },
+                    { line: endLine, position: endColumn }
+                );
+            }
+            // 仅尾随小数点：`1000.`
+            if (!afterDot || !this.isIdentifierStart(afterDot)) {
+                value += this.currentChar();
+                this.advance();
+                const endLine = this.line;
+                const endColumn = this.column;
+                return new Token(
+                    TokenType.RealLiteral,
+                    value,
+                    { line: startLine, position: startColumn },
+                    { line: endLine, position: endColumn }
+                );
+            }
         }
+
+        const endLine = this.line;
+        const endColumn = this.column;
+        return new Token(
+            TokenType.IntegerLiteral,
+            value,
+            { line: startLine, position: startColumn },
+            { line: endLine, position: endColumn }
+        );
     }
 
     /**

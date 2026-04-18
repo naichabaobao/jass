@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { DataEnterManager } from './data-enter-manager';
 import { JumpCache, JumpCacheItem } from './jump-cache';
 import {
+    ASTNode,
     BlockStatement,
     Statement,
     FunctionDeclaration,
@@ -74,76 +75,43 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
         }
     }
 
-    private getKeywordDocName(symbolName: string): string | null {
-        const keyword = symbolName.toLowerCase();
-        const docMap: Record<string, string> = {
-            function: 'function.html',
-            endfunction: 'endfunction.html',
-            constant: 'constant.html',
-            native: 'native.html',
-            local: 'local.html',
-            type: 'type.html',
-            set: 'set.html',
-            call: 'call.html',
-            takes: 'takes.html',
-            returns: 'returns.html',
-            extends: 'extends.html',
-            array: 'array.html',
-            if: 'if.html',
-            else: 'else.html',
-            elseif: 'elseif.html',
-            endif: 'endif.html',
-            then: 'then.html',
-            loop: 'loop.html',
-            endloop: 'endloop.html',
-            exitwhen: 'exitwhen.html',
-            return: 'return.html',
-            and: 'and.html',
-            or: 'or.html',
-            not: 'not.html',
-            globals: 'globals.html',
-            endglobals: 'endglobals.html',
-            library: 'library.html',
-            initializer: 'initializer.html',
-            needs: 'needs.html',
-            uses: 'uses.html',
-            requires: 'requires.html',
-            endlibrary: 'endlibrary.html',
-            scope: 'scope.html',
-            endscope: 'endscope.html',
-            private: 'private.html',
-            public: 'public.html',
-            static: 'static.html',
-            interface: 'interface.html',
-            endinterface: 'endinterface.html',
-            implement: 'implement.html',
-            struct: 'struct.html',
-            endstruct: 'endstruct.html',
-            method: 'method.html',
-            endmethod: 'endmethod.html',
-            this: 'this.html',
-            delegate: 'delegate.html',
-            operator: 'operator.html',
-            debug: 'debug.html',
-            module: 'module.html',
-            endmodule: 'endmodule.html',
-            optional: 'optional.html',
-            stub: 'stub.html',
-            key: 'key.html',
-            thistype: 'thistype.html',
-            oninit: 'oninit.html',
-            ondestroy: 'ondestroy.html',
-            hook: 'hook.html',
-            defaults: 'defaults.html',
-            execute: 'execute.html',
-            create: 'create.html',
-            destroy: 'destroy.html',
-            size: 'size.html',
-            name: 'name.html',
-            allocate: 'allocate.html',
-            deallocate: 'deallocate.html'
-        };
-        return docMap[keyword] || null;
+    /**
+     * 与 DataEnterManager 缓存键对齐：避免 Windows 路径大小写/斜杠差异导致 getBlockStatement 为 null
+     */
+    private resolveBlockStatementForDocumentPath(filePath: string): BlockStatement | null {
+        let block = this.dataEnterManager.getBlockStatement(filePath);
+        if (block) {
+            return block;
+        }
+        const normalized = path.normalize(filePath);
+        if (normalized !== filePath) {
+            block = this.dataEnterManager.getBlockStatement(normalized);
+            if (block) {
+                return block;
+            }
+        }
+        const target = normalized.replace(/\\/g, '/').toLowerCase();
+        for (const cached of this.dataEnterManager.getAllCachedFiles()) {
+            if (path.normalize(cached).replace(/\\/g, '/').toLowerCase() === target) {
+                return this.dataEnterManager.getBlockStatement(cached);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * this：优先从包含光标的方法沿 parent 找到外层 struct；否则按 struct 范围取最内层
+     */
+    private findStructForThisAtPosition(block: BlockStatement, position: vscode.Position): StructDeclaration | null {
+        const callable = this.findContainingFunctionOrMethod(block, position);
+        if (callable instanceof MethodDeclaration) {
+            for (let p: ASTNode | null = callable.parent; p; p = p.parent) {
+                if (p instanceof StructDeclaration) {
+                    return p;
+                }
+            }
+        }
+        return this.findInnermostStructContaining(block, position);
     }
 
     async provideDefinition(
@@ -216,15 +184,26 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
                 return null;
             }
 
-            // 关键字文档展示（当前先支持 function / if / loop）
-            const keywordDocName = this.getKeywordDocName(symbolName);
-            if (keywordDocName) {
-                await vscode.commands.executeCommand('jass.openKeywordDocWebview', keywordDocName);
+            const filePath = document.uri.fsPath;
+
+            // this → 当前 struct：优先从「包含光标的方法」沿 AST parent 找 StructDeclaration（最可靠），
+            // 再回退到按 struct 起止范围的最内层匹配。并解决缓存路径与 document.fsPath 不一致导致无 AST 的问题。
+            const idRange = document.getWordRangeAtPosition(position, /[A-Za-z_]\w*/);
+            const idWord = idRange ? document.getText(idRange) : '';
+            if (idWord.toLowerCase() === 'this') {
+                const rootBlock = this.resolveBlockStatementForDocumentPath(filePath);
+                if (rootBlock) {
+                    const struct = this.findStructForThisAtPosition(rootBlock, position);
+                    if (struct?.name?.start && struct.name.end) {
+                        const thisLocations: vscode.Location[] = [];
+                        this.addLocation(struct.name, filePath, thisLocations);
+                        return thisLocations.length > 0 ? thisLocations : null;
+                    }
+                }
                 return null;
             }
 
             const locations: vscode.Location[] = [];
-            const filePath = document.uri.fsPath;
 
             // 检查缓存
             const cachedLocations = this.jumpCache.getBySymbolName(symbolName);
@@ -761,6 +740,58 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
         position: vscode.Position
     ): FunctionDeclaration | MethodDeclaration | NativeDeclaration | null {
         return this.findContainingCallableInStatements(block.body, position);
+    }
+
+    /**
+     * 查找包含 position 的最内层 struct（成员中嵌套的 struct 优先于外层）
+     */
+    private findInnermostStructContaining(
+        block: BlockStatement,
+        position: vscode.Position
+    ): StructDeclaration | null {
+        return this.findInnermostStructInStatements(block.body, position);
+    }
+
+    private findInnermostStructInStatements(
+        statements: readonly Statement[],
+        position: vscode.Position
+    ): StructDeclaration | null {
+        for (const stmt of statements) {
+            const found = this.findInnermostStructInStatement(stmt, position);
+            if (found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    private findInnermostStructInStatement(
+        stmt: Statement,
+        position: vscode.Position
+    ): StructDeclaration | null {
+        if (stmt instanceof StructDeclaration) {
+            if (stmt.start && stmt.end && this.isPositionInRange(position, stmt.start, stmt.end)) {
+                const inner = this.findInnermostStructInStatements(stmt.members, position);
+                return inner ?? stmt;
+            }
+            return null;
+        }
+        if (stmt instanceof LibraryDeclaration) {
+            return this.findInnermostStructInStatements(stmt.members, position);
+        }
+        if (stmt instanceof ScopeDeclaration) {
+            return this.findInnermostStructInStatements(stmt.members, position);
+        }
+        if (stmt instanceof ModuleDeclaration) {
+            return this.findInnermostStructInStatements(stmt.members, position);
+        }
+        if (stmt instanceof InterfaceDeclaration) {
+            return this.findInnermostStructInStatements(stmt.members, position);
+        }
+        if (stmt instanceof BlockStatement) {
+            return this.findInnermostStructContaining(stmt, position);
+        }
+        return null;
     }
 
     private findContainingCallableInStatements(
