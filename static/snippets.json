@@ -1,0 +1,316 @@
+{
+  "global": {
+    "prefix": "globals",
+    "body": "globals\n\t${0:}\nendglobals"
+  },
+  "if": {
+    "prefix": "if",
+    "body": "if ${1:condition} then\n\t${0:}\nendif",
+    "description": "if",
+    "scope": "source.jass"
+  },
+  "ifelse": {
+    "prefix": "ifelse",
+    "body": "if ${1:condition} then\n\t${2:}\nelse\n\t${0:}\nendif",
+    "description": "ifelse",
+    "scope": "source.jass"
+  },
+  "elseif": {
+    "prefix": "elif",
+    "body": "elseif ${1:condition} then\n\t${0:}\n",
+    "description": "elseif",
+    "scope": "source.jass"
+  },
+  "function": {
+    "prefix": "function",
+    "body": "function ${1:function_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:}\nendfunction",
+    "description": "function",
+    "scope": "source.jass"
+  },
+
+  "boolexpr": {
+    "prefix": "function_boolexpr",
+    "body": "function ${1:function_name} takes ${2:nothing} returns boolean\n\treturn ${0:true}\nendfunction",
+    "description": "function",
+    "scope": "source.jass"
+  },
+  "loop": {
+    "prefix": "loop",
+    "body": "loop\n\texitwhen ${1:condition}\n\t${0:}\nendloop",
+    "description": "loop循环",
+    "scope": "source.jass"
+  },
+  "cd": {
+    "prefix": "cd",
+    "body": "call BJDebugMsg(\"${0}\")",
+    "description": "调用debug打印信息",
+    "scope": "source.jass"
+  },
+  "debug-log": {
+    "prefix": "debug",
+    "body": "call BJDebugMsg(\"${0}\")",
+    "description": "调用debug打印信息",
+    "scope": "source.jass"
+  },
+  "main": {
+    "prefix": "main",
+    "body": "function main takes nothing returns nothing\n\t${0:}\nendfunction",
+    "description": "main",
+    "scope": "source.jass"
+  },
+  "config": {
+    "prefix": "config",
+    "body": "function config takes nothing returns nothing\n\t${0:}\nendfunction",
+    "description": "config",
+    "scope": "source.jass"
+  },
+  "library": {
+    "prefix": "library",
+    "body": "library ${1:library_name} initializer ${2:init_function} requires ${3:require_libs}\n\tprivate function ${2:initializer_name} takes nothing returns nothing\n\t\t${0:}\n\tendfunction\nendlibrary\n",
+    "description": "library",
+    "scope": "source.jass"
+  },
+  "method": {
+    "prefix": "method",
+    "body": "method ${1:method_name} takes ${2:nothing} returns ${3:nothing}\n\t${0:}\nendmethod",
+    "description": "method",
+    "scope": "source.jass"
+  },
+  "struct": {
+    "prefix": "struct",
+    "body": "struct ${1:struct_name}\n\t${0:}\nendstruct",
+    "description": "struct",
+    "scope": "source.jass"
+  },
+  "inject": {
+    "prefix": "inject",
+    "body": "//! inject main\n\t//! dovjassinit\n\t${0:}\n//! endinject",
+    "description": "inject",
+    "scope": "source.jass"
+  },
+  "textmacro": {
+    "prefix": "textmacro",
+    "body": "//! textmacro textmacro_name takes args\n\t${0:\\$args\\$}\n//! endtextmacro",
+    "description": "文本宏",
+    "scope": "source.jass"
+  },
+  "runtextmacro": {
+    "prefix": "runtextmacro",
+    "body": "//! runtextmacro ${1:runtextmacro_name}(${0:})",
+    "description": "文本宏",
+    "scope": "source.jass"
+  },
+  "region": {
+    "prefix": "region",
+    "body": "//region\n${0}\n//endregion",
+    "description": "折叠块",
+    "scope": "source.jass"
+  },
+  "for": {
+    "prefix": "for",
+    "body": "for (${2:0} <= ${1:index} < ${3:10}) {${0:}}",
+    "description": "for循环",
+    "scope": "source.jass"
+  },
+  "while": {
+    "prefix": "while",
+    "body": "while (${1:true}) {${0:}}",
+    "description": "while循环",
+    "scope": "source.jass"
+  },
+  "debug": {
+    "prefix": "debug",
+    "body": "debug {${0:}}",
+    "description": "debug",
+    "scope": "source.jass"
+  },
+
+  "interface": {
+    "prefix": "interface",
+    "body": "interface ${1:interface_name}\n${0:}\nendinterface",
+    "description": "vjass接口",
+    "scope": "source.jass"
+  },
+
+  "novjass": {
+    "prefix": "novjass",
+    "body": "//! novjass\n  ${0:}\n//! endnovjass",
+    "description": "novjass-block",
+    "scope": "source.jass"
+  },
+
+  "block-zinc": {
+    "prefix": "zinc",
+    "body": "//! zinc\n  ${0:}\n//! endzinc",
+    "description": "zinc-block",
+    "scope": "source.jass"
+  },
+  "library-zinc": {
+    "prefix": "library",
+    "body": "library ${1:library_name} ${2:requires ${3:require_librarys}} {\n${0:}\n}",
+    "description": "zinc library 模板",
+    "scope": "source.jass"
+  },
+  "interface-zinc": {
+    "prefix": "interface",
+    "body": "interface ${1:interface_name} {\n${0:}\n}",
+    "description": "zinc接口",
+    "scope": "source.jass"
+  },
+  "struct-zinc": {
+    "prefix": "struct",
+    "body": "struct ${1:struct_name} ${2:extends ${3:extends_name}} {\n${0:}\n}",
+    "description": "zinc struct 模板",
+    "scope": "source.jass"
+  },
+  "module-zinc": {
+    "prefix": "module",
+    "body": "module ${1:module_name} {\n${0:}\n}",
+    "description": "zinc module 模板",
+    "scope": "source.jass"
+  },
+  "function-zinc": {
+    "prefix": "function",
+    "body": "function ${1:function_name}(${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
+    "description": "zinc function 模板",
+    "scope": "source.jass"
+  },
+  "method-zinc": {
+    "prefix": "method",
+    "body": "method ${1:function_name}(${2}) ${3| -> nothing, , -> |} {\n\t${0:}\n}",
+    "description": "zinc method 模板",
+    "scope": "source.jass"
+  },
+  "public-zinc": {
+    "prefix": "public",
+    "body": "public {\n${0:}\n}",
+    "description": "zinc public 模板",
+    "scope": "source.jass"
+  },
+  "private-zinc": {
+    "prefix": "private",
+    "body": "private {\n${0:}\n}",
+    "description": "zinc private 模板",
+    "scope": "source.jass"
+  },
+  "deprecated": {
+    "prefix": "deprecated",
+    "body": "// @deprecated",
+    "description": "不建议使用",
+    "scope": "source.jass"
+  },
+  "param": {
+    "prefix": "param",
+    "body": "// @param ${1:param_name} ${0:param_descript}",
+    "description": "参数提示",
+    "scope": "source.jass"
+  },
+  "private": {
+    "prefix": "private",
+    "body": "// @private",
+    "description": "私有化",
+    "scope": "source.jass"
+  },
+  "ignore-file-errors": {
+    "prefix": ["ignore-file", "ignore-file-errors"],
+    "body": "// @ignore-file-errors",
+    "description": "忽略当前文件所有 error 级别错误",
+    "scope": "source.jass"
+  },
+  "ignore-next-line-syntax": {
+    "prefix": ["ignore-next-line", "ignore-next-line-syntax"],
+    "body": "// @ignore-next-line-syntax",
+    "description": "忽略下一行语法错误",
+    "scope": "source.jass"
+  },
+  "ignore-directive": {
+    "prefix": "ignore",
+    "body": "// @ignore ${1|file,next-line|}",
+    "description": "通用忽略注解模板（file / next-line）",
+    "scope": "source.jass"
+  },
+  "lua-value": {
+    "prefix": "lua-value",
+    "body": "<?=${0:}?>",
+    "description": "插入lua值",
+    "scope": "source.jass"
+  },
+  "define": {
+    "prefix": "define",
+    "body": "#define ${1:MACRO_NAME} ${0:value}",
+    "description": "Define a macro",
+    "scope": "source.jass"
+  },
+  "define-func": {
+    "prefix": "define-func",
+    "body": "#define ${1:MACRO_NAME}(${2:param1}, ${3:param2}) ${0:value}",
+    "description": "Define a function-like macro",
+    "scope": "source.jass"
+  },
+  "ifdef": {
+    "prefix": "ifdef",
+    "body": "#ifdef ${1:MACRO_NAME}\n\t${0:}\n#endif",
+    "description": "If defined macro block",
+    "scope": "source.jass"
+  },
+  "ifndef": {
+    "prefix": "ifndef",
+    "body": "#ifndef ${1:MACRO_NAME}\n\t${0:}\n#endif",
+    "description": "If not defined macro block",
+    "scope": "source.jass"
+  },
+  "if-cond": {
+    "prefix": "if-cond",
+    "body": "#if ${1:condition}\n\t${0:}\n#endif",
+    "description": "If condition macro block",
+    "scope": "source.jass"
+  },
+  "elif": {
+    "prefix": "elif-cond",
+    "body": "#elif ${1:condition}\n\t${0:}",
+    "description": "Else if condition macro block",
+    "scope": "source.jass"
+  },
+  "else": {
+    "prefix": "else-cond",
+    "body": "#else\n\t${0:}",
+    "description": "Else condition macro block",
+    "scope": "source.jass"
+  },
+  "include": {
+    "prefix": "include",
+    "body": "#include \"${0:header.jass}\"",
+    "description": "Include header file",
+    "scope": "source.jass"
+  },
+  "include-system": {
+    "prefix": "include-system",
+    "body": "#include \"${0:header.jass}\"",
+    "description": "Include system header file",
+    "scope": "source.jass"
+  },
+  "pragma": {
+    "prefix": "pragma",
+    "body": "#pragma ${0:once}",
+    "description": "Pragma directive",
+    "scope": "source.jass"
+  },
+  "undef": {
+    "prefix": "undef",
+    "body": "#undef ${0:MACRO_NAME}",
+    "description": "Undefine a macro",
+    "scope": "source.jass"
+  },
+  "error": {
+    "prefix": "error",
+    "body": "#error \"${0:error message}\"",
+    "description": "Error directive",
+    "scope": "source.jass"
+  },
+  "warning": {
+    "prefix": "warning",
+    "body": "#warning \"${0:warning message}\"",
+    "description": "Warning directive",
+    "scope": "source.jass"
+  }
+}

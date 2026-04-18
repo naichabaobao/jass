@@ -1,0 +1,79 @@
+{
+    "comments": {
+        "lineComment": "//",
+        "blockComment": [
+            "/*",
+            "*/"
+        ]
+    },
+    "brackets": [
+        [
+            "[",
+            "]"
+        ],
+        [
+            "(",
+            ")"
+        ],
+        [
+            "{",
+            "}"
+        ]
+    ],
+    "autoClosingPairs": [
+        [
+            "[",
+            "]"
+        ],
+        [
+            "(",
+            ")"
+        ],
+        [
+            "\"",
+            "\""
+        ],
+        [
+            "{",
+            "}"
+        ],
+        [
+            "'",
+            "'"
+        ]
+    ],
+    "wordPattern": "",
+    "surroundingPairs": [
+        [
+            "[",
+            "]"
+        ],
+        [
+            "(",
+            ")"
+        ],
+        [
+            "{",
+            "}"
+        ],
+        [
+            "\"",
+            "\""
+        ],
+        [
+            "'",
+            "'"
+        ]
+    ],
+    "folding": {
+        "offSide": true,
+        "markers": {
+            "start": "^\\s*//\\s*region\\b",
+            "end": "^\\s*//\\s*endregion\\b"
+        }
+    },
+    "indentationRules": {
+        "increaseIndentPattern": "\\b(takes|returns|if|loop|library|scope|elseif|else|globals|struct|scope|interface|method|module|textmacro|library_once)\\b|{",
+        "decreaseIndentPattern": "\\b(else|elseif|endfunction|endif|endloop|endlibrary|endscope|endglobals|endstruct|endmethod|endinterface|endmodule|endtextmacro)\\b|}"
+    }
+}

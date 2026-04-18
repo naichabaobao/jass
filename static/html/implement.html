@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: implement</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>implement</code></h1>
+  <h2>语法</h2>
+  <pre><code>implement ModuleName
+implement optional OtherModule</code></pre>
+  <h2>说明</h2>
+  <p>在 struct 中引入 module 成员。</p>
+  <h2>示例</h2>
+  <pre><code>struct MyStruct
+implement MyModule
+endstruct</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>重复 implement 同一模块会被忽略；optional 模块缺失不报错。</li></ul>
+</body>
+</html>

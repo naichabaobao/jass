@@ -1,0 +1,11 @@
+out
+node_modules
+.vscode-test/
+.vscode/jass-cache/
+src/temp
+src/test
+*.vsix
+*.log
+*.zip
+./test.j
+*.temp

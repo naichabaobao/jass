@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>JASS 关键字: local</title></head>
+<body>
+  <h1><code>local</code></h1>
+  <p>声明函数作用域内的局部变量，仅在当前函数有效。</p>
+  <pre><code>function Demo takes nothing returns nothing
+    local integer i = 0
+    local unit u = null
+    set i = i + 1
+endfunction</code></pre>
+  <p>建议：局部变量用完及时置空（句柄类型）以减少泄漏风险。</p>
+</body>
+</html>

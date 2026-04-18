@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: public</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>public</code></h1>
+  <h2>语法</h2>
+  <pre><code>public <声明></code></pre>
+  <h2>说明</h2>
+  <p>公开可见性。用于允许域外访问成员。</p>
+  <h2>示例</h2>
+  <pre><code>scope S
+public function api takes nothing returns nothing
+endfunction
+endscope</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>在 struct 中默认就是 public，显式写 public 主要为可读性。</li></ul>
+</body>
+</html>

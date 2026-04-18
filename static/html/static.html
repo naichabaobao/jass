@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vJass 关键字: static</title>
+  <style>body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; line-height: 1.7; } h1 { margin-bottom: 8px; } pre { background: #111; color: #f5f5f5; padding: 12px; border-radius: 8px; overflow-x: auto; } code { font-family: Consolas, monospace; }</style>
+</head>
+<body>
+  <h1><code>static</code></h1>
+  <h2>语法</h2>
+  <pre><code>static <成员或方法声明></code></pre>
+  <h2>说明</h2>
+  <p>静态成员/方法属于类型本身。文档也用于 static onInit、static if 等编译期特性。</p>
+  <h2>示例</h2>
+  <pre><code>struct A
+static integer array ko
+private static method onInit takes nothing returns nothing
+endmethod
+endstruct</code></pre>
+  <h2>注意事项</h2>
+  <ul><li>静态方法不依赖实例 this。</li></ul>
+</body>
+</html>

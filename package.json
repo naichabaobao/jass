@@ -1,0 +1,208 @@
+{
+  "name": "jass",
+  "displayName": "JASS/vJass/Zinc Language Tools",
+  "description": "完整的 JASS/vJass/Zinc 语言支持，包括语法高亮、代码补全、跳转定义、悬停提示、错误诊断、代码格式化等功能。支持 vJass 的库、结构、接口、模块、委托等特性，以及 Zinc 的 C-like 语法。QQ群:786204376",
+  "publisher": "jass",
+  "icon": "static/jass.png",
+  "version": "1.9.12",
+  "keywords": [
+    "jass",
+    "vjass",
+    "zinc",
+    "warcraft",
+    "war3",
+    "warcraft3",
+    "jasshelper",
+    "语法高亮",
+    "代码补全",
+    "语言支持"
+  ],
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "markdown": "github",
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Formatters"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naichabaobao/jass"
+  },
+  "homepage": "https://github.com/naichabaobao/jass",
+  "activationEvents": [
+    "onLanguage:jass",
+    "onLanguage:jass-zinc"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Jass",
+      "properties": {
+        "jass.diagnostic": {
+          "type": "boolean",
+          "default": true,
+          "description": "(Test) diagnostic support,does not support including Lua and pre-processing code"
+        },
+        "jass.literal.completion": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable literal completion suggestions (string, number, mark). Default: false (disabled) to reduce clutter."
+        },
+        "jass.literal.hover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable literal hover and definition navigation (string, number, mark). Default: true (enabled)."
+        },
+        "jass.keywordDefinition": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "When enabled, **Go to Definition** (e.g. Ctrl+click) on a JASS/vJass **keyword** opens the built-in keyword doc in a Webview. When disabled (default), keyword clicks do not use this path so normal symbol navigation is unaffected. Reload the window after changing this option."
+        },
+        "jass.hint": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable hint support for function parameters and method calls. This is an experimental feature."
+        },
+        "jass.apiVersion": {
+          "type": "string",
+          "default": "off",
+          "enum": [
+            "off",
+            "1.20",
+            "1.24",
+            "1.27",
+            "1.26a",
+            "1.27a",
+            "1.28f",
+            "1.29",
+            "1.30",
+            "1.31",
+            "1.32",
+            "1.33",
+            "1.36"
+          ],
+          "markdownDescription": "Warcraft III API version preference for completion behavior. In legacy versions (`1.20/1.24/1.26a/1.27/1.27a`), APIs marked by `@since` newer than selected version are filtered out. In other versions, newer APIs are de-prioritized. Items without version tags are unchanged."
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "jass",
+        "aliases": [
+          "jass",
+          "jass2",
+          "vjass"
+        ],
+        "extensions": [
+          ".j",
+          ".ai",
+          ".jass"
+        ],
+        "configuration": "./static/jass-configuration.json"
+      },
+      {
+        "id": "jass-zinc",
+        "aliases": [
+          "zinc"
+        ],
+        "extensions": [
+          ".zn"
+        ],
+        "configuration": "./static/jass-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "scopeName": "source.jass",
+        "language": "jass",
+        "path": "./static/jass.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.zinc",
+        "language": "jass-zinc",
+        "path": "./static/zinc.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "jass",
+        "path": "./static/snippets.json"
+      },
+      {
+        "language": "jass-zinc",
+        "path": "./static/snippets.json"
+      }
+    ],
+    "documentFormattingProvider": true,
+    "enableProposedApi": false,
+    "codeLensProvider": {
+      "resolveProvider": "true"
+    },
+    "commands": [
+      {
+        "command": "jass.createConfigFile",
+        "title": "create jass.config.json"
+      },
+      {
+        "command": "jass.openReplacementSymbol",
+        "title": "JASS: Open Replacement Symbol"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "jass.createConfigFile",
+          "when": "explorerResourceIsFolder",
+          "group": "jass"
+        }
+      ]
+    },
+    "iconThemes": [
+      {
+        "id": "jass-icons",
+        "label": "JASS Icons",
+        "path": "./static/jass-icon-theme.json"
+      }
+    ]
+  },
+  "capabilities": {
+    "documentSymbolProvider": "true",
+    "workspaceSymbolProvider": "true"
+  },
+  "scripts": {
+    "compile": "tsc  -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "npm run test:parser && npm run test:analyzer",
+    "test:e2e": "node out/test/runTest.js",
+    "test:parser": "node out/vjass/parser.test.js",
+    "test:analyzer": "node -e \"const { runAnalyzerTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTests();\"",
+    "test:codeaction": "node -e \"const { runCodeActionUtilsTests } = require('./out/provider/code-action-utils.test.js'); runCodeActionUtilsTests();\"",
+    "test:inlay": "node out/provider/inlay-hints-provider.test.js",
+    "test:completion-version": "node out/provider/completion-version-filter.test.js",
+    "test:version-gates": "node out/provider/version-gates.test.js",
+    "test:type": "node -e \"const { runAnalyzerTypeTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTypeTests();\"",
+    "package": "npx @vscode/vsce package",
+    "publish:skip-duplicate": "npx @vscode/vsce publish --skip-duplicate",
+    "publish": "npx @vscode/vsce publish",
+    "prepublishOnly": "npm run compile",
+    "fix-dependencies": "npm install --production"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.31",
+    "@types/mocha": "^10.0.7",
+    "@vscode/test-electron": "^2.5.2",
+    "@types/vscode": "^1.49.3",
+    "mocha": "^10.8.2",
+    "typescript": "^4.9.4"
+  },
+  "bugs": {
+    "url": "https://github.com/naichabaobao/jass/issues"
+  },
+  "author": "家猫hoo",
+  "license": "GPL",
+  "__npminstall_done": false
+}

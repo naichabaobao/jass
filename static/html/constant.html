@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JASS 关键字: constant</title>
+</head>
+<body>
+  <h1><code>constant</code></h1>
+  <p>声明常量，值在运行期间不应被修改。</p>
+  <h2>语法</h2>
+  <pre><code>constant integer MAX_LEVEL = 10
+constant native Foo takes nothing returns nothing</code></pre>
+  <h2>示例</h2>
+  <pre><code>globals
+    constant integer MAX_PLAYER = 12
+endglobals</code></pre>
+  <h2>注意</h2>
+  <ul>
+    <li>常量赋值后不应再 <code>set</code> 修改。</li>
+    <li>使用全大写命名可读性更好。</li>
+  </ul>
+</body>
+</html>
