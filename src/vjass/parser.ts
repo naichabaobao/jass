@@ -6,6 +6,8 @@ import {
     BlockStatement,
     Statement,
     Expression,
+    type EndKeywordToken,
+    InvalidExpression,
     VariableDeclaration,
     AssignmentStatement,
     CallStatement,
@@ -66,6 +68,36 @@ export class Parser {
 
     // 用于跟踪已声明的标识符（用于检测重复声明）
     private declaredIdentifiers: Map<string, { type: string, location: { line: number, position: number } }> = new Map();
+
+    private toEndKeywordToken(keyword: string, token: IToken | null | undefined): EndKeywordToken | null {
+        if (!token) return null;
+        return {
+            keyword,
+            start: token.start,
+            end: token.end
+        };
+    }
+
+    private createInvalidExpression(
+        message: string,
+        start?: { line: number, position: number },
+        end?: { line: number, position: number },
+        fix?: string
+    ): InvalidExpression {
+        const token = this.lexer.current();
+        const s = start || token?.start || { line: 0, position: 0 };
+        const e = end || token?.end || s;
+        return new InvalidExpression(message, s, e, fix);
+    }
+
+    private reportMissingEndTag(startToken: IToken, endKeyword: string, owner: string): void {
+        this.error(
+            `Expected '${endKeyword}' to close ${owner}`,
+            startToken.start,
+            startToken.end,
+            `Add '${endKeyword}' before leaving this ${owner}.`
+        );
+    }
 
     /**
      * 检查标识符是否已声明（用于检测重复声明）
@@ -827,12 +859,14 @@ export class Parser {
         const returnType = this.parseReturns();
 
         // 解析函数体
-        const body = this.parseFunctionBody();
+        const bodyResult = this.parseFunctionBody();
+        const body = bodyResult.body;
+        if (!bodyResult.endToken) {
+            this.reportMissingEndTag(startToken, "endfunction", "function declaration");
+        }
 
-        const endToken = this.lexer.current();
-        const endPos = endToken?.end || startPos;
-
-        return new FunctionDeclaration({
+        const endPos = body.end || startPos;
+        const node = new FunctionDeclaration({
             name,
             parameters,
             returnType,
@@ -840,6 +874,8 @@ export class Parser {
             start: startPos,
             end: endPos
         });
+        node.setEndKeywordToken(this.toEndKeywordToken("endfunction", bodyResult.endToken));
+        return node;
     }
 
     /**
@@ -1005,6 +1041,7 @@ export class Parser {
         // 如果下一个 token 是 endmethod，说明方法体为空（struct 中的 method 声明）
         // 注意：在 interface 中，方法声明后如果有 defaults，应该直接检查 endinterface 或下一个 method
         let body: BlockStatement;
+        let methodEndToken: IToken | null = null;
         const currentToken = this.lexer.current();
         const startPosForBody = currentToken?.start || { line: 0, position: 0 };
         
@@ -1023,13 +1060,23 @@ export class Parser {
             body = new BlockStatement([], startPosForBody, startPosForBody);
         } else {
             // struct 中的 method 声明，需要 body（可能为空）
-            body = this.parseMethodBody();
+            const bodyResult = this.parseMethodBody();
+            body = bodyResult.body;
+            methodEndToken = bodyResult.endToken;
+            if (!methodEndToken) {
+                this.error(
+                    "Expected 'endmethod' to close method declaration",
+                    startPos,
+                    startToken.end,
+                    "Add 'endmethod' before the enclosing end tag (for example, endstruct/endinterface)."
+                );
+            }
         }
 
         const endToken = this.lexer.current();
         const endPos = endToken?.end || startPos;
 
-        return new MethodDeclaration({
+        const node = new MethodDeclaration({
             name,
             parameters,
             returnType,
@@ -1044,14 +1091,17 @@ export class Parser {
             start: startPos,
             end: endPos
         });
+        node.setEndKeywordToken(this.toEndKeywordToken("endmethod", methodEndToken));
+        return node;
     }
 
     /**
      * 解析方法体
      */
-    private parseMethodBody(): BlockStatement {
+    private parseMethodBody(): { body: BlockStatement; endToken: IToken | null } {
         const statements: Statement[] = [];
         const startPos = this.lexer.current()?.start || { line: 0, position: 0 };
+        let consumedEndToken: IToken | null = null;
 
         while (!this.isAtEnd() && !this.checkValue("endmethod") && !this.checkValue("endstruct") && !this.checkValue("endinterface")) {
             if (this.isComment()) {
@@ -1082,6 +1132,7 @@ export class Parser {
             const endmethodToken = this.lexer.current();
             if (endmethodToken) {
                 endPos = endmethodToken.end; // 保存 endmethod 的位置
+                consumedEndToken = endmethodToken;
             }
             this.lexer.next();
         } else {
@@ -1093,7 +1144,7 @@ export class Parser {
                 }
             }
         }
-        return new BlockStatement(statements, startPos, endPos);
+        return { body: new BlockStatement(statements, startPos, endPos), endToken: consumedEndToken };
     }
 
     /**
@@ -1387,9 +1438,10 @@ export class Parser {
     /**
      * 解析函数体
      */
-    private parseFunctionBody(): BlockStatement {
+    private parseFunctionBody(): { body: BlockStatement; endToken: IToken | null } {
         const statements: Statement[] = [];
         const startPos = this.lexer.current()?.start || { line: 0, position: 0 };
+        let consumedEndToken: IToken | null = null;
 
         while (!this.isAtEnd() && !this.check(TokenType.KeywordEndfunction)) {
             if (this.isComment()) {
@@ -1412,11 +1464,12 @@ export class Parser {
 
         // 消费 endfunction
         if (this.check(TokenType.KeywordEndfunction)) {
+            consumedEndToken = this.lexer.current();
             this.lexer.next();
         }
 
-        const endPos = this.lexer.current()?.end || startPos;
-        return new BlockStatement(statements, startPos, endPos);
+        const endPos = consumedEndToken?.end || this.lexer.current()?.end || startPos;
+        return { body: new BlockStatement(statements, startPos, endPos), endToken: consumedEndToken };
     }
 
     /**
@@ -1770,10 +1823,12 @@ export class Parser {
 
         // 消费 endstruct
         let endPos = startPos;
+        let capturedEndstructToken: IToken | null = null;
         if (this.checkValue("endstruct")) {
-            const endstructToken = this.lexer.current();
-            if (endstructToken) {
-                endPos = endstructToken.end; // 保存 endstruct 的位置
+            const token = this.lexer.current();
+            if (token) {
+                endPos = token.end; // 保存 endstruct 的位置
+                capturedEndstructToken = token;
             }
             this.lexer.next();
         } else {
@@ -1787,12 +1842,7 @@ export class Parser {
                         endPos = lastMember.end;
                     }
                 }
-                this.error(
-                    `Unclosed struct '${structName}'. Expected 'endstruct' to close the struct declaration that started at line ${startPos.line + 1}.`,
-                    currentToken.start,
-                    currentToken.end,
-                    `Add 'endstruct' before '${currentToken.value || "this token"}' to close the struct declaration.`
-                );
+                this.reportMissingEndTag(startToken, "endstruct", "struct declaration");
                 // 尝试同步到下一个同步点
                 this.synchronize();
                 // 同步后，使用当前 token 的位置作为 endPos
@@ -1808,16 +1858,11 @@ export class Parser {
                         endPos = lastMember.end;
                     }
                 }
-                this.error(
-                    `Unclosed struct '${structName}'. Expected 'endstruct' to close the struct declaration that started at line ${startPos.line + 1}. Reached end of file.`,
-                    startPos,
-                    endPos,
-                    `Add 'endstruct' at the end of the struct declaration to close it.`
-                );
+                this.reportMissingEndTag(startToken, "endstruct", "struct declaration");
             }
         }
 
-        return new StructDeclaration({
+        const node = new StructDeclaration({
             name,
             members,
             extendsType,
@@ -1827,6 +1872,8 @@ export class Parser {
             start: startPos,
             end: endPos
         });
+        node.setEndKeywordToken(this.toEndKeywordToken("endstruct", capturedEndstructToken));
+        return node;
     }
 
     /**
@@ -1991,10 +2038,12 @@ export class Parser {
 
         // 消费 endinterface
         let endPos = startPos;
+        let capturedEndinterfaceToken: IToken | null = null;
         if (this.checkValue("endinterface")) {
-            const endinterfaceToken = this.lexer.current();
-            if (endinterfaceToken) {
-                endPos = endinterfaceToken.end; // 保存 endinterface 的位置
+            const token = this.lexer.current();
+            if (token) {
+                endPos = token.end; // 保存 endinterface 的位置
+                capturedEndinterfaceToken = token;
             }
             this.lexer.next();
         } else {
@@ -2008,12 +2057,7 @@ export class Parser {
                         endPos = lastMember.end;
                     }
                 }
-                this.error(
-                    `Unclosed interface '${interfaceName}'. Expected 'endinterface' to close the interface declaration that started at line ${startPos.line + 1}.`,
-                    currentToken.start,
-                    currentToken.end,
-                    `Add 'endinterface' before '${currentToken.value || "this token"}' to close the interface declaration.`
-                );
+                this.reportMissingEndTag(startToken, "endinterface", "interface declaration");
                 // 尝试同步到下一个同步点
                 this.synchronize();
                 // 同步后，使用当前 token 的位置作为 endPos
@@ -2029,21 +2073,18 @@ export class Parser {
                         endPos = lastMember.end;
                     }
                 }
-                this.error(
-                    `Unclosed interface '${interfaceName}'. Expected 'endinterface' to close the interface declaration that started at line ${startPos.line + 1}. Reached end of file.`,
-                    startPos,
-                    endPos,
-                    `Add 'endinterface' at the end of the interface declaration to close it.`
-                );
+                this.reportMissingEndTag(startToken, "endinterface", "interface declaration");
             }
         }
 
-        return new InterfaceDeclaration({
+        const node = new InterfaceDeclaration({
             name,
             members,
             start: startPos,
             end: endPos
         });
+        node.setEndKeywordToken(this.toEndKeywordToken("endinterface", capturedEndinterfaceToken));
+        return node;
     }
 
     /**
@@ -2150,10 +2191,12 @@ export class Parser {
 
         // 消费 endmodule
         let endPos = startPos;
+        let capturedEndmoduleToken: IToken | null = null;
         if (this.checkValue("endmodule")) {
-            const endmoduleToken = this.lexer.current();
-            if (endmoduleToken) {
-                endPos = endmoduleToken.end; // 保存 endmodule 的位置
+            const token = this.lexer.current();
+            if (token) {
+                endPos = token.end; // 保存 endmodule 的位置
+                capturedEndmoduleToken = token;
             }
             this.lexer.next();
         } else {
@@ -2167,12 +2210,7 @@ export class Parser {
                         endPos = lastMember.end;
                     }
                 }
-                this.error(
-                    `Unclosed module '${moduleName}'. Expected 'endmodule' to close the module declaration that started at line ${startPos.line + 1}.`,
-                    currentToken.start,
-                    currentToken.end,
-                    `Add 'endmodule' before '${currentToken.value || "this token"}' to close the module declaration.`
-                );
+                this.reportMissingEndTag(startToken, "endmodule", "module declaration");
                 // 尝试同步到下一个同步点
                 this.synchronize();
                 // 同步后，使用当前 token 的位置作为 endPos
@@ -2188,22 +2226,19 @@ export class Parser {
                         endPos = lastMember.end;
                     }
                 }
-                this.error(
-                    `Unclosed module '${moduleName}'. Expected 'endmodule' to close the module declaration that started at line ${startPos.line + 1}. Reached end of file.`,
-                    startPos,
-                    endPos,
-                    `Add 'endmodule' at the end of the module declaration to close it.`
-                );
+                this.reportMissingEndTag(startToken, "endmodule", "module declaration");
             }
         }
 
-        return new ModuleDeclaration({
+        const node = new ModuleDeclaration({
             name,
             members,
             implementsTypes: [],
             start: startPos,
             end: endPos
         });
+        node.setEndKeywordToken(this.toEndKeywordToken("endmodule", capturedEndmoduleToken));
+        return node;
     }
 
     /**
@@ -2413,13 +2448,16 @@ export class Parser {
 
         // 消费 endlibrary
         let endPos = startPos;
+        let capturedEndlibraryToken: IToken | null = null;
         if (this.checkValue("endlibrary")) {
-            const endlibraryToken = this.lexer.current();
-            if (endlibraryToken) {
-                endPos = endlibraryToken.end; // 保存 endlibrary 的位置
+            const token = this.lexer.current();
+            if (token) {
+                endPos = token.end; // 保存 endlibrary 的位置
+                capturedEndlibraryToken = token;
             }
             this.lexer.next();
         } else {
+            this.reportMissingEndTag(startToken, "endlibrary", "library declaration");
             // 如果没有 endlibrary，使用最后一个成员的位置
             if (statements.length > 0) {
                 const lastStmt = statements[statements.length - 1];
@@ -2430,7 +2468,7 @@ export class Parser {
         }
 
         // 返回 LibraryDeclaration
-        return new LibraryDeclaration({
+        const node = new LibraryDeclaration({
             name,
             members: statements,
             dependencies,
@@ -2440,6 +2478,8 @@ export class Parser {
             start: startPos,
             end: endPos
         });
+        node.setEndKeywordToken(this.toEndKeywordToken("endlibrary", capturedEndlibraryToken));
+        return node;
     }
 
     /**
@@ -2506,13 +2546,16 @@ export class Parser {
 
         // 消费 endscope
         let endPos = startPos;
+        let capturedEndscopeToken: IToken | null = null;
         if (this.checkValue("endscope")) {
-            const endscopeToken = this.lexer.current();
-            if (endscopeToken) {
-                endPos = endscopeToken.end; // 保存 endscope 的位置
+            const token = this.lexer.current();
+            if (token) {
+                endPos = token.end; // 保存 endscope 的位置
+                capturedEndscopeToken = token;
             }
             this.lexer.next();
         } else {
+            this.reportMissingEndTag(startToken, "endscope", "scope declaration");
             // 如果没有 endscope，使用最后一个成员的位置
             if (statements.length > 0) {
                 const lastStmt = statements[statements.length - 1];
@@ -2523,13 +2566,15 @@ export class Parser {
         }
 
         // 返回 ScopeDeclaration
-        return new ScopeDeclaration({
+        const node = new ScopeDeclaration({
             name,
             members: statements,
             initializer,
             start: startPos,
             end: endPos
         });
+        node.setEndKeywordToken(this.toEndKeywordToken("endscope", capturedEndscopeToken));
+        return node;
     }
 
     /**
@@ -3172,13 +3217,16 @@ export class Parser {
 
         // 消费 endglobals
         let endPos = startPos;
+        let capturedEndglobalsToken: IToken | null = null;
         if (this.check(TokenType.keywordEndglobals)) {
-            const endglobalsToken = this.lexer.current();
-            if (endglobalsToken) {
-                endPos = endglobalsToken.end; // 保存 endglobals 的位置
+            const token = this.lexer.current();
+            if (token) {
+                endPos = token.end; // 保存 endglobals 的位置
+                capturedEndglobalsToken = token;
             }
             this.lexer.next();
         } else {
+            this.reportMissingEndTag(startToken, "endglobals", "globals block");
             // 如果没有 endglobals，使用最后一个语句的位置
             if (statements.length > 0) {
                 const lastStmt = statements[statements.length - 1];
@@ -3188,7 +3236,9 @@ export class Parser {
             }
         }
 
-        return new BlockStatement(statements, startPos, endPos);
+        const block = new BlockStatement(statements, startPos, endPos);
+        block.setEndKeywordToken(this.toEndKeywordToken("endglobals", capturedEndglobalsToken));
+        return block;
     }
 
     /**
@@ -3547,11 +3597,7 @@ export class Parser {
         const startPos = startToken.start;
 
         // 解析条件
-        const condition = this.parseExpression();
-        if (!condition) {
-            this.error("Expected condition expression");
-            return null;
-        }
+        const condition = this.parseExpression() || this.createInvalidExpression("Expected condition expression");
 
         // 对于 static if，验证条件必须是常量表达式（这里只做基本检查，实际验证需要在语义分析阶段）
         if (isStatic) {
@@ -3609,16 +3655,20 @@ export class Parser {
         }
 
         // 消费 endif
+        let endifToken: IToken | null = null;
         if (!this.check(TokenType.keywordEndif)) {
-            this.error("Expected 'endif' to close if statement");
+            this.reportMissingEndTag(startToken, "endif", "if statement");
         } else {
+            endifToken = this.lexer.current();
             this.lexer.next();
         }
 
         const endToken = this.lexer.current();
         const endPos = endToken?.end || startPos;
 
-        return new IfStatement(condition, consequent, alternate, isStatic, startPos, endPos);
+        const node = new IfStatement(condition, consequent, alternate, isStatic, startPos, endPos);
+        node.setEndKeywordToken(this.toEndKeywordToken("endif", endifToken));
+        return node;
     }
 
     /**
@@ -3629,11 +3679,7 @@ export class Parser {
         this.lexer.next();
         
         // 解析条件
-        const condition = this.parseExpression();
-        if (!condition) {
-            this.error("Expected condition expression after 'elseif'");
-            return null;
-        }
+        const condition = this.parseExpression() || this.createInvalidExpression("Expected condition expression after 'elseif'");
         
         // 解析 then
         this.consumeValue("then", "Expected 'then' after elseif condition");
@@ -3744,11 +3790,19 @@ export class Parser {
         }
 
         // 消费 endloop
-        const endToken = this.consume(TokenType.keywordEndloop, "Expected 'endloop' to close loop statement");
+        let endToken: IToken | null = null;
+        if (this.check(TokenType.keywordEndloop)) {
+            endToken = this.lexer.current();
+            this.lexer.next();
+        } else {
+            this.reportMissingEndTag(startToken, "endloop", "loop statement");
+        }
         const endPos = endToken?.end || startPos;
 
         const body = new BlockStatement(statements, startPos, endPos);
-        return new LoopStatement(body, startPos, endPos);
+        const node = new LoopStatement(body, startPos, endPos);
+        node.setEndKeywordToken(this.toEndKeywordToken("endloop", endToken));
+        return node;
     }
 
     /**
@@ -3776,30 +3830,23 @@ export class Parser {
         const startPos = startToken.start;
 
         // 解析目标表达式（可以是标识符、数组索引、成员访问等）
-        const target = this.parseExpression();
-        if (!target) {
-            this.error("Expected target expression after 'set'");
-            return null;
-        }
+        const target = this.parseExpression() || this.createInvalidExpression("Expected target expression after 'set'");
 
         // 解析 = 运算符
-        this.consume(TokenType.OperatorAssign, "Expected '=' after target expression");
+        const assignToken = this.consume(TokenType.OperatorAssign, "Expected '=' after target expression");
 
         // 解析值表达式
-        const valueErrorsBefore = this.errors.errors.length;
         const value = this.parseExpression();
-        if (!value) {
-            // 例如二元运算符后缺右操作数时，parseBinaryExpression 已给出更精确的诊断
-            if (this.errors.errors.length === valueErrorsBefore) {
-                this.error("Expected value expression after '='");
-            }
-            return null;
-        }
+        const finalValue = value || this.createInvalidExpression(
+            "Expected value expression after '='",
+            assignToken?.start,
+            assignToken?.end
+        );
 
         const endToken = this.lexer.current();
         const endPos = endToken?.end || startPos;
 
-        return new AssignmentStatement(target, value, startPos, endPos);
+        return new AssignmentStatement(target, finalValue, startPos, endPos);
     }
 
     /**
@@ -3996,11 +4043,7 @@ export class Parser {
         const startPos = startToken.start;
 
         // 解析条件
-        const condition = this.parseExpression();
-        if (!condition) {
-            this.error("Expected condition expression");
-            return null;
-        }
+        const condition = this.parseExpression() || this.createInvalidExpression("Expected condition expression");
 
         const endToken = this.lexer.current();
         const endPos = endToken?.end || startPos;
@@ -4010,7 +4053,8 @@ export class Parser {
 
     /**
      * 解析表达式。
-     * 返回 null 时，调用方应检查 errors：残缺二元式通常已在运算符处记录诊断。
+     * 返回 null 仅表示当前位置无法组成表达式。
+     * 对于残缺表达式，parser 会尽量生成 InvalidExpression，由 analyzer 统一产出诊断。
      */
     private parseExpression(): Expression | null {
         return this.parseBinaryExpression(0);
@@ -4051,20 +4095,15 @@ export class Parser {
             const nextPrecedence = isRightAssociative ? precedence : precedence + 1;
 
             const operatorToken = token;
-            const errorsBeforeRhs = this.errors.errors.length;
             this.lexer.next();
             const right = this.parseBinaryExpression(nextPrecedence);
             if (!right) {
-                // 若深层解析（例如更内层运算符后缺操作数）已报错，则不在外层重复标注
-                if (this.errors.errors.length === errorsBeforeRhs) {
-                    this.error(
-                        "Expected expression after operator",
-                        operatorToken.start,
-                        operatorToken.end,
-                        "Provide the right-hand operand, or move the operator to a valid position."
-                    );
-                }
-                return null;
+                return this.createInvalidExpression(
+                    "Expected expression after operator",
+                    operatorToken.start,
+                    operatorToken.end,
+                    "Provide the right-hand operand, or move the operator to a valid position."
+                );
             }
 
             left = new BinaryExpression(
@@ -4107,8 +4146,11 @@ export class Parser {
             this.lexer.next();
             const operand = this.parseUnaryExpression();
             if (!operand) {
-                this.error("Expected expression after unary operator");
-                return null;
+                return this.createInvalidExpression(
+                    "Expected expression after unary operator",
+                    token.start,
+                    token.end
+                );
             }
             return new BinaryExpression(
                 operator,

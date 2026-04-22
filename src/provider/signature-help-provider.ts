@@ -547,6 +547,21 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             if (stmt instanceof BlockStatement) {
                 this.findMethodsInBlock(stmt, methodName, structName, isStatic, filePath, signatures);
             }
+
+            if (
+                stmt instanceof LibraryDeclaration ||
+                stmt instanceof ModuleDeclaration ||
+                stmt instanceof ScopeDeclaration
+            ) {
+                this.findMethodsInBlock(
+                    new BlockStatement(stmt.members),
+                    methodName,
+                    structName,
+                    isStatic,
+                    filePath,
+                    signatures
+                );
+            }
         }
         
         // 如果没有找到指定的结构体，尝试跨文件查找
@@ -706,6 +721,14 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 const found = this.findModuleInBlock(stmt, moduleName);
                 if (found) return found;
             }
+            if (
+                stmt instanceof LibraryDeclaration ||
+                stmt instanceof ModuleDeclaration ||
+                stmt instanceof ScopeDeclaration
+            ) {
+                const found = this.findModuleInBlock(new BlockStatement(stmt.members), moduleName);
+                if (found) return found;
+            }
         }
         return null;
     }
@@ -721,9 +744,17 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             if (stmt instanceof StructDeclaration) {
                 structs.push(stmt);
             }
-            
+
             if (stmt instanceof BlockStatement) {
                 this.findStructsInBlock(stmt, structs);
+            }
+
+            if (
+                stmt instanceof LibraryDeclaration ||
+                stmt instanceof ModuleDeclaration ||
+                stmt instanceof ScopeDeclaration
+            ) {
+                this.findStructsInBlock(new BlockStatement(stmt.members), structs);
             }
         }
     }
@@ -1031,10 +1062,41 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
         if (!blockStatement) {
             return null;
         }
-        
-        return this.findContainingStruct(blockStatement, position);
+
+        const structFromRange = this.findContainingStruct(blockStatement, position);
+        if (structFromRange) {
+            return structFromRange;
+        }
+
+        // 范围信息不完整时：用当前方法反查所属 struct（与 this./thistype. 解析一致）
+        const containingMethod = this.findContainingMethod(blockStatement, position);
+        if (containingMethod) {
+            return this.findStructOwningMethod(blockStatement, containingMethod);
+        }
+
+        return null;
     }
     
+    /**
+     * 行内范围检测（与 InlayHintsProvider 一致，避免 struct/method 的 end 列与光标列不一致导致匹配失败）
+     */
+    private isPositionInAstRange(
+        position: vscode.Position,
+        start: { line: number; position: number },
+        end: { line: number; position: number }
+    ): boolean {
+        if (position.line < start.line || position.line > end.line) {
+            return false;
+        }
+        if (position.line === start.line && position.character < start.position) {
+            return false;
+        }
+        if (position.line === end.line && position.character > end.position) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 查找包含指定位置的 struct
      */
@@ -1045,20 +1107,91 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
         for (const stmt of block.body) {
             if (stmt instanceof StructDeclaration) {
                 if (stmt.start && stmt.end) {
-                    if (this.isPositionInRange(position, stmt.start, stmt.end)) {
+                    const structStartLine = stmt.start.line;
+                    const structEndLine = stmt.end.line;
+                    if (position.line >= structStartLine && position.line <= structEndLine) {
                         return stmt;
                     }
                 }
+                for (const member of stmt.members) {
+                    if (member instanceof MethodDeclaration) {
+                        if (
+                            member.body &&
+                            member.body.start &&
+                            member.body.end &&
+                            this.isPositionInAstRange(position, member.body.start, member.body.end)
+                        ) {
+                            return stmt;
+                        }
+                    } else if (member instanceof BlockStatement) {
+                        if (
+                            member.start &&
+                            member.end &&
+                            this.isPositionInAstRange(position, member.start, member.end)
+                        ) {
+                            return stmt;
+                        }
+                    }
+                }
             }
-            
+
             if (stmt instanceof BlockStatement) {
                 const found = this.findContainingStruct(stmt, position);
                 if (found) {
                     return found;
                 }
             }
+
+            if (
+                stmt instanceof LibraryDeclaration ||
+                stmt instanceof ModuleDeclaration ||
+                stmt instanceof ScopeDeclaration
+            ) {
+                const found = this.findContainingStruct(new BlockStatement(stmt.members), position);
+                if (found) {
+                    return found;
+                }
+            }
         }
-        
+
+        return null;
+    }
+
+    /**
+     * 查找包含给定方法声明的 struct（用于 this./thistype. 在 struct 范围匹配失败时的回退）
+     */
+    private findStructOwningMethod(
+        block: BlockStatement,
+        method: MethodDeclaration
+    ): StructDeclaration | null {
+        for (const stmt of block.body) {
+            if (stmt instanceof StructDeclaration) {
+                for (const m of stmt.members) {
+                    if (m === method) {
+                        return stmt;
+                    }
+                }
+            }
+
+            if (stmt instanceof BlockStatement) {
+                const found = this.findStructOwningMethod(stmt, method);
+                if (found) {
+                    return found;
+                }
+            }
+
+            if (
+                stmt instanceof LibraryDeclaration ||
+                stmt instanceof ModuleDeclaration ||
+                stmt instanceof ScopeDeclaration
+            ) {
+                const found = this.findStructOwningMethod(new BlockStatement(stmt.members), method);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+
         return null;
     }
     
@@ -1151,25 +1284,46 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
                 for (const member of stmt.members) {
                     if (member instanceof MethodDeclaration) {
                         if (member.start && member.end) {
-                            if (this.isPositionInRange(position, member.start, member.end)) {
+                            const methodStartLine = member.start.line;
+                            const methodEndLine = member.end.line;
+                            if (position.line >= methodStartLine && position.line <= methodEndLine + 1) {
                                 return member;
                             }
+                        }
+                        if (
+                            member.body &&
+                            member.body.start &&
+                            member.body.end &&
+                            this.isPositionInAstRange(position, member.body.start, member.body.end)
+                        ) {
+                            return member;
                         }
                     }
                 }
             }
-            
+
             if (stmt instanceof BlockStatement) {
                 const found = this.findContainingMethod(stmt, position);
                 if (found) {
                     return found;
                 }
             }
+
+            if (
+                stmt instanceof LibraryDeclaration ||
+                stmt instanceof ModuleDeclaration ||
+                stmt instanceof ScopeDeclaration
+            ) {
+                const found = this.findContainingMethod(new BlockStatement(stmt.members), position);
+                if (found) {
+                    return found;
+                }
+            }
         }
-        
+
         return null;
     }
-    
+
     /**
      * 查找变量的类型（用于类型推断）
      * 查找顺序：1. local 变量 2. takes 参数 3. globals 变量

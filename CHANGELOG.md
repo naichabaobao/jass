@@ -1,3 +1,8 @@
+#### 1.9.14
+- 表达式错误改为在 `analyzer` 统一诊断：`parser` 容错生成无效表达式节点，减少解析阶段误伤与重复报错。
+- 所有带结束标签的块（`function/method/if/loop/globals/scope/library/struct/interface/module`）统一记录结束标签 token。
+- 缺失结束标签时，诊断锚定到起始关键字（如 `method`/`if`/`loop`），定位更直观。
+
 #### 1.9.13
 - 修复 method 形参在签名帮助中不提示的问题。
 - vJass 解析：二元运算符缺少右操作数时在运算符处报错；表达式路径统一按「词法耗尽」处理，避免 `EndOfInput` 边界漏诊。

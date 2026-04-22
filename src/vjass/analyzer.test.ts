@@ -521,6 +521,28 @@ endlibrary`,
         }
     );
 
+    testSemantic(
+        "表达式残缺：二元运算符后缺操作数由 analyzer 统一报错",
+        `function test takes nothing returns nothing
+local integer used = 10
+set used = used +
+endfunction`,
+        (errors) => {
+            return errors.errors.some((e) => e.message.includes("Expected expression after operator"));
+        }
+    );
+
+    testSemantic(
+        "表达式残缺：一元运算符后缺操作数由 analyzer 统一报错",
+        `function test takes nothing returns nothing
+local integer used = 10
+set used = -
+endfunction`,
+        (errors) => {
+            return errors.errors.some((e) => e.message.includes("Expected expression after unary operator"));
+        }
+    );
+
     // ========== 测试 6: 委托检查 ==========
     console.log("\n【测试 6】委托检查");
 

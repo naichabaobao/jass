@@ -519,6 +519,11 @@ class ASTNode {
  */
 abstract class Statement extends ASTNode {
     /**
+     * 对应语句的结束关键字 token（如 endfunction/endmethod/endif/endloop...）。
+     * 若语法上不存在结束关键字，或解析阶段未能捕获，则为 null。
+     */
+    public endKeywordToken: EndKeywordToken | null = null;
+    /**
      * 构造函数
      * @param start 开始位置
      * @param end 结束位置
@@ -532,6 +537,11 @@ abstract class Statement extends ASTNode {
      * @returns 语句的字符串表示
      */
     public abstract toString(): string;
+
+    public setEndKeywordToken(token: EndKeywordToken | null): this {
+        this.endKeywordToken = token;
+        return this;
+    }
 }
 
 /**
@@ -559,6 +569,41 @@ abstract class Expression extends ASTNode {
      * @returns 表达式的字符串表示
      */
     public abstract toString(): string;
+}
+
+export interface EndKeywordToken {
+    keyword: string;
+    start: { line: number, position: number };
+    end: { line: number, position: number };
+}
+
+/**
+ * 解析阶段容错表达式：
+ * parser 不立即上报表达式错误，而是生成该节点；
+ * analyzer 统一在语义阶段根据该节点上报诊断。
+ */
+class InvalidExpression extends Expression {
+    public readonly message: string;
+    public readonly fix?: string;
+
+    constructor(
+        message: string,
+        start?: { line: number, position: number },
+        end?: { line: number, position: number },
+        fix?: string
+    ) {
+        super(start, end);
+        this.message = message;
+        this.fix = fix;
+    }
+
+    public getType(): string | null {
+        return null;
+    }
+
+    public toString(): string {
+        return "<invalid-expression>";
+    }
 }
 
 /**
@@ -2033,6 +2078,7 @@ export {
     ASTNode, 
     Statement, 
     Expression,
+    InvalidExpression,
     Literal,
     IntegerLiteral,
     RealLiteral,

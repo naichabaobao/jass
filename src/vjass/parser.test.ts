@@ -33,6 +33,7 @@ import {
     ModuleDeclaration,
     ImplementStatement,
     DelegateDeclaration,
+    InvalidExpression,
     OperatorType,
     BinaryExpression
 } from "./ast";
@@ -400,20 +401,44 @@ interface IBuffInterface=
         return expr.operator === OperatorType.Plus;
     })) exprPassed++; else exprFailed++;
 
-    // 残缺二元表达式：须在运算符所在行报告错误（且不得静默接受错误 AST）
+    // 残缺表达式改为解析阶段容错，语义阶段统一诊断：parser 应生成 InvalidExpression
     function testIncompleteRhs(name: string, code: string, expectErrorSubstring: string, errorLine1Based: number): boolean {
         const parser = new Parser(code);
-        parser.parse();
-        const errs = parser.errors.errors.filter((e) => e.message.includes(expectErrorSubstring));
-        if (errs.length === 0) {
-            console.log(`✗ ${name}: 未找到包含 “${expectErrorSubstring}” 的诊断`);
-            parser.errors.errors.forEach((e, i) => {
-                const line = e.start?.line !== undefined ? e.start.line + 1 : "?";
-                console.log(`  已有错误 ${i + 1} (行 ${line}): ${e.message}`);
-            });
+        const ast = parser.parse();
+        const collectInvalidExpr = (expr: Expression | null | undefined, out: InvalidExpression[]) => {
+            if (!expr) return;
+            if (expr instanceof InvalidExpression) {
+                out.push(expr);
+                return;
+            }
+            const anyExpr = expr as any;
+            if (anyExpr.left) collectInvalidExpr(anyExpr.left as Expression, out);
+            if (anyExpr.right) collectInvalidExpr(anyExpr.right as Expression, out);
+            if (Array.isArray(anyExpr.arguments)) {
+                for (const a of anyExpr.arguments as Expression[]) collectInvalidExpr(a, out);
+            }
+            if (anyExpr.expression) collectInvalidExpr(anyExpr.expression as Expression, out);
+            if (anyExpr.callee) collectInvalidExpr(anyExpr.callee as Expression, out);
+        };
+        const stack: Statement[] = [...ast.body];
+        const invalidExpressions: InvalidExpression[] = [];
+        while (stack.length > 0) {
+            const stmt = stack.pop()!;
+            if (stmt instanceof AssignmentStatement) collectInvalidExpr(stmt.value, invalidExpressions);
+            if (stmt instanceof ReturnStatement) collectInvalidExpr(stmt.argument, invalidExpressions);
+            if (stmt instanceof CallStatement) collectInvalidExpr(stmt.expression, invalidExpressions);
+            const anyStmt = stmt as any;
+            if (anyStmt.condition) collectInvalidExpr(anyStmt.condition as Expression, invalidExpressions);
+            if (Array.isArray(anyStmt.members)) stack.push(...anyStmt.members);
+            if (anyStmt.body instanceof BlockStatement) stack.push(...anyStmt.body.body);
+            if (stmt instanceof BlockStatement) stack.push(...stmt.body);
+        }
+        const matched = invalidExpressions.filter((e) => e.message.includes(expectErrorSubstring));
+        if (matched.length === 0) {
+            console.log(`✗ ${name}: 未找到包含 “${expectErrorSubstring}” 的 InvalidExpression`);
             return false;
         }
-        const e0 = errs[0];
+        const e0 = matched[0];
         const line = e0.start.line + 1;
         if (line !== errorLine1Based) {
             console.log(`✗ ${name}: 期望错误在第 ${errorLine1Based} 行，实际第 ${line} 行`);

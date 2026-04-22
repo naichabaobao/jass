@@ -17,6 +17,7 @@ import {
     ImplementStatement,
     DelegateDeclaration,
     CallExpression,
+    InvalidExpression,
     Identifier,
     ThistypeExpression,
     IfStatement,
@@ -1407,6 +1408,14 @@ export class SemanticAnalyzer {
             this.checkCallExpression(node);
         } else if (node instanceof AssignmentStatement) {
             this.checkAssignment(node);
+        } else if (node instanceof InvalidExpression) {
+            this.addError(
+                node.start,
+                node.end,
+                node.message,
+                node.fix
+            );
+            return;
         } else if (node instanceof VariableDeclaration) {
             this.checkVariableDeclaration(node);
             this.checkKeywordMisspelling(node);
