@@ -22,9 +22,9 @@ globals
     constant integer c_food_made         = 0
     // 当前已使用人口数
     constant integer c_food_used         = 0
-    // 当前黄金数
+    // 当前黄金数量
     constant integer c_gold              = 0
-    // 当前拥有的金矿未采集金钱数之和
+    // 当前拥有的金矿未采集黄金数量之和
     constant integer c_gold_owned        = 0
     // 当前首英雄数量，不含训练/复活中
     constant integer c_hero1_done        = 0
