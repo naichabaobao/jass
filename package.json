@@ -83,8 +83,7 @@
             "1.32",
             "1.33",
             "1.36",
-            "2.02",
-            "2.04"
+            "2.03"
           ],
           "markdownDescription": "Warcraft III API version preference for completion behavior. In legacy versions (`1.20/1.24/1.26a/1.27/1.27a`), APIs marked by `@since` newer than selected version are filtered out. In other versions, newer APIs are de-prioritized. Items without version tags are unchanged."
         }
