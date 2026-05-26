@@ -1,7 +1,5 @@
 // @ignore-file-errors
 
-
-
 // Native types. All native functions take extended handle types when
 // possible to help prevent passing bad values to native functions
 
@@ -1384,11 +1382,11 @@ globals
 	// 单位事件 单位状态变更
 	constant unitevent EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)
 	
-	// Events which may have a filter for the "other unit"   
+	// Events which may have a filter for the "other unit"
 	
 	// 单位事件 单位获取到攻击目标(类似触发单位警戒攻击)
 	constant unitevent EVENT_UNIT_ACQUIRED_TARGET = ConvertUnitEvent(60)
-	// 单位事件 目标在单位获取范围内(类似警戒范围)
+	// 单位事件 目标在单位获取范围内(类似警戒范围)/注意范围内一个目标
 	constant unitevent EVENT_UNIT_TARGET_IN_RANGE = ConvertUnitEvent(61)
 	// 单位事件 单位被攻击
 	constant unitevent EVENT_UNIT_ATTACKED = ConvertUnitEvent(62)
@@ -1519,11 +1517,11 @@ globals
  	constant playerunitevent EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
 	// 玩家单位事件 出售物品
  	constant playerunitevent EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
-	// 玩家单位事件 准备施放技能(前摇开始)
+	// 玩家单位事件 准备施放技能(前摇开始)/开始施放持续性技能
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
 	// 玩家单位事件 开始施放技能(前摇结束)
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_CAST = ConvertPlayerUnitEvent(273)
-	// 玩家单位事件 发动技能效果(后摇开始)
+	// 玩家单位事件 发动技能效果(后摇开始)/开始施放技能效果
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_EFFECT = ConvertPlayerUnitEvent(274)
 	// 玩家单位事件 释放技能結束 (后摇结束)
  	constant playerunitevent EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
@@ -1543,11 +1541,11 @@ globals
 	constant unitevent EVENT_UNIT_CHANGE_OWNER = ConvertUnitEvent(287)
 	// 单位事件 出售物品
 	constant unitevent EVENT_UNIT_SELL_ITEM = ConvertUnitEvent(288)
-	// 单位事件 准备施放技能 (前摇开始)
+	// 单位事件 准备施放技能 (前摇开始)/开始施放持续性技能
 	constant unitevent EVENT_UNIT_SPELL_CHANNEL = ConvertUnitEvent(289)
 	// 单位事件 开始施放技能 (前摇结束)
 	constant unitevent EVENT_UNIT_SPELL_CAST = ConvertUnitEvent(290)
-	// 单位事件 施放技能生效 (后摇开始)
+	// 单位事件 施放技能生效 (后摇开始)/开始施放技能效果
 	constant unitevent EVENT_UNIT_SPELL_EFFECT = ConvertUnitEvent(291)
 	// 单位事件 施放技能结束 (后摇结束)
 	constant unitevent EVENT_UNIT_SPELL_FINISH = ConvertUnitEvent(292)
