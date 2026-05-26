@@ -1,3 +1,6 @@
+#### 1.9.15
+- 修复多个dzapi文件bug
+
 #### 1.9.14
 - 表达式错误改为在 `analyzer` 统一诊断：`parser` 容错生成无效表达式节点，减少解析阶段误伤与重复报错。
 - 所有带结束标签的块（`function/method/if/loop/globals/scope/library/struct/interface/module`）统一记录结束标签 token。

@@ -76,7 +76,7 @@ interface StandardLibrariesConfig {
     /** blizzard.j 文件路径 */
     "blizzard.j"?: string;
     /** DzAPI.j 文件路径 */
-    "dzapi.j"?: string;
+    "DzAPI.j"?: string;
 }
 
 /**
@@ -140,7 +140,7 @@ interface IgnoreDirectives {
 /**
  * 标准库文件解析顺序
  */
-const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j', 'dzapi.j'];
+const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j', 'DzAPI.j'];
 
 /**
  * 需要忽略的文件名（不处理，但需要监听变化）
