@@ -12,7 +12,7 @@ export class CommonAiProgram extends BlockStatement {
 export class DzAPIJProgram extends BlockStatement {
 
 }
-export class war3mapJProgram extends BlockStatement {
+export class War3mapJProgram extends BlockStatement {
 
 }
 export class AIScriptsAiProgram extends BlockStatement {
@@ -29,13 +29,13 @@ export class Program extends BlockStatement {
     private readonly blizzardJProgram?: BlizzardJProgram;
     private readonly commonAiProgram?: CommonAiProgram;
     private readonly DzAPIJProgram?: DzAPIJProgram;
-    private readonly war3mapJProgram?: war3mapJProgram;
+    private readonly war3mapJProgram?: War3mapJProgram;
     private readonly AIScriptsAiProgram?: AIScriptsAiProgram;
     private readonly CheatsJProgram?: CheatsJProgram;
     private readonly InitCheatsJProgram?: InitCheatsJProgram;
 
     constructor(commonJProgram?: CommonJProgram, blizzardJProgram?: BlizzardJProgram, commonAiProgram?: CommonAiProgram,
-                DzAPIJProgram?: DzAPIJProgram, war3mapJProgram?: war3mapJProgram, AIScriptsAiProgram?: AIScriptsAiProgram,
+                DzAPIJProgram?: DzAPIJProgram, war3mapJProgram?: War3mapJProgram, AIScriptsAiProgram?: AIScriptsAiProgram,
                 CheatsJProgram?: CheatsJProgram, InitCheatsJProgram?: InitCheatsJProgram)
     {
         super();
