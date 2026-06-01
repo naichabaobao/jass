@@ -889,7 +889,12 @@ export async function activate(context: vscode.ExtensionContext) {
                 "standardLibraries": {
                     "common.j": "./libs/common.j",
                     "common.ai": "./libs/common.ai",
-                    "blizzard.j": "./libs/blizzard.j"
+                    "blizzard.j": "./libs/blizzard.j",
+                    "DzAPI.j": "./libs/DzAPI.j",
+                    "war3map.j": "./libs/war3map.j",
+                    "AIScripts.ai": "./libs/AIScripts.ai",
+                    "Cheats.j": "./libs/Cheats.j",
+                    "InitCheats.j": "./libs/InitCheats.j"
                 },
                 "diagnostics": {
                     "enable": true,
