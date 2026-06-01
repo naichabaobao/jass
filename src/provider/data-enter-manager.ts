@@ -1219,7 +1219,7 @@ export class DataEnterManager {
 
     /**
      * 按顺序获取标准库文件的 BlockStatement
-     * @returns 按解析顺序返回的 BlockStatement 数组 [common.j, common.ai, blizzard.j]
+     * @returns 按解析顺序返回的 BlockStatement 数组 [common.j, common.ai, blizzard.j, DzAPI.j, war3map.j, AIScripts.ai, Cheats.j, InitCheats.j]
      */
     public getStandardLibraries(workspaceRoot?: string): BlockStatement[] {
         const root = workspaceRoot || this.workspaceRoot;
