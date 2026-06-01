@@ -15,7 +15,7 @@ export class DzAPIJProgram extends BlockStatement {
 export class war3mapJProgram extends BlockStatement {
 
 }
-export class AIScriptsAIProgram extends BlockStatement {
+export class AIScriptsAiProgram extends BlockStatement {
 
 }
 export class CheatsJProgram extends BlockStatement {
