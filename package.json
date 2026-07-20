@@ -217,12 +217,12 @@
       "jass.submenu": [
         {
           "command": "jass.checkTrigger",
-          "when": "editorLangId == jass && resourceExtname != .ai",
+          "when": "editorLangId == jass",
           "group": "1_check@1"
         },
         {
           "command": "jass.checkAILibrary",
-          "when": "editorLangId == jass && resourceExtname == .ai",
+          "when": "editorLangId == jass",
           "group": "1_check@2"
         },
         {
