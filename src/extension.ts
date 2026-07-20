@@ -997,17 +997,17 @@ export async function activate(context: vscode.ExtensionContext) {
         switch (checkType) {
             case 'trigger':
                 // 编译自定义触发: common.j + blizzard.j + 目标文件
-                args = [libPaths.commonJ, libPaths.blizzardJ, filePath];
+                args = [`"${libPaths.commonJ}"`, `"${libPaths.blizzardJ}"`, `"${filePath}"`];
                 checkTypeName = '编译自定义触发';
                 break;
             case 'aiLibrary':
                 // 编译自定义库(Blizzard.j或common.ai): common.j + 目标文件
-                args = [libPaths.commonJ, filePath];
+                args = [`"${libPaths.commonJ}"`, `"${filePath}"`];
                 checkTypeName = '编译自定义库(Blizzard.j或common.ai)';
                 break;
             case 'ai':
                 // 编译自定义ai脚本: common.j + common.ai + 目标文件
-                args = [libPaths.commonJ, libPaths.commonAi, filePath];
+                args = [`"${libPaths.commonJ}"`, `"${libPaths.commonAi}"`, `"${filePath}"`];
                 checkTypeName = '编译自定义ai脚本';
                 break;
         }
