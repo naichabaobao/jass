@@ -1018,9 +1018,14 @@ export async function activate(context: vscode.ExtensionContext) {
         jassOutputChannel.appendLine(`📋 JASS ${checkTypeName}`);
         jassOutputChannel.appendLine(`📁 文件: ${filePath}`);
         jassOutputChannel.appendLine(`🔧 编译器: ${pjassPath}`);
-        jassOutputChannel.appendLine(`📚 标准库:`);
-        args.slice(0, -1).forEach((lib, i) => {
-            jassOutputChannel.appendLine(`   ${i + 1}. ${lib}`);
+        jassOutputChannel.appendLine(`📚 入参文件:`);
+        // 显示所有入参（包含标准库和目标文件）
+        args.forEach((arg, i) => {
+            // 去掉路径两端的引号以便显示
+            const displayPath = arg.replace(/^"|"$/g, '');
+            const isLast = i === args.length - 1;
+            const label = isLast ? '🎯 目标文件' : `📖 标准库 ${i + 1}`;
+            jassOutputChannel.appendLine(`   ${label}: ${displayPath}`);
         });
         jassOutputChannel.appendLine(`───────────────────────────────────────────────────────────`);
         jassOutputChannel.appendLine('');
