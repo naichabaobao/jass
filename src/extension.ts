@@ -940,31 +940,29 @@ export async function activate(context: vscode.ExtensionContext) {
      */
     function getStandardLibraryPaths(): { commonJ: string; blizzardJ: string; commonAi: string } {
         const config = vscode.workspace.getConfiguration('jass');
-        const libPathConfig = config.get<any>('standardLibraryPath', {});
-        
         const extensionPath = context.extensionPath;
         
         // 优先使用用户配置的路径，否则使用扩展内置的 static 目录
-        const commonJ = libPathConfig.commonJ || path.join(extensionPath, 'static', 'common.j');
-        const blizzardJ = libPathConfig.blizzardJ || path.join(extensionPath, 'static', 'blizzard.j');
-        const commonAi = libPathConfig.commonAi || path.join(extensionPath, 'static', 'common.ai');
+        const commonJ = config.get<string>('compiler.commonJ', '') || path.join(extensionPath, 'static', 'common.j');
+        const blizzardJ = config.get<string>('compiler.blizzardJ', '') || path.join(extensionPath, 'static', 'blizzard.j');
+        const commonAi = config.get<string>('compiler.commonAi', '') || path.join(extensionPath, 'static', 'common.ai');
         
         return { commonJ, blizzardJ, commonAi };
     }
 
     /**
-     * 获取 jassparser.exe 路径
+     * 获取 pjass.exe 路径
      */
-    function getJassParserPath(): string {
+    function getPjassPath(): string {
         const config = vscode.workspace.getConfiguration('jass');
-        const userPath = config.get<string>('jassparserPath', '');
+        const userPath = config.get<string>('compiler.pjassPath', '');
         
         if (userPath) {
             return userPath;
         }
         
-        // 默认路径：扩展目录下的 out/extern/pjass/jassparser.exe
-        return path.join(context.extensionPath, 'out', 'extern', 'pjass', 'jassparser.exe');
+        // 默认路径：扩展目录下的 out/extern/pjass/pjass.exe
+        return path.join(context.extensionPath, 'out', 'extern', 'pjass', 'pjass.exe');
     }
 
     /**
@@ -974,14 +972,14 @@ export async function activate(context: vscode.ExtensionContext) {
         checkType: 'trigger' | 'aiLibrary' | 'ai',
         filePath: string
     ): Promise<void> {
-        const jassparserPath = getJassParserPath();
+        const pjassPath = getPjassPath();
         const libPaths = getStandardLibraryPaths();
         
-        // 检查 jassparser.exe 是否存在
-        if (!fs.existsSync(jassparserPath)) {
+        // 检查 pjass.exe 是否存在
+        if (!fs.existsSync(pjassPath)) {
             vscode.window.showErrorMessage(
-                `找不到 jassparser.exe: ${jassparserPath}\n` +
-                `请在设置中配置 "jass.jassparserPath"，或将 jassparser.exe 放到扩展目录。`
+                `找不到 pjass.exe: ${pjassPath}\n` +
+                `请在设置中配置 "jass.compiler.pjassPath"，或将 pjass.exe 放到扩展目录 (out/extern/pjass/pjass.exe)。`
             );
             return;
         }
@@ -998,19 +996,19 @@ export async function activate(context: vscode.ExtensionContext) {
 
         switch (checkType) {
             case 'trigger':
-                // 触发编译检查: common.j + blizzard.j + 目标文件
+                // 编译自定义触发: common.j + blizzard.j + 目标文件
                 args = [libPaths.commonJ, libPaths.blizzardJ, filePath];
-                checkTypeName = '触发编译检查';
+                checkTypeName = '编译自定义触发';
                 break;
             case 'aiLibrary':
-                // AI库编译检查: common.j + common.ai + 目标文件
-                args = [libPaths.commonJ, libPaths.commonAi, filePath];
-                checkTypeName = 'AI库编译检查';
+                // 编译自定义库(Blizzard.j或common.ai): common.j + 目标文件
+                args = [libPaths.commonJ, filePath];
+                checkTypeName = '编译自定义库(Blizzard.j或common.ai)';
                 break;
             case 'ai':
-                // AI编译检查: common.j + 目标文件（用于检查 Blizzard.j 或 common.ai）
-                args = [libPaths.commonJ, filePath];
-                checkTypeName = 'AI编译检查';
+                // 编译自定义ai脚本: common.j + common.ai + 目标文件
+                args = [libPaths.commonJ, libPaths.commonAi, filePath];
+                checkTypeName = '编译自定义ai脚本';
                 break;
         }
 
@@ -1019,7 +1017,7 @@ export async function activate(context: vscode.ExtensionContext) {
         jassOutputChannel.appendLine(`═══════════════════════════════════════════════════════════`);
         jassOutputChannel.appendLine(`📋 JASS ${checkTypeName}`);
         jassOutputChannel.appendLine(`📁 文件: ${filePath}`);
-        jassOutputChannel.appendLine(`🔧 编译器: ${jassparserPath}`);
+        jassOutputChannel.appendLine(`🔧 编译器: ${pjassPath}`);
         jassOutputChannel.appendLine(`📚 标准库:`);
         args.slice(0, -1).forEach((lib, i) => {
             jassOutputChannel.appendLine(`   ${i + 1}. ${lib}`);
@@ -1035,7 +1033,7 @@ export async function activate(context: vscode.ExtensionContext) {
             },
             () => {
                 return new Promise<void>((resolve) => {
-                    const proc = spawn(jassparserPath, args, {
+                    const proc = spawn(pjassPath, args, {
                         shell: true
                     });
 
@@ -1076,7 +1074,7 @@ export async function activate(context: vscode.ExtensionContext) {
                     proc.on('error', (err) => {
                         jassOutputChannel.appendLine(`❌ 执行失败: ${err.message}`);
                         jassOutputChannel.appendLine('');
-                        jassOutputChannel.appendLine(`请确保 jassparser.exe 存在且可执行。`);
+                        jassOutputChannel.appendLine(`请确保 pjass.exe 存在且可执行。`);
                         vscode.window.showErrorMessage(`执行 ${checkTypeName} 失败: ${err.message}`);
                         resolve();
                     });

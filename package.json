@@ -89,32 +89,29 @@
           ],
           "markdownDescription": "Warcraft III API version preference for completion behavior. In legacy versions (`1.20/1.24/1.26a/1.27/1.27a`), APIs marked by `@since` newer than selected version are filtered out. In other versions, newer APIs are de-prioritized. Items without version tags are unchanged."
         },
-        "jass.jassparserPath": {
+        "jass.compiler.pjassPath": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Path to jassparser.exe (pjass) for syntax checking. If empty, uses the bundled version at `out/extern/pjass/jassparser.exe`. Example: `C:/Users/Administrator/.vscode/extensions/jass.jass-1.8.36/out/extern/pjass/jassparser.exe`"
+          "description": "pjass.exe 路径 (用于 JASS 语法检查). 留空则使用扩展内置版本 (out/extern/pjass/pjass.exe)",
+          "scope": "machine-overridable"
         },
-        "jass.standardLibraryPath": {
-          "type": "object",
-          "default": {},
-          "properties": {
-            "commonJ": {
-              "type": "string",
-              "default": "",
-              "description": "Path to common.j. If empty, uses bundled version."
-            },
-            "blizzardJ": {
-              "type": "string",
-              "default": "",
-              "description": "Path to Blizzard.j. If empty, uses bundled version."
-            },
-            "commonAi": {
-              "type": "string",
-              "default": "",
-              "description": "Path to common.ai. If empty, uses bundled version."
-            }
-          },
-          "markdownDescription": "Paths to standard library files for jassparser. If empty, uses bundled versions from extension's `static` folder."
+        "jass.compiler.commonJ": {
+          "type": "string",
+          "default": "",
+          "description": "common.j 路径. 留空则使用扩展内置版本 (static/common.j)",
+          "scope": "machine-overridable"
+        },
+        "jass.compiler.blizzardJ": {
+          "type": "string",
+          "default": "",
+          "description": "Blizzard.j 路径. 留空则使用扩展内置版本 (static/blizzard.j)",
+          "scope": "machine-overridable"
+        },
+        "jass.compiler.commonAi": {
+          "type": "string",
+          "default": "",
+          "description": "common.ai 路径. 留空则使用扩展内置版本 (static/common.ai)",
+          "scope": "machine-overridable"
         }
       }
     },
@@ -182,17 +179,17 @@
       },
       {
         "command": "jass.checkTrigger",
-        "title": "触发编译检查",
+        "title": "编译自定义触发",
         "category": "JASS"
       },
       {
         "command": "jass.checkAILibrary",
-        "title": "AI库编译检查",
+        "title": "编译自定义库(Blizzard.j或common.ai)",
         "category": "JASS"
       },
       {
         "command": "jass.checkAI",
-        "title": "AI编译检查",
+        "title": "编译自定义ai脚本",
         "category": "JASS"
       }
     ],
