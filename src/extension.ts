@@ -1033,23 +1033,35 @@ export async function activate(context: vscode.ExtensionContext) {
             },
             () => {
                 return new Promise<void>((resolve) => {
-                    const proc = spawn(pjassPath, args, {
+                    const proc = spawn(`"${pjassPath}"`, args, {
                         shell: true
                     });
 
-                    let stdout = '';
-                    let stderr = '';
+                    const stdoutChunks: Buffer[] = [];
+                    const stderrChunks: Buffer[] = [];
 
-                    proc.stdout.on('data', (data) => {
-                        stdout += data.toString();
+                    proc.stdout.on('data', (data: Buffer) => {
+                        stdoutChunks.push(data);
                     });
 
-                    proc.stderr.on('data', (data) => {
-                        stderr += data.toString();
+                    proc.stderr.on('data', (data: Buffer) => {
+                        stderrChunks.push(data);
                     });
 
                     proc.on('close', (code) => {
-                        const allOutput = (stdout + stderr).trim();
+                        const stdoutBuf = Buffer.concat(stdoutChunks);
+                        const stderrBuf = Buffer.concat(stderrChunks);
+                        
+                        // 尝试用 GBK 解码中文路径，失败则用默认编码
+                        let decoded = '';
+                        try {
+                            const decoder = new (globalThis as any).TextDecoder('gbk');
+                            decoded = decoder.decode(Buffer.concat([stdoutBuf, stderrBuf]));
+                        } catch {
+                            decoded = Buffer.concat([stdoutBuf, stderrBuf]).toString();
+                        }
+                        
+                        const allOutput = decoded.trim();
                         
                         if (allOutput) {
                             jassOutputChannel.appendLine(allOutput);
