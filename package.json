@@ -98,19 +98,37 @@
         "jass.compiler.commonJ": {
           "type": "string",
           "default": "",
-          "description": "common.j 路径. 留空则使用扩展内置版本 (static/common.j)",
+          "description": "common.j 路径 (用于显示中文 API 注释). 留空则使用扩展内置版本 (static/common.j)",
           "scope": "machine-overridable"
         },
         "jass.compiler.blizzardJ": {
           "type": "string",
           "default": "",
-          "description": "Blizzard.j 路径. 留空则使用扩展内置版本 (static/blizzard.j)",
+          "description": "Blizzard.j 路径 (用于显示中文 API 注释). 留空则使用扩展内置版本 (static/blizzard.j)",
           "scope": "machine-overridable"
         },
         "jass.compiler.commonAi": {
           "type": "string",
           "default": "",
-          "description": "common.ai 路径. 留空则使用扩展内置版本 (static/common.ai)",
+          "description": "common.ai 路径 (用于显示中文 API 注释). 留空则使用扩展内置版本 (static/common.ai)",
+          "scope": "machine-overridable"
+        },
+        "jass.compiler.checkCommonJ": {
+          "type": "string",
+          "default": "",
+          "description": "编译检查用的 common.j 路径. 留空则使用 jass.compiler.commonJ 路径",
+          "scope": "machine-overridable"
+        },
+        "jass.compiler.checkBlizzardJ": {
+          "type": "string",
+          "default": "",
+          "description": "编译检查用的 Blizzard.j 路径. 留空则使用 jass.compiler.blizzardJ 路径",
+          "scope": "machine-overridable"
+        },
+        "jass.compiler.checkCommonAi": {
+          "type": "string",
+          "default": "",
+          "description": "编译检查用的 common.ai 路径. 留空则使用 jass.compiler.commonAi 路径",
           "scope": "machine-overridable"
         }
       }

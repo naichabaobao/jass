@@ -951,6 +951,32 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     /**
+     * 获取编译检查用的标准库文件路径
+     * 优先级：compiler.check* 配置 > compiler.* 配置 > 扩展内置
+     */
+    function getCheckLibraryPaths(): { commonJ: string; blizzardJ: string; commonAi: string } {
+        const config = vscode.workspace.getConfiguration('jass');
+        const extensionPath = context.extensionPath;
+        
+        // 优先使用编译专用配置，否则回退到显示注释的配置
+        const checkCommonJ = config.get<string>('compiler.checkCommonJ', '');
+        const checkBlizzardJ = config.get<string>('compiler.checkBlizzardJ', '');
+        const checkCommonAi = config.get<string>('compiler.checkCommonAi', '');
+        
+        const commonJ = checkCommonJ
+            || config.get<string>('compiler.commonJ', '')
+            || path.join(extensionPath, 'static', 'common.j');
+        const blizzardJ = checkBlizzardJ
+            || config.get<string>('compiler.blizzardJ', '')
+            || path.join(extensionPath, 'static', 'blizzard.j');
+        const commonAi = checkCommonAi
+            || config.get<string>('compiler.commonAi', '')
+            || path.join(extensionPath, 'static', 'common.ai');
+        
+        return { commonJ, blizzardJ, commonAi };
+    }
+
+    /**
      * 获取 pjass.exe 路径
      */
     function getPjassPath(): string {
@@ -973,7 +999,8 @@ export async function activate(context: vscode.ExtensionContext) {
         filePath: string
     ): Promise<void> {
         const pjassPath = getPjassPath();
-        const libPaths = getStandardLibraryPaths();
+        // 编译检查使用专门的库配置（可与显示注释的库不同）
+        const libPaths = getCheckLibraryPaths();
         
         // 检查 pjass.exe 是否存在
         if (!fs.existsSync(pjassPath)) {
