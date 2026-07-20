@@ -88,6 +88,33 @@
             "2.03"
           ],
           "markdownDescription": "Warcraft III API version preference for completion behavior. In legacy versions (`1.20/1.24/1.26a/1.27/1.27a`), APIs marked by `@since` newer than selected version are filtered out. In other versions, newer APIs are de-prioritized. Items without version tags are unchanged."
+        },
+        "jass.jassparserPath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to jassparser.exe (pjass) for syntax checking. If empty, uses the bundled version at `out/extern/pjass/jassparser.exe`. Example: `C:/Users/Administrator/.vscode/extensions/jass.jass-1.8.36/out/extern/pjass/jassparser.exe`"
+        },
+        "jass.standardLibraryPath": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "commonJ": {
+              "type": "string",
+              "default": "",
+              "description": "Path to common.j. If empty, uses bundled version."
+            },
+            "blizzardJ": {
+              "type": "string",
+              "default": "",
+              "description": "Path to Blizzard.j. If empty, uses bundled version."
+            },
+            "commonAi": {
+              "type": "string",
+              "default": "",
+              "description": "Path to common.ai. If empty, uses bundled version."
+            }
+          },
+          "markdownDescription": "Paths to standard library files for jassparser. If empty, uses bundled versions from extension's `static` folder."
         }
       }
     },
@@ -152,6 +179,27 @@
       {
         "command": "jass.openReplacementSymbol",
         "title": "JASS: Open Replacement Symbol"
+      },
+      {
+        "command": "jass.checkTrigger",
+        "title": "触发编译检查",
+        "category": "JASS"
+      },
+      {
+        "command": "jass.checkAILibrary",
+        "title": "AI库编译检查",
+        "category": "JASS"
+      },
+      {
+        "command": "jass.checkAI",
+        "title": "AI编译检查",
+        "category": "JASS"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "jass.submenu",
+        "label": "JASS"
       }
     ],
     "menus": {
@@ -160,6 +208,30 @@
           "command": "jass.createConfigFile",
           "when": "explorerResourceIsFolder",
           "group": "jass"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "jass.submenu",
+          "when": "editorLangId == jass",
+          "group": "jass@1"
+        }
+      ],
+      "jass.submenu": [
+        {
+          "command": "jass.checkTrigger",
+          "when": "editorLangId == jass && resourceExtname != .ai",
+          "group": "1_check@1"
+        },
+        {
+          "command": "jass.checkAILibrary",
+          "when": "editorLangId == jass && resourceExtname == .ai",
+          "group": "1_check@2"
+        },
+        {
+          "command": "jass.checkAI",
+          "when": "editorLangId == jass",
+          "group": "1_check@3"
         }
       ]
     },

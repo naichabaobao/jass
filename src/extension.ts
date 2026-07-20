@@ -2,6 +2,7 @@ import("./provider/data-enter-manager");
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { spawn } from 'child_process';
 
 import("./provider/data-enter-manager");
 import { CompletionProvider } from './provider/completion-provider';
@@ -925,6 +926,201 @@ export async function activate(context: vscode.ExtensionContext) {
             if (dataEnterManager) {
                 dataEnterManager.reloadConfig();
             }
+        })
+    );
+
+    // ========== JASS 编译检查功能 ==========
+    
+    // 创建 OutputChannel 用于显示编译结果
+    const jassOutputChannel = vscode.window.createOutputChannel('JASS 编译检查');
+    context.subscriptions.push(jassOutputChannel);
+
+    /**
+     * 获取标准库文件路径
+     */
+    function getStandardLibraryPaths(): { commonJ: string; blizzardJ: string; commonAi: string } {
+        const config = vscode.workspace.getConfiguration('jass');
+        const libPathConfig = config.get<any>('standardLibraryPath', {});
+        
+        const extensionPath = context.extensionPath;
+        
+        // 优先使用用户配置的路径，否则使用扩展内置的 static 目录
+        const commonJ = libPathConfig.commonJ || path.join(extensionPath, 'static', 'common.j');
+        const blizzardJ = libPathConfig.blizzardJ || path.join(extensionPath, 'static', 'blizzard.j');
+        const commonAi = libPathConfig.commonAi || path.join(extensionPath, 'static', 'common.ai');
+        
+        return { commonJ, blizzardJ, commonAi };
+    }
+
+    /**
+     * 获取 jassparser.exe 路径
+     */
+    function getJassParserPath(): string {
+        const config = vscode.workspace.getConfiguration('jass');
+        const userPath = config.get<string>('jassparserPath', '');
+        
+        if (userPath) {
+            return userPath;
+        }
+        
+        // 默认路径：扩展目录下的 out/extern/pjass/jassparser.exe
+        return path.join(context.extensionPath, 'out', 'extern', 'pjass', 'jassparser.exe');
+    }
+
+    /**
+     * 执行 jassparser 进行语法检查
+     */
+    async function runJassParser(
+        checkType: 'trigger' | 'aiLibrary' | 'ai',
+        filePath: string
+    ): Promise<void> {
+        const jassparserPath = getJassParserPath();
+        const libPaths = getStandardLibraryPaths();
+        
+        // 检查 jassparser.exe 是否存在
+        if (!fs.existsSync(jassparserPath)) {
+            vscode.window.showErrorMessage(
+                `找不到 jassparser.exe: ${jassparserPath}\n` +
+                `请在设置中配置 "jass.jassparserPath"，或将 jassparser.exe 放到扩展目录。`
+            );
+            return;
+        }
+
+        // 检查目标文件是否存在
+        if (!fs.existsSync(filePath)) {
+            vscode.window.showErrorMessage(`找不到文件: ${filePath}`);
+            return;
+        }
+
+        // 根据检查类型构建参数
+        let args: string[];
+        let checkTypeName: string;
+
+        switch (checkType) {
+            case 'trigger':
+                // 触发编译检查: common.j + blizzard.j + 目标文件
+                args = [libPaths.commonJ, libPaths.blizzardJ, filePath];
+                checkTypeName = '触发编译检查';
+                break;
+            case 'aiLibrary':
+                // AI库编译检查: common.j + common.ai + 目标文件
+                args = [libPaths.commonJ, libPaths.commonAi, filePath];
+                checkTypeName = 'AI库编译检查';
+                break;
+            case 'ai':
+                // AI编译检查: common.j + 目标文件（用于检查 Blizzard.j 或 common.ai）
+                args = [libPaths.commonJ, filePath];
+                checkTypeName = 'AI编译检查';
+                break;
+        }
+
+        jassOutputChannel.clear();
+        jassOutputChannel.show(true);
+        jassOutputChannel.appendLine(`═══════════════════════════════════════════════════════════`);
+        jassOutputChannel.appendLine(`📋 JASS ${checkTypeName}`);
+        jassOutputChannel.appendLine(`📁 文件: ${filePath}`);
+        jassOutputChannel.appendLine(`🔧 编译器: ${jassparserPath}`);
+        jassOutputChannel.appendLine(`📚 标准库:`);
+        args.slice(0, -1).forEach((lib, i) => {
+            jassOutputChannel.appendLine(`   ${i + 1}. ${lib}`);
+        });
+        jassOutputChannel.appendLine(`───────────────────────────────────────────────────────────`);
+        jassOutputChannel.appendLine('');
+
+        vscode.window.withProgress(
+            {
+                location: vscode.ProgressLocation.Notification,
+                title: `正在执行 ${checkTypeName}...`,
+                cancellable: false
+            },
+            () => {
+                return new Promise<void>((resolve) => {
+                    const proc = spawn(jassparserPath, args, {
+                        shell: true
+                    });
+
+                    let stdout = '';
+                    let stderr = '';
+
+                    proc.stdout.on('data', (data) => {
+                        stdout += data.toString();
+                    });
+
+                    proc.stderr.on('data', (data) => {
+                        stderr += data.toString();
+                    });
+
+                    proc.on('close', (code) => {
+                        const allOutput = (stdout + stderr).trim();
+                        
+                        if (allOutput) {
+                            jassOutputChannel.appendLine(allOutput);
+                        } else if (code === 0) {
+                            jassOutputChannel.appendLine('✅ 检查通过，没有发现语法错误。');
+                        } else {
+                            jassOutputChannel.appendLine('❌ 检查失败，但没有输出信息。');
+                        }
+
+                        jassOutputChannel.appendLine('');
+                        jassOutputChannel.appendLine(`═══════════════════════════════════════════════════════════`);
+
+                        if (code === 0) {
+                            vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
+                        } else {
+                            vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，请查看输出面板`);
+                        }
+
+                        resolve();
+                    });
+
+                    proc.on('error', (err) => {
+                        jassOutputChannel.appendLine(`❌ 执行失败: ${err.message}`);
+                        jassOutputChannel.appendLine('');
+                        jassOutputChannel.appendLine(`请确保 jassparser.exe 存在且可执行。`);
+                        vscode.window.showErrorMessage(`执行 ${checkTypeName} 失败: ${err.message}`);
+                        resolve();
+                    });
+                });
+            }
+        );
+    }
+
+    // 注册触发编译检查命令
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.checkTrigger', async () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                vscode.window.showWarningMessage('请先打开一个 JASS 文件');
+                return;
+            }
+            const filePath = editor.document.uri.fsPath;
+            await runJassParser('trigger', filePath);
+        })
+    );
+
+    // 注册 AI库编译检查命令
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.checkAILibrary', async () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                vscode.window.showWarningMessage('请先打开一个 JASS 文件');
+                return;
+            }
+            const filePath = editor.document.uri.fsPath;
+            await runJassParser('aiLibrary', filePath);
+        })
+    );
+
+    // 注册 AI编译检查命令
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.checkAI', async () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                vscode.window.showWarningMessage('请先打开一个 JASS 文件');
+                return;
+            }
+            const filePath = editor.document.uri.fsPath;
+            await runJassParser('ai', filePath);
         })
     );
 
