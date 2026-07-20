@@ -221,12 +221,12 @@
           "group": "1_check@1"
         },
         {
-          "command": "jass.checkAILibrary",
+          "command": "jass.checkAI",
           "when": "editorLangId == jass",
           "group": "1_check@2"
         },
         {
-          "command": "jass.checkAI",
+          "command": "jass.checkAILibrary",
           "when": "editorLangId == jass",
           "group": "1_check@3"
         }
