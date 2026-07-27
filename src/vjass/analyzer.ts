@@ -54,7 +54,7 @@ export interface SemanticAnalyzerOptions {
     checkArrayBounds?: boolean;
     /** 是否检查句柄资源泄漏（timer/group/force/location 等，默认开启） */
     checkHandleLeaks?: boolean;
-    /** 标准库文件列表（如 common.j, blizzard.j, common.ai），用于多文件检测 */
+    /** 标准库文件列表（如 common.j, blizzard.j, common.ai, DzAPI.j, war3map.j, AIScripts.ai, Cheats.j, InitCheats.j），用于多文件检测 */
     standardLibraries?: string[];
     /** 外部符号表（来自标准库和工程目录的其他 jass 文件），用于检查函数是否在其他文件中声明 */
     externalSymbols?: Map<string, SymbolInfo>;

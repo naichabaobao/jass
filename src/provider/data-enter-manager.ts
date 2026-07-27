@@ -77,6 +77,14 @@ interface StandardLibrariesConfig {
     "blizzard.j"?: string;
     /** DzAPI.j 文件路径 */
     "DzAPI.j"?: string;
+    /** war3map.j 文件路径 */
+    "war3map.j"?: string;
+    /** AIScripts.ai 文件路径 */
+    "AIScripts.ai"?: string;
+    /** Cheats.j 文件路径 */
+    "Cheats.j"?: string;
+    /** InitCheats.j 文件路径 */
+    "InitCheats.j"?: string;
 }
 
 /**
@@ -140,7 +148,7 @@ interface IgnoreDirectives {
 /**
  * 标准库文件解析顺序
  */
-const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j', 'DzAPI.j'];
+const STANDARD_LIBRARY_ORDER = ['common.j', 'common.ai', 'blizzard.j', 'DzAPI.j', 'war3map.j', 'AIScripts.ai', 'Cheats.j', 'InitCheats.j'];
 
 /**
  * 需要忽略的文件名（不处理，但需要监听变化）
@@ -1211,7 +1219,7 @@ export class DataEnterManager {
 
     /**
      * 按顺序获取标准库文件的 BlockStatement
-     * @returns 按解析顺序返回的 BlockStatement 数组 [common.j, common.ai, blizzard.j]
+     * @returns 按解析顺序返回的 BlockStatement 数组 [common.j, common.ai, blizzard.j, DzAPI.j, war3map.j, AIScripts.ai, Cheats.j, InitCheats.j]
      */
     public getStandardLibraries(workspaceRoot?: string): BlockStatement[] {
         const root = workspaceRoot || this.workspaceRoot;
