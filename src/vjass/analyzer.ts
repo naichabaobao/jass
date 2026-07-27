@@ -5913,15 +5913,22 @@ export class SemanticAnalyzer {
                     continue;
                 }
 
-                // 报告未使用的局部变量 / 形参
-                if (info.symbol.type === SymbolType.LOCAL_VARIABLE || info.symbol.type === SymbolType.PARAMETER) {
+                // 报告未使用的局部变量 / 形参 / 全局变量
+                if (info.symbol.type === SymbolType.LOCAL_VARIABLE || info.symbol.type === SymbolType.PARAMETER || info.symbol.type === SymbolType.GLOBAL_VARIABLE) {
                     let warningStart = info.location;
                     let warningEnd = info.symbol.node.end || info.location;
                     if (info.symbol.node instanceof VariableDeclaration && info.symbol.node.name) {
                         warningStart = info.symbol.node.name.start || warningStart;
                         warningEnd = info.symbol.node.name.end || warningEnd;
                     }
-                    const label = info.symbol.type === SymbolType.PARAMETER ? "parameter" : "local variable";
+                    let label: string;
+                    if (info.symbol.type === SymbolType.PARAMETER) {
+                        label = "parameter";
+                    } else if (info.symbol.type === SymbolType.GLOBAL_VARIABLE) {
+                        label = "global variable";
+                    } else {
+                        label = "local variable";
+                    }
                     this.addWarning(
                         warningStart,
                         warningEnd,

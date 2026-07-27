@@ -40,12 +40,42 @@ npm install
 
 - 当设置为 legacy 版本（`1.20`、`1.24`、`1.26a`、`1.27`、`1.27a`）时：
   - 会根据注释中的 `@since` 信息（兼容 `@version`）直接过滤“高于目标版本”的 API。
-- 当设置为其他版本（如 `1.28f`、`1.33`、`1.36`）时：
+- 当设置为其他版本（如 `1.28f`、`1.33`、`1.36`、`2.00`、`2.02`、`2.03`）时：
   - 会根据 `@since` 对“高于目标版本”的 API 降权排序。
 - 没有版本标注的条目不处理（保持原样）。
 
 > 目前标准库中的版本标注还在逐步完善中。  
 > 希望有缘人一起帮忙补充 `common.j / blizzard.j / common.ai` 的 `@since`（兼容 `@version`）标注，欢迎 PR ❤️
+
+##### `jass.compiler.*` - JASS 编译检查配置
+
+通过 `jass.compiler.*` 系列配置项，可以分离「显示注释用标准库」与「编译检查用标准库」，并自定义 `pjass.exe` 路径。
+
+```json
+{
+  "jass.compiler.pjassPath": "",
+  "jass.compiler.commonJ": "",
+  "jass.compiler.blizzardJ": "",
+  "jass.compiler.commonAi": "",
+  "jass.compiler.checkCommonJ": "",
+  "jass.compiler.checkBlizzardJ": "",
+  "jass.compiler.checkCommonAi": ""
+}
+```
+
+**配置项说明**：
+
+| 配置项 | 说明 | 默认值 |
+| --- | --- | --- |
+| `jass.compiler.pjassPath` | `pjass.exe` 路径，用于 JASS 语法检查。留空则使用扩展内置版本（`out/extern/pjass/pjass.exe`） | `""` |
+| `jass.compiler.commonJ` | `common.j` 路径，用于显示中文 API 注释。留空则使用扩展内置版本（`static/common.j`） | `""` |
+| `jass.compiler.blizzardJ` | `Blizzard.j` 路径，用于显示中文 API 注释。留空则使用扩展内置版本（`static/blizzard.j`） | `""` |
+| `jass.compiler.commonAi` | `common.ai` 路径，用于显示中文 API 注释。留空则使用扩展内置版本（`static/common.ai`） | `""` |
+| `jass.compiler.checkCommonJ` | 编译检查用的 `common.j` 路径。留空则回退到 `jass.compiler.commonJ` | `""` |
+| `jass.compiler.checkBlizzardJ` | 编译检查用的 `Blizzard.j` 路径。留空则回退到 `jass.compiler.blizzardJ` | `""` |
+| `jass.compiler.checkCommonAi` | 编译检查用的 `common.ai` 路径。留空则回退到 `jass.compiler.commonAi` | `""` |
+
+**查找优先级**（编译检查）：`jass.compiler.check*` > `jass.compiler.*` > 扩展内置 `static/` 版本。
 
 #### 创建配置文件
 
@@ -247,6 +277,7 @@ npm install
 - **查找实现** - 查找接口的实现位置
 - **工作区符号** - 快速搜索工作区中的所有符号
 - **文档大纲** - 显示文件的结构和符号树
+- **JASS 编译检查** - 基于 `pjass.exe` 的语法编译检查，右键菜单提供三种检查模式（触发器 / 自定义库 / AI 脚本）
 
 ### 语言特性支持
 - **JASS** - 完整的 JASS 语言支持
@@ -517,6 +548,23 @@ endstruct
    - 使用构造函数初始化对象
    - 及时释放不再使用的对象
 
+### JASS 编译检查
+
+扩展内置 `pjass.exe` 语法检查器，可在编辑区右键 → `JASS` 子菜单中选择检查模式：
+
+| 菜单项 | 入参顺序 | 适用场景 |
+| --- | --- | --- |
+| `编译自定义触发` | `common.j` + `blizzard.j` + 目标文件 | 检查自定义触发器脚本（war3map.j 风格） |
+| `编译自定义库(Blizzard.j或common.ai)` | `common.j` + 目标文件 | 检查自定义库脚本（如 Blizzard.j、common.ai） |
+| `编译自定义ai脚本` | `common.j` + `common.ai` + 目标文件 | 检查 AI 脚本 |
+
+**使用步骤**：
+1. 打开任意 `.j` / `.jass` / `.ai` 文件。
+2. 在编辑区右键 → `JASS` → 选择对应的检查模式。
+3. 查看输出面板 `JASS 编译检查` 中的结果（支持中文路径 GBK 解码）。
+
+> 若提示找不到 `pjass.exe`，请在 `settings.json` 配置 `jass.compiler.pjassPath`，或将 `pjass.exe` 放到扩展目录 `out/extern/pjass/pjass.exe`。
+
 ## 🛠️ 开发指南
 
 ### 环境要求
@@ -550,37 +598,29 @@ endstruct
 
 ## 📝 版本信息
 
-- **当前版本**: 1.9.9
+- **当前版本**: 1.9.16
 - **VS Code 版本要求**: 1.63+
 - **common.j 版本**: 2.03
 - **物编数据版本**: 2.03
 
 ### 近期重要更新（最近 5 次）
 
-#### v1.9.9
-- 新增 `jass.apiVersion` 行为策略：补全排序版本感知 + return bug 兼容分支
-- 诊断增强：句柄泄漏检测分级、`hint` 级别展示、错误忽略注解（文件级/下一行语法级）
-- 工程体验增强：Quick Fix 与 Code Action 精度提升，跨文件缓存一致性与定义跳转稳定性提升
+#### v1.9.16
+- 新增 JASS 编译检查功能（基于 `pjass.exe`）：编辑区右键 `JASS` 子菜单提供三种检查模式（触发器 / 自定义库 / AI 脚本），结果输出到 `JASS 编译检查` 面板。
+- 新增 `jass.compiler.*` 配置项，分离「显示注释用标准库」与「编译检查用标准库」，并支持自定义 `pjass.exe` 路径。
+- `jass.apiVersion` 枚举新增 `2.00`、`2.02` 版本选项。
 
-#### v1.9.8
-- 注释标签体系增强：`@param/@returns/@deprecated/@provider/@since/@see/@example`
-- 文档渲染统一：`@version` 兼容展示为 `Since`
-- hover/completion 废弃信息展示优化（删除线与分组展示）
+#### v1.9.15
+- 修复多个 dzapi 文件 bug。
 
-#### v1.9.7
-- 类型系统修复：`function interface` 参与类型合法性判定
-- 返回路径与字符串拼接相关误报修复（`not all code paths return` / `+` 推断）
-- takes 参数符号链路增强：hover、跳转定义、补全同步优化
+#### v1.9.14
+- 表达式错误改为在 `analyzer` 统一诊断；带结束标签的块统一记录结束标签 token，缺失时锚定起始关键字。
 
-#### v1.9.6
-- hint 渲染优化：仅处理可见范围并支持取消，降低大文件开销
-- 配置项拆分：`jass.literal.completion` 与 `jass.literal.hover`
-- 新增 `jass.hint` 全局开关，便于不同项目按需控制提示噪音
+#### v1.9.13
+- 修复 method 形参签名帮助不提示；vJass 二元运算符缺右操作数报错；`call` 语句去重检查与 `this.方法名` 提示优化。
 
-#### v1.9.5
-- hover 能力扩展：字符码（如 `'az09'`）数值解释与 vJASS 常量信息展示
-- `jass.config.json` 读取与诊断配置链路修复（解析/生效一致性提升）
-- 配置文档完善：补充 `excludes/includes/parsing/standardLibraries/diagnostics` 说明
+#### v1.9.12
+- 修复未使用 BUG；关键字跳转默认关闭；参数未使用支持；支持 `this` 跳转。
 
 查看完整的更新日志，请参考 [CHANGELOG.md](CHANGELOG.md)
 

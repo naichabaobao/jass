@@ -172,7 +172,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                                 macro.name,
                                 vscode.CompletionItemKind.Snippet
                             );
-                            item.detail = 'TextMacro';
+                            item.detail = `TextMacro — ${this.getRelativePath(macro.filePath)}`;
                             
                             const params = macro.parameters.length > 0
                                 ? ` takes ${macro.parameters.join(', ')}`
@@ -212,7 +212,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                                 define.name,
                                 vscode.CompletionItemKind.Constant
                             );
-                            item.detail = '#define';
+                            item.detail = `#define — ${this.getRelativePath(define.filePath)}`;
                             
                             const valueStr = define.value ? ` ${define.value}` : '';
                             // 优化多行 #define 的显示
@@ -297,7 +297,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                             stmt.name.name,
                             vscode.CompletionItemKind.Variable
                         );
-                        item.detail = 'Global Variable';
+                        item.detail = `Global Variable — ${this.getRelativePath(filePath)}`;
                         const visibilityStr = stmt.isPrivate ? 'private ' : (stmt.isPublic ? 'public ' : '');
                         const typeStr = stmt.type ? stmt.type.toString() : 'unknown';
                         const constantStr = stmt.isConstant ? 'constant ' : '';
@@ -364,7 +364,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Function
                 );
-                item.detail = 'Function';
+                item.detail = `Function — ${this.getRelativePath(filePath)}`;
                 let doc = this.formatFunctionSignature(stmt);
                 
                 // 添加注释
@@ -395,7 +395,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Function
                 );
-                item.detail = stmt.isConstant ? 'Constant Native Function' : 'Native Function';
+                item.detail = (stmt.isConstant ? 'Constant Native Function' : 'Native Function') + ` — ${this.getRelativePath(filePath)}`;
                 let doc = this.formatNativeSignature(stmt);
                 
                 // 添加注释
@@ -426,7 +426,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Interface
                 );
-                item.detail = 'Function Interface';
+                item.detail = `Function Interface — ${this.getRelativePath(filePath)}`;
                 let doc = this.formatFunctionInterfaceSignature(stmt);
                 
                 // 添加注释
@@ -457,7 +457,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Variable
                 );
-                item.detail = 'Global Variable';
+                item.detail = `Global Variable — ${this.getRelativePath(filePath)}`;
                 const visibilityStr = stmt.isPrivate ? 'private ' : (stmt.isPublic ? 'public ' : '');
                 const typeStr = stmt.type ? stmt.type.toString() : 'unknown';
                 const constantStr = stmt.isConstant ? 'constant ' : '';
@@ -498,7 +498,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Class
                 );
-                item.detail = 'Type';
+                item.detail = `Type — ${this.getRelativePath(filePath)}`;
                 const baseType = stmt.baseType ? ` extends ${stmt.baseType.toString()}` : '';
                 const doc = `type ${stmt.name.name}${baseType}`;
                 
@@ -530,7 +530,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Struct
                 );
-                item.detail = 'Struct';
+                item.detail = `Struct — ${this.getRelativePath(filePath)}`;
                 const extendsInfo = stmt.extendsType ? ` extends ${stmt.extendsType.toString()}` : '';
                 const indexInfo = stmt.indexSize !== null ? `[${stmt.indexSize}]` : '';
                 const arrayInfo = stmt.isArrayStruct ? ` extends array${stmt.arraySize !== null ? ` [${stmt.arraySize}]` : ''}` : '';
@@ -569,7 +569,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Interface
                 );
-                item.detail = 'Interface';
+                item.detail = `Interface — ${this.getRelativePath(filePath)}`;
                 const doc = `interface ${stmt.name.name}`;
                 
                 // 添加注释
@@ -600,7 +600,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Module
                 );
-                item.detail = 'Module';
+                item.detail = `Module — ${this.getRelativePath(filePath)}`;
                 const doc = `module ${stmt.name.name}`;
                 
                 // 添加注释
@@ -631,7 +631,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name.name,
                     vscode.CompletionItemKind.Class
                 );
-                item.detail = 'Delegate';
+                item.detail = `Delegate — ${this.getRelativePath(filePath)}`;
                 const delegateType = stmt.delegateType ? stmt.delegateType.toString() : 'unknown';
                 const privateStr = stmt.isPrivate ? 'private ' : '';
                 const doc = `${privateStr}delegate ${delegateType} ${stmt.name.name}`;
@@ -664,7 +664,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     stmt.name,
                     vscode.CompletionItemKind.Snippet
                 );
-                item.detail = 'TextMacro';
+                item.detail = `TextMacro — ${this.getRelativePath(filePath)}`;
                 const params = stmt.parameters.length > 0
                     ? ` takes ${stmt.parameters.join(', ')}`
                     : '';
@@ -2781,7 +2781,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     else if (member.isPublic) methodModifiers.push('public');
                     if (member.isStatic) methodModifiers.push('static');
                     if (member.isStub) methodModifiers.push('stub');
-                    item.detail = `${methodModifiers.join(' ')}${methodModifiers.length > 0 ? ' ' : ''}method`;
+                    item.detail = `${methodModifiers.join(' ')}${methodModifiers.length > 0 ? ' ' : ''}method — ${this.getRelativePath(filePath)}`;
                     
                     const doc = this.formatMethodSignature(member);
                     const comment = this.extractCommentForStatement(member, filePath);
@@ -2859,7 +2859,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     // 显示文件路径
                     documentation.appendMarkdown(`\n\n**_>:** \`${this.getRelativePath(filePath)}\``);
                     
-                    item.detail = `${modifierStr}${typeStr}`;
+                    item.detail = `${modifierStr}${typeStr} — ${this.getRelativePath(filePath)}`;
                     item.documentation = documentation;
                     // 优化排序：字段在方法之后，常量优先于普通字段
                     const typePriority = member.isConstant ? '2' : '3';
@@ -3033,7 +3033,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                         member.name.name,
                         vscode.CompletionItemKind.Method
                     );
-                    item.detail = member.isStatic ? 'Static Method (from module)' : 'Method (from module)';
+                    item.detail = (member.isStatic ? 'Static Method (from module)' : 'Method (from module)') + ` — ${this.getRelativePath(filePath)}`;
                     
                     const doc = this.formatMethodSignature(member);
                     const comment = this.extractCommentForStatement(member, filePath);
@@ -3101,7 +3101,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                     documentation.appendMarkdown(`\n\n**来自模块:** \`${module.name?.name || 'unknown'}\``);
                     documentation.appendMarkdown(`\n\n**文件:** \`${this.getRelativePath(filePath)}\``);
                     
-                    item.detail = `${modifierStr}${typeStr} (from module)`;
+                    item.detail = `${modifierStr}${typeStr} (from module) — ${this.getRelativePath(filePath)}`;
                     item.documentation = documentation;
                     item.sortText = `1_module_${member.name.name}`;
                     items.push(item);
@@ -3152,7 +3152,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 // 跳过
             } else {
                 const item = new vscode.CompletionItem('allocate', vscode.CompletionItemKind.Method);
-            item.detail = 'Built-in Static Method (Private)';
+            item.detail = `Built-in Static Method (Private) — ${this.getRelativePath(filePath)}`;
             
             // 如果存在自定义 create，allocate 需要相同参数
             const createMethod = struct.members.find(
@@ -3189,7 +3189,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 // 跳过
             } else {
                 const item = new vscode.CompletionItem('create', vscode.CompletionItemKind.Method);
-            item.detail = hasCustomCreate ? 'Static Method' : 'Built-in Static Method';
+            item.detail = (hasCustomCreate ? 'Static Method' : 'Built-in Static Method') + ` — ${this.getRelativePath(filePath)}`;
             
             const createMethod = struct.members.find(
                 m => m instanceof MethodDeclaration && m.isStatic && m.name?.name === 'create'
@@ -3244,7 +3244,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 // 静态访问：只显示静态的 destroy
                 if (hasCustomDestroy && isCustomDestroyStatic) {
                     const item = new vscode.CompletionItem('destroy', vscode.CompletionItemKind.Method);
-                    item.detail = 'Static Method';
+                    item.detail = `Static Method — ${this.getRelativePath(filePath)}`;
                     
                     const doc = this.formatMethodSignature(customDestroy);
                     const comment = this.extractCommentForStatement(customDestroy, filePath);
@@ -3265,7 +3265,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
             } else {
                 // 实例访问：destroy 总是存在
                 const item = new vscode.CompletionItem('destroy', vscode.CompletionItemKind.Method);
-                item.detail = hasCustomDestroy ? 'Method' : 'Built-in Method';
+                item.detail = (hasCustomDestroy ? 'Method' : 'Built-in Method') + ` — ${this.getRelativePath(filePath)}`;
                 
                 if (hasCustomDestroy && !isCustomDestroyStatic) {
                     const doc = this.formatMethodSignature(customDestroy);
@@ -3304,7 +3304,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 // 跳过
             } else {
                 const item = new vscode.CompletionItem('deallocate', vscode.CompletionItemKind.Method);
-            item.detail = 'Built-in Method';
+            item.detail = `Built-in Method — ${this.getRelativePath(filePath)}`;
             
             const doc = `method deallocate takes nothing returns nothing`;
             const documentation = new vscode.MarkdownString();
@@ -3335,7 +3335,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                 ) as MethodDeclaration | undefined;
                 
                 const item = new vscode.CompletionItem('onDestroy', vscode.CompletionItemKind.Method);
-                item.detail = 'Method';
+                item.detail = `Method — ${this.getRelativePath(filePath)}`;
                 
                 const doc = this.formatMethodSignature(onDestroyMethod!);
                 const comment = this.extractCommentForStatement(onDestroyMethod!, filePath);
@@ -3388,7 +3388,7 @@ export class CompletionProvider implements vscode.CompletionItemProvider {
                         member.name.name,
                         vscode.CompletionItemKind.Method
                     );
-                    item.detail = member.isStatic ? 'Static Method' : 'Method';
+                    item.detail = (member.isStatic ? 'Static Method' : 'Method') + ` — ${this.getRelativePath(filePath)}`;
                     
                     const doc = this.formatMethodSignature(member);
                     const comment = this.extractCommentForStatement(member, filePath);

@@ -335,19 +335,12 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
     ): vscode.SignatureInformation[] {
         const signatures: vscode.SignatureInformation[] = [];
 
-        // 从所有缓存的文件中查找（包括工作目录和 static 目录下的所有文件，它们都一视同仁）
+        // 从所有缓存的文件中查找
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
-        
-        // 调试：检查缓存的文件数量
-        if (allCachedFiles.length === 0) {
-            console.warn(`[SignatureHelpProvider] No cached files found for function: ${callInfo.name}`);
-        }
 
         for (const filePath of allCachedFiles) {
             const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
             if (!blockStatement) {
-                // 调试：检查为什么 blockStatement 为 null
-                console.warn(`[SignatureHelpProvider] BlockStatement is null for file: ${filePath}`);
                 continue;
             }
 
@@ -571,8 +564,6 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
             for (const filePath of allCachedFiles) {
                 const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
                 if (!blockStatement) {
-                    // 调试：检查为什么 blockStatement 为 null
-                    console.warn(`[SignatureHelpProvider] BlockStatement is null for file: ${filePath}`);
                     continue;
                 }
                 
@@ -1383,11 +1374,9 @@ export class SignatureHelpProvider implements vscode.SignatureHelpProvider {
         const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
         for (const cachedFilePath of allCachedFiles) {
             const cachedBlock = this.dataEnterManager.getBlockStatement(cachedFilePath);
-if (!cachedBlock) {
-                    // 调试：检查为什么 BlockStatement 为 null
-                    console.warn(`[SignatureHelpProvider] BlockStatement is null for file: ${cachedFilePath}`);
-                    continue;
-                }
+            if (!cachedBlock) {
+                continue;
+            }
             const varType = this.findVariableInGlobals(cachedBlock, variableName);
             if (varType) {
                 return varType;

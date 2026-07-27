@@ -1,3 +1,22 @@
+#### 1.9.17 (pre-release)
+- 补全项 detail 显示文件路径：所有跨文件可见符号（函数、native、全局变量、结构体、接口、模块、TextMacro 等）的补全 detail 均显示「类型 — 相对路径」，无需展开详情即可快速定位来源文件。
+- 修复 `@since` / `@version` 注释解析换行问题：下一行非 `@xxx` 标签的文本不再被误拼接到版本号上，回归为普通描述文本；其他多标签续行（`@param` / `@deprecated` / `@example` 等）不受影响。
+- 修复 signature-help-provider 中一处缩进错误，并清理 3 处残留的 `console.warn` 调试输出。
+- 语义分析「未使用符号」检查补全覆盖全局变量：`globals` 块 / library / scope 内的全局变量现在也会参与未使用检查（私有全局严格检查，公开全局按跨文件可见性处理）。
+
+#### 1.9.16
+- 新增 JASS 编译检查功能（基于 pjass.exe）：在 `.j/.jass/.ai` 文件编辑区右键 → `JASS` 子菜单，提供三种检查模式：
+  - `编译自定义触发`：以 `common.j + blizzard.j + 目标文件` 顺序入参，检查触发器脚本。
+  - `编译自定义库(Blizzard.j或common.ai)`：以 `common.j + 目标文件` 顺序入参，检查自定义库脚本。
+  - `编译自定义ai脚本`：以 `common.j + common.ai + 目标文件` 顺序入参，检查 AI 脚本。
+  - 检查结果输出到 `JASS 编译检查` 输出面板，支持中文路径 GBK 解码；找不到 `pjass.exe` 会给出明确提示。
+- 新增 `jass.compiler.*` 配置项，分离「显示注释用标准库」与「编译检查用标准库」：
+  - `jass.compiler.pjassPath`：自定义 `pjass.exe` 路径，留空使用扩展内置版本（`out/extern/pjass/pjass.exe`）。
+  - `jass.compiler.commonJ / blizzardJ / commonAi`：用于 hover/补全显示中文 API 注释的标准库路径，留空使用扩展内置 `static/` 版本。
+  - `jass.compiler.checkCommonJ / checkBlizzardJ / checkCommonAi`：编译检查专用标准库路径，留空时回退到对应的 `jass.compiler.*` 配置，再回退到扩展内置版本。
+- `jass.apiVersion` 枚举新增 `2.00`、`2.02` 两个版本选项。
+- 怎么用：打开任意 JASS 文件 → 右键 → `JASS` → 选择对应检查模式；如需切换标准库来源，在 `settings.json` 配置 `jass.compiler.*` 即可。
+
 #### 1.9.15
 - 修复多个dzapi文件bug
 
