@@ -893,7 +893,7 @@ export class DataEnterManager {
      */
     private isJassFile(filePath: string): boolean {
         const ext = path.extname(filePath).toLowerCase();
-        const validExtensions = ['.j', '.jass', '.ai', '.zn'];
+        const validExtensions = ['.j', '.jass', '.ai', '.zn', '.eai'];
         return validExtensions.includes(ext);
     }
 

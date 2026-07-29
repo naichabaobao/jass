@@ -57,7 +57,7 @@ export class UnusedSymbolDecorationProvider {
 
     private isSupportedFile(filePath: string): boolean {
         const ext = path.extname(filePath).toLowerCase();
-        return ext === '.j' || ext === '.jass' || ext === '.ai' || ext === '.zn';
+        return ext === '.j' || ext === '.jass' || ext === '.ai' || ext === '.zn' || ext === '.eai';
     }
 
     private isUnusedMessage(message: string): boolean {
