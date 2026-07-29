@@ -249,8 +249,7 @@ export class DiagnosticProvider {
      * 检查文件是否支持诊断
      */
     private isSupportedFile(filePath: string): boolean {
-        const ext = path.extname(filePath).toLowerCase();
-        return ext === '.j' || ext === '.jass' || ext === '.ai' || ext === '.zn' || ext === '.eai';
+        return this.dataEnterManager.isJassFile(filePath);
     }
 
     /**

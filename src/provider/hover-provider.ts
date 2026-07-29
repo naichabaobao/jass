@@ -63,8 +63,7 @@ export class HoverProvider implements vscode.HoverProvider {
 
             // 兜底：确保所有已打开的 JASS 文件都已解析（不走防抖延迟）
             const openJassDocs = vscode.workspace.textDocuments.filter(doc => {
-                const ext = doc.uri.fsPath.split('.').pop()?.toLowerCase();
-                const isJass = ['j', 'jass', 'ai', 'zn', 'eai'].includes(ext || '');
+                const isJass = this.dataEnterManager.isJassFile(doc.uri.fsPath);
                 const isIgnored = ['numbers.jass', 'presets.jass', 'strings.jass'].includes(
                     doc.uri.fsPath.split(/[\\/]/).pop()?.toLowerCase() || ''
                 );

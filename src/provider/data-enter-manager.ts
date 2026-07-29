@@ -889,12 +889,34 @@ export class DataEnterManager {
     }
 
     /**
+     * 获取所有合法的 JASS 文件扩展名（含配置中用户自定义的扩展名）
+     */
+    public getValidExtensions(): string[] {
+        const baseExtensions = ['.j', '.jass', '.ai', '.zn'];
+        try {
+            const additional = vscode.workspace.getConfiguration('jass').get<string[]>('additionalExtensions', []);
+            if (Array.isArray(additional) && additional.length > 0) {
+                for (const ext of additional) {
+                    if (typeof ext === 'string' && ext.trim()) {
+                        const normalized = ext.trim().toLowerCase().startsWith('.') ? ext.trim().toLowerCase() : '.' + ext.trim().toLowerCase();
+                        if (!baseExtensions.includes(normalized)) {
+                            baseExtensions.push(normalized);
+                        }
+                    }
+                }
+            }
+        } catch {
+            // 忽略配置读取错误
+        }
+        return baseExtensions;
+    }
+
+    /**
      * 检查文件是否为 JASS 文件
      */
-    private isJassFile(filePath: string): boolean {
+    public isJassFile(filePath: string): boolean {
         const ext = path.extname(filePath).toLowerCase();
-        const validExtensions = ['.j', '.jass', '.ai', '.zn', '.eai'];
-        return validExtensions.includes(ext);
+        return this.getValidExtensions().includes(ext);
     }
 
     /**
@@ -1686,7 +1708,7 @@ export class DataEnterManager {
                 } else if (entry.isFile()) {
                     // 检查文件扩展名
                     const ext = path.extname(entry.name).toLowerCase();
-                    if (['.j', '.jass', '.ai', '.zn'].includes(ext)) {
+                    if (this.getValidExtensions().includes(ext)) {
                         try {
                             const content = fs.readFileSync(fullPath, 'utf-8');
                             this.textMacroCollector.collectFromFile(fullPath, content, collection);
@@ -1889,7 +1911,7 @@ export class DataEnterManager {
                         await loadFilesInDir(fullPath, baseDir);
                     } else if (entry.isFile()) {
                         const ext = path.extname(entry.name).toLowerCase();
-                        if (['.j', '.jass', '.ai', '.zn'].includes(ext) && !this.shouldIgnoreFile(fullPath)) {
+                        if (this.getValidExtensions().includes(ext) && !this.shouldIgnoreFile(fullPath)) {
                             try {
                                 totalFiles++;
                                 const content = fs.readFileSync(fullPath, 'utf-8');
@@ -1950,7 +1972,7 @@ export class DataEnterManager {
                         await loadFilesInDir(fullPath);
                     } else if (entry.isFile()) {
                         const ext = path.extname(entry.name).toLowerCase();
-                        if (['.j', '.jass', '.ai', '.zn'].includes(ext)) {
+                        if (this.getValidExtensions().includes(ext)) {
                             // 只处理工作区文件，排除静态文件和标准库文件
                             if (this.isWorkspaceFile(fullPath) && 
                                 !this.isImmutableFile(fullPath) && 

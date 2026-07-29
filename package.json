@@ -130,6 +130,14 @@
           "default": "",
           "description": "编译检查用的 common.ai 路径. 留空则使用 jass.compiler.commonAi 路径",
           "scope": "machine-overridable"
+        },
+        "jass.additionalExtensions": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "额外识别的 JASS 文件扩展名列表（不含点，如 \"eai\"、\"w3x\" 等）。添加后这些扩展名的文件会被当作 JASS 文件处理，支持语法高亮、悬停提示、跳转定义等功能。修改后需重新加载窗口生效。"
         }
       }
     },
