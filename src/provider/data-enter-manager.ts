@@ -1754,7 +1754,6 @@ export class DataEnterManager {
         await this.collectAllTextMacros(rootDir);
         await this.loadStandardLibraries(rootDir);
         await this.loadStaticFiles(rootDir);
-        await this.loadWorkspaceFiles(rootDir);
 
         this.hasLoadedStandardLibraries = true;
 
