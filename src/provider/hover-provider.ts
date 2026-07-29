@@ -53,12 +53,24 @@ export class HoverProvider implements vscode.HoverProvider {
         }
     }
 
-    provideHover(
+    async provideHover(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.Hover> {
+    ): Promise<vscode.Hover | null> {
         try {
+            const filePath = document.uri.fsPath;
+
+            // 兜底：确保当前文件已解析（不走防抖延迟，同步解析）
+            if (!this.dataEnterManager.getBlockStatement(filePath)) {
+                const ext = filePath.split('.').pop()?.toLowerCase();
+                const isJass = ['j', 'jass', 'ai', 'zn'].includes(ext || '');
+                const isIgnored = ['numbers.jass', 'presets.jass', 'strings.jass'].includes(filePath.split(/[\\/]/).pop()?.toLowerCase() || '');
+                if (isJass && !isIgnored) {
+                    await this.dataEnterManager.updateFile(filePath, document.getText());
+                }
+            }
+
             // 首先检查是否是字符代码（如 'az09'）
             const charCodeHover = this.checkCharacterCodeHover(document, position);
             if (charCodeHover) {
@@ -123,7 +135,6 @@ export class HoverProvider implements vscode.HoverProvider {
             }
 
             const hoverContents: vscode.MarkdownString[] = [];
-            const filePath = document.uri.fsPath;
 
             // 从所有缓存的文件中全局查找匹配的符号（函数、全局变量、类型、结构体等）
             // 包括工作目录和 static 目录下的所有文件，它们都一视同仁

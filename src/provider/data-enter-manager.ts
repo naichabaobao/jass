@@ -1342,27 +1342,15 @@ export class DataEnterManager {
         this.hasInitializedWorkspace = false;
 
         if (hasWorkspace && workspaceRoot) {
-            console.log('📦 Phase 1: Collecting TextMacros...');
-            // 阶段1：收集所有文件中的 textmacro 定义
+            console.log('📦 Loading standard libraries for workspace mode...');
             await this.collectAllTextMacros(workspaceRoot);
-            
-            const stats = this.textMacroRegistry.getStats();
-            console.log(`✅ Collected ${stats.totalMacros} textmacros from ${stats.totalFiles} files`);
-
-            console.log('📦 Phase 2: Parsing files with TextMacro expansion...');
-            // 阶段2：解析所有文件（此时 runtextmacro 可以正确展开）
             await this.loadStandardLibraries(workspaceRoot);
             await this.loadStaticFiles(workspaceRoot);
-            await this.loadWorkspaceFiles(workspaceRoot);
             this.hasLoadedStandardLibraries = true;
-            
+
             const cacheStats = this.getCacheStats();
-            console.log('✅ Workspace initialization complete');
+            console.log(`✅ Workspace initialization complete (only standard libraries loaded)`);
             console.log(`📊 Cache Stats: ${cacheStats.totalFiles} files cached (${cacheStats.immutableFiles} immutable)`);
-            if (cacheStats.totalFiles > 0) {
-                const fileList = cacheStats.cachedFiles.slice(0, 10).map(f => path.basename(f)).join(', ');
-                console.log(`📁 Sample cached files: ${fileList}${cacheStats.cachedFiles.length > 10 ? '...' : ''}`);
-            }
         } else {
             console.log('📂 No workspace folder; single-file mode enabled (parse on open/edit).');
         }
@@ -1374,20 +1362,19 @@ export class DataEnterManager {
             this.setupFileWatcher();
         }
 
-        // 无工作区时：对当前已打开的 JASS 文档做一次解析，否则已打开的单文件不会进缓存
-        if (!hasWorkspace) {
-            const jassDocs = vscode.workspace.textDocuments.filter(doc => 
-                this.isJassFile(doc.uri.fsPath) && !this.shouldIgnoreFile(doc.uri.fsPath)
-            );
-            
-            // 如果有已打开的JASS文件，先加载标准库再处理已打开的文件
-            if (jassDocs.length > 0) {
-                await this.ensureStandardLibrariesLoaded(jassDocs[0].uri.fsPath);
+        // 无论是否有工作区：对当前已打开的 JASS 文档做一次同步解析
+        const jassDocs = vscode.workspace.textDocuments.filter(doc => 
+            this.isJassFile(doc.uri.fsPath) && !this.shouldIgnoreFile(doc.uri.fsPath)
+        );
+
+        if (jassDocs.length > 0) {
+            await this.ensureStandardLibrariesLoaded(jassDocs[0].uri.fsPath);
+        }
+
+        for (const doc of jassDocs) {
+            if (!this.cache.has(doc.uri.fsPath)) {
+                await this.handleFileUpdate(doc.uri.fsPath, doc.getText());
             }
-            
-            jassDocs.forEach((doc) => {
-                this.handleFileChange(doc.uri.fsPath);
-            });
         }
 
         this.hasInitializedWorkspace = true;
@@ -1555,38 +1542,25 @@ export class DataEnterManager {
 
         this.disposables.push(this.fileWatcher);
 
-        // 监听文档打开事件（立即解析，确保 outline 可以显示）
-        const openDisposable = vscode.workspace.onDidOpenTextDocument((document) => {
+        // 监听文档打开事件（立即同步解析，确保 hover 立即可用）
+        const openDisposable = vscode.workspace.onDidOpenTextDocument(async (document) => {
             const filePath = document.uri.fsPath;
-            // 只处理 JASS 文件
             if (!this.isJassFile(filePath)) {
                 return;
             }
-            // 如果是不可变文件或应该忽略的文件，跳过
             if (this.isImmutableFile(filePath) || this.shouldIgnoreFile(filePath)) {
                 return;
             }
 
-            // 单文件模式下，首次打开JASS文件时延迟加载标准库
             const hasWorkspace = !!vscode.workspace.workspaceFolders?.[0];
             if (!hasWorkspace && !this.hasLoadedStandardLibraries) {
-                this.ensureStandardLibrariesLoaded(filePath).then(() => {
-                    // 标准库加载完成后再处理当前文件
-                    if (!this.cache.has(filePath)) {
-                        const content = document.getText();
-                        if (content) {
-                            this.handleFileChange(filePath);
-                        }
-                    }
-                });
-                return;
+                await this.ensureStandardLibrariesLoaded(filePath);
             }
 
-            // 如果文件还没有被解析，立即解析
             if (!this.cache.has(filePath)) {
                 const content = document.getText();
                 if (content) {
-                    this.handleFileChange(filePath);
+                    await this.handleFileUpdate(filePath, content);
                 }
             }
         });
