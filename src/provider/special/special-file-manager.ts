@@ -90,10 +90,15 @@ export class SpecialFileManager {
     /**
      * 初始化，扫描工作区中的特殊文件
      */
-    public async initialize(workspaceRoot?: string): Promise<void> {
-        if (this.isInitialized) {
+    public async initialize(workspaceRoot?: string, force: boolean = false): Promise<void> {
+        if (this.isInitialized && !force) {
             console.log(`[SpecialFileManager] Already initialized, skipping.`);
             return;
+        }
+        if (force) {
+            console.log(`[SpecialFileManager] Force re-initialization...`);
+            this.isInitialized = false;
+            this.initPromise = null;
         }
         console.log(`[SpecialFileManager] Starting initialization...`);
         
@@ -205,23 +210,42 @@ export class SpecialFileManager {
     }
 
     /**
-     * 获取所有字面量
+     * 获取所有字面量（去重）
      */
     public getAllLiterals(): SpecialLiteral[] {
         if (!this.isInitialized) {
             this.ensureInitialized().catch(err => console.error('[SpecialFileManager] Lazy init failed:', err));
         }
-        return [...this.literals];
+        return this.dedupeLiterals([...this.literals]);
     }
 
     /**
-     * 根据内容查找字面量
+     * 根据内容查找字面量（去重）
      */
     public findLiteralsByContent(content: string): SpecialLiteral[] {
         if (!this.isInitialized) {
             this.ensureInitialized().catch(err => console.error('[SpecialFileManager] Lazy init failed:', err));
         }
-        return this.literals.filter(literal => literal.content === content);
+        const results = this.literals.filter(literal => literal.content === content);
+        const deduped = this.dedupeLiterals(results);
+        console.log(`[SpecialFileManager] findLiteralsByContent("${content}"): ${results.length} raw, ${deduped.length} deduped, type=${deduped[0]?.type}`);
+        return deduped;
+    }
+
+    /**
+     * 去重：按 content + filePath 去重
+     */
+    private dedupeLiterals(literals: SpecialLiteral[]): SpecialLiteral[] {
+        const seen = new Set<string>();
+        const result: SpecialLiteral[] = [];
+        for (const l of literals) {
+            const key = l.content + '|' + l.filePath;
+            if (!seen.has(key)) {
+                seen.add(key);
+                result.push(l);
+            }
+        }
+        return result;
     }
 
     /**
