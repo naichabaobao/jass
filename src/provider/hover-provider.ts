@@ -61,13 +61,20 @@ export class HoverProvider implements vscode.HoverProvider {
         try {
             const filePath = document.uri.fsPath;
 
-            // 兜底：确保当前文件已解析（不走防抖延迟，同步解析）
-            if (!this.dataEnterManager.getBlockStatement(filePath)) {
-                const ext = filePath.split('.').pop()?.toLowerCase();
+            // 兜底：确保所有已打开的 JASS 文件都已解析（不走防抖延迟）
+            const openJassDocs = vscode.workspace.textDocuments.filter(doc => {
+                const ext = doc.uri.fsPath.split('.').pop()?.toLowerCase();
                 const isJass = ['j', 'jass', 'ai', 'zn'].includes(ext || '');
-                const isIgnored = ['numbers.jass', 'presets.jass', 'strings.jass'].includes(filePath.split(/[\\/]/).pop()?.toLowerCase() || '');
-                if (isJass && !isIgnored) {
-                    await this.dataEnterManager.updateFile(filePath, document.getText());
+                const isIgnored = ['numbers.jass', 'presets.jass', 'strings.jass'].includes(
+                    doc.uri.fsPath.split(/[\\/]/).pop()?.toLowerCase() || ''
+                );
+                return isJass && !isIgnored;
+            });
+
+            for (const doc of openJassDocs) {
+                const docPath = doc.uri.fsPath;
+                if (!this.dataEnterManager.getBlockStatement(docPath)) {
+                    await this.dataEnterManager.updateFile(docPath, doc.getText());
                 }
             }
 
@@ -139,6 +146,13 @@ export class HoverProvider implements vscode.HoverProvider {
             // 从所有缓存的文件中全局查找匹配的符号（函数、全局变量、类型、结构体等）
             // 包括工作目录和 static 目录下的所有文件，它们都一视同仁
             const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+            console.log(`[HOVER] symbol="${symbolName}" cachedFiles=${allCachedFiles.length} currentFile="${filePath}"`);
+            if (allCachedFiles.length <= 10) {
+                console.log(`[HOVER] cached file list: ${allCachedFiles.map(f => {
+                    const p = f.replace(/\\/g, '/');
+                    return p.substring(p.lastIndexOf('/') + 1);
+                }).join(', ')}`);
+            }
 
             // 先尝试从缓存获取全局符号
             const cachedItems = this.hoverCache.getBySymbolName(symbolName);
