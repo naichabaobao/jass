@@ -182,15 +182,19 @@ export class SpecialFileManager {
         // 也检查扩展的 static 目录（从编译后的 out 目录计算）
         try {
             // __dirname 在编译后是 out/provider/special
-            // 需要回到项目根目录的 static 目录
-            const extensionStaticDir = path.resolve(__dirname, "../../../../static");
-            if (fs.existsSync(extensionStaticDir) && fs.statSync(extensionStaticDir).isDirectory()) {
-                findFiles(extensionStaticDir);
-            } else {
-                // 尝试另一个可能的路径（如果从 src 编译）
-                const altPath = path.resolve(__dirname, "../../../../../static");
-                if (fs.existsSync(altPath) && fs.statSync(altPath).isDirectory()) {
-                    findFiles(altPath);
+            // 需要回到项目根目录的 static 目录: ../../../static
+            const pathCandidates = [
+                path.resolve(__dirname, "../../../static"),       // out/provider/special → 项目根/static
+                path.resolve(__dirname, "../../../../static"),    // 备选：更深一层
+                path.resolve(__dirname, "../../static"),          // 备选：out/provider/special → out/static
+            ];
+            console.log(`[SpecialFileManager] __dirname=${__dirname}`);
+            for (const candidate of pathCandidates) {
+                console.log(`[SpecialFileManager] Trying path: ${candidate} (exists=${fs.existsSync(candidate)})`);
+                if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
+                    console.log(`[SpecialFileManager] Using static dir: ${candidate}`);
+                    findFiles(candidate);
+                    break;
                 }
             }
         } catch (error) {
