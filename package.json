@@ -54,7 +54,7 @@
         "jass.literal.hover": {
           "type": "boolean",
           "default": true,
-          "description": "启用字面值悬停提示和定义跳转（字符串、数字、四字码）。默认：开启。"
+          "description": "启用字面值悬停提示和定义跳转（API、函数、变量、字符串、数字、四字码）。默认：开启。"
         },
         "jass.keywordDefinition": {
           "type": "boolean",
@@ -137,7 +137,7 @@
           "items": {
             "type": "string"
           },
-          "description": "额外识别的 JASS 文件扩展名列表（不含点，如 \"eai\"、\"w3x\" 等）。添加后这些扩展名的文件会被当作 JASS 文件处理，支持语法高亮、悬停提示、跳转定义等功能。修改后需重新加载窗口生效。"
+          "description": "额外识别的 JASS 文件格式（不含点，如 \"eai\"、\"wj\" 等）。添加后这些扩展名的文件会被当作 JASS 文件处理，支持语法高亮、悬停提示、跳转定义等功能。修改后需重新加载窗口生效。"
         }
       }
     },
