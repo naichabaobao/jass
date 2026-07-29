@@ -197,6 +197,7 @@ export class DataEnterManager {
     private readonly configReloadCallbacks: Array<() => void> = [];
     private hasInitializedWorkspace = false;
     private hasLoggedEmptyCacheWarning = false;
+    private hasLoadedStandardLibraries = false;
 
     constructor(options: DataEnterOptions = {}) {
         this.options = {
@@ -844,6 +845,50 @@ export class DataEnterManager {
     }
 
     /**
+     * 推断项目根目录（单文件模式下使用）
+     * 从给定文件向上查找，直到找到包含常见根标记文件或包含多个 JASS 文件的目录
+     */
+    private inferProjectRoot(fromFile: string): string | null {
+        let currentDir = path.dirname(fromFile);
+        const jassExtensions = ['.j', '.jass', '.ai', '.zn'];
+        const rootMarkers = ['common.j', 'Blizzard.j', 'jass.config.json'];
+
+        // 向上查找最多10层
+        for (let i = 0; i < 10; i++) {
+            // 检查是否有根标记文件
+            for (const marker of rootMarkers) {
+                try {
+                    if (fs.existsSync(path.join(currentDir, marker))) {
+                        return currentDir;
+                    }
+                } catch {
+                    // 忽略访问错误继续
+                }
+            }
+
+            // 检查当前目录是否有3个以上的JASS文件
+            try {
+                const entries = fs.readdirSync(currentDir);
+                const jassCount = entries.filter(f => jassExtensions.includes(path.extname(f).toLowerCase())).length;
+                if (jassCount >= 3) {
+                    return currentDir;
+                }
+            } catch {
+                // 忽略访问错误继续
+            }
+
+            // 向上一级
+            const parentDir = path.dirname(currentDir);
+            if (parentDir === currentDir) {
+                break; // 已经到达根目录
+            }
+            currentDir = parentDir;
+        }
+
+        return null;
+    }
+
+    /**
      * 检查文件是否为 JASS 文件
      */
     private isJassFile(filePath: string): boolean {
@@ -1309,6 +1354,7 @@ export class DataEnterManager {
             await this.loadStandardLibraries(workspaceRoot);
             await this.loadStaticFiles(workspaceRoot);
             await this.loadWorkspaceFiles(workspaceRoot);
+            this.hasLoadedStandardLibraries = true;
             
             const cacheStats = this.getCacheStats();
             console.log('✅ Workspace initialization complete');
@@ -1330,10 +1376,17 @@ export class DataEnterManager {
 
         // 无工作区时：对当前已打开的 JASS 文档做一次解析，否则已打开的单文件不会进缓存
         if (!hasWorkspace) {
-            vscode.workspace.textDocuments.forEach((doc) => {
-                if (this.isJassFile(doc.uri.fsPath) && !this.shouldIgnoreFile(doc.uri.fsPath)) {
-                    this.handleFileChange(doc.uri.fsPath);
-                }
+            const jassDocs = vscode.workspace.textDocuments.filter(doc => 
+                this.isJassFile(doc.uri.fsPath) && !this.shouldIgnoreFile(doc.uri.fsPath)
+            );
+            
+            // 如果有已打开的JASS文件，先加载标准库再处理已打开的文件
+            if (jassDocs.length > 0) {
+                await this.ensureStandardLibrariesLoaded(jassDocs[0].uri.fsPath);
+            }
+            
+            jassDocs.forEach((doc) => {
+                this.handleFileChange(doc.uri.fsPath);
             });
         }
 
@@ -1513,6 +1566,22 @@ export class DataEnterManager {
             if (this.isImmutableFile(filePath) || this.shouldIgnoreFile(filePath)) {
                 return;
             }
+
+            // 单文件模式下，首次打开JASS文件时延迟加载标准库
+            const hasWorkspace = !!vscode.workspace.workspaceFolders?.[0];
+            if (!hasWorkspace && !this.hasLoadedStandardLibraries) {
+                this.ensureStandardLibrariesLoaded(filePath).then(() => {
+                    // 标准库加载完成后再处理当前文件
+                    if (!this.cache.has(filePath)) {
+                        const content = document.getText();
+                        if (content) {
+                            this.handleFileChange(filePath);
+                        }
+                    }
+                });
+                return;
+            }
+
             // 如果文件还没有被解析，立即解析
             if (!this.cache.has(filePath)) {
                 const content = document.getText();
@@ -1655,6 +1724,45 @@ export class DataEnterManager {
             }
         } catch (error) {
             console.error(`Failed to read directory ${dir}:`, error);
+        }
+    }
+
+    /**
+     * 确保标准库和静态文件已加载（单文件模式下使用）
+     * 可以在打开文件时被调用，以延迟加载标准库
+     */
+    private async ensureStandardLibrariesLoaded(fromFile?: string): Promise<void> {
+        if (this.hasLoadedStandardLibraries) {
+            return;
+        }
+
+        // 确定根目录
+        let rootDir: string | undefined = this.workspaceRoot;
+        if (!rootDir && fromFile) {
+            rootDir = this.inferProjectRoot(fromFile) || path.dirname(fromFile);
+        }
+        if (!rootDir) {
+            return;
+        }
+
+        if (!this.workspaceRoot) {
+            this.workspaceRoot = rootDir;
+        }
+
+        console.log(`[INIT] Loading standard libraries for single-file mode, root="${rootDir}"`);
+        
+        await this.collectAllTextMacros(rootDir);
+        await this.loadStandardLibraries(rootDir);
+        await this.loadStaticFiles(rootDir);
+        await this.loadWorkspaceFiles(rootDir);
+
+        this.hasLoadedStandardLibraries = true;
+
+        const cacheStats = this.getCacheStats();
+        console.log(`[INIT] Single-file mode: ${cacheStats.totalFiles} files cached (${cacheStats.immutableFiles} immutable)`);
+        if (cacheStats.totalFiles > 0) {
+            const fileList = cacheStats.cachedFiles.slice(0, 10).map(f => path.basename(f)).join(', ');
+            console.log(`[INIT] Sample cached files: ${fileList}${cacheStats.cachedFiles.length > 10 ? '...' : ''}`);
         }
     }
 
