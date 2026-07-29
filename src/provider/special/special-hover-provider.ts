@@ -110,9 +110,13 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
             }
 
             if (hoverContents.length === 0) {
+                if (literalContent) {
+                    console.log(`[SPECIAL-HOVER] No match for "${literalContent}" (type detected), total literals=${specialFileManager.getAllLiterals().length}`);
+                }
                 return null;
             }
 
+            console.log(`[SPECIAL-HOVER] Found ${matchingLiterals.length} matches for "${literalContent}"`);
             return new vscode.Hover(hoverContents, hoverRange);
         } catch (error) {
             console.error('Error in SpecialHoverProvider:', error);

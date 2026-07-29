@@ -73,6 +73,7 @@ export class SpecialFileManager {
 
         // 查找特殊文件（即使没有 workspaceRoot，也会从扩展内置的 static 目录查找）
         const specialFiles = await this.findSpecialFiles(workspaceRoot || '');
+        console.log(`[SpecialFileManager] Found ${specialFiles.length} special files: ${specialFiles.map(f => path.basename(f)).join(', ')}`);
         
         if (specialFiles.length === 0) {
             console.warn(`[SpecialFileManager] No special files found in workspace. Make sure strings.jass, presets.jass, or numbers.jass exist.`);
@@ -92,12 +93,17 @@ export class SpecialFileManager {
                 }
 
                 const fileLiterals = parser.parse(filePath, content);
+                console.log(`[SpecialFileManager] Parsed ${fileName}: ${fileLiterals.length} literals`);
+                const withDesc = fileLiterals.filter(l => l.description).length;
+                console.log(`[SpecialFileManager]   ${withDesc} literals have description`);
                 this.literals.push(...fileLiterals);
                 this.filePathToLiterals.set(filePath, fileLiterals);
             } catch (error) {
                 console.error(`[SpecialFileManager] Failed to parse special file ${filePath}:`, error);
             }
         }
+
+        console.log(`[SpecialFileManager] Init complete: ${this.literals.length} total literals`);
     }
 
     /**
