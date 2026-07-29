@@ -57,6 +57,10 @@ export class SpecialFileManager {
     public static getInstance(): SpecialFileManager {
         if (!SpecialFileManager.instance) {
             SpecialFileManager.instance = new SpecialFileManager();
+            // 获取实例后立即触发初始化（不等待，后台执行）
+            SpecialFileManager.instance.ensureInitialized().catch(err => {
+                console.error('[SpecialFileManager] Auto init failed:', err);
+            });
         }
         return SpecialFileManager.instance;
     }
@@ -74,6 +78,13 @@ export class SpecialFileManager {
         }
         this.initPromise = this.initialize();
         await this.initPromise;
+    }
+
+    /**
+     * 等待初始化完成（公开方法，供外部调用）
+     */
+    public async waitForInitialization(): Promise<void> {
+        await this.ensureInitialized();
     }
 
     /**
