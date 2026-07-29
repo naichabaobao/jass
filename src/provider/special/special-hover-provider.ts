@@ -41,17 +41,16 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
             const stringMatch = textBeforeCursor.match(/"([^"]*)$/);
             if (stringMatch) {
                 const contentBefore = stringMatch[1];
-                const hasClosingQuote = textAfterCursor.startsWith('"');
-                if (hasClosingQuote) {
-                    const contentAfter = textAfterCursor.substring(1).match(/^[^"]*/)?.[0] || '';
+                const quoteStart = textBeforeCursor.lastIndexOf('"');
+                // 在 textAfterCursor 中查找闭合引号（无论光标在哪里）
+                const closingQuoteIndex = textAfterCursor.indexOf('"');
+                if (closingQuoteIndex !== -1) {
+                    const contentAfter = textAfterCursor.substring(0, closingQuoteIndex);
                     literalContent = contentBefore + contentAfter;
-                    // 设置 hover range：从开始引号到结束引号
-                    const quoteStart = textBeforeCursor.lastIndexOf('"');
-                    const quoteEnd = position.character + 1 + contentAfter.length;
+                    const quoteEnd = position.character + closingQuoteIndex + 1;
                     hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
                 } else {
                     literalContent = contentBefore;
-                    const quoteStart = textBeforeCursor.lastIndexOf('"');
                     hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
                 }
                 
@@ -64,16 +63,16 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
                 const markMatch = textBeforeCursor.match(/'([^']*)$/);
                 if (markMatch) {
                     const contentBefore = markMatch[1];
-                    const hasClosingQuote = textAfterCursor.startsWith("'");
-                    if (hasClosingQuote) {
-                        const contentAfter = textAfterCursor.substring(1).match(/^[^']*/)?.[0] || '';
+                    const quoteStart = textBeforeCursor.lastIndexOf("'");
+                    // 在 textAfterCursor 中查找闭合引号（无论光标在哪里）
+                    const closingQuoteIndex = textAfterCursor.indexOf("'");
+                    if (closingQuoteIndex !== -1) {
+                        const contentAfter = textAfterCursor.substring(0, closingQuoteIndex);
                         literalContent = contentBefore + contentAfter;
-                        const quoteStart = textBeforeCursor.lastIndexOf("'");
-                        const quoteEnd = position.character + 1 + contentAfter.length;
+                        const quoteEnd = position.character + closingQuoteIndex + 1;
                         hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
                     } else {
                         literalContent = contentBefore;
-                        const quoteStart = textBeforeCursor.lastIndexOf("'");
                         hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
                     }
                     
