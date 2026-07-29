@@ -17,6 +17,8 @@ export class SpecialFileManager {
     private stringsParser: StringsParser | undefined;
     private presetsParser: PresetsParser | undefined;
     private numbersParser: NumbersParser | undefined;
+    private isInitialized = false;
+    private initPromise: Promise<void> | null = null;
 
     private constructor() {
         // 延迟初始化解析器，避免循环依赖问题
@@ -60,9 +62,30 @@ export class SpecialFileManager {
     }
 
     /**
+     * 确保已初始化（懒加载）
+     */
+    private async ensureInitialized(): Promise<void> {
+        if (this.isInitialized) {
+            return;
+        }
+        if (this.initPromise) {
+            await this.initPromise;
+            return;
+        }
+        this.initPromise = this.initialize();
+        await this.initPromise;
+    }
+
+    /**
      * 初始化，扫描工作区中的特殊文件
      */
     public async initialize(workspaceRoot?: string): Promise<void> {
+        if (this.isInitialized) {
+            console.log(`[SpecialFileManager] Already initialized, skipping.`);
+            return;
+        }
+        console.log(`[SpecialFileManager] Starting initialization...`);
+        
         if (!workspaceRoot) {
             const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
             workspaceRoot = workspaceFolder?.uri.fsPath;
@@ -104,6 +127,8 @@ export class SpecialFileManager {
         }
 
         console.log(`[SpecialFileManager] Init complete: ${this.literals.length} total literals`);
+        this.isInitialized = true;
+        this.initPromise = null;
     }
 
     /**
@@ -168,6 +193,9 @@ export class SpecialFileManager {
      * 获取所有字面量
      */
     public getAllLiterals(): SpecialLiteral[] {
+        if (!this.isInitialized) {
+            this.ensureInitialized().catch(err => console.error('[SpecialFileManager] Lazy init failed:', err));
+        }
         return [...this.literals];
     }
 
@@ -175,6 +203,9 @@ export class SpecialFileManager {
      * 根据内容查找字面量
      */
     public findLiteralsByContent(content: string): SpecialLiteral[] {
+        if (!this.isInitialized) {
+            this.ensureInitialized().catch(err => console.error('[SpecialFileManager] Lazy init failed:', err));
+        }
         return this.literals.filter(literal => literal.content === content);
     }
 
@@ -182,6 +213,9 @@ export class SpecialFileManager {
      * 根据类型查找字面量
      */
     public findLiteralsByType(type: 'string' | 'mark' | 'number'): SpecialLiteral[] {
+        if (!this.isInitialized) {
+            this.ensureInitialized().catch(err => console.error('[SpecialFileManager] Lazy init failed:', err));
+        }
         return this.literals.filter(literal => literal.type === type);
     }
 
@@ -189,6 +223,9 @@ export class SpecialFileManager {
      * 根据文件路径获取字面量
      */
     public getLiteralsByFile(filePath: string): SpecialLiteral[] {
+        if (!this.isInitialized) {
+            this.ensureInitialized().catch(err => console.error('[SpecialFileManager] Lazy init failed:', err));
+        }
         return this.filePathToLiterals.get(filePath) || [];
     }
 
