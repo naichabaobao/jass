@@ -146,13 +146,6 @@ export class HoverProvider implements vscode.HoverProvider {
             // 从所有缓存的文件中全局查找匹配的符号（函数、全局变量、类型、结构体等）
             // 包括工作目录和 static 目录下的所有文件，它们都一视同仁
             const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
-            console.log(`[HOVER] symbol="${symbolName}" cachedFiles=${allCachedFiles.length} currentFile="${filePath}"`);
-            if (allCachedFiles.length <= 10) {
-                console.log(`[HOVER] cached file list: ${allCachedFiles.map(f => {
-                    const p = f.replace(/\\/g, '/');
-                    return p.substring(p.lastIndexOf('/') + 1);
-                }).join(', ')}`);
-            }
 
             // 先尝试从缓存获取全局符号
             const cachedItems = this.hoverCache.getBySymbolName(symbolName);

@@ -372,7 +372,6 @@ export async function activate(context: vscode.ExtensionContext) {
     try {
         const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
         const workspaceRoot = workspaceFolder?.uri.fsPath;
-        console.log(`[INIT] Initializing SpecialFileManager, workspaceRoot="${workspaceRoot || '(none)'}"`);
         const specialFileManager = SpecialFileManager.getInstance();
         await specialFileManager.initialize(workspaceRoot);
         console.log('✅ SpecialFileManager initialized successfully');

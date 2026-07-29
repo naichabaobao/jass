@@ -92,15 +92,12 @@ export class SpecialFileManager {
      */
     public async initialize(workspaceRoot?: string, force: boolean = false): Promise<void> {
         if (this.isInitialized && !force) {
-            console.log(`[SpecialFileManager] Already initialized, skipping.`);
             return;
         }
         if (force) {
-            console.log(`[SpecialFileManager] Force re-initialization...`);
             this.isInitialized = false;
             this.initPromise = null;
         }
-        console.log(`[SpecialFileManager] Starting initialization...`);
         
         if (!workspaceRoot) {
             const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
@@ -110,15 +107,12 @@ export class SpecialFileManager {
         this.literals = [];
         this.filePathToLiterals.clear();
 
-        // 查找特殊文件（即使没有 workspaceRoot，也会从扩展内置的 static 目录查找）
         const specialFiles = await this.findSpecialFiles(workspaceRoot || '');
-        console.log(`[SpecialFileManager] Found ${specialFiles.length} special files: ${specialFiles.map(f => path.basename(f)).join(', ')}`);
         
         if (specialFiles.length === 0) {
-            console.warn(`[SpecialFileManager] No special files found in workspace. Make sure strings.jass, presets.jass, or numbers.jass exist.`);
+            console.warn(`[SpecialFileManager] No special files found. Make sure strings.jass, presets.jass, or numbers.jass exist.`);
         }
         
-        // 解析每个文件
         for (const filePath of specialFiles) {
             try {
                 const content = fs.readFileSync(filePath, 'utf-8');
@@ -132,9 +126,6 @@ export class SpecialFileManager {
                 }
 
                 const fileLiterals = parser.parse(filePath, content);
-                console.log(`[SpecialFileManager] Parsed ${fileName}: ${fileLiterals.length} literals`);
-                const withDesc = fileLiterals.filter(l => l.description).length;
-                console.log(`[SpecialFileManager]   ${withDesc} literals have description`);
                 this.literals.push(...fileLiterals);
                 this.filePathToLiterals.set(filePath, fileLiterals);
             } catch (error) {
@@ -142,7 +133,6 @@ export class SpecialFileManager {
             }
         }
 
-        console.log(`[SpecialFileManager] Init complete: ${this.literals.length} total literals`);
         this.isInitialized = true;
         this.initPromise = null;
     }
@@ -186,18 +176,13 @@ export class SpecialFileManager {
 
         // 也检查扩展的 static 目录（从编译后的 out 目录计算）
         try {
-            // __dirname 在编译后是 out/provider/special
-            // 需要回到项目根目录的 static 目录: ../../../static
             const pathCandidates = [
                 path.resolve(__dirname, "../../../static"),       // out/provider/special → 项目根/static
                 path.resolve(__dirname, "../../../../static"),    // 备选：更深一层
                 path.resolve(__dirname, "../../static"),          // 备选：out/provider/special → out/static
             ];
-            console.log(`[SpecialFileManager] __dirname=${__dirname}`);
             for (const candidate of pathCandidates) {
-                console.log(`[SpecialFileManager] Trying path: ${candidate} (exists=${fs.existsSync(candidate)})`);
                 if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
-                    console.log(`[SpecialFileManager] Using static dir: ${candidate}`);
                     findFiles(candidate);
                     break;
                 }
@@ -227,9 +212,7 @@ export class SpecialFileManager {
             this.ensureInitialized().catch(err => console.error('[SpecialFileManager] Lazy init failed:', err));
         }
         const results = this.literals.filter(literal => literal.content === content);
-        const deduped = this.dedupeLiterals(results);
-        console.log(`[SpecialFileManager] findLiteralsByContent("${content}"): ${results.length} raw, ${deduped.length} deduped, type=${deduped[0]?.type}`);
-        return deduped;
+        return this.dedupeLiterals(results);
     }
 
     /**
