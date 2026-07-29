@@ -68,15 +68,11 @@ export class SpecialFileManager {
             workspaceRoot = workspaceFolder?.uri.fsPath;
         }
 
-        if (!workspaceRoot) {
-            return;
-        }
-
         this.literals = [];
         this.filePathToLiterals.clear();
 
-        // 查找特殊文件
-        const specialFiles = await this.findSpecialFiles(workspaceRoot);
+        // 查找特殊文件（即使没有 workspaceRoot，也会从扩展内置的 static 目录查找）
+        const specialFiles = await this.findSpecialFiles(workspaceRoot || '');
         
         if (specialFiles.length === 0) {
             console.warn(`[SpecialFileManager] No special files found in workspace. Make sure strings.jass, presets.jass, or numbers.jass exist.`);
@@ -136,7 +132,10 @@ export class SpecialFileManager {
             }
         };
 
-        findFiles(workspaceRoot);
+        // 如果有工作区根目录，先从工作区查找
+        if (workspaceRoot) {
+            findFiles(workspaceRoot);
+        }
 
         // 也检查扩展的 static 目录（从编译后的 out 目录计算）
         try {
