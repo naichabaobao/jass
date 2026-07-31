@@ -230,6 +230,14 @@ export class DataEnterManager {
         // 不在这里设置监听器，监听器在 initializeWorkspace 中设置
     }
 
+    /**
+     * 规范化文件路径（统一斜杠为正斜杠，统一小写）
+     * 用于缓存键比较，避免因路径大小写/斜杠不同导致重复缓存
+     */
+    private normalizeFilePath(filePath: string): string {
+        return filePath.replace(/\\/g, '/').toLowerCase();
+    }
+
     // 已移除 .mate 持久化功能，缓存仅保留内存态。
 
     private parseApiVersionParts(version: string): { major: number; minor: number } | null {
@@ -385,10 +393,16 @@ export class DataEnterManager {
      * 处理文件更新
      */
     private async handleFileUpdate(filePath: string, content?: string): Promise<void> {
+        // 规范化路径，避免大小写/斜杠不一致导致重复缓存
+        const normalizedKey = this.normalizeFilePath(filePath);
+        // 保留原始路径用于显示（优先保留已缓存的原始路径）
+        const existingItem = this.cache.get(normalizedKey);
+        const displayPath = existingItem ? (existingItem as any)._originalPath || filePath : filePath;
+        
         const isImmutable = this.isImmutableFile(filePath);
         
         // 如果是不可变文件且已缓存，直接返回（不更新）
-        if (isImmutable && this.cache.has(filePath)) {
+        if (isImmutable && this.cache.has(normalizedKey)) {
             return;
         }
 
@@ -540,29 +554,30 @@ export class DataEnterManager {
 
         this.applyIgnoreDirectivesToAllErrors(errors, ignoreDirectives);
         
-        // 存储到缓存
+        // 存储到缓存（使用规范化路径作为 key，避免大小写/斜杠不一致导致重复）
         if (blockStatement || zincProgram) {
             const stats = fs.existsSync(filePath) ? fs.statSync(filePath) : { mtimeMs: Date.now() };
-            const cacheItem = this.cache.get(filePath);
-            this.cache.set(filePath, {
+            const cacheItem = this.cache.get(normalizedKey);
+            this.cache.set(normalizedKey, {
                 blockStatement: blockStatement || null,
                 zincProgram: zincProgram || undefined,
                 lastModified: stats.mtimeMs,
                 version: (cacheItem?.version || 0) + 1,
                 isImmutable,
                 content, // 存储原始内容用于提取注释
-                errors: errors // 存储错误信息
-            });
+                errors: errors, // 存储错误信息
+                _originalPath: displayPath // 保存原始路径用于显示
+            } as any);
 
-            // 如果是不可变文件，添加到集合中
+            // 如果是不可变文件，添加到集合中（使用规范化路径）
             if (isImmutable) {
-                this.immutableFiles.add(filePath);
+                this.immutableFiles.add(normalizedKey);
             }
 
             // 3. 更新补全项缓存（异步，不阻塞）
             // 只对非 Zinc 文件更新补全缓存（Zinc 文件由 ZincCompletionProvider 处理）
             if (blockStatement) {
-                this.updateCompletionCache(filePath, blockStatement);
+                this.updateCompletionCache(displayPath, blockStatement);
             }
 
             // 4. 清除跳转缓存（因为文件内容已更新，需要重新计算）
@@ -1189,7 +1204,7 @@ export class DataEnterManager {
      * 获取文件的 BlockStatement
      */
     public getBlockStatement(filePath: string): BlockStatement | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.blockStatement || null;
     }
 
@@ -1197,7 +1212,7 @@ export class DataEnterManager {
      * 获取文件的 ZincProgram（仅用于 .zn 文件）
      */
     public getZincProgram(filePath: string): ZincProgram | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.zincProgram || null;
     }
 
@@ -1213,7 +1228,7 @@ export class DataEnterManager {
      * 获取文件的错误集合
      */
     public getErrors(filePath: string): ErrorCollection | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.errors || null;
     }
 
@@ -1221,7 +1236,7 @@ export class DataEnterManager {
      * 获取文件的原始内容（用于提取注释）
      */
     public getFileContent(filePath: string): string | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.content || null;
     }
 
@@ -1229,7 +1244,7 @@ export class DataEnterManager {
      * 获取文件缓存信息
      */
     public getCacheInfo(filePath: string): { lastModified: number; version: number } | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         if (!cacheItem) {
             return null;
         }
@@ -1262,9 +1277,14 @@ export class DataEnterManager {
 
     /**
      * 获取所有缓存的文件路径
+     * 返回原始显示路径（保留用户看到的路径大小写）
      */
     public getAllCachedFiles(): string[] {
-        const files = Array.from(this.cache.keys());
+        const files: string[] = [];
+        for (const [key, item] of this.cache.entries()) {
+            const displayPath = (item as any)._originalPath || key;
+            files.push(displayPath);
+        }
         // 调试：仅在工作区初始化完成后提示一次，避免 hover 期间重复刷屏
         if (files.length === 0 && this.hasInitializedWorkspace && !this.hasLoggedEmptyCacheWarning) {
             console.warn('[DataEnterManager] getAllCachedFiles: cache is empty');
