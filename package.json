@@ -92,43 +92,43 @@
         "jass.compiler.pjassPath": {
           "type": "string",
           "default": "",
-          "description": "pjass.exe 路径（用于 JASS 语法检查）。留空则使用扩展内置版本。可右键 JASS 文件 → JASS → 选择库文件路径，或按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
+          "description": "pjass.exe 路径（用于 JASS 语法检查）。留空则使用扩展内置版本。可按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
           "scope": "machine"
         },
         "jass.compiler.commonJ": {
           "type": "string",
           "default": "",
-          "description": "common.j 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。可右键 JASS 文件 → JASS → 选择库文件路径，或按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
+          "description": "common.j 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。可按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
           "scope": "machine"
         },
         "jass.compiler.blizzardJ": {
           "type": "string",
           "default": "",
-          "description": "Blizzard.j 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。可右键 JASS 文件 → JASS → 选择库文件路径，或按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
+          "description": "Blizzard.j 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。可按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
           "scope": "machine"
         },
         "jass.compiler.commonAi": {
           "type": "string",
           "default": "",
-          "description": "common.ai 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。可右键 JASS 文件 → JASS → 选择库文件路径，或按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
+          "description": "common.ai 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。可按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
           "scope": "machine"
         },
         "jass.compiler.checkCommonJ": {
           "type": "string",
           "default": "",
-          "description": "编译检查用的 common.j 路径。留空则使用 jass.compiler.commonJ 路径。可右键 JASS 文件 → JASS → 选择库文件路径，或按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
+          "description": "编译检查用的 common.j 路径。留空则使用 jass.compiler.commonJ 路径。可按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
           "scope": "machine"
         },
         "jass.compiler.checkBlizzardJ": {
           "type": "string",
           "default": "",
-          "description": "编译检查用的 Blizzard.j 路径。留空则使用 jass.compiler.blizzardJ 路径。可右键 JASS 文件 → JASS → 选择库文件路径，或按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
+          "description": "编译检查用的 Blizzard.j 路径。留空则使用 jass.compiler.blizzardJ 路径。可按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
           "scope": "machine"
         },
         "jass.compiler.checkCommonAi": {
           "type": "string",
           "default": "",
-          "description": "编译检查用的 common.ai 路径。留空则使用 jass.compiler.commonAi 路径。可右键 JASS 文件 → JASS → 选择库文件路径，或按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
+          "description": "编译检查用的 common.ai 路径。留空则使用 jass.compiler.commonAi 路径。可按 Ctrl+Shift+P 输入「JASS: 选择库文件路径」快速指定。",
           "scope": "machine"
         },
         "jass.additionalExtensions": {
@@ -246,11 +246,6 @@
         }
       ],
       "jass.submenu": [
-        {
-          "command": "jass.selectLibraryFile",
-          "when": "editorLangId == jass",
-          "group": "0_settings@1"
-        },
         {
           "command": "jass.checkTrigger",
           "when": "editorLangId == jass",
