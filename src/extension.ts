@@ -1166,55 +1166,6 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    // 注册：选择库文件路径（弹出 QuickPick 选择要配置的项，再弹出系统文件选择器）
-    context.subscriptions.push(
-        vscode.commands.registerCommand('jass.selectLibraryFile', async () => {
-            interface LibOption {
-                label: string;
-                configKey: string;
-                filters: { [name: string]: string[] };
-            }
-            const libOptions: LibOption[] = [
-                { label: 'pjass.exe 路径', configKey: 'compiler.pjassPath', filters: { '可执行文件': ['exe'] } },
-                { label: 'common.j 路径（显示中文注释）', configKey: 'compiler.commonJ', filters: { 'JASS 文件': ['j'] } },
-                { label: 'Blizzard.j 路径（显示中文注释）', configKey: 'compiler.blizzardJ', filters: { 'JASS 文件': ['j'] } },
-                { label: 'common.ai 路径（显示中文注释）', configKey: 'compiler.commonAi', filters: { 'AI 文件': ['ai'] } },
-                { label: '编译检查用 common.j', configKey: 'compiler.checkCommonJ', filters: { 'JASS 文件': ['j'] } },
-                { label: '编译检查用 Blizzard.j', configKey: 'compiler.checkBlizzardJ', filters: { 'JASS 文件': ['j'] } },
-                { label: '编译检查用 common.ai', configKey: 'compiler.checkCommonAi', filters: { 'AI 文件': ['ai'] } },
-            ];
-
-            const picked = await vscode.window.showQuickPick(libOptions, {
-                placeHolder: '请选择要配置的库文件',
-                title: 'JASS - 选择库文件'
-            });
-
-            if (!picked) {
-                return;
-            }
-
-            const uris = await vscode.window.showOpenDialog({
-                canSelectFiles: true,
-                canSelectFolders: false,
-                canSelectMany: false,
-                openLabel: `选择 ${picked.label}`,
-                filters: picked.filters
-            });
-
-            if (!uris || uris.length === 0) {
-                return;
-            }
-
-            const selectedPath = uris[0].fsPath;
-            const config = vscode.workspace.getConfiguration('jass');
-            await config.update(picked.configKey, selectedPath, vscode.ConfigurationTarget.Global);
-
-            vscode.window.showInformationMessage(
-                `✅ 已设置 ${picked.label}：\n${selectedPath}`
-            );
-        })
-    );
-
     // 将 DataEnterManager 与 DocumentInfoManager 的清理添加到订阅中，以便在扩展停用时释放资源
     context.subscriptions.push({
         dispose: () => {
