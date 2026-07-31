@@ -820,25 +820,34 @@ export class DataEnterManager {
 
     /**
      * 检查文件是否为不可变文件（静态文件）
+     * 只有在扩展 static 目录或工作区 static 目录下的文件才是不可变的
      */
-    private isImmutableFile(filePath: string): boolean {
-        const fileName = path.basename(filePath).toLowerCase();
+    public isImmutableFile(filePath: string): boolean {
         const normalizedPath = filePath.replace(/\\/g, '/').toLowerCase();
 
-        // 检查是否在扩展的 static 目录下
-        const extensionStaticDir = path.resolve(__dirname, "../../../static").replace(/\\/g, '/').toLowerCase();
-        if (normalizedPath.includes(extensionStaticDir)) {
-            return true;
-        }
-
         // 检查是否在工作区的 static 目录下
-        if (normalizedPath.includes('/static/') || normalizedPath.includes('\\static\\')) {
+        if (normalizedPath.includes('/static/')) {
             return true;
         }
 
-        // 标准库文件也是不可变的
-        if (STANDARD_LIBRARY_ORDER.includes(fileName)) {
-            return true;
+        // 尝试多个可能的扩展 static 目录路径
+        const possiblePaths = [
+            path.resolve(__dirname, "../../../static"),
+            path.resolve(__dirname, "../../../../static"),
+            path.resolve(__dirname, "../../static"),
+        ];
+
+        for (const possiblePath of possiblePaths) {
+            try {
+                if (fs.existsSync(possiblePath)) {
+                    const normalizedStaticDir = possiblePath.replace(/\\/g, '/').toLowerCase();
+                    if (normalizedPath.includes(normalizedStaticDir)) {
+                        return true;
+                    }
+                }
+            } catch {
+                // 忽略访问错误
+            }
         }
 
         return false;
