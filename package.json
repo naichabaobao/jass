@@ -224,6 +224,11 @@
         "command": "jass.checkAI",
         "title": "编译自定义ai脚本",
         "category": "JASS"
+      },
+      {
+        "command": "jass.selectLibraryFile",
+        "title": "选择库文件路径",
+        "category": "JASS"
       }
     ],
     "submenus": [
