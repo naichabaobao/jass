@@ -128,12 +128,19 @@ export class ZincHoverProvider implements vscode.HoverProvider {
         token: vscode.CancellationToken
     ): vscode.ProviderResult<vscode.Hover> {
         try {
-            const filePath = document.uri.fsPath;
-            const ext = path.extname(filePath).toLowerCase();
-            
-            // 只处理 .zn 文件
-            if (ext !== '.zn') {
-                return null;
+            const isUntitled = document.uri.scheme === 'untitled';
+            const filePath = isUntitled ? document.uri.toString() : document.uri.fsPath;
+
+            // 只处理 Zinc 文件（已保存文件检查扩展名，未保存文件检查 languageId）
+            if (isUntitled) {
+                if (document.languageId !== 'jass-zinc') {
+                    return null;
+                }
+            } else {
+                const ext = path.extname(filePath).toLowerCase();
+                if (ext !== '.zn') {
+                    return null;
+                }
             }
 
             // 检查是否是 library 成员访问（如 libraryName.memberName）
@@ -988,4 +995,3 @@ export class ZincHoverProvider implements vscode.HoverProvider {
         }
     }
 }
-

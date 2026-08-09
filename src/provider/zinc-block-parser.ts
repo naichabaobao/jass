@@ -27,8 +27,9 @@ export class ZincBlockHelper {
         dataEnterManager: DataEnterManager
     ): ZincBlockInfo | null {
         try {
-            const filePath = document.uri.fsPath;
-            const blockStatement = dataEnterManager.getBlockStatement(filePath);
+            const isUntitled = document.uri.scheme === 'untitled';
+            const docKey = isUntitled ? document.uri.toString() : document.uri.fsPath;
+            const blockStatement = dataEnterManager.getBlockStatement(docKey);
             if (!blockStatement) {
                 return null;
             }
@@ -42,7 +43,7 @@ export class ZincBlockHelper {
             // 解析 Zinc 代码
             let program: ZincProgram | null = null;
             try {
-                const zincParser = new InnerZincParser(result.content, filePath);
+                const zincParser = new InnerZincParser(result.content, docKey);
                 const statements = zincParser.parse();
                 program = new ZincProgram(statements);
             } catch (error) {
@@ -95,4 +96,3 @@ export class ZincBlockHelper {
         return null;
     }
 }
-
