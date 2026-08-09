@@ -61,10 +61,24 @@ export class HoverProvider implements vscode.HoverProvider {
     ): Promise<vscode.Hover | null> {
         try {
             const filePath = document.uri.fsPath;
+            const isUntitled = document.uri.scheme === 'untitled';
+            // 统一的文件标识：untitled 用 uri 字符串，file 用 fsPath
+            const docKey = isUntitled ? document.uri.toString() : filePath;
+
+            // 对未保存（untitled）的文件，强制解析当前文档内容
+            if (isUntitled) {
+                if (!this.dataEnterManager.getBlockStatement(docKey)) {
+                    await this.dataEnterManager.updateFile(docKey, document.getText());
+                }
+            }
 
             // 兜底：确保所有已打开的 JASS 文件都已解析（不走防抖延迟）
             const openJassDocs = vscode.workspace.textDocuments.filter(doc => {
-                const isJass = this.dataEnterManager.isJassFile(doc.uri.fsPath);
+                const docIsUntitled = doc.uri.scheme === 'untitled';
+                // untitled 文件根据 languageId 判断；file 文件根据扩展名判断
+                const isJass = docIsUntitled
+                    ? doc.languageId === 'jass' || doc.languageId === 'jass-zinc'
+                    : this.dataEnterManager.isJassFile(doc.uri.fsPath);
                 const isIgnored = ['numbers.jass', 'presets.jass', 'strings.jass'].includes(
                     doc.uri.fsPath.split(/[\\/]/).pop()?.toLowerCase() || ''
                 );
@@ -72,7 +86,8 @@ export class HoverProvider implements vscode.HoverProvider {
             });
 
             for (const doc of openJassDocs) {
-                const docPath = doc.uri.fsPath;
+                const docIsUntitled = doc.uri.scheme === 'untitled';
+                const docPath = docIsUntitled ? doc.uri.toString() : doc.uri.fsPath;
                 if (!this.dataEnterManager.getBlockStatement(docPath)) {
                     await this.dataEnterManager.updateFile(docPath, doc.getText());
                 }
@@ -106,8 +121,8 @@ export class HoverProvider implements vscode.HoverProvider {
                 
                 // 使用 Zinc hover provider 的内部方法
                 const hoverContents: vscode.MarkdownString[] = [];
-                (this.zincHoverProvider as any).findSymbolsInProgram(zincBlockInfo.program, symbolName, document.uri.fsPath, hoverContents);
-                (this.zincHoverProvider as any).findLocalVariableHover(zincBlockInfo.program, symbolName, document.uri.fsPath, adjustedPosition, hoverContents);
+                (this.zincHoverProvider as any).findSymbolsInProgram(zincBlockInfo.program, symbolName, docKey, hoverContents);
+                (this.zincHoverProvider as any).findLocalVariableHover(zincBlockInfo.program, symbolName, docKey, adjustedPosition, hoverContents);
                 
                 if (hoverContents.length > 0) {
                     return new vscode.Hover(hoverContents, wordRange);
@@ -148,7 +163,7 @@ export class HoverProvider implements vscode.HoverProvider {
             // 排序：自带库优先 → 当前文件次之 → 其他文件最后
             const allCachedFiles = this.sortCachedFiles(
                 this.dataEnterManager.getAllCachedFiles(),
-                filePath
+                docKey
             );
 
             // 先尝试从缓存获取全局符号
@@ -190,15 +205,15 @@ export class HoverProvider implements vscode.HoverProvider {
 
                 if (globalHoverContents.length > 0) {
                     // 将计算的结果保存到缓存（只保存全局符号，不保存局部变量）
-                    this.saveHoverToCache(symbolName, globalHoverContents, filePath);
+                    this.saveHoverToCache(symbolName, globalHoverContents, docKey);
                 }
             }
 
             // 查找局部变量和参数的悬停信息（仅在当前文件中，因为 local 和 takes 参数是局部作用域的）
             // 局部变量不应该缓存，因为它们是局部作用域的
-            const currentFileBlock = this.dataEnterManager.getBlockStatement(filePath);
+            const currentFileBlock = this.dataEnterManager.getBlockStatement(docKey);
             if (currentFileBlock) {
-                this.findLocalVariableHover(currentFileBlock, symbolName, filePath, position, hoverContents);
+                this.findLocalVariableHover(currentFileBlock, symbolName, docKey, position, hoverContents);
             }
 
 
@@ -455,9 +470,11 @@ export class HoverProvider implements vscode.HoverProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): vscode.MarkdownString | null {
+        const isUntitled = document.uri.scheme === 'untitled';
+        const docKey = isUntitled ? document.uri.toString() : document.uri.fsPath;
         const allCachedFiles = this.sortCachedFiles(
             this.dataEnterManager.getAllCachedFiles(),
-            document.uri.fsPath
+            docKey
         );
         
         for (const filePath of allCachedFiles) {
@@ -535,8 +552,9 @@ export class HoverProvider implements vscode.HoverProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): string | null {
-        const filePath = document.uri.fsPath;
-        const currentBlock = this.dataEnterManager.getBlockStatement(filePath);
+        const isUntitled = document.uri.scheme === 'untitled';
+        const docKey = isUntitled ? document.uri.toString() : document.uri.fsPath;
+        const currentBlock = this.dataEnterManager.getBlockStatement(docKey);
         if (!currentBlock) {
             return null;
         }
@@ -577,7 +595,7 @@ export class HoverProvider implements vscode.HoverProvider {
 
         const sortedFiles = this.sortCachedFiles(
             this.dataEnterManager.getAllCachedFiles(),
-            filePath
+            docKey
         );
         for (const cachedFilePath of sortedFiles) {
             if (this.dataEnterManager.isZincFile(cachedFilePath)) {
@@ -824,8 +842,9 @@ export class HoverProvider implements vscode.HoverProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): StructDeclaration | null {
-        const filePath = document.uri.fsPath;
-        const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+        const isUntitled = document.uri.scheme === 'untitled';
+        const docKey = isUntitled ? document.uri.toString() : document.uri.fsPath;
+        const blockStatement = this.dataEnterManager.getBlockStatement(docKey);
         if (!blockStatement) {
             return null;
         }
@@ -2362,4 +2381,3 @@ export class HoverProvider implements vscode.HoverProvider {
         return null;
     }
 }
-
