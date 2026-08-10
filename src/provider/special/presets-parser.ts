@@ -27,7 +27,10 @@ export class PresetsParser extends SpecialParser {
                 const content = match[1];
                 if (content) {
                     const column = match.index;
-                    const description = this.extractLineComment(line);
+                    // 优先使用同一行的注释，否则使用前置注释
+                    const lineComment = this.extractLineComment(line);
+                    const leadingComment = this.extractLeadingComments(lines, lineIndex);
+                    const description = lineComment || leadingComment;
 
                     literals.push({
                         content,

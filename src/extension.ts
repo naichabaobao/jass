@@ -38,9 +38,15 @@ import { CodeActionProvider } from './provider/code-action-provider';
 import { WorkspaceSymbolProvider } from './provider/workspace-symbol-provider';
 import { DocumentInfoManager } from './provider/document-info-manager';
 
-// JASS 语言选择器
-const jassSelector = { scheme: 'file', language: 'jass' };
-const jassZincSelector = { scheme: 'file', language: 'jass-zinc' };
+// JASS 语言选择器（同时支持已保存的 file 和未保存的 untitled 两种 scheme）
+const jassSelector: vscode.DocumentSelector = [
+    { scheme: 'file', language: 'jass' },
+    { scheme: 'untitled', language: 'jass' }
+];
+const jassZincSelector: vscode.DocumentSelector = [
+    { scheme: 'file', language: 'jass-zinc' },
+    { scheme: 'untitled', language: 'jass-zinc' }
+];
 
 // 全局 DataEnterManager 实例
 let dataEnterManager: DataEnterManager | undefined;
@@ -195,12 +201,12 @@ async function showSupportPrompt(context: vscode.ExtensionContext): Promise<void
     }
 
     if (choice === '稍后提醒') {
-        // 每次打开都询问，因此“稍后提醒”不写入冷却状态
+        // 每次打开都询问，因此"稍后提醒"不写入冷却状态
         return;
     }
 
     if (choice === '狠心拒绝') {
-        // 每次打开都询问，因此“狠心拒绝”不写入冷却状态
+        // 每次打开都询问，因此"狠心拒绝"不写入冷却状态
         return;
     }
 }

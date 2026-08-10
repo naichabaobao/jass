@@ -44,27 +44,27 @@
         "jass.diagnostic": {
           "type": "boolean",
           "default": true,
-          "description": "(Test) diagnostic support,does not support including Lua and pre-processing code"
+          "description": "（测试）诊断支持，不支持包含 Lua 和预处理代码的文件"
         },
         "jass.literal.completion": {
           "type": "boolean",
           "default": false,
-          "description": "Enable literal completion suggestions (string, number, mark). Default: false (disabled) to reduce clutter."
+          "description": "启用字面值补全建议（字符串、数字、四字码）。默认：关闭，以减少干扰。"
         },
         "jass.literal.hover": {
           "type": "boolean",
           "default": true,
-          "description": "Enable literal hover and definition navigation (string, number, mark). Default: true (enabled)."
+          "description": "启用字面值悬停提示和定义跳转（API、函数、变量、字符串、数字、四字码）。默认：开启。"
         },
         "jass.keywordDefinition": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "When enabled, **Go to Definition** (e.g. Ctrl+click) on a JASS/vJass **keyword** opens the built-in keyword doc in a Webview. When disabled (default), keyword clicks do not use this path so normal symbol navigation is unaffected. Reload the window after changing this option."
+          "markdownDescription": "启用后，在 JASS/vJass **关键字**上执行**转到定义**（例如 Ctrl+点击）会在内置 Webview 中打开关键字文档。禁用（默认）时，关键字点击不会走此路径，因此不影响正常符号跳转。修改此选项后需重新加载窗口。"
         },
         "jass.hint": {
           "type": "boolean",
           "default": false,
-          "description": "Enable hint support for function parameters and method calls. This is an experimental feature."
+          "description": "启用函数参数和方法调用的提示支持。这是一项实验性功能。"
         },
         "jass.apiVersion": {
           "type": "string",
@@ -87,49 +87,64 @@
             "2.02",
             "2.03"
           ],
-          "markdownDescription": "Warcraft III API version preference for completion behavior. In legacy versions (`1.20/1.24/1.26a/1.27/1.27a`), APIs marked by `@since` newer than selected version are filtered out. In other versions, newer APIs are de-prioritized. Items without version tags are unchanged."
+          "markdownDescription": "用于补全行为的魔兽争霸 III API 版本偏好。在旧版本（`1.20/1.24/1.26a/1.27/1.27a`）中，`@since` 标记晚于所选版本的 API 将被过滤掉。在其他版本中，较新的 API 将降低优先级。没有版本标记的项目保持不变。"
         },
         "jass.compiler.pjassPath": {
           "type": "string",
+          "format": "file",
           "default": "",
-          "description": "pjass.exe 路径 (用于 JASS 语法检查). 留空则使用扩展内置版本 (out/extern/pjass/pjass.exe)",
-          "scope": "machine-overridable"
+          "description": "pjass.exe 路径（用于 JASS 语法检查）。留空则使用扩展内置版本。",
+          "scope": "machine"
         },
         "jass.compiler.commonJ": {
           "type": "string",
+          "format": "file",
           "default": "",
-          "description": "common.j 路径 (用于显示中文 API 注释). 留空则使用扩展内置版本 (static/common.j)",
-          "scope": "machine-overridable"
+          "description": "common.j 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。",
+          "scope": "machine"
         },
         "jass.compiler.blizzardJ": {
           "type": "string",
+          "format": "file",
           "default": "",
-          "description": "Blizzard.j 路径 (用于显示中文 API 注释). 留空则使用扩展内置版本 (static/blizzard.j)",
-          "scope": "machine-overridable"
+          "description": "Blizzard.j 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。",
+          "scope": "machine"
         },
         "jass.compiler.commonAi": {
           "type": "string",
+          "format": "file",
           "default": "",
-          "description": "common.ai 路径 (用于显示中文 API 注释). 留空则使用扩展内置版本 (static/common.ai)",
-          "scope": "machine-overridable"
+          "description": "common.ai 路径（用于显示中文 API 注释）。留空则使用扩展内置版本。",
+          "scope": "machine"
         },
         "jass.compiler.checkCommonJ": {
           "type": "string",
+          "format": "file",
           "default": "",
-          "description": "编译检查用的 common.j 路径. 留空则使用 jass.compiler.commonJ 路径",
-          "scope": "machine-overridable"
+          "description": "编译检查用的 common.j 路径。留空则使用 jass.compiler.commonJ 路径。",
+          "scope": "machine"
         },
         "jass.compiler.checkBlizzardJ": {
           "type": "string",
+          "format": "file",
           "default": "",
-          "description": "编译检查用的 Blizzard.j 路径. 留空则使用 jass.compiler.blizzardJ 路径",
-          "scope": "machine-overridable"
+          "description": "编译检查用的 Blizzard.j 路径。留空则使用 jass.compiler.blizzardJ 路径。",
+          "scope": "machine"
         },
         "jass.compiler.checkCommonAi": {
           "type": "string",
+          "format": "file",
           "default": "",
-          "description": "编译检查用的 common.ai 路径. 留空则使用 jass.compiler.commonAi 路径",
-          "scope": "machine-overridable"
+          "description": "编译检查用的 common.ai 路径。留空则使用 jass.compiler.commonAi 路径。",
+          "scope": "machine"
+        },
+        "jass.additionalExtensions": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "额外识别的 JASS 文件格式（不含点，如 \"lua\"、\"eai\" 等）。添加后这些扩展名的文件会被当作 JASS 文件处理，支持语法高亮、悬停提示、跳转定义等功能。修改后需重新加载窗口生效。"
         }
       }
     },

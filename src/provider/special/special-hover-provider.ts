@@ -6,15 +6,26 @@ import { SpecialLiteral } from './special-parser';
  * 特殊文件悬停提供者
  */
 export class SpecialHoverProvider implements vscode.HoverProvider {
-    provideHover(
+    async provideHover(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.Hover> {
+    ): Promise<vscode.Hover | null> {
         try {
             // 检查配置是否启用（使用 literal.hover 配置项）
             if (!vscode.workspace.getConfiguration("jass").get<boolean>("literal.hover", true)) {
                 return null;
+            }
+
+            const specialFileManager = SpecialFileManager.getInstance();
+            // 等待初始化完成（最多等待2秒）
+            try {
+                await Promise.race([
+                    specialFileManager.waitForInitialization(),
+                    new Promise<void>((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
+                ]);
+            } catch (e) {
+                console.warn('[SPECIAL-HOVER] Initialization wait failed or timed out');
             }
 
             const hoverContents: vscode.MarkdownString[] = [];
@@ -22,7 +33,6 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
             const textBeforeCursor = lineText.substring(0, position.character);
             const textAfterCursor = lineText.substring(position.character);
 
-            const specialFileManager = SpecialFileManager.getInstance();
             let matchingLiterals: SpecialLiteral[] = [];
             let literalContent: string | null = null;
             let hoverRange: vscode.Range | undefined;
@@ -31,17 +41,16 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
             const stringMatch = textBeforeCursor.match(/"([^"]*)$/);
             if (stringMatch) {
                 const contentBefore = stringMatch[1];
-                const hasClosingQuote = textAfterCursor.startsWith('"');
-                if (hasClosingQuote) {
-                    const contentAfter = textAfterCursor.substring(1).match(/^[^"]*/)?.[0] || '';
+                const quoteStart = textBeforeCursor.lastIndexOf('"');
+                // 在 textAfterCursor 中查找闭合引号（无论光标在哪里）
+                const closingQuoteIndex = textAfterCursor.indexOf('"');
+                if (closingQuoteIndex !== -1) {
+                    const contentAfter = textAfterCursor.substring(0, closingQuoteIndex);
                     literalContent = contentBefore + contentAfter;
-                    // 设置 hover range：从开始引号到结束引号
-                    const quoteStart = textBeforeCursor.lastIndexOf('"');
-                    const quoteEnd = position.character + 1 + contentAfter.length;
+                    const quoteEnd = position.character + closingQuoteIndex + 1;
                     hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
                 } else {
                     literalContent = contentBefore;
-                    const quoteStart = textBeforeCursor.lastIndexOf('"');
                     hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
                 }
                 
@@ -54,16 +63,16 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
                 const markMatch = textBeforeCursor.match(/'([^']*)$/);
                 if (markMatch) {
                     const contentBefore = markMatch[1];
-                    const hasClosingQuote = textAfterCursor.startsWith("'");
-                    if (hasClosingQuote) {
-                        const contentAfter = textAfterCursor.substring(1).match(/^[^']*/)?.[0] || '';
+                    const quoteStart = textBeforeCursor.lastIndexOf("'");
+                    // 在 textAfterCursor 中查找闭合引号（无论光标在哪里）
+                    const closingQuoteIndex = textAfterCursor.indexOf("'");
+                    if (closingQuoteIndex !== -1) {
+                        const contentAfter = textAfterCursor.substring(0, closingQuoteIndex);
                         literalContent = contentBefore + contentAfter;
-                        const quoteStart = textBeforeCursor.lastIndexOf("'");
-                        const quoteEnd = position.character + 1 + contentAfter.length;
+                        const quoteEnd = position.character + closingQuoteIndex + 1;
                         hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
                     } else {
                         literalContent = contentBefore;
-                        const quoteStart = textBeforeCursor.lastIndexOf("'");
                         hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
                     }
                     

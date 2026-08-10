@@ -197,6 +197,7 @@ export class DataEnterManager {
     private readonly configReloadCallbacks: Array<() => void> = [];
     private hasInitializedWorkspace = false;
     private hasLoggedEmptyCacheWarning = false;
+    private hasLoadedStandardLibraries = false;
 
     constructor(options: DataEnterOptions = {}) {
         this.options = {
@@ -227,6 +228,14 @@ export class DataEnterManager {
         this.loadConfig();
 
         // 不在这里设置监听器，监听器在 initializeWorkspace 中设置
+    }
+
+    /**
+     * 规范化文件路径（统一斜杠为正斜杠，统一小写）
+     * 用于缓存键比较，避免因路径大小写/斜杠不同导致重复缓存
+     */
+    private normalizeFilePath(filePath: string): string {
+        return filePath.replace(/\\/g, '/').toLowerCase();
     }
 
     // 已移除 .mate 持久化功能，缓存仅保留内存态。
@@ -384,10 +393,16 @@ export class DataEnterManager {
      * 处理文件更新
      */
     private async handleFileUpdate(filePath: string, content?: string): Promise<void> {
+        // 规范化路径，避免大小写/斜杠不一致导致重复缓存
+        const normalizedKey = this.normalizeFilePath(filePath);
+        // 保留原始路径用于显示（优先保留已缓存的原始路径）
+        const existingItem = this.cache.get(normalizedKey);
+        const displayPath = existingItem ? (existingItem as any)._originalPath || filePath : filePath;
+        
         const isImmutable = this.isImmutableFile(filePath);
         
         // 如果是不可变文件且已缓存，直接返回（不更新）
-        if (isImmutable && this.cache.has(filePath)) {
+        if (isImmutable && this.cache.has(normalizedKey)) {
             return;
         }
 
@@ -539,29 +554,30 @@ export class DataEnterManager {
 
         this.applyIgnoreDirectivesToAllErrors(errors, ignoreDirectives);
         
-        // 存储到缓存
+        // 存储到缓存（使用规范化路径作为 key，避免大小写/斜杠不一致导致重复）
         if (blockStatement || zincProgram) {
             const stats = fs.existsSync(filePath) ? fs.statSync(filePath) : { mtimeMs: Date.now() };
-            const cacheItem = this.cache.get(filePath);
-            this.cache.set(filePath, {
+            const cacheItem = this.cache.get(normalizedKey);
+            this.cache.set(normalizedKey, {
                 blockStatement: blockStatement || null,
                 zincProgram: zincProgram || undefined,
                 lastModified: stats.mtimeMs,
                 version: (cacheItem?.version || 0) + 1,
                 isImmutable,
                 content, // 存储原始内容用于提取注释
-                errors: errors // 存储错误信息
-            });
+                errors: errors, // 存储错误信息
+                _originalPath: displayPath // 保存原始路径用于显示
+            } as any);
 
-            // 如果是不可变文件，添加到集合中
+            // 如果是不可变文件，添加到集合中（使用规范化路径）
             if (isImmutable) {
-                this.immutableFiles.add(filePath);
+                this.immutableFiles.add(normalizedKey);
             }
 
             // 3. 更新补全项缓存（异步，不阻塞）
             // 只对非 Zinc 文件更新补全缓存（Zinc 文件由 ZincCompletionProvider 处理）
             if (blockStatement) {
-                this.updateCompletionCache(filePath, blockStatement);
+                this.updateCompletionCache(displayPath, blockStatement);
             }
 
             // 4. 清除跳转缓存（因为文件内容已更新，需要重新计算）
@@ -819,37 +835,112 @@ export class DataEnterManager {
 
     /**
      * 检查文件是否为不可变文件（静态文件）
+     * 只有在扩展 static 目录或工作区 static 目录下的文件才是不可变的
      */
-    private isImmutableFile(filePath: string): boolean {
-        const fileName = path.basename(filePath).toLowerCase();
+    public isImmutableFile(filePath: string): boolean {
         const normalizedPath = filePath.replace(/\\/g, '/').toLowerCase();
 
-        // 检查是否在扩展的 static 目录下
-        const extensionStaticDir = path.resolve(__dirname, "../../../static").replace(/\\/g, '/').toLowerCase();
-        if (normalizedPath.includes(extensionStaticDir)) {
-            return true;
-        }
-
         // 检查是否在工作区的 static 目录下
-        if (normalizedPath.includes('/static/') || normalizedPath.includes('\\static\\')) {
+        if (normalizedPath.includes('/static/')) {
             return true;
         }
 
-        // 标准库文件也是不可变的
-        if (STANDARD_LIBRARY_ORDER.includes(fileName)) {
-            return true;
+        // 尝试多个可能的扩展 static 目录路径
+        const possiblePaths = [
+            path.resolve(__dirname, "../../../static"),
+            path.resolve(__dirname, "../../../../static"),
+            path.resolve(__dirname, "../../static"),
+        ];
+
+        for (const possiblePath of possiblePaths) {
+            try {
+                if (fs.existsSync(possiblePath)) {
+                    const normalizedStaticDir = possiblePath.replace(/\\/g, '/').toLowerCase();
+                    if (normalizedPath.includes(normalizedStaticDir)) {
+                        return true;
+                    }
+                }
+            } catch {
+                // 忽略访问错误
+            }
         }
 
         return false;
     }
 
     /**
+     * 推断项目根目录（单文件模式下使用）
+     * 从给定文件向上查找，直到找到包含常见根标记文件或包含多个 JASS 文件的目录
+     */
+    private inferProjectRoot(fromFile: string): string | null {
+        let currentDir = path.dirname(fromFile);
+        const jassExtensions = ['.j', '.jass', '.ai', '.zn'];
+        const rootMarkers = ['common.j', 'Blizzard.j', 'jass.config.json'];
+
+        // 向上查找最多10层
+        for (let i = 0; i < 10; i++) {
+            // 检查是否有根标记文件
+            for (const marker of rootMarkers) {
+                try {
+                    if (fs.existsSync(path.join(currentDir, marker))) {
+                        return currentDir;
+                    }
+                } catch {
+                    // 忽略访问错误继续
+                }
+            }
+
+            // 检查当前目录是否有3个以上的JASS文件
+            try {
+                const entries = fs.readdirSync(currentDir);
+                const jassCount = entries.filter(f => jassExtensions.includes(path.extname(f).toLowerCase())).length;
+                if (jassCount >= 3) {
+                    return currentDir;
+                }
+            } catch {
+                // 忽略访问错误继续
+            }
+
+            // 向上一级
+            const parentDir = path.dirname(currentDir);
+            if (parentDir === currentDir) {
+                break; // 已经到达根目录
+            }
+            currentDir = parentDir;
+        }
+
+        return null;
+    }
+
+    /**
+     * 获取所有合法的 JASS 文件扩展名（含配置中用户自定义的扩展名）
+     */
+    public getValidExtensions(): string[] {
+        const baseExtensions = ['.j', '.jass', '.ai', '.zn'];
+        try {
+            const additional = vscode.workspace.getConfiguration('jass').get<string[]>('additionalExtensions', []);
+            if (Array.isArray(additional) && additional.length > 0) {
+                for (const ext of additional) {
+                    if (typeof ext === 'string' && ext.trim()) {
+                        const normalized = ext.trim().toLowerCase().startsWith('.') ? ext.trim().toLowerCase() : '.' + ext.trim().toLowerCase();
+                        if (!baseExtensions.includes(normalized)) {
+                            baseExtensions.push(normalized);
+                        }
+                    }
+                }
+            }
+        } catch {
+            // 忽略配置读取错误
+        }
+        return baseExtensions;
+    }
+
+    /**
      * 检查文件是否为 JASS 文件
      */
-    private isJassFile(filePath: string): boolean {
+    public isJassFile(filePath: string): boolean {
         const ext = path.extname(filePath).toLowerCase();
-        const validExtensions = ['.j', '.jass', '.ai', '.zn'];
-        return validExtensions.includes(ext);
+        return this.getValidExtensions().includes(ext);
     }
 
     /**
@@ -1113,7 +1204,7 @@ export class DataEnterManager {
      * 获取文件的 BlockStatement
      */
     public getBlockStatement(filePath: string): BlockStatement | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.blockStatement || null;
     }
 
@@ -1121,7 +1212,7 @@ export class DataEnterManager {
      * 获取文件的 ZincProgram（仅用于 .zn 文件）
      */
     public getZincProgram(filePath: string): ZincProgram | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.zincProgram || null;
     }
 
@@ -1137,7 +1228,7 @@ export class DataEnterManager {
      * 获取文件的错误集合
      */
     public getErrors(filePath: string): ErrorCollection | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.errors || null;
     }
 
@@ -1145,7 +1236,7 @@ export class DataEnterManager {
      * 获取文件的原始内容（用于提取注释）
      */
     public getFileContent(filePath: string): string | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         return cacheItem?.content || null;
     }
 
@@ -1153,7 +1244,7 @@ export class DataEnterManager {
      * 获取文件缓存信息
      */
     public getCacheInfo(filePath: string): { lastModified: number; version: number } | null {
-        const cacheItem = this.cache.get(filePath);
+        const cacheItem = this.cache.get(this.normalizeFilePath(filePath));
         if (!cacheItem) {
             return null;
         }
@@ -1186,9 +1277,14 @@ export class DataEnterManager {
 
     /**
      * 获取所有缓存的文件路径
+     * 返回原始显示路径（保留用户看到的路径大小写）
      */
     public getAllCachedFiles(): string[] {
-        const files = Array.from(this.cache.keys());
+        const files: string[] = [];
+        for (const [key, item] of this.cache.entries()) {
+            const displayPath = (item as any)._originalPath || key;
+            files.push(displayPath);
+        }
         // 调试：仅在工作区初始化完成后提示一次，避免 hover 期间重复刷屏
         if (files.length === 0 && this.hasInitializedWorkspace && !this.hasLoggedEmptyCacheWarning) {
             console.warn('[DataEnterManager] getAllCachedFiles: cache is empty');
@@ -1297,26 +1393,15 @@ export class DataEnterManager {
         this.hasInitializedWorkspace = false;
 
         if (hasWorkspace && workspaceRoot) {
-            console.log('📦 Phase 1: Collecting TextMacros...');
-            // 阶段1：收集所有文件中的 textmacro 定义
+            console.log('📦 Loading standard libraries for workspace mode...');
             await this.collectAllTextMacros(workspaceRoot);
-            
-            const stats = this.textMacroRegistry.getStats();
-            console.log(`✅ Collected ${stats.totalMacros} textmacros from ${stats.totalFiles} files`);
-
-            console.log('📦 Phase 2: Parsing files with TextMacro expansion...');
-            // 阶段2：解析所有文件（此时 runtextmacro 可以正确展开）
             await this.loadStandardLibraries(workspaceRoot);
             await this.loadStaticFiles(workspaceRoot);
-            await this.loadWorkspaceFiles(workspaceRoot);
-            
+            this.hasLoadedStandardLibraries = true;
+
             const cacheStats = this.getCacheStats();
-            console.log('✅ Workspace initialization complete');
+            console.log(`✅ Workspace initialization complete (only standard libraries loaded)`);
             console.log(`📊 Cache Stats: ${cacheStats.totalFiles} files cached (${cacheStats.immutableFiles} immutable)`);
-            if (cacheStats.totalFiles > 0) {
-                const fileList = cacheStats.cachedFiles.slice(0, 10).map(f => path.basename(f)).join(', ');
-                console.log(`📁 Sample cached files: ${fileList}${cacheStats.cachedFiles.length > 10 ? '...' : ''}`);
-            }
         } else {
             console.log('📂 No workspace folder; single-file mode enabled (parse on open/edit).');
         }
@@ -1328,13 +1413,19 @@ export class DataEnterManager {
             this.setupFileWatcher();
         }
 
-        // 无工作区时：对当前已打开的 JASS 文档做一次解析，否则已打开的单文件不会进缓存
-        if (!hasWorkspace) {
-            vscode.workspace.textDocuments.forEach((doc) => {
-                if (this.isJassFile(doc.uri.fsPath) && !this.shouldIgnoreFile(doc.uri.fsPath)) {
-                    this.handleFileChange(doc.uri.fsPath);
-                }
-            });
+        // 无论是否有工作区：对当前已打开的 JASS 文档做一次同步解析
+        const jassDocs = vscode.workspace.textDocuments.filter(doc => 
+            this.isJassFile(doc.uri.fsPath) && !this.shouldIgnoreFile(doc.uri.fsPath)
+        );
+
+        if (jassDocs.length > 0) {
+            await this.ensureStandardLibrariesLoaded(jassDocs[0].uri.fsPath);
+        }
+
+        for (const doc of jassDocs) {
+            if (!this.cache.has(doc.uri.fsPath)) {
+                await this.handleFileUpdate(doc.uri.fsPath, doc.getText());
+            }
         }
 
         this.hasInitializedWorkspace = true;
@@ -1502,22 +1593,25 @@ export class DataEnterManager {
 
         this.disposables.push(this.fileWatcher);
 
-        // 监听文档打开事件（立即解析，确保 outline 可以显示）
-        const openDisposable = vscode.workspace.onDidOpenTextDocument((document) => {
+        // 监听文档打开事件（立即同步解析，确保 hover 立即可用）
+        const openDisposable = vscode.workspace.onDidOpenTextDocument(async (document) => {
             const filePath = document.uri.fsPath;
-            // 只处理 JASS 文件
             if (!this.isJassFile(filePath)) {
                 return;
             }
-            // 如果是不可变文件或应该忽略的文件，跳过
             if (this.isImmutableFile(filePath) || this.shouldIgnoreFile(filePath)) {
                 return;
             }
-            // 如果文件还没有被解析，立即解析
+
+            const hasWorkspace = !!vscode.workspace.workspaceFolders?.[0];
+            if (!hasWorkspace && !this.hasLoadedStandardLibraries) {
+                await this.ensureStandardLibrariesLoaded(filePath);
+            }
+
             if (!this.cache.has(filePath)) {
                 const content = document.getText();
                 if (content) {
-                    this.handleFileChange(filePath);
+                    await this.handleFileUpdate(filePath, content);
                 }
             }
         });
@@ -1643,7 +1737,7 @@ export class DataEnterManager {
                 } else if (entry.isFile()) {
                     // 检查文件扩展名
                     const ext = path.extname(entry.name).toLowerCase();
-                    if (['.j', '.jass', '.ai', '.zn'].includes(ext)) {
+                    if (this.getValidExtensions().includes(ext)) {
                         try {
                             const content = fs.readFileSync(fullPath, 'utf-8');
                             this.textMacroCollector.collectFromFile(fullPath, content, collection);
@@ -1655,6 +1749,44 @@ export class DataEnterManager {
             }
         } catch (error) {
             console.error(`Failed to read directory ${dir}:`, error);
+        }
+    }
+
+    /**
+     * 确保标准库和静态文件已加载（单文件模式下使用）
+     * 可以在打开文件时被调用，以延迟加载标准库
+     */
+    private async ensureStandardLibrariesLoaded(fromFile?: string): Promise<void> {
+        if (this.hasLoadedStandardLibraries) {
+            return;
+        }
+
+        // 确定根目录
+        let rootDir: string | undefined = this.workspaceRoot;
+        if (!rootDir && fromFile) {
+            rootDir = this.inferProjectRoot(fromFile) || path.dirname(fromFile);
+        }
+        if (!rootDir) {
+            return;
+        }
+
+        if (!this.workspaceRoot) {
+            this.workspaceRoot = rootDir;
+        }
+
+        console.log(`[INIT] Loading standard libraries for single-file mode, root="${rootDir}"`);
+        
+        await this.collectAllTextMacros(rootDir);
+        await this.loadStandardLibraries(rootDir);
+        await this.loadStaticFiles(rootDir);
+
+        this.hasLoadedStandardLibraries = true;
+
+        const cacheStats = this.getCacheStats();
+        console.log(`[INIT] Single-file mode: ${cacheStats.totalFiles} files cached (${cacheStats.immutableFiles} immutable)`);
+        if (cacheStats.totalFiles > 0) {
+            const fileList = cacheStats.cachedFiles.slice(0, 10).map(f => path.basename(f)).join(', ');
+            console.log(`[INIT] Sample cached files: ${fileList}${cacheStats.cachedFiles.length > 10 ? '...' : ''}`);
         }
     }
 
@@ -1808,7 +1940,7 @@ export class DataEnterManager {
                         await loadFilesInDir(fullPath, baseDir);
                     } else if (entry.isFile()) {
                         const ext = path.extname(entry.name).toLowerCase();
-                        if (['.j', '.jass', '.ai', '.zn'].includes(ext) && !this.shouldIgnoreFile(fullPath)) {
+                        if (this.getValidExtensions().includes(ext) && !this.shouldIgnoreFile(fullPath)) {
                             try {
                                 totalFiles++;
                                 const content = fs.readFileSync(fullPath, 'utf-8');
@@ -1869,7 +2001,7 @@ export class DataEnterManager {
                         await loadFilesInDir(fullPath);
                     } else if (entry.isFile()) {
                         const ext = path.extname(entry.name).toLowerCase();
-                        if (['.j', '.jass', '.ai', '.zn'].includes(ext)) {
+                        if (this.getValidExtensions().includes(ext)) {
                             // 只处理工作区文件，排除静态文件和标准库文件
                             if (this.isWorkspaceFile(fullPath) && 
                                 !this.isImmutableFile(fullPath) && 

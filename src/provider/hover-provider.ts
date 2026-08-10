@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { DataEnterManager } from './data-enter-manager';
 import { DocumentInfoManager } from './document-info-manager';
 import type { DocumentInfo } from './document-info-manager';
@@ -53,12 +54,45 @@ export class HoverProvider implements vscode.HoverProvider {
         }
     }
 
-    provideHover(
+    async provideHover(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.Hover> {
+    ): Promise<vscode.Hover | null> {
         try {
+            const filePath = document.uri.fsPath;
+            const isUntitled = document.uri.scheme === 'untitled';
+            // 统一的文件标识：untitled 用 uri 字符串，file 用 fsPath
+            const docKey = isUntitled ? document.uri.toString() : filePath;
+
+            // 对未保存（untitled）的文件，强制解析当前文档内容
+            if (isUntitled) {
+                if (!this.dataEnterManager.getBlockStatement(docKey)) {
+                    await this.dataEnterManager.updateFile(docKey, document.getText());
+                }
+            }
+
+            // 兜底：确保所有已打开的 JASS 文件都已解析（不走防抖延迟）
+            const openJassDocs = vscode.workspace.textDocuments.filter(doc => {
+                const docIsUntitled = doc.uri.scheme === 'untitled';
+                // untitled 文件根据 languageId 判断；file 文件根据扩展名判断
+                const isJass = docIsUntitled
+                    ? doc.languageId === 'jass' || doc.languageId === 'jass-zinc'
+                    : this.dataEnterManager.isJassFile(doc.uri.fsPath);
+                const isIgnored = ['numbers.jass', 'presets.jass', 'strings.jass'].includes(
+                    doc.uri.fsPath.split(/[\\/]/).pop()?.toLowerCase() || ''
+                );
+                return isJass && !isIgnored;
+            });
+
+            for (const doc of openJassDocs) {
+                const docIsUntitled = doc.uri.scheme === 'untitled';
+                const docPath = docIsUntitled ? doc.uri.toString() : doc.uri.fsPath;
+                if (!this.dataEnterManager.getBlockStatement(docPath)) {
+                    await this.dataEnterManager.updateFile(docPath, doc.getText());
+                }
+            }
+
             // 首先检查是否是字符代码（如 'az09'）
             const charCodeHover = this.checkCharacterCodeHover(document, position);
             if (charCodeHover) {
@@ -87,8 +121,8 @@ export class HoverProvider implements vscode.HoverProvider {
                 
                 // 使用 Zinc hover provider 的内部方法
                 const hoverContents: vscode.MarkdownString[] = [];
-                (this.zincHoverProvider as any).findSymbolsInProgram(zincBlockInfo.program, symbolName, document.uri.fsPath, hoverContents);
-                (this.zincHoverProvider as any).findLocalVariableHover(zincBlockInfo.program, symbolName, document.uri.fsPath, adjustedPosition, hoverContents);
+                (this.zincHoverProvider as any).findSymbolsInProgram(zincBlockInfo.program, symbolName, docKey, hoverContents);
+                (this.zincHoverProvider as any).findLocalVariableHover(zincBlockInfo.program, symbolName, docKey, adjustedPosition, hoverContents);
                 
                 if (hoverContents.length > 0) {
                     return new vscode.Hover(hoverContents, wordRange);
@@ -123,11 +157,14 @@ export class HoverProvider implements vscode.HoverProvider {
             }
 
             const hoverContents: vscode.MarkdownString[] = [];
-            const filePath = document.uri.fsPath;
 
             // 从所有缓存的文件中全局查找匹配的符号（函数、全局变量、类型、结构体等）
-            // 包括工作目录和 static 目录下的所有文件，它们都一视同仁
-            const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+            // 包括工作目录和 static 目录下的所有文件
+            // 排序：自带库优先 → 当前文件次之 → 其他文件最后
+            const allCachedFiles = this.sortCachedFiles(
+                this.dataEnterManager.getAllCachedFiles(),
+                docKey
+            );
 
             // 先尝试从缓存获取全局符号
             const cachedItems = this.hoverCache.getBySymbolName(symbolName);
@@ -168,15 +205,15 @@ export class HoverProvider implements vscode.HoverProvider {
 
                 if (globalHoverContents.length > 0) {
                     // 将计算的结果保存到缓存（只保存全局符号，不保存局部变量）
-                    this.saveHoverToCache(symbolName, globalHoverContents, filePath);
+                    this.saveHoverToCache(symbolName, globalHoverContents, docKey);
                 }
             }
 
             // 查找局部变量和参数的悬停信息（仅在当前文件中，因为 local 和 takes 参数是局部作用域的）
             // 局部变量不应该缓存，因为它们是局部作用域的
-            const currentFileBlock = this.dataEnterManager.getBlockStatement(filePath);
+            const currentFileBlock = this.dataEnterManager.getBlockStatement(docKey);
             if (currentFileBlock) {
-                this.findLocalVariableHover(currentFileBlock, symbolName, filePath, position, hoverContents);
+                this.findLocalVariableHover(currentFileBlock, symbolName, docKey, position, hoverContents);
             }
 
 
@@ -216,6 +253,38 @@ export class HoverProvider implements vscode.HoverProvider {
             console.error('Error in provideHover:', error);
             return null;
         }
+    }
+
+    /**
+     * 规范化文件路径（统一斜杠和大小写，用于比较）
+     */
+    private normalizePath(filePath: string): string {
+        return filePath.replace(/\\/g, '/').toLowerCase();
+    }
+
+    /**
+     * 对缓存文件列表排序：
+     * 1. 自带库（static/不可变文件）优先 → 确保中文注释在最前
+     * 2. 当前打开的文件次之
+     * 3. 其他文件最后
+     */
+    private sortCachedFiles(filePaths: string[], currentFilePath?: string): string[] {
+        const normalizedCurrent = currentFilePath ? this.normalizePath(currentFilePath) : undefined;
+        return [...filePaths].sort((a, b) => {
+            const aIsImmutable = this.dataEnterManager.isImmutableFile(a);
+            const bIsImmutable = this.dataEnterManager.isImmutableFile(b);
+            if (aIsImmutable !== bIsImmutable) {
+                return aIsImmutable ? -1 : 1;
+            }
+            if (normalizedCurrent) {
+                const aIsCurrent = this.normalizePath(a) === normalizedCurrent;
+                const bIsCurrent = this.normalizePath(b) === normalizedCurrent;
+                if (aIsCurrent !== bIsCurrent) {
+                    return aIsCurrent ? -1 : 1;
+                }
+            }
+            return 0;
+        });
     }
 
     private isStatementAllowedForApiVersion(stmt: Statement, filePath: string): boolean {
@@ -401,7 +470,12 @@ export class HoverProvider implements vscode.HoverProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): vscode.MarkdownString | null {
-        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        const isUntitled = document.uri.scheme === 'untitled';
+        const docKey = isUntitled ? document.uri.toString() : document.uri.fsPath;
+        const allCachedFiles = this.sortCachedFiles(
+            this.dataEnterManager.getAllCachedFiles(),
+            docKey
+        );
         
         for (const filePath of allCachedFiles) {
             // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
@@ -478,8 +552,9 @@ export class HoverProvider implements vscode.HoverProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): string | null {
-        const filePath = document.uri.fsPath;
-        const currentBlock = this.dataEnterManager.getBlockStatement(filePath);
+        const isUntitled = document.uri.scheme === 'untitled';
+        const docKey = isUntitled ? document.uri.toString() : document.uri.fsPath;
+        const currentBlock = this.dataEnterManager.getBlockStatement(docKey);
         if (!currentBlock) {
             return null;
         }
@@ -518,7 +593,11 @@ export class HoverProvider implements vscode.HoverProvider {
             }
         }
 
-        for (const cachedFilePath of this.dataEnterManager.getAllCachedFiles()) {
+        const sortedFiles = this.sortCachedFiles(
+            this.dataEnterManager.getAllCachedFiles(),
+            docKey
+        );
+        for (const cachedFilePath of sortedFiles) {
             if (this.dataEnterManager.isZincFile(cachedFilePath)) {
                 continue;
             }
@@ -763,8 +842,9 @@ export class HoverProvider implements vscode.HoverProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): StructDeclaration | null {
-        const filePath = document.uri.fsPath;
-        const blockStatement = this.dataEnterManager.getBlockStatement(filePath);
+        const isUntitled = document.uri.scheme === 'untitled';
+        const docKey = isUntitled ? document.uri.toString() : document.uri.fsPath;
+        const blockStatement = this.dataEnterManager.getBlockStatement(docKey);
         if (!blockStatement) {
             return null;
         }
@@ -1963,7 +2043,9 @@ export class HoverProvider implements vscode.HoverProvider {
      * 查找模块定义
      */
     private findModuleDefinition(moduleName: string): { filePath: string } | null {
-        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        const allCachedFiles = this.sortCachedFiles(
+            this.dataEnterManager.getAllCachedFiles()
+        );
         
         for (const cachedFilePath of allCachedFiles) {
             // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
@@ -2009,7 +2091,9 @@ export class HoverProvider implements vscode.HoverProvider {
      * 查找结构体定义
      */
     private findStructDefinition(structName: string): { filePath: string } | null {
-        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        const allCachedFiles = this.sortCachedFiles(
+            this.dataEnterManager.getAllCachedFiles()
+        );
         
         for (const cachedFilePath of allCachedFiles) {
             // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
@@ -2032,7 +2116,9 @@ export class HoverProvider implements vscode.HoverProvider {
     }
 
     private findInterfaceDefinition(interfaceName: string): { filePath: string } | null {
-        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        const allCachedFiles = this.sortCachedFiles(
+            this.dataEnterManager.getAllCachedFiles()
+        );
 
         for (const cachedFilePath of allCachedFiles) {
             if (this.dataEnterManager.isZincFile(cachedFilePath)) {
@@ -2147,7 +2233,10 @@ export class HoverProvider implements vscode.HoverProvider {
 
         // 从 hoverContents 中提取信息并分组到各个文件
         // 注意：hoverContents 可能包含多个文件的符号，需要按文件分组
-        const allCachedFiles = this.dataEnterManager.getAllCachedFiles();
+        const allCachedFiles = this.sortCachedFiles(
+            this.dataEnterManager.getAllCachedFiles(),
+            currentFilePath
+        );
         
         for (const cachedFilePath of allCachedFiles) {
             // 跳过 .zn 文件，因为它们使用 ZincProgram 而不是 BlockStatement
@@ -2292,4 +2381,3 @@ export class HoverProvider implements vscode.HoverProvider {
         return null;
     }
 }
-
