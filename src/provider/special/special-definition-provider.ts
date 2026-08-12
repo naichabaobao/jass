@@ -14,7 +14,8 @@ export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
     ): vscode.ProviderResult<vscode.Definition | vscode.LocationLink[]> {
         try {
             // 检查配置是否启用（使用 literal.hover 配置项）
-            if (!vscode.workspace.getConfiguration("jass").get<boolean>("literal.hover", true)) {
+            const hoverEnabled = vscode.workspace.getConfiguration("jass").get<boolean>("literal.hover", true);
+            if (!hoverEnabled) {
                 return null;
             }
 
@@ -27,66 +28,68 @@ export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
             let matchingLiterals: SpecialLiteral[] = [];
             let literalContent: string | null = null;
 
-            // 检测是否在字符串字面量中（双引号）
-            const stringMatch = textBeforeCursor.match(/"([^"]*)$/);
-            if (stringMatch) {
-                // 检查光标是否在字符串内（后面还有结束引号或没有引号）
-                const contentBefore = stringMatch[1];
-                // 检查后面是否有结束引号
-                const hasClosingQuote = textAfterCursor.startsWith('"');
-                // 提取完整内容（包括光标后的部分，直到结束引号）
-                if (hasClosingQuote) {
-                    const contentAfter = textAfterCursor.substring(1).match(/^[^"]*/)?.[0] || '';
-                    literalContent = contentBefore + contentAfter;
-                } else {
-                    // 没有结束引号，只使用光标前的内容
-                    literalContent = contentBefore;
-                }
-                
+            // 统计光标前引号数量，判断是否真正在未闭合的字面量内
+            const countChar = (str: string, ch: string) => {
+                let count = 0;
+                for (const c of str) if (c === ch) count++;
+                return count;
+            };
+            const doubleQuoteCount = countChar(textBeforeCursor, '"');
+            const singleQuoteCount = countChar(textBeforeCursor, "'");
+            const insideString = doubleQuoteCount % 2 === 1;
+            const insideMark = singleQuoteCount % 2 === 1;
+
+            // 先检测数字字面量（与引号无关，不会误匹配）
+            const numberMatch = textBeforeCursor.match(/\b(0[xX][0-9a-fA-F]*|0[bB][01]*|\$[0-9a-fA-F]*|[0-9]+)$/);
+            if (numberMatch && !insideString && !insideMark) {
+                const numberBefore = numberMatch[0];
+                const numberAfterMatch = textAfterCursor.match(/^[0-9a-fA-F]*/);
+                const numberAfter = numberAfterMatch ? numberAfterMatch[0] : '';
+                literalContent = numberBefore + numberAfter;
+
                 if (literalContent) {
                     matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
                 }
             }
-            // 检测是否在标记字面量中（单引号）
-            else {
-                const markMatch = textBeforeCursor.match(/'([^']*)$/);
-                if (markMatch) {
-                    const contentBefore = markMatch[1];
-                    const hasClosingQuote = textAfterCursor.startsWith("'");
-                    if (hasClosingQuote) {
-                        const contentAfter = textAfterCursor.substring(1).match(/^[^']*/)?.[0] || '';
-                        literalContent = contentBefore + contentAfter;
-                    } else {
-                        literalContent = contentBefore;
-                    }
-                    
-                    if (literalContent) {
-                        matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
-                    }
+            // 检测是否在字符串字面量中（双引号） - 必须真正在未闭合引号内
+            else if (insideString) {
+                const quoteStart = textBeforeCursor.lastIndexOf('"');
+                const contentBefore = textBeforeCursor.substring(quoteStart + 1);
+                const hasClosingQuote = textAfterCursor.startsWith('"');
+                if (hasClosingQuote) {
+                    const contentAfter = textAfterCursor.substring(1).match(/^[^"]*/)?.[0] || '';
+                    literalContent = contentBefore + contentAfter;
+                } else {
+                    literalContent = contentBefore;
                 }
-                // 检测是否在数字字面量中
-                else {
-                    const numberMatch = textBeforeCursor.match(/\b(0[xX][0-9a-fA-F]*|0[bB][01]*|\$[0-9a-fA-F]*|[0-9]+)$/);
-                    if (numberMatch) {
-                        const numberBefore = numberMatch[0];
-                        // 检查后面是否还有数字字符
-                        const numberAfterMatch = textAfterCursor.match(/^[0-9a-fA-F]*/);
-                        const numberAfter = numberAfterMatch ? numberAfterMatch[0] : '';
-                        literalContent = numberBefore + numberAfter;
-                        
-                        if (literalContent) {
-                            matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
-                        }
-                    }
-                    // 如果都不匹配，尝试使用单词范围
-                    else {
-                        const wordRange = document.getWordRangeAtPosition(position);
-                        if (wordRange) {
-                            const symbolName = document.getText(wordRange);
-                            if (symbolName) {
-                                matchingLiterals = specialFileManager.findLiteralsByContent(symbolName);
-                            }
-                        }
+
+                if (literalContent) {
+                    matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
+                }
+            }
+            // 检测是否在标记字面量中（单引号/四字码） - 必须真正在未闭合引号内
+            else if (insideMark) {
+                const quoteStart = textBeforeCursor.lastIndexOf("'");
+                const contentBefore = textBeforeCursor.substring(quoteStart + 1);
+                const hasClosingQuote = textAfterCursor.startsWith("'");
+                if (hasClosingQuote) {
+                    const contentAfter = textAfterCursor.substring(1).match(/^[^']*/)?.[0] || '';
+                    literalContent = contentBefore + contentAfter;
+                } else {
+                    literalContent = contentBefore;
+                }
+
+                if (literalContent) {
+                    matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
+                }
+            }
+            // 如果都不匹配，尝试使用单词范围
+            else {
+                const wordRange = document.getWordRangeAtPosition(position);
+                if (wordRange) {
+                    const symbolName = document.getText(wordRange);
+                    if (symbolName) {
+                        matchingLiterals = specialFileManager.findLiteralsByContent(symbolName);
                     }
                 }
             }
@@ -94,32 +97,23 @@ export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
             // 创建位置信息
             for (const literal of matchingLiterals) {
                 try {
-                    // 确保文件路径存在
-                    const fs = require('fs');
                     if (!fs.existsSync(literal.filePath)) {
-                        console.warn(`[SpecialDefinitionProvider] File not found: ${literal.filePath}`);
                         continue;
                     }
 
                     const uri = vscode.Uri.file(literal.filePath);
-                    
-                    // 计算正确的范围
-                    // literal.column 是引号在行中的起始位置（match.index）
-                    // 对于字符串和标记，column 是开始引号的位置
-                    // 对于数字，column 是数字的起始位置
+
                     let startColumn: number;
                     let endColumn: number;
-                    
+
                     if (literal.type === 'string' || literal.type === 'mark') {
-                        // 字符串/标记：column 是引号位置，内容从 column+1 开始
-                        startColumn = literal.column; // 开始引号位置
-                        endColumn = literal.column + 1 + literal.content.length; // 结束引号位置
+                        startColumn = literal.column;
+                        endColumn = literal.column + 1 + literal.content.length;
                     } else {
-                        // 数字：column 是数字的起始位置
                         startColumn = literal.column;
                         endColumn = literal.column + literal.content.length;
                     }
-                    
+
                     const location = new vscode.Location(
                         uri,
                         new vscode.Range(
@@ -131,12 +125,11 @@ export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
                     );
                     locations.push(location);
                 } catch (error) {
-                    console.error(`[SpecialDefinitionProvider] Failed to create location for ${literal.filePath}:`, error);
+                    console.error(`[SpecialDefinitionProvider] Failed to create location:`, error);
                 }
             }
 
             if (locations.length > 0) {
-                console.log(`[SpecialDefinitionProvider] Found ${locations.length} definition(s) for "${literalContent || 'unknown'}"`);
                 return locations;
             }
 
@@ -147,4 +140,3 @@ export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
         }
     }
 }
-
