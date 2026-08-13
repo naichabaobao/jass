@@ -1,8 +1,19 @@
+#### 1.9.18
+- 修复 `@ignore-file-errors` 整文件忽略注解：原实现仅屏蔽 error 等级诊断，现按 `error > warning > info` 等级联屏蔽（与 `jass.config.json` 的 `diagnostics.severity` 等级体系一致）；整文件注解下语法/语义错误、警告、info 级校验提示全部不再显示，仅保留最低等级 `hint`。
+- 修复「仅打开单个 JASS 文件（未打开工作区文件夹）时 common.j 等标准库不显示」：单文件模式原先完全跳过 `loadStandardLibraries` / `loadStaticFiles`，导致 native 函数没有悬停/补全/跳转，语义分析还会对 native 大量误报「未定义」。现已在单文件模式下同样加载标准库与扩展 `static` 文件；并统一标准库 static 目录解析为「多候选回退」（`resolveExtensionStaticDir`），修复 `getStandardLibraryFiles` 旧的单候选路径在 dev/打包布局下解析不到内置 static 目录的问题。
+- 维护：补充 `.vscodeignore`，发布包不再包含 `.vscode/`（含 jass-cache 运行缓存）、`.workbuddy/`（内部记忆笔记）、`docs/`（内部设计文档）、`*.test.js` 测试文件与 `vsc-extension-quickstart.md` 等开发期文件。
+- 本版同时并入此前在 1.9.17 节中记录、但尚未随 1.9.17 发布的未提交改动（移除基于 pjass.exe 的 JASS 编译检查、special 提供器重构、static 标准库更新等）。
+
 #### 1.9.17 (pre-release)
 - 补全项 detail 显示文件路径：所有跨文件可见符号（函数、native、全局变量、结构体、接口、模块、TextMacro 等）的补全 detail 均显示「类型 — 相对路径」，无需展开详情即可快速定位来源文件。
 - 修复 `@since` / `@version` 注释解析换行问题：下一行非 `@xxx` 标签的文本不再被误拼接到版本号上，回归为普通描述文本；其他多标签续行（`@param` / `@deprecated` / `@example` 等）不受影响。
 - 修复 signature-help-provider 中一处缩进错误，并清理 3 处残留的 `console.warn` 调试输出。
 - 语义分析「未使用符号」检查补全覆盖全局变量：`globals` 块 / library / scope 内的全局变量现在也会参与未使用检查（私有全局严格检查，公开全局按跨文件可见性处理）。
+- 修复文档/悬浮 Webview 语法高亮：还原 `enhanceKeywordDocHtml` 中被误改坏的单词边界正则（误写成退格符，导致关键字/类型/数字高亮失效），并修正行拆分/拼接原先使用字面量 `\n` 文本而非真实换行符的问题，使多行代码正确分行与注释着色。
+- 字面量提示（悬停/转到定义）改进：以光标前引号奇偶计数判断是否真正处于未闭合的字符串/四字码字面量内，修复「数字提示受前一个引号字符影响而失效」以及「关闭 `literal.hover` 开关后代码/变量/函数仍显示提示」的问题。
+- 移除基于 `pjass.exe` 的 JASS 编译检查功能（右键 `JASS` 子菜单、`jass.compiler.*` 配置及 `jass.check*` 命令）：外部 exe 语法检查性能低且不符合项目方向；后续如需语法检查将以 TypeScript 实现。
+- 修复 `@ignore-file-errors` 仅屏蔽 error 等级诊断的缺陷：现按 `error > warning > info` 等级联屏蔽，与 `jass.config.json` 的 `diagnostics.severity` 等级体系保持一致。整文件注解下，语法/语义错误、警告、以及 info 级校验提示全部不再显示；仅保留最低等级 `hint`（在用户声明的等级体系之外，且历史上本就不参与屏蔽）。
+- 修复「仅打开单个 JASS 文件（未打开工作区文件夹）时 common.j 等标准库不显示」：单文件模式下 `initializeWorkspace` 原先完全跳过 `loadStandardLibraries` / `loadStaticFiles`，导致 native 函数没有悬停/补全/跳转，语义分析还会对 native 大量误报「未定义」。现已在单文件模式下同样加载标准库与扩展 `static` 文件。顺带统一标准库 static 目录的解析为「多候选回退」（`resolveExtensionStaticDir`），修复 `getStandardLibraryFiles` 旧的单候选路径在 dev/打包布局下根本解析不到内置 static 目录的问题。
 
 #### 1.9.16
 - 新增 JASS 编译检查功能（基于 pjass.exe）：在 `.j/.jass/.ai` 文件编辑区右键 → `JASS` 子菜单，提供三种检查模式：

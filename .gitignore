@@ -9,3 +9,6 @@ src/test
 *.zip
 ./test.j
 *.temp
+.workbuddy/
+.creator/
+.cursor/

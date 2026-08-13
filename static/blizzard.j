@@ -8653,7 +8653,7 @@ endfunction
 
 
 // 创建哈希表
-@since 1.24
+// @since 1.24
 function InitHashtableBJ takes nothing returns hashtable
     set bj_lastCreatedHashtable = InitHashtable()
     return bj_lastCreatedHashtable
@@ -8697,297 +8697,297 @@ endfunction
 
 
 // 保存 实数 到哈希表
-@since 1.24
+// @since 1.24
 function SaveRealBJ takes real value, integer key, integer missionKey, hashtable table returns nothing
     call SaveReal(table, missionKey, key, value)
 endfunction
 
 
 // 保存 整数 到哈希表
-@since 1.24
+// @since 1.24
 function SaveIntegerBJ takes integer value, integer key, integer missionKey, hashtable table returns nothing
     call SaveInteger(table, missionKey, key, value)
 endfunction
 
 
 // 保存 布尔值 到哈希表
-@since 1.24
+// @since 1.24
 function SaveBooleanBJ takes boolean value, integer key, integer missionKey, hashtable table returns nothing
     call SaveBoolean(table, missionKey, key, value)
 endfunction
 
 
 // 保存 字符串 到哈希表
-@since 1.24
+// @since 1.24
 function SaveStringBJ takes string value, integer key, integer missionKey, hashtable table returns boolean
     return SaveStr(table, missionKey, key, value)
 endfunction
 
 
 // 保存 玩家 到哈希表
-@since 1.24
+// @since 1.24
 function SavePlayerHandleBJ takes player whichPlayer, integer key, integer missionKey, hashtable table returns boolean
     return SavePlayerHandle(table, missionKey, key, whichPlayer)
 endfunction
 
 // 保存 微件/对象（单位/物品/可破坏物） 到哈希表
-@since 1.24
+// @since 1.24
 function SaveWidgetHandleBJ takes widget whichWidget, integer key, integer missionKey, hashtable table returns boolean
     return SaveWidgetHandle(table, missionKey, key, whichWidget)
 endfunction
 
 
 // 保存 可破坏物 到哈希表
-@since 1.24
+// @since 1.24
 function SaveDestructableHandleBJ takes destructable whichDestructable, integer key, integer missionKey, hashtable table returns boolean
     return SaveDestructableHandle(table, missionKey, key, whichDestructable)
 endfunction
 
 
 // 保存 物品 到哈希表
-@since 1.24
+// @since 1.24
 function SaveItemHandleBJ takes item whichItem, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemHandle(table, missionKey, key, whichItem)
 endfunction
 
 
 // 保存 单位 到哈希表
-@since 1.24
+// @since 1.24
 function SaveUnitHandleBJ takes unit whichUnit, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitHandle(table, missionKey, key, whichUnit)
 endfunction
 
 // 保存 技能 到哈希表
-@since 1.24
+// @since 1.24
 function SaveAbilityHandleBJ takes ability whichAbility, integer key, integer missionKey, hashtable table returns boolean
     return SaveAbilityHandle(table, missionKey, key, whichAbility)
 endfunction
 
 
 // 保存 计时器 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTimerHandleBJ takes timer whichTimer, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerHandle(table, missionKey, key, whichTimer)
 endfunction
 
 
 // 保存 触发器 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTriggerHandleBJ takes trigger whichTrigger, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerHandle(table, missionKey, key, whichTrigger)
 endfunction
 
 
 // 保存 触发条件 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTriggerConditionHandleBJ takes triggercondition whichTriggercondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerConditionHandle(table, missionKey, key, whichTriggercondition)
 endfunction
 
 
 // 保存 触发器动作 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTriggerActionHandleBJ takes triggeraction whichTriggeraction, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerActionHandle(table, missionKey, key, whichTriggeraction)
 endfunction
 
 
 // 保存 触发事件 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTriggerEventHandleBJ takes event whichEvent, integer key, integer missionKey, hashtable table returns boolean
     return SaveTriggerEventHandle(table, missionKey, key, whichEvent)
 endfunction
 
 
 // 保存 玩家组 到哈希表
-@since 1.24
+// @since 1.24
 function SaveForceHandleBJ takes force whichForce, integer key, integer missionKey, hashtable table returns boolean
     return SaveForceHandle(table, missionKey, key, whichForce)
 endfunction
 
 
 // 保存 单位组 到哈希表
-@since 1.24
+// @since 1.24
 function SaveGroupHandleBJ takes group whichGroup, integer key, integer missionKey, hashtable table returns boolean
     return SaveGroupHandle(table, missionKey, key, whichGroup)
 endfunction
 
 
 // 保存 点 到哈希表
-@since 1.24
+// @since 1.24
 function SaveLocationHandleBJ takes location whichLocation, integer key, integer missionKey, hashtable table returns boolean
     return SaveLocationHandle(table, missionKey, key, whichLocation)
 endfunction
 
 
 // 保存 区域(矩形) 到哈希表
-@since 1.24
+// @since 1.24
 function SaveRectHandleBJ takes rect whichRect, integer key, integer missionKey, hashtable table returns boolean
     return SaveRectHandle(table, missionKey, key, whichRect)
 endfunction
 
 
 // 保存 条件表达式 到哈希表
-@since 1.24
+// @since 1.24
 function SaveBooleanExprHandleBJ takes boolexpr whichBoolexpr, integer key, integer missionKey, hashtable table returns boolean
     return SaveBooleanExprHandle(table, missionKey, key, whichBoolexpr)
 endfunction
 
 
 // 保存 音效 到哈希表
-@since 1.24
+// @since 1.24
 function SaveSoundHandleBJ takes sound whichSound, integer key, integer missionKey, hashtable table returns boolean
     return SaveSoundHandle(table, missionKey, key, whichSound)
 endfunction
 
 
 // 保存 特效 到哈希表
-@since 1.24
+// @since 1.24
 function SaveEffectHandleBJ takes effect whichEffect, integer key, integer missionKey, hashtable table returns boolean
     return SaveEffectHandle(table, missionKey, key, whichEffect)
 endfunction
 
 
 // 保存 单位池 到哈希表
-@since 1.24
+// @since 1.24
 function SaveUnitPoolHandleBJ takes unitpool whichUnitpool, integer key, integer missionKey, hashtable table returns boolean
     return SaveUnitPoolHandle(table, missionKey, key, whichUnitpool)
 endfunction
 
 
 // 保存 物品池 到哈希表
-@since 1.24
+// @since 1.24
 function SaveItemPoolHandleBJ takes itempool whichItempool, integer key, integer missionKey, hashtable table returns boolean
     return SaveItemPoolHandle(table, missionKey, key, whichItempool)
 endfunction
 
 
 // 保存 任务 到哈希表
-@since 1.24
+// @since 1.24
 function SaveQuestHandleBJ takes quest whichQuest, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestHandle(table, missionKey, key, whichQuest)
 endfunction
 
 
 // 保存 任务要求 到哈希表
-@since 1.24
+// @since 1.24
 function SaveQuestItemHandleBJ takes questitem whichQuestitem, integer key, integer missionKey, hashtable table returns boolean
     return SaveQuestItemHandle(table, missionKey, key, whichQuestitem)
 endfunction
 
 
 // 保存 任务失败条件 到哈希表
-@since 1.24
+// @since 1.24
 function SaveDefeatConditionHandleBJ takes defeatcondition whichDefeatcondition, integer key, integer missionKey, hashtable table returns boolean
     return SaveDefeatConditionHandle(table, missionKey, key, whichDefeatcondition)
 endfunction
 
 
 // 保存 计时器窗口 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTimerDialogHandleBJ takes timerdialog whichTimerdialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveTimerDialogHandle(table, missionKey, key, whichTimerdialog)
 endfunction
 
 
 // 保存 排行榜 到哈希表
-@since 1.24
+// @since 1.24
 function SaveLeaderboardHandleBJ takes leaderboard whichLeaderboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveLeaderboardHandle(table, missionKey, key, whichLeaderboard)
 endfunction
 
 
 // 保存 多面板 到哈希表
-@since 1.24
+// @since 1.24
 function SaveMultiboardHandleBJ takes multiboard whichMultiboard, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardHandle(table, missionKey, key, whichMultiboard)
 endfunction
 
 
 // 保存 多面板项目 到哈希表
-@since 1.24
+// @since 1.24
 function SaveMultiboardItemHandleBJ takes multiboarditem whichMultiboarditem, integer key, integer missionKey, hashtable table returns boolean
     return SaveMultiboardItemHandle(table, missionKey, key, whichMultiboarditem)
 endfunction
 
 
 // 保存 可追踪物 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTrackableHandleBJ takes trackable whichTrackable, integer key, integer missionKey, hashtable table returns boolean
     return SaveTrackableHandle(table, missionKey, key, whichTrackable)
 endfunction
 
 
 // 保存 对话框 到哈希表
-@since 1.24
+// @since 1.24
 function SaveDialogHandleBJ takes dialog whichDialog, integer key, integer missionKey, hashtable table returns boolean
     return SaveDialogHandle(table, missionKey, key, whichDialog)
 endfunction
 
 
 // 保存 对话框按钮 到哈希表
-@since 1.24
+// @since 1.24
 function SaveButtonHandleBJ takes button whichButton, integer key, integer missionKey, hashtable table returns boolean
     return SaveButtonHandle(table, missionKey, key, whichButton)
 endfunction
 
 
 // 保存 漂浮文字 到哈希表
-@since 1.24
+// @since 1.24
 function SaveTextTagHandleBJ takes texttag whichTexttag, integer key, integer missionKey, hashtable table returns boolean
     return SaveTextTagHandle(table, missionKey, key, whichTexttag)
 endfunction
 
 
 // 保存 闪电效果 到哈希表
-@since 1.24
+// @since 1.24
 function SaveLightningHandleBJ takes lightning whichLightning, integer key, integer missionKey, hashtable table returns boolean
     return SaveLightningHandle(table, missionKey, key, whichLightning)
 endfunction
 
 
 // 保存 图像 到哈希表
-@since 1.24
+// @since 1.24
 function SaveImageHandleBJ takes image whichImage, integer key, integer missionKey, hashtable table returns boolean
     return SaveImageHandle(table, missionKey, key, whichImage)
 endfunction
 
 
 // 保存 地面纹理变化 到哈希表
-@since 1.24
+// @since 1.24
 function SaveUbersplatHandleBJ takes ubersplat whichUbersplat, integer key, integer missionKey, hashtable table returns boolean
     return SaveUbersplatHandle(table, missionKey, key, whichUbersplat)
 endfunction
 
 
 // 保存 区域(不规则) 到哈希表
-@since 1.24
+// @since 1.24
 function SaveRegionHandleBJ takes region whichRegion, integer key, integer missionKey, hashtable table returns boolean
     return SaveRegionHandle(table, missionKey, key, whichRegion)
 endfunction
 
 
 // 保存 迷雾状态 到哈希表
-@since 1.24
+// @since 1.24
 function SaveFogStateHandleBJ takes fogstate whichFogState, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogStateHandle(table, missionKey, key, whichFogState)
 endfunction
 
 
 // 保存 可见度修正器 到哈希表
-@since 1.24
+// @since 1.24
 function SaveFogModifierHandleBJ takes fogmodifier whichFogModifier, integer key, integer missionKey, hashtable table returns boolean
     return SaveFogModifierHandle(table, missionKey, key, whichFogModifier)
 endfunction
 
 // 保存 句柄 到哈希表
-@since 1.24
+// @since 1.24
 function SaveAgentHandleBJ takes agent whichAgent, integer key, integer missionKey, hashtable table returns boolean
     return SaveAgentHandle(table, missionKey, key, whichAgent)
 endfunction
 
 // 保存 哈希表 到哈希表
-@since 1.24
+// @since 1.24
 function SaveHashtableHandleBJ takes hashtable whichHashtable, integer key, integer missionKey, hashtable table returns boolean
     return SaveHashtableHandle(table, missionKey, key, whichHashtable)
 endfunction
@@ -9029,7 +9029,7 @@ endfunction
 
 
 // 从哈希表提取实数
-@since 1.24
+// @since 1.24
 function LoadRealBJ takes integer key, integer missionKey, hashtable table returns real
     //call SyncStoredReal(table, missionKey, key)
     return LoadReal(table, missionKey, key)
@@ -9037,7 +9037,7 @@ endfunction
 
 
 // 从哈希表提取整数
-@since 1.24
+// @since 1.24
 function LoadIntegerBJ takes integer key, integer missionKey, hashtable table returns integer
     //call SyncStoredInteger(table, missionKey, key)
     return LoadInteger(table, missionKey, key)
@@ -9045,7 +9045,7 @@ endfunction
 
 
 // 从哈希表提取布尔值
-@since 1.24
+// @since 1.24
 function LoadBooleanBJ takes integer key, integer missionKey, hashtable table returns boolean
     //call SyncStoredBoolean(table, missionKey, key)
     return LoadBoolean(table, missionKey, key)
@@ -9054,7 +9054,7 @@ endfunction
 
 // 从哈希表提取字符串
 // 保存内容为null时返回 ""
-@since 1.24
+// @since 1.24
 function LoadStringBJ takes integer key, integer missionKey, hashtable table returns string
     local string s
 
@@ -9069,82 +9069,82 @@ endfunction
 
 
 // 从哈希表提取玩家
-@since 1.24
+// @since 1.24
 function LoadPlayerHandleBJ takes integer key, integer missionKey, hashtable table returns player
     return LoadPlayerHandle(table, missionKey, key)
 endfunction
 
 // 从哈希表提取微件/实体（单位/物品/可破坏物）
-@since 1.24
+// @since 1.24
 function LoadWidgetHandleBJ takes integer key, integer missionKey, hashtable table returns widget
     return LoadWidgetHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取可破坏物
-@since 1.24
+// @since 1.24
 function LoadDestructableHandleBJ takes integer key, integer missionKey, hashtable table returns destructable
     return LoadDestructableHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取物品
-@since 1.24
+// @since 1.24
 function LoadItemHandleBJ takes integer key, integer missionKey, hashtable table returns item
     return LoadItemHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取单位
-@since 1.24
+// @since 1.24
 function LoadUnitHandleBJ takes integer key, integer missionKey, hashtable table returns unit
     return LoadUnitHandle(table, missionKey, key)
 endfunction
 
 // 从哈希表提取技能
-@since 1.24
+// @since 1.24
 function LoadAbilityHandleBJ takes integer key, integer missionKey, hashtable table returns ability
     return LoadAbilityHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取计时器
-@since 1.24
+// @since 1.24
 function LoadTimerHandleBJ takes integer key, integer missionKey, hashtable table returns timer
     return LoadTimerHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取触发器
-@since 1.24
+// @since 1.24
 function LoadTriggerHandleBJ takes integer key, integer missionKey, hashtable table returns trigger
     return LoadTriggerHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取触发条件
-@since 1.24
+// @since 1.24
 function LoadTriggerConditionHandleBJ takes integer key, integer missionKey, hashtable table returns triggercondition
     return LoadTriggerConditionHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取触发器动作
-@since 1.24
+// @since 1.24
 function LoadTriggerActionHandleBJ takes integer key, integer missionKey, hashtable table returns triggeraction
     return LoadTriggerActionHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取触发事件
-@since 1.24
+// @since 1.24
 function LoadTriggerEventHandleBJ takes integer key, integer missionKey, hashtable table returns event
     return LoadTriggerEventHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取玩家组
-@since 1.24
+// @since 1.24
 function LoadForceHandleBJ takes integer key, integer missionKey, hashtable table returns force
     return LoadForceHandle(table, missionKey, key)
 endfunction
@@ -9152,7 +9152,7 @@ endfunction
 
 // 从哈希表提取单位组
 // 若仍需使用该单位组，请勿排泄
-@since 1.24
+// @since 1.24
 function LoadGroupHandleBJ takes integer key, integer missionKey, hashtable table returns group
     return LoadGroupHandle(table, missionKey, key)
 endfunction
@@ -9160,7 +9160,7 @@ endfunction
 
 // 从哈希表提取点
 // 若仍需使用该点，请勿排泄
-@since 1.24
+// @since 1.24
 function LoadLocationHandleBJ takes integer key, integer missionKey, hashtable table returns location
     return LoadLocationHandle(table, missionKey, key)
 endfunction
@@ -9168,140 +9168,140 @@ endfunction
 
 // 从哈希表提取区域(矩形)
 // 若仍需使用该区域，请勿排泄
-@since 1.24
+// @since 1.24
 function LoadRectHandleBJ takes integer key, integer missionKey, hashtable table returns rect
     return LoadRectHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取条件表达式
-@since 1.24
+// @since 1.24
 function LoadBooleanExprHandleBJ takes integer key, integer missionKey, hashtable table returns boolexpr
     return LoadBooleanExprHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取音效
-@since 1.24
+// @since 1.24
 function LoadSoundHandleBJ takes integer key, integer missionKey, hashtable table returns sound
     return LoadSoundHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取特效
-@since 1.24
+// @since 1.24
 function LoadEffectHandleBJ takes integer key, integer missionKey, hashtable table returns effect
     return LoadEffectHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取单位池
-@since 1.24
+// @since 1.24
 function LoadUnitPoolHandleBJ takes integer key, integer missionKey, hashtable table returns unitpool
     return LoadUnitPoolHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取物品池
-@since 1.24
+// @since 1.24
 function LoadItemPoolHandleBJ takes integer key, integer missionKey, hashtable table returns itempool
     return LoadItemPoolHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取任务
-@since 1.24
+// @since 1.24
 function LoadQuestHandleBJ takes integer key, integer missionKey, hashtable table returns quest
     return LoadQuestHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取任务要求
-@since 1.24
+// @since 1.24
 function LoadQuestItemHandleBJ takes integer key, integer missionKey, hashtable table returns questitem
     return LoadQuestItemHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取（任务）失败条件
-@since 1.24
+// @since 1.24
 function LoadDefeatConditionHandleBJ takes integer key, integer missionKey, hashtable table returns defeatcondition
     return LoadDefeatConditionHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取计时器窗口
-@since 1.24
+// @since 1.24
 function LoadTimerDialogHandleBJ takes integer key, integer missionKey, hashtable table returns timerdialog
     return LoadTimerDialogHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取排行榜
-@since 1.24
+// @since 1.24
 function LoadLeaderboardHandleBJ takes integer key, integer missionKey, hashtable table returns leaderboard
     return LoadLeaderboardHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取多面板
-@since 1.24
+// @since 1.24
 function LoadMultiboardHandleBJ takes integer key, integer missionKey, hashtable table returns multiboard
     return LoadMultiboardHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取多面板项目
-@since 1.24
+// @since 1.24
 function LoadMultiboardItemHandleBJ takes integer key, integer missionKey, hashtable table returns multiboarditem
     return LoadMultiboardItemHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取可追踪物
-@since 1.24
+// @since 1.24
 function LoadTrackableHandleBJ takes integer key, integer missionKey, hashtable table returns trackable
     return LoadTrackableHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取对话框
-@since 1.24
+// @since 1.24
 function LoadDialogHandleBJ takes integer key, integer missionKey, hashtable table returns dialog
     return LoadDialogHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取对话框按钮
-@since 1.24
+// @since 1.24
 function LoadButtonHandleBJ takes integer key, integer missionKey, hashtable table returns button
     return LoadButtonHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取漂浮文字
-@since 1.24
+// @since 1.24
 function LoadTextTagHandleBJ takes integer key, integer missionKey, hashtable table returns texttag
     return LoadTextTagHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取闪电效果
-@since 1.24
+// @since 1.24
 function LoadLightningHandleBJ takes integer key, integer missionKey, hashtable table returns lightning
     return LoadLightningHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取图象
-@since 1.24
+// @since 1.24
 function LoadImageHandleBJ takes integer key, integer missionKey, hashtable table returns image
     return LoadImageHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取地面纹理变化
-@since 1.24
+// @since 1.24
 function LoadUbersplatHandleBJ takes integer key, integer missionKey, hashtable table returns ubersplat
     return LoadUbersplatHandle(table, missionKey, key)
 endfunction
@@ -9309,27 +9309,27 @@ endfunction
 
 // 从哈希表提取区域(不规则)
 // 如仍需使用该区域，请勿排泄
-@since 1.24
+// @since 1.24
 function LoadRegionHandleBJ takes integer key, integer missionKey, hashtable table returns region
     return LoadRegionHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取迷雾状态
-@since 1.24
+// @since 1.24
 function LoadFogStateHandleBJ takes integer key, integer missionKey, hashtable table returns fogstate
     return LoadFogStateHandle(table, missionKey, key)
 endfunction
 
 
 // 从哈希表提取可见度修正器
-@since 1.24
+// @since 1.24
 function LoadFogModifierHandleBJ takes integer key, integer missionKey, hashtable table returns fogmodifier
     return LoadFogModifierHandle(table, missionKey, key)
 endfunction
 
 // 从哈希表提取哈希表
-@since 1.24
+// @since 1.24
 function LoadHashtableHandleBJ takes integer key, integer missionKey, hashtable table returns hashtable
     return LoadHashtableHandle(table, missionKey, key)
 endfunction
@@ -9372,7 +9372,7 @@ endfunction
 
 // 清空哈希表
 // 清空整张表
-@since 1.24
+// @since 1.24
 function FlushParentHashtableBJ takes hashtable table returns nothing
     call FlushParentHashtable(table)
 endfunction
@@ -9380,7 +9380,7 @@ endfunction
 
 // 清空哈希表（指定主索引）
 // 仅清空指定索引
-@since 1.24
+// @since 1.24
 function FlushChildHashtableBJ takes integer missionKey, hashtable table returns nothing
     call FlushChildHashtable(table, missionKey)
 endfunction
@@ -9406,7 +9406,7 @@ endfunction
 
 
 // 判断哈希表是否存有数据
-@since 1.24
+// @since 1.24
 function HaveSavedValue takes integer key, integer valueType, integer missionKey, hashtable table returns boolean
     if(valueType == bj_HASHTABLE_BOOLEAN) then
         return HaveSavedBoolean(table, missionKey, key)

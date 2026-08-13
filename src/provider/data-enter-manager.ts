@@ -319,9 +319,16 @@ export class DataEnterManager {
             return;
         }
 
+        // @ignore-file-errors 忽略整文件诊断：按 error > warning > info 等级联屏蔽，
+        // 与 jass.config.json 的 diagnostics.severity 等级体系保持一致。
+        // 等级越低（越不严重）越应被一并忽略，因此 error / warning / info 全部清除，
+        // 仅保留最低等级 hint（在用户声明的等级体系之外，且历史上本就不参与屏蔽）。
         errors.errors = [];
+        errors.warnings = [];
         if (errors.checkValidationErrors && errors.checkValidationErrors.length > 0) {
-            errors.checkValidationErrors = errors.checkValidationErrors.filter((error) => error.severity !== 'error');
+            errors.checkValidationErrors = errors.checkValidationErrors.filter(
+                (error) => error.severity === 'hint'
+            );
         }
     }
 
@@ -1319,6 +1326,17 @@ export class DataEnterManager {
             }
         } else {
             console.log('📂 No workspace folder; single-file mode enabled (parse on open/edit).');
+            // 单文件模式同样必须加载标准库（common.j / blizzard.j 等）与扩展 static 文件，
+            // 否则 native 函数没有悬停/补全/跳转，语义分析也会对 native 大量误报“未定义”。
+            // 见用户反馈：仅打开单个 .j 文件（未打开工作区）时 common.j 不显示。
+            const firstJassDoc = vscode.workspace.textDocuments.find(
+                (doc) => this.isJassFile(doc.uri.fsPath)
+            );
+            const singleFileRoot = firstJassDoc
+                ? path.dirname(firstJassDoc.uri.fsPath)
+                : process.cwd();
+            await this.loadStandardLibraries(singleFileRoot);
+            await this.loadStaticFiles(singleFileRoot);
         }
 
         // 无论是否有工作区，都注册事件与文档监听，保证解析和补全/诊断等功能可用
@@ -1659,6 +1677,28 @@ export class DataEnterManager {
     }
 
     /**
+     * 解析扩展内置 static 目录（兼容不同编译/运行目录导致的 __dirname 深度差异）
+     * @returns 找到的 static 目录绝对路径；都不存在时返回 null
+     */
+    private resolveExtensionStaticDir(): string | null {
+        const candidates = [
+            path.resolve(__dirname, "../../../static"),
+            path.resolve(__dirname, "../../../../static"),
+            path.resolve(__dirname, "../../static")
+        ];
+        for (const dir of candidates) {
+            try {
+                if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) {
+                    return dir;
+                }
+            } catch {
+                // 忽略不可访问的候选路径
+            }
+        }
+        return null;
+    }
+
+    /**
      * 按顺序加载标准库文件
      * 优先使用配置中的路径，然后从工作区根目录查找，最后从扩展的 static 目录查找
      */
@@ -1672,19 +1712,8 @@ export class DataEnterManager {
         const strictLegacyMode = legacyApiVersions.has((apiVersion || '').toLowerCase());
 
         // 扩展 static 目录候选路径（兼容不同编译/运行目录）
-        const extensionStaticDirCandidates = [
-            path.resolve(__dirname, "../../../static"),
-            path.resolve(__dirname, "../../../../static"),
-            path.resolve(__dirname, "../../static")
-        ];
-        const extensionStaticDir = extensionStaticDirCandidates.find((dir) => {
-            try {
-                return fs.existsSync(dir) && fs.statSync(dir).isDirectory();
-            } catch {
-                return false;
-            }
-        });
-        
+        const extensionStaticDir = this.resolveExtensionStaticDir();
+
         console.log(`📚 Scanning for standard libraries...`);
         console.log(`   Workspace root: ${workspaceRoot}`);
         console.log(`   Extension static: ${extensionStaticDir}`);
@@ -1967,8 +1996,8 @@ export class DataEnterManager {
      */
     private getStandardLibraryFiles(workspaceRoot: string): Array<{ filePath: string; content: string }> {
         const files: Array<{ filePath: string; content: string }> = [];
-        const extensionStaticDir = path.resolve(__dirname, "../../../static");
-        
+        const extensionStaticDir = this.resolveExtensionStaticDir();
+
         for (const fileName of STANDARD_LIBRARY_ORDER) {
             let filePath: string | null = null;
             
@@ -1989,8 +2018,12 @@ export class DataEnterManager {
                 filePath = path.join(workspaceRoot, fileName);
                 if (!fs.existsSync(filePath)) {
                     // 3. 如果工作区不存在，从扩展的 static 目录查找
-                    filePath = path.join(extensionStaticDir, fileName);
-                    if (!fs.existsSync(filePath)) {
+                    if (extensionStaticDir) {
+                        filePath = path.join(extensionStaticDir, fileName);
+                        if (!fs.existsSync(filePath)) {
+                            filePath = null;
+                        }
+                    } else {
                         filePath = null;
                     }
                 }

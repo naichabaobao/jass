@@ -4,3 +4,21 @@ tslint.json
 tsconfig.json
 test.j
 *.temp
+
+# 开发/编辑器配置与运行缓存（不随扩展发布）
+.vscode/**
+.vscode
+.workbuddy/**
+.workbuddy
+
+# 内部设计/审查文档（非用户文档，不随扩展发布）
+docs/**
+docs
+
+# 测试文件与 e2e 运行器（不随扩展发布）
+**/*.test.js
+out/test/**
+
+# 其他开发期文件
+.gitignore
+vsc-extension-quickstart.md

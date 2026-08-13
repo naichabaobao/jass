@@ -13,7 +13,8 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
     ): vscode.ProviderResult<vscode.Hover> {
         try {
             // 检查配置是否启用（使用 literal.hover 配置项）
-            if (!vscode.workspace.getConfiguration("jass").get<boolean>("literal.hover", true)) {
+            const hoverEnabled = vscode.workspace.getConfiguration("jass").get<boolean>("literal.hover", true);
+            if (!hoverEnabled) {
                 return null;
             }
 
@@ -27,77 +28,82 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
             let literalContent: string | null = null;
             let hoverRange: vscode.Range | undefined;
 
-            // 检测是否在字符串字面量中（双引号）
-            const stringMatch = textBeforeCursor.match(/"([^"]*)$/);
-            if (stringMatch) {
-                const contentBefore = stringMatch[1];
-                const hasClosingQuote = textAfterCursor.startsWith('"');
-                if (hasClosingQuote) {
-                    const contentAfter = textAfterCursor.substring(1).match(/^[^"]*/)?.[0] || '';
-                    literalContent = contentBefore + contentAfter;
-                    // 设置 hover range：从开始引号到结束引号
-                    const quoteStart = textBeforeCursor.lastIndexOf('"');
-                    const quoteEnd = position.character + 1 + contentAfter.length;
-                    hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
-                } else {
-                    literalContent = contentBefore;
-                    const quoteStart = textBeforeCursor.lastIndexOf('"');
-                    hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
-                }
-                
+            // 统计光标前引号数量，判断是否真正在未闭合的字面量内
+            // 奇数 = 在字面量内，偶数 = 不在字面量内
+            const countChar = (str: string, ch: string) => {
+                let count = 0;
+                for (const c of str) if (c === ch) count++;
+                return count;
+            };
+            const doubleQuoteCount = countChar(textBeforeCursor, '"');
+            const singleQuoteCount = countChar(textBeforeCursor, "'");
+            const insideString = doubleQuoteCount % 2 === 1;
+            const insideMark = singleQuoteCount % 2 === 1;
+
+            // 先检测数字字面量（与引号无关，不会误匹配）
+            const numberMatch = textBeforeCursor.match(/\b(0[xX][0-9a-fA-F]*|0[bB][01]*|\$[0-9a-fA-F]*|[0-9]+)$/);
+            if (numberMatch && !insideString && !insideMark) {
+                const numberBefore = numberMatch[0];
+                const numberAfterMatch = textAfterCursor.match(/^[0-9a-fA-F]*/);
+                const numberAfter = numberAfterMatch ? numberAfterMatch[0] : '';
+                literalContent = numberBefore + numberAfter;
+
+                const numberStart = textBeforeCursor.length - numberBefore.length;
+                const numberEnd = position.character + numberAfter.length;
+                hoverRange = new vscode.Range(position.line, numberStart, position.line, numberEnd);
+
                 if (literalContent) {
                     matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
                 }
             }
-            // 检测是否在标记字面量中（单引号）
-            else {
-                const markMatch = textBeforeCursor.match(/'([^']*)$/);
-                if (markMatch) {
-                    const contentBefore = markMatch[1];
-                    const hasClosingQuote = textAfterCursor.startsWith("'");
-                    if (hasClosingQuote) {
-                        const contentAfter = textAfterCursor.substring(1).match(/^[^']*/)?.[0] || '';
-                        literalContent = contentBefore + contentAfter;
-                        const quoteStart = textBeforeCursor.lastIndexOf("'");
-                        const quoteEnd = position.character + 1 + contentAfter.length;
-                        hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
-                    } else {
-                        literalContent = contentBefore;
-                        const quoteStart = textBeforeCursor.lastIndexOf("'");
-                        hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
-                    }
-                    
-                    if (literalContent) {
-                        matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
-                    }
+            // 检测是否在字符串字面量中（双引号） - 必须真正在未闭合引号内
+            else if (insideString) {
+                const quoteStart = textBeforeCursor.lastIndexOf('"');
+                const contentBefore = textBeforeCursor.substring(quoteStart + 1);
+                // 在 textAfterCursor 中查找闭合引号
+                const closingQuoteIndex = textAfterCursor.indexOf('"');
+                if (closingQuoteIndex !== -1) {
+                    const contentAfter = textAfterCursor.substring(0, closingQuoteIndex);
+                    literalContent = contentBefore + contentAfter;
+                    const quoteEnd = position.character + closingQuoteIndex + 1;
+                    hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
+                } else {
+                    literalContent = contentBefore;
+                    hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
                 }
-                // 检测是否在数字字面量中
-                else {
-                    const numberMatch = textBeforeCursor.match(/\b(0[xX][0-9a-fA-F]*|0[bB][01]*|\$[0-9a-fA-F]*|[0-9]+)$/);
-                    if (numberMatch) {
-                        const numberBefore = numberMatch[0];
-                        const numberAfterMatch = textAfterCursor.match(/^[0-9a-fA-F]*/);
-                        const numberAfter = numberAfterMatch ? numberAfterMatch[0] : '';
-                        literalContent = numberBefore + numberAfter;
-                        
-                        const numberStart = textBeforeCursor.length - numberBefore.length;
-                        const numberEnd = position.character + numberAfter.length;
-                        hoverRange = new vscode.Range(position.line, numberStart, position.line, numberEnd);
-                        
-                        if (literalContent) {
-                            matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
-                        }
-                    }
-                    // 如果都不匹配，尝试使用单词范围
-                    else {
-                        const wordRange = document.getWordRangeAtPosition(position);
-                        if (wordRange) {
-                            hoverRange = wordRange;
-                            const symbolName = document.getText(wordRange);
-                            if (symbolName) {
-                                matchingLiterals = specialFileManager.findLiteralsByContent(symbolName);
-                            }
-                        }
+
+                if (literalContent) {
+                    matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
+                }
+            }
+            // 检测是否在标记字面量中（单引号/四字码） - 必须真正在未闭合引号内
+            else if (insideMark) {
+                const quoteStart = textBeforeCursor.lastIndexOf("'");
+                const contentBefore = textBeforeCursor.substring(quoteStart + 1);
+                // 在 textAfterCursor 中查找闭合引号
+                const closingQuoteIndex = textAfterCursor.indexOf("'");
+                if (closingQuoteIndex !== -1) {
+                    const contentAfter = textAfterCursor.substring(0, closingQuoteIndex);
+                    literalContent = contentBefore + contentAfter;
+                    const quoteEnd = position.character + closingQuoteIndex + 1;
+                    hoverRange = new vscode.Range(position.line, quoteStart, position.line, quoteEnd);
+                } else {
+                    literalContent = contentBefore;
+                    hoverRange = new vscode.Range(position.line, quoteStart, position.line, position.character);
+                }
+
+                if (literalContent) {
+                    matchingLiterals = specialFileManager.findLiteralsByContent(literalContent);
+                }
+            }
+            // 如果都不匹配，尝试使用单词范围
+            else {
+                const wordRange = document.getWordRangeAtPosition(position);
+                if (wordRange) {
+                    hoverRange = wordRange;
+                    const symbolName = document.getText(wordRange);
+                    if (symbolName) {
+                        matchingLiterals = specialFileManager.findLiteralsByContent(symbolName);
                     }
                 }
             }
@@ -125,13 +131,13 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
      */
     private createLiteralHoverContent(literal: SpecialLiteral): vscode.MarkdownString | null {
         const content = new vscode.MarkdownString();
-        
+
         const literalText = literal.type === 'string' ? `"${literal.content}"` :
                            literal.type === 'mark' ? `'${literal.content}'` :
                            literal.content;
 
         content.appendCodeblock(literalText, 'jass');
-        
+
         if (literal.deprecated) {
             content.appendMarkdown('\n\n~~**Deprecated**~~');
         }
@@ -161,4 +167,3 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
         return filePath;
     }
 }
-
