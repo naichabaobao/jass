@@ -1073,10 +1073,25 @@ export async function activate(context: vscode.ExtensionContext) {
 
                 const allOutput = decoded.trim();
 
-                if (allOutput) {
-                    jassOutputChannel.appendLine(allOutput);
-                } else if (code === 0) {
+                if (code === 0) {
                     jassOutputChannel.appendLine('✅ 检查通过，没有发现语法错误。');
+                } else if (allOutput) {
+                    // 重新格式化输出，让 VSCode 能识别文件路径为可点击链接
+                    // pjass 原始格式：D:\path\file.j:5:1: error message
+                    // 转换为：D:\path\file.j:5:1 （独立一行，VSCode 可识别为链接）
+                    //          error message（错误信息下一行）
+                    const errorPattern = /^((?:[a-zA-Z]:[\\/])?[^:]+?):(\d+):(\d+):\s*(.+)$/;
+                    for (const line of allOutput.split('\n')) {
+                        const match = line.match(errorPattern);
+                        if (match) {
+                            const [, errPath, lineNum, colNum, errMsg] = match;
+                            // 文件:行:列 单独一行，VSCode 可识别为可点击链接
+                            jassOutputChannel.appendLine(`${errPath}:${lineNum}:${colNum}`);
+                            jassOutputChannel.appendLine(`  ❌ ${errMsg}`);
+                        } else {
+                            jassOutputChannel.appendLine(line);
+                        }
+                    }
                 } else {
                     jassOutputChannel.appendLine('❌ 检查失败，但没有输出信息。');
                 }
@@ -1088,8 +1103,7 @@ export async function activate(context: vscode.ExtensionContext) {
                     vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
                 } else {
                     jassOutputChannel.appendLine('');
-                    jassOutputChannel.appendLine('💡 提示：按住 Ctrl 键点击上方的错误路径（如 D:\\map\\war3map.j:5:1:），可直接跳转到对应代码行');
-                    jassOutputChannel.appendLine('         macOS 用户请按住 Cmd 键点击');
+                    jassOutputChannel.appendLine('💡 按住 Ctrl 点击上方的文件路径行即可跳转到对应代码行（macOS 按 Cmd）');
                     vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，请查看输出面板`);
                 }
 
