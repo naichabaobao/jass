@@ -1070,7 +1070,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 cancellable: false
             },
             () => {
-                return new Promise<void>((resolve) => {
+                return new Promise<{ exitCode: number; parsedErrors: { filePath: string; line: number; col: number; message: string }[] }>((resolve) => {
                     const proc = spawn(`"${pjassPath}"`, args, {
                         shell: true
                     });
@@ -1109,11 +1109,11 @@ export async function activate(context: vscode.ExtensionContext) {
                             jassOutputChannel.appendLine('❌ 检查失败，但没有输出信息。');
                         }
 
-                        // 解析错误输出，弹出 QuickPick 供用户直接点击跳转
+                        // 解析错误输出
+                        const parsedErrors: { filePath: string; line: number; col: number; message: string }[] = [];
                         if (code !== 0 && allOutput) {
                             const errorLinePattern = /^((?:[a-zA-Z]:)?[^:]+):(\d+):(\d+):\s*(.+)$/;
                             const outputLines = allOutput.split('\n');
-                            const parsedErrors: { filePath: string; line: number; col: number; message: string }[] = [];
 
                             for (const line of outputLines) {
                                 const match = line.match(errorLinePattern);
@@ -1131,45 +1131,13 @@ export async function activate(context: vscode.ExtensionContext) {
                             if (parsedErrors.length > 0) {
                                 jassOutputChannel.appendLine('');
                                 jassOutputChannel.appendLine('💡 点击弹出的错误列表可直接跳转到对应代码行');
-
-                                // 弹出 QuickPick，用户直接点击即可跳转
-                                const items = parsedErrors.map(err => ({
-                                    label: `$(error) ${path.basename(err.filePath)}:${err.line}:${err.col}`,
-                                    description: err.message,
-                                    detail: err.filePath,
-                                    ...err
-                                }));
-
-                                // 异步弹出，不阻塞 resolve
-                                vscode.window.showQuickPick(items, {
-                                    placeHolder: `发现 ${parsedErrors.length} 个错误，点击即可跳转`
-                                }).then(async (selected) => {
-                                    if (selected) {
-                                        try {
-                                            const uri = vscode.Uri.file(selected.filePath);
-                                            const doc = await vscode.workspace.openTextDocument(uri);
-                                            const editor = await vscode.window.showTextDocument(doc);
-                                            const pos = new vscode.Position(Math.max(0, selected.line - 1), Math.max(0, selected.col - 1));
-                                            editor.selection = new vscode.Selection(pos, pos);
-                                            editor.revealRange(new vscode.Range(pos, pos), vscode.TextEditorRevealType.InCenter);
-                                        } catch (e) {
-                                            vscode.window.showWarningMessage(`无法打开文件: ${selected.filePath}`);
-                                        }
-                                    }
-                                });
                             }
                         }
 
                         jassOutputChannel.appendLine('');
                         jassOutputChannel.appendLine(`═══════════════════════════════════════════════════════════`);
 
-                        if (code === 0) {
-                            vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
-                        } else {
-                            vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，点击弹出的错误项可直接跳转`);
-                        }
-
-                        resolve();
+                        resolve({ exitCode: code ?? 1, parsedErrors });
                     });
 
                     proc.on('error', (err) => {
@@ -1177,11 +1145,44 @@ export async function activate(context: vscode.ExtensionContext) {
                         jassOutputChannel.appendLine('');
                         jassOutputChannel.appendLine(`请确保 pjass.exe 存在且可执行。`);
                         vscode.window.showErrorMessage(`执行 ${checkTypeName} 失败: ${err.message}`);
-                        resolve();
+                        resolve({ exitCode: 1, parsedErrors: [] });
                     });
                 });
             }
-        );
+        ).then(async (result) => {
+            // withProgress 完成后，弹出 QuickPick（进度通知已关闭，不会遮挡）
+            if (result.exitCode === 0) {
+                vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
+            } else if (result.parsedErrors.length > 0) {
+                const items = result.parsedErrors.map(err => ({
+                    label: `$(error) ${path.basename(err.filePath)}:${err.line}:${err.col}`,
+                    description: err.message,
+                    detail: err.filePath,
+                    filePath: err.filePath,
+                    line: err.line,
+                    col: err.col
+                }));
+
+                const selected = await vscode.window.showQuickPick(items, {
+                    placeHolder: `发现 ${result.parsedErrors.length} 个错误，点击即可跳转`
+                });
+
+                if (selected) {
+                    try {
+                        const uri = vscode.Uri.file(selected.filePath);
+                        const doc = await vscode.workspace.openTextDocument(uri);
+                        const editor = await vscode.window.showTextDocument(doc);
+                        const pos = new vscode.Position(Math.max(0, selected.line - 1), Math.max(0, selected.col - 1));
+                        editor.selection = new vscode.Selection(pos, pos);
+                        editor.revealRange(new vscode.Range(pos, pos), vscode.TextEditorRevealType.InCenter);
+                    } catch (e) {
+                        vscode.window.showWarningMessage(`无法打开文件: ${selected.filePath}`);
+                    }
+                }
+            } else {
+                vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，请查看输出面板`);
+            }
+        });
     }
 
     // 注册触发编译检查命令
