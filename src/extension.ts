@@ -257,9 +257,9 @@ function enhanceKeywordDocHtml(html: string): string {
     'create','destroy','size','name','allocate','deallocate'
   ];
   const typeWords = ['integer','real','boolean','string','handle','code','nothing','true','false','null'];
-  const kwPattern = new RegExp('\\\\b(' + keywords.join('|') + ')\\\\b', 'g');
-  const tyPattern = new RegExp('\\\\b(' + typeWords.join('|') + ')\\\\b', 'g');
-  const numPattern = /\\b\\d+(?:\\.\\d+)?\\b/g;
+  const kwPattern = new RegExp('\\\b(' + keywords.join('|') + ')\\\b', 'g');
+  const tyPattern = new RegExp('\\\b(' + typeWords.join('|') + ')\\\b', 'g');
+  const numPattern = /\\\b\\d+(?:\\.\\d+)?\\b/g;
 
   function escapeHtml(str) {
     return str
@@ -288,7 +288,7 @@ function enhanceKeywordDocHtml(html: string): string {
         out += '<span class="jass-comment">' + escapeHtml(commentPart) + '</span>';
       }
       return out;
-    }).join('\\n');
+    }).join('\n');
   }
 
   document.querySelectorAll('pre code').forEach((node) => {
@@ -936,10 +936,21 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     // ========== JASS 编译检查功能 ==========
-    
-    // 创建 OutputChannel 用于显示编译结果
-    const jassOutputChannel = vscode.window.createOutputChannel('JASS 编译检查');
-    context.subscriptions.push(jassOutputChannel);
+
+    // 使用 Pseudoterminal 输出到终端（终端会自动识别 filepath:line:col 为可点击链接）
+    class JassCompilerTerminal implements vscode.Pseudoterminal {
+        private writeEmitter = new vscode.EventEmitter<string>();
+        onDidWrite: vscode.Event<string> = this.writeEmitter.event;
+        private closeEmitter = new vscode.EventEmitter<number>();
+        onDidClose?: vscode.Event<number> = this.closeEmitter.event;
+
+        writeLine(text: string) {
+            this.writeEmitter.fire(text + '\r\n');
+        }
+
+        open(_initialDimensions: vscode.TerminalDimensions | undefined): void {}
+        close(): void {}
+    }
 
     /**
      * 获取标准库文件路径
@@ -947,28 +958,25 @@ export async function activate(context: vscode.ExtensionContext) {
     function getStandardLibraryPaths(): { commonJ: string; blizzardJ: string; commonAi: string } {
         const config = vscode.workspace.getConfiguration('jass');
         const extensionPath = context.extensionPath;
-        
-        // 优先使用用户配置的路径，否则使用扩展内置的 static 目录
+
         const commonJ = config.get<string>('compiler.commonJ', '') || path.join(extensionPath, 'static', 'common.j');
         const blizzardJ = config.get<string>('compiler.blizzardJ', '') || path.join(extensionPath, 'static', 'blizzard.j');
         const commonAi = config.get<string>('compiler.commonAi', '') || path.join(extensionPath, 'static', 'common.ai');
-        
+
         return { commonJ, blizzardJ, commonAi };
     }
 
     /**
      * 获取编译检查用的标准库文件路径
-     * 优先级：compiler.check* 配置 > compiler.* 配置 > 扩展内置
      */
     function getCheckLibraryPaths(): { commonJ: string; blizzardJ: string; commonAi: string } {
         const config = vscode.workspace.getConfiguration('jass');
         const extensionPath = context.extensionPath;
-        
-        // 优先使用编译专用配置，否则回退到显示注释的配置
+
         const checkCommonJ = config.get<string>('compiler.checkCommonJ', '');
         const checkBlizzardJ = config.get<string>('compiler.checkBlizzardJ', '');
         const checkCommonAi = config.get<string>('compiler.checkCommonAi', '');
-        
+
         const commonJ = checkCommonJ
             || config.get<string>('compiler.commonJ', '')
             || path.join(extensionPath, 'static', 'common.j');
@@ -978,7 +986,7 @@ export async function activate(context: vscode.ExtensionContext) {
         const commonAi = checkCommonAi
             || config.get<string>('compiler.commonAi', '')
             || path.join(extensionPath, 'static', 'common.ai');
-        
+
         return { commonJ, blizzardJ, commonAi };
     }
 
@@ -988,12 +996,11 @@ export async function activate(context: vscode.ExtensionContext) {
     function getPjassPath(): string {
         const config = vscode.workspace.getConfiguration('jass');
         const userPath = config.get<string>('compiler.pjassPath', '');
-        
+
         if (userPath) {
             return userPath;
         }
-        
-        // 默认路径：扩展目录下的 out/extern/pjass/pjass.exe
+
         return path.join(context.extensionPath, 'out', 'extern', 'pjass', 'pjass.exe');
     }
 
@@ -1005,10 +1012,8 @@ export async function activate(context: vscode.ExtensionContext) {
         filePath: string
     ): Promise<void> {
         const pjassPath = getPjassPath();
-        // 编译检查使用专门的库配置（可与显示注释的库不同）
         const libPaths = getCheckLibraryPaths();
-        
-        // 检查 pjass.exe 是否存在
+
         if (!fs.existsSync(pjassPath)) {
             vscode.window.showErrorMessage(
                 `找不到 pjass.exe: ${pjassPath}\n` +
@@ -1017,120 +1022,99 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        // 检查目标文件是否存在
         if (!fs.existsSync(filePath)) {
             vscode.window.showErrorMessage(`找不到文件: ${filePath}`);
             return;
         }
 
-        // 根据检查类型构建参数
         let args: string[];
         let checkTypeName: string;
 
         switch (checkType) {
             case 'trigger':
-                // 编译自定义触发: common.j + blizzard.j + 目标文件
                 args = [`"${libPaths.commonJ}"`, `"${libPaths.blizzardJ}"`, `"${filePath}"`];
                 checkTypeName = '编译自定义触发';
                 break;
             case 'aiLibrary':
-                // 编译自定义库(Blizzard.j或common.ai): common.j + 目标文件
                 args = [`"${libPaths.commonJ}"`, `"${filePath}"`];
                 checkTypeName = '编译自定义库(Blizzard.j或common.ai)';
                 break;
             case 'ai':
-                // 编译自定义ai脚本: common.j + common.ai + 目标文件
                 args = [`"${libPaths.commonJ}"`, `"${libPaths.commonAi}"`, `"${filePath}"`];
                 checkTypeName = '编译自定义ai脚本';
                 break;
         }
 
-        jassOutputChannel.clear();
-        jassOutputChannel.show(true);
-        jassOutputChannel.appendLine(`═══════════════════════════════════════════════════════════`);
-        jassOutputChannel.appendLine(`📋 JASS ${checkTypeName}`);
-        jassOutputChannel.appendLine(`📁 文件: ${filePath}`);
-        jassOutputChannel.appendLine(`🔧 编译器: ${pjassPath}`);
-        jassOutputChannel.appendLine(`📚 入参文件:`);
-        // 显示所有入参（包含标准库和目标文件）
+        // 创建终端并显示
+        const pty = new JassCompilerTerminal();
+        const terminal = vscode.window.createTerminal({
+            name: `JASS ${checkTypeName}`,
+            pty
+        });
+        terminal.show(true);
+
+        pty.writeLine(`═══════════════════════════════════════════════════════════`);
+        pty.writeLine(`📋 JASS ${checkTypeName}`);
+        pty.writeLine(`📁 文件: ${filePath}`);
+        pty.writeLine(`🔧 编译器: ${pjassPath}`);
+        pty.writeLine(`📚 入参文件:`);
         args.forEach((arg, i) => {
-            // 去掉路径两端的引号以便显示
-            const displayPath = arg.replace(/^"|"$/g, '');
+            const displayPath = arg.replace(/^.|.$/g, '');
             const isLast = i === args.length - 1;
             const label = isLast ? '🎯 目标文件' : `📖 标准库 ${i + 1}`;
-            jassOutputChannel.appendLine(`   ${label}: ${displayPath}`);
+            pty.writeLine(`   ${label}: ${displayPath}`);
         });
-        jassOutputChannel.appendLine(`───────────────────────────────────────────────────────────`);
-        jassOutputChannel.appendLine('');
+        pty.writeLine(`───────────────────────────────────────────────────────────`);
+        pty.writeLine('');
 
-        vscode.window.withProgress(
-            {
-                location: vscode.ProgressLocation.Notification,
-                title: `正在执行 ${checkTypeName}...`,
-                cancellable: false
-            },
-            () => {
-                return new Promise<void>((resolve) => {
-                    const proc = spawn(`"${pjassPath}"`, args, {
-                        shell: true
-                    });
+        const proc = spawn(`"${pjassPath}"`, args, { shell: true });
+        const stdoutChunks: Buffer[] = [];
+        const stderrChunks: Buffer[] = [];
 
-                    const stdoutChunks: Buffer[] = [];
-                    const stderrChunks: Buffer[] = [];
+        proc.stdout.on('data', (data: Buffer) => { stdoutChunks.push(data); });
+        proc.stderr.on('data', (data: Buffer) => { stderrChunks.push(data); });
 
-                    proc.stdout.on('data', (data: Buffer) => {
-                        stdoutChunks.push(data);
-                    });
+        proc.on('close', (code) => {
+            const stdoutBuf = Buffer.concat(stdoutChunks);
+            const stderrBuf = Buffer.concat(stderrChunks);
 
-                    proc.stderr.on('data', (data: Buffer) => {
-                        stderrChunks.push(data);
-                    });
-
-                    proc.on('close', (code) => {
-                        const stdoutBuf = Buffer.concat(stdoutChunks);
-                        const stderrBuf = Buffer.concat(stderrChunks);
-                        
-                        // 尝试用 GBK 解码中文路径，失败则用默认编码
-                        let decoded = '';
-                        try {
-                            const decoder = new (globalThis as any).TextDecoder('gbk');
-                            decoded = decoder.decode(Buffer.concat([stdoutBuf, stderrBuf]));
-                        } catch {
-                            decoded = Buffer.concat([stdoutBuf, stderrBuf]).toString();
-                        }
-                        
-                        const allOutput = decoded.trim();
-                        
-                        if (allOutput) {
-                            jassOutputChannel.appendLine(allOutput);
-                        } else if (code === 0) {
-                            jassOutputChannel.appendLine('✅ 检查通过，没有发现语法错误。');
-                        } else {
-                            jassOutputChannel.appendLine('❌ 检查失败，但没有输出信息。');
-                        }
-
-                        jassOutputChannel.appendLine('');
-                        jassOutputChannel.appendLine(`═══════════════════════════════════════════════════════════`);
-
-                        if (code === 0) {
-                            vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
-                        } else {
-                            vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，请查看输出面板`);
-                        }
-
-                        resolve();
-                    });
-
-                    proc.on('error', (err) => {
-                        jassOutputChannel.appendLine(`❌ 执行失败: ${err.message}`);
-                        jassOutputChannel.appendLine('');
-                        jassOutputChannel.appendLine(`请确保 pjass.exe 存在且可执行。`);
-                        vscode.window.showErrorMessage(`执行 ${checkTypeName} 失败: ${err.message}`);
-                        resolve();
-                    });
-                });
+            let decoded = '';
+            try {
+                const decoder = new (globalThis as any).TextDecoder('gbk');
+                decoded = decoder.decode(Buffer.concat([stdoutBuf, stderrBuf]));
+            } catch {
+                decoded = Buffer.concat([stdoutBuf, stderrBuf]).toString();
             }
-        );
+
+            const allOutput = decoded.trim();
+
+            if (code === 0) {
+                pty.writeLine('✅ 检查通过，没有发现语法错误。');
+            } else if (allOutput) {
+                // 输出 pjass 原始内容，终端会自动识别 filepath:line:col 为可点击链接
+                pty.writeLine(allOutput);
+            } else {
+                pty.writeLine('❌ 检查失败，但没有输出信息。');
+            }
+
+            pty.writeLine('');
+            pty.writeLine(`═══════════════════════════════════════════════════════════`);
+
+            if (code === 0) {
+                vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
+            } else {
+                pty.writeLine('');
+                pty.writeLine('💡 按住 Ctrl 点击上方的错误路径行即可跳转到对应代码行（macOS 按 Cmd）');
+                vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，请查看终端`);
+            }
+        });
+
+        proc.on('error', (err) => {
+            pty.writeLine(`❌ 执行失败: ${err.message}`);
+            pty.writeLine('');
+            pty.writeLine(`请确保 pjass.exe 存在且可执行。`);
+            vscode.window.showErrorMessage(`执行 ${checkTypeName} 失败: ${err.message}`);
+        });
     }
 
     // 注册触发编译检查命令

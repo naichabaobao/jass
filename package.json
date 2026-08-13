@@ -278,7 +278,7 @@
     "workspaceSymbolProvider": "true"
   },
   "scripts": {
-    "compile": "tsc  -p ./",
+    "compile": "tsc -p ./ && node -e \"const fs=require('fs'),p=require('path');const d='out/extern/pjass';fs.mkdirSync(d,{recursive:true});['pjass.exe','pjass-readme.txt'].forEach(f=>{const s=p.join('src/extern/pjass',f);if(fs.existsSync(s)){fs.copyFileSync(s,p.join(d,f));console.log('Copied:',f)}});\"",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
     "test": "npm run test:parser && npm run test:analyzer",
