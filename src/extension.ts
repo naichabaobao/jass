@@ -257,9 +257,9 @@ function enhanceKeywordDocHtml(html: string): string {
     'create','destroy','size','name','allocate','deallocate'
   ];
   const typeWords = ['integer','real','boolean','string','handle','code','nothing','true','false','null'];
-  const kwPattern = new RegExp('\\\\b(' + keywords.join('|') + ')\\\\b', 'g');
-  const tyPattern = new RegExp('\\\\b(' + typeWords.join('|') + ')\\\\b', 'g');
-  const numPattern = /\\b\\d+(?:\\.\\d+)?\\b/g;
+  const kwPattern = new RegExp('\\\b(' + keywords.join('|') + ')\\\b', 'g');
+  const tyPattern = new RegExp('\\\b(' + typeWords.join('|') + ')\\\b', 'g');
+  const numPattern = /\\\b\\d+(?:\\.\\d+)?\\b/g;
 
   function escapeHtml(str) {
     return str
@@ -288,7 +288,7 @@ function enhanceKeywordDocHtml(html: string): string {
         out += '<span class="jass-comment">' + escapeHtml(commentPart) + '</span>';
       }
       return out;
-    }).join('\\n');
+    }).join('\n');
   }
 
   document.querySelectorAll('pre code').forEach((node) => {
@@ -1059,7 +1059,7 @@ export async function activate(context: vscode.ExtensionContext) {
         pty.writeLine(`🔧 编译器: ${pjassPath}`);
         pty.writeLine(`📚 入参文件:`);
         args.forEach((arg, i) => {
-            const displayPath = arg.replace(/^"|"$/g, '');
+            const displayPath = arg.replace(/^.|.$/g, '');
             const isLast = i === args.length - 1;
             const label = isLast ? '🎯 目标文件' : `📖 标准库 ${i + 1}`;
             pty.writeLine(`   ${label}: ${displayPath}`);
