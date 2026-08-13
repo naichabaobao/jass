@@ -10,11 +10,10 @@
 		"moduleResolution": "node",
 		"typeRoots": ["./node_modules/@types"],
 		"types": ["node", "vscode"],
-		"strict": true,   /* enable all strict type-checking options */
+		"strict": true,
 		"removeComments": true,
 		"strictNullChecks": true,
 		"experimentalDecorators": false,
-		"downlevelIteration": true, // 允许展开迭代器
 		"strictPropertyInitialization": true,
 		"allowJs": true,
     	"checkJs": false
