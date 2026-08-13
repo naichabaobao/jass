@@ -941,10 +941,6 @@ export async function activate(context: vscode.ExtensionContext) {
     const jassOutputChannel = vscode.window.createOutputChannel('JASS 编译检查');
     context.subscriptions.push(jassOutputChannel);
 
-    // 创建 DiagnosticCollection 用于「问题」面板显示编译错误（可直接点击跳转）
-    const compilerDiagnostics = vscode.languages.createDiagnosticCollection('jassCompiler');
-    context.subscriptions.push(compilerDiagnostics);
-
     /**
      * 获取标准库文件路径
      */
@@ -1050,7 +1046,6 @@ export async function activate(context: vscode.ExtensionContext) {
         }
 
         jassOutputChannel.clear();
-        compilerDiagnostics.clear();
         jassOutputChannel.show(true);
         jassOutputChannel.appendLine(`═══════════════════════════════════════════════════════════`);
         jassOutputChannel.appendLine(`📋 JASS ${checkTypeName}`);
@@ -1114,42 +1109,54 @@ export async function activate(context: vscode.ExtensionContext) {
                             jassOutputChannel.appendLine('❌ 检查失败，但没有输出信息。');
                         }
 
-                        // 解析错误输出，同步到「问题」面板（可直接点击跳转）
+                        // 解析错误输出，弹出 QuickPick 供用户直接点击跳转
                         if (code !== 0 && allOutput) {
                             const errorLinePattern = /^((?:[a-zA-Z]:)?[^:]+):(\d+):(\d+):\s*(.+)$/;
                             const outputLines = allOutput.split('\n');
-                            const diagnosticMap = new Map<string, vscode.Diagnostic[]>();
+                            const parsedErrors: { filePath: string; line: number; col: number; message: string }[] = [];
 
                             for (const line of outputLines) {
                                 const match = line.match(errorLinePattern);
                                 if (match) {
                                     const [, errFilePath, lineStr, colStr, message] = match;
-                                    const lineNum = Math.max(0, parseInt(lineStr, 10) - 1);
-                                    const colNum = Math.max(0, parseInt(colStr, 10) - 1);
-
-                                    const range = new vscode.Range(lineNum, colNum, lineNum, colNum + 1);
-                                    const diagnostic = new vscode.Diagnostic(
-                                        range,
-                                        message,
-                                        vscode.DiagnosticSeverity.Error
-                                    );
-                                    diagnostic.source = 'pjass';
-
-                                    if (!diagnosticMap.has(errFilePath)) {
-                                        diagnosticMap.set(errFilePath, []);
-                                    }
-                                    diagnosticMap.get(errFilePath)!.push(diagnostic);
+                                    parsedErrors.push({
+                                        filePath: errFilePath,
+                                        line: parseInt(lineStr, 10),
+                                        col: parseInt(colStr, 10),
+                                        message
+                                    });
                                 }
                             }
 
-                            for (const [errFilePath, diagnostics] of diagnosticMap) {
-                                const uri = vscode.Uri.file(errFilePath);
-                                compilerDiagnostics.set(uri, diagnostics);
-                            }
-
-                            if (diagnosticMap.size > 0) {
+                            if (parsedErrors.length > 0) {
                                 jassOutputChannel.appendLine('');
-                                jassOutputChannel.appendLine('💡 错误已同步到「问题」面板，可直接点击跳转到对应代码行');
+                                jassOutputChannel.appendLine('💡 点击弹出的错误列表可直接跳转到对应代码行');
+
+                                // 弹出 QuickPick，用户直接点击即可跳转
+                                const items = parsedErrors.map(err => ({
+                                    label: `$(error) ${path.basename(err.filePath)}:${err.line}:${err.col}`,
+                                    description: err.message,
+                                    detail: err.filePath,
+                                    ...err
+                                }));
+
+                                // 异步弹出，不阻塞 resolve
+                                vscode.window.showQuickPick(items, {
+                                    placeHolder: `发现 ${parsedErrors.length} 个错误，点击即可跳转`
+                                }).then(async (selected) => {
+                                    if (selected) {
+                                        try {
+                                            const uri = vscode.Uri.file(selected.filePath);
+                                            const doc = await vscode.workspace.openTextDocument(uri);
+                                            const editor = await vscode.window.showTextDocument(doc);
+                                            const pos = new vscode.Position(Math.max(0, selected.line - 1), Math.max(0, selected.col - 1));
+                                            editor.selection = new vscode.Selection(pos, pos);
+                                            editor.revealRange(new vscode.Range(pos, pos), vscode.TextEditorRevealType.InCenter);
+                                        } catch (e) {
+                                            vscode.window.showWarningMessage(`无法打开文件: ${selected.filePath}`);
+                                        }
+                                    }
+                                });
                             }
                         }
 
@@ -1159,7 +1166,7 @@ export async function activate(context: vscode.ExtensionContext) {
                         if (code === 0) {
                             vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
                         } else {
-                            vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，点击底部「问题」面板可跳转`);
+                            vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，点击弹出的错误项可直接跳转`);
                         }
 
                         resolve();
