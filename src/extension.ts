@@ -941,9 +941,6 @@ export async function activate(context: vscode.ExtensionContext) {
     const jassOutputChannel = vscode.window.createOutputChannel('JASS 编译检查');
     context.subscriptions.push(jassOutputChannel);
 
-    // 编译错误 Webview 面板引用（复用同一面板）
-    let compilerErrorPanel: vscode.WebviewPanel | undefined;
-
     /**
      * 获取标准库文件路径
      */
@@ -995,114 +992,6 @@ export async function activate(context: vscode.ExtensionContext) {
         }
 
         return path.join(context.extensionPath, 'out', 'extern', 'pjass', 'pjass.exe');
-    }
-
-    /**
-     * 解析 pjass 输出中的错误信息
-     */
-    function parsePjassErrors(output: string): { filePath: string; line: number; col: number; message: string }[] {
-        const errors: { filePath: string; line: number; col: number; message: string }[] = [];
-        const errorLinePattern = /((?:[a-zA-Z]:[\\/])?[^:]+?):(\d+):(\d+):\s*(.+)/;
-        for (const line of output.split('\n')) {
-            const match = line.match(errorLinePattern);
-            if (match) {
-                const [, errFilePath, lineStr, colStr, message] = match;
-                errors.push({
-                    filePath: errFilePath,
-                    line: parseInt(lineStr, 10),
-                    col: parseInt(colStr, 10),
-                    message
-                });
-            }
-        }
-        return errors;
-    }
-
-    /**
-     * 显示编译错误 Webview 面板（HTML 链接可直接点击跳转）
-     */
-    function showCompilerErrorPanel(
-        checkTypeName: string,
-        filePath: string,
-        errors: { filePath: string; line: number; col: number; message: string }[]
-    ): void {
-        const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-        const errorRows = errors.map((err, i) => {
-            const data = JSON.stringify({ filePath: err.filePath, line: err.line, col: err.col });
-            const shortPath = path.basename(err.filePath);
-            return `<tr class="error-row" data-error="${escapeHtml(data)}">
-                <td class="idx">${i + 1}</td>
-                <td class="loc">${escapeHtml(shortPath)}:${err.line}:${err.col}</td>
-                <td class="msg">${escapeHtml(err.message)}</td>
-                <td class="path">${escapeHtml(err.filePath)}</td>
-            </tr>`;
-        }).join('');
-
-        const html = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>JASS 编译错误</title>
-<style>
-  body { font-family: var(--vscode-font-family); margin: 0; padding: 12px; color: var(--vscode-foreground); background: var(--vscode-editor-background); }
-  h2 { margin: 0 0 8px; color: var(--vscode-errorForeground); font-size: 15px; }
-  .info { margin: 0 0 12px; font-size: 12px; opacity: 0.8; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--vscode-panel-border); color: var(--vscode-descriptionForeground); font-weight: 500; }
-  td { padding: 5px 8px; border-bottom: 1px solid var(--vscode-panel-border); }
-  .error-row { cursor: pointer; }
-  .error-row:hover { background: var(--vscode-list-hoverBackground); }
-  .idx { width: 30px; text-align: center; color: var(--vscode-errorForeground); }
-  .loc { white-space: nowrap; color: var(--vscode-textLink-foreground); font-weight: 600; }
-  .msg { color: var(--vscode-errorForeground); }
-  .path { font-size: 11px; opacity: 0.6; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tip { margin-top: 12px; font-size: 12px; color: var(--vscode-descriptionForeground); }
-</style>
-</head>
-<body>
-<h2>⚠️ ${escapeHtml(checkTypeName)} - 发现 ${errors.length} 个错误</h2>
-<p class="info">文件: ${escapeHtml(filePath)}</p>
-<table>
-<thead><tr><th>#</th><th>位置</th><th>错误信息</th><th>完整路径</th></tr></thead>
-<tbody>${errorRows}</tbody>
-</table>
-<p class="tip">👆 点击任意错误行可直接跳转到对应代码位置</p>
-<script>
-const vscode = acquireVsCodeApi();
-document.querySelectorAll('.error-row').forEach(row => {
-    row.addEventListener('click', () => {
-        vscode.postMessage(JSON.parse(row.dataset.error));
-    });
-});
-</script>
-</body>
-</html>`;
-
-        if (compilerErrorPanel) {
-            compilerErrorPanel.dispose();
-        }
-        compilerErrorPanel = vscode.window.createWebviewPanel(
-            'jassCompilerErrors',
-            'JASS 编译错误',
-            vscode.ViewColumn.Beside,
-            { enableScripts: true }
-        );
-        compilerErrorPanel.webview.html = html;
-
-        compilerErrorPanel.webview.onDidReceiveMessage(async (msg: { filePath: string; line: number; col: number }) => {
-            try {
-                const uri = vscode.Uri.file(msg.filePath);
-                const doc = await vscode.workspace.openTextDocument(uri);
-                const editor = await vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
-                const pos = new vscode.Position(Math.max(0, msg.line - 1), Math.max(0, msg.col - 1));
-                editor.selection = new vscode.Selection(pos, pos);
-                editor.revealRange(new vscode.Range(pos, pos), vscode.TextEditorRevealType.InCenter);
-            } catch {
-                vscode.window.showWarningMessage(`无法打开文件: ${msg.filePath}`);
-            }
-        });
     }
 
     /**
@@ -1197,19 +1086,11 @@ document.querySelectorAll('.error-row').forEach(row => {
 
                 if (code === 0) {
                     vscode.window.showInformationMessage(`✅ ${checkTypeName} 完成：没有发现语法错误`);
-                    // 关闭可能打开的错误面板
-                    if (compilerErrorPanel) {
-                        compilerErrorPanel.dispose();
-                        compilerErrorPanel = undefined;
-                    }
                 } else {
-                    const parsedErrors = parsePjassErrors(allOutput);
-                    if (parsedErrors.length > 0) {
-                        showCompilerErrorPanel(checkTypeName, filePath, parsedErrors);
-                        vscode.window.showWarningMessage(`⚠️ ${checkTypeName}：发现 ${parsedErrors.length} 个错误，点击右侧面板中的错误行可跳转`);
-                    } else {
-                        vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，请查看输出面板`);
-                    }
+                    jassOutputChannel.appendLine('');
+                    jassOutputChannel.appendLine('💡 提示：按住 Ctrl 键点击上方的错误路径（如 D:\\map\\war3map.j:5:1:），可直接跳转到对应代码行');
+                    jassOutputChannel.appendLine('         macOS 用户请按住 Cmd 键点击');
+                    vscode.window.showWarningMessage(`⚠️ ${checkTypeName} 完成：发现错误，请查看输出面板`);
                 }
 
                 resolve();
