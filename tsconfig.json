@@ -28,6 +28,7 @@
 		"node_modules",
 		".vscode-test",
 		"./out",
+		"./out-tmp",
 		"./dist",
 		"static",
 		"src/boot",

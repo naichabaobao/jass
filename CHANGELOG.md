@@ -1,3 +1,6 @@
+#### 1.9.19 (pre-release)
+- 修复多行块注释（`/* ... */` 跨行）被「缩起来」：原 `removeComment` 在块注释状态下对非换行字符直接丢弃，导致注释体所在行被整行清空、整段长度变短、后续基于字符偏移的定位全部错位。现改为注释体内每个非换行字符替换为空格、换行保留、`*/` 替换为两空格，长度与行结构完全不变。单行块注释与字符串内 `/* */`、`//` 保护逻辑保持不变。
+
 #### 1.9.18
 - 修复 `@ignore-file-errors` 整文件忽略注解：原实现仅屏蔽 error 等级诊断，现按 `error > warning > info` 等级联屏蔽（与 `jass.config.json` 的 `diagnostics.severity` 等级体系一致）；整文件注解下语法/语义错误、警告、info 级校验提示全部不再显示，仅保留最低等级 `hint`。
 - 修复「仅打开单个 JASS 文件（未打开工作区文件夹）时 common.j 等标准库不显示」：单文件模式原先完全跳过 `loadStandardLibraries` / `loadStaticFiles`，导致 native 函数没有悬停/补全/跳转，语义分析还会对 native 大量误报「未定义」。现已在单文件模式下同样加载标准库与扩展 `static` 文件；并统一标准库 static 目录解析为「多候选回退」（`resolveExtensionStaticDir`），修复 `getStandardLibraryFiles` 旧的单候选路径在 dev/打包布局下解析不到内置 static 目录的问题。
