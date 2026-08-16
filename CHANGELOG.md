@@ -1,5 +1,7 @@
 #### 1.9.19 (pre-release)
 - 修复多行块注释（`/* ... */` 跨行）被「缩起来」：原 `removeComment` 在块注释状态下对非换行字符直接丢弃，导致注释体所在行被整行清空、整段长度变短、后续基于字符偏移的定位全部错位。现改为注释体内每个非换行字符替换为空格、换行保留、`*/` 替换为两空格，长度与行结构完全不变。单行块注释与字符串内 `/* */`、`//` 保护逻辑保持不变。
+- 修复 vJASS `method operator` 误报错：原 `parseMethod` 仅支持 `[] []= < > == !=` 与命名运算符，导致 `method operator +` / `-` / `*` / `/` / `=` / `<=` / `>=` 全部被报 `Invalid operator name` 而解析失败——这正是结构体运算符重载（如 `operator +`、`operator =`）最常见的误报错来源。现补齐这 7 个运算符分支；报错提示同步更新。
+- 新增 `src/vjass/parser-bugs.test.ts`：39 个合法复杂 vJASS 片段的「应零语法误报」回归扫描（覆盖 library/scope/struct 继承与运算符重载/module/interface/textmacro/static if/debug/注入/zinc 等），接入 `npm test`（新增 `test:bugscan`）。扫描目前全绿。
 
 #### 1.9.18
 - 修复 `@ignore-file-errors` 整文件忽略注解：原实现仅屏蔽 error 等级诊断，现按 `error > warning > info` 等级联屏蔽（与 `jass.config.json` 的 `diagnostics.severity` 等级体系一致）；整文件注解下语法/语义错误、警告、info 级校验提示全部不再显示，仅保留最低等级 `hint`。

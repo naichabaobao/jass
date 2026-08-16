@@ -956,6 +956,28 @@ export class Parser {
             } else if (opToken.type === TokenType.OperatorNotEqual) {
                 operatorName = "!=";
                 this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorPlus) {
+                operatorName = "+";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorMinus) {
+                operatorName = "-";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorMultiply) {
+                operatorName = "*";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorDivide) {
+                operatorName = "/";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorAssign) {
+                // 赋值运算符 operator =
+                operatorName = "=";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorLessEqual) {
+                operatorName = "<=";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorGreaterEqual) {
+                operatorName = ">=";
+                this.lexer.next();
             }
             // 处理自定义运算符（标识符，如 x, x=）
             else if (opToken.type === TokenType.Identifier) {
@@ -970,7 +992,7 @@ export class Parser {
                     operatorName = customOpName;
                 }
             } else {
-                this.error(`Invalid operator name '${opToken.value}'. Expected [], []=, <, >, ==, !=, or identifier`);
+                this.error(`Invalid operator name '${opToken.value}'. Expected [], []=, +, -, *, /, =, <, >, <=, >=, ==, !=, or identifier`);
                 return null;
             }
         } else {
