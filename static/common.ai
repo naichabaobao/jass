@@ -1835,7 +1835,7 @@ endfunction
 //============================================================================
 
 // 研究指定科技
-// 简单难度AI默认只升一级
+// 简单难度AI只升第一级
 function SetBuildUpgr takes integer qty, integer unitid returns nothing
     if MeleeDifficulty() != MELEE_NEWBIE or qty == 1 then
         call SetBuildAll(BUILD_UPGRADE,qty,unitid,-1)
