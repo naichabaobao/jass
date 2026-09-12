@@ -928,6 +928,11 @@ globals
     constant integer c_wyvern            = 0
     // 当前驭风者（风骑士）数量，不含建造中
     constant integer c_wyvern_done       = 0
+    // 诱捕（兽族）已研究标识
+    constant boolean b_ensnare           = false
+    // 猎头者（兽族）
+    // 狂战士升级前等于HEAD_HUNTER，升级后等于BERSERKER
+    constant integer hunter_code         = HEAD_HUNTER
 
     // 当前猎头者数量，含建造中
     // 混乱之治AI脚本变量
