@@ -9288,15 +9288,15 @@ native BlzTriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player which
 native BlzGetTriggerPlayerKey takes nothing returns oskeytype
 // 获取触发的特殊按键
 native BlzGetTriggerPlayerMetaKey takes nothing returns integer
-// 获取触发的按键被按下
+// 查询触发玩家是否按下按键
 native BlzGetTriggerPlayerIsKeyDown takes nothing returns boolean
-// 判断指定特殊按键是否按下
+// 查询指定特殊按键是否按下
 // @since 3.0
 native BlzIsMetaKeyPressed takes integer metakey returns boolean
-// 判断触发按键是否按下
+// 查询触发按键是否按下
 // @since 3.0
 native BlzIsKeyPressed takes oskeytype key returns boolean
-// 判断鼠标按钮是否按下(指定鼠标按钮类型)
+// 查询鼠标按钮是否按下(指定鼠标按钮类型)
 // @since 3.0
 native BlzIsMouseButtonPressed takes mousebuttontype mouseButtonType returns boolean
 // 获取鼠标的屏幕 X 坐标
