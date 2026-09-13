@@ -197,7 +197,8 @@ type ubersplat extends handle
 // 哈希表
 type hashtable extends agent
 // UI框架/控件句柄
-type framehandle extends handle
+// 3.0从 handle 改为 agent
+type framehandle extends agent
 // 原生 UI框架/控件句柄 类型
 type originframetype extends handle
 // UI框架/控件句柄 相对锚点类型
@@ -208,6 +209,9 @@ type textaligntype extends handle
 type frameeventtype extends handle
 // 键盘按键类型
 type oskeytype extends handle
+// 元密钥类型
+// @since 3.0
+type metakeytype extends handle
 // 技能整数域
 type abilityintegerfield extends handle
 // 技能实数域
@@ -274,6 +278,18 @@ type unitcategory extends handle
 type pathingflag extends handle
 // 技能按钮特效
 type commandbuttoneffect extends handle
+// 迷雾风格
+// @since 3.0
+type fogstyle extends handle
+// 装备类型
+// @since 3.0
+type equipmentType extends handle
+// 物品标签
+// @since 3.0
+type itemTag extends handle
+// 装载槽
+// @since 3.0
+type loadoutslot extends handle
 
 // 转换整数成种族
 constant native ConvertRace takes integer i returns race
@@ -443,6 +459,20 @@ constant native ConvertRegenType takes integer i returns regentype
 constant native ConvertUnitCategory takes integer i returns unitcategory
 // 转换整数成路径标志
 constant native ConvertPathingFlag takes integer i returns pathingflag
+// 转换整数成迷雾风格
+// @since 3.0
+constant native ConvertFogStyle takes integer i returns fogstyle
+// 转换整数成装备类型
+// @since 3.0
+constant native ConvertEquipmentType takes integer i returns equipmentType
+// 转换整数成物品标签
+// @since 3.0
+constant native ConvertItemTag takes integer i returns itemTag
+// 转换整数装载槽
+// @since 3.0
+constant native ConvertLoadoutSlot takes integer i returns loadoutslot
+
+
 // 转换命令字符串成命令ID
 constant native OrderId takes string orderIdString returns integer
 // 转换命令ID成命令字符串
@@ -609,6 +639,11 @@ globals
 	// 代码：|CffA57033|r , 三色值：164, 111, 51
 	// @since 1.29
 	constant playercolor PLAYER_COLOR_PEANUT = ConvertPlayerColor(23)
+	// 玩家颜色 黑色
+	// 代码：|cff000000|r , 三色值：0, 0, 0
+	// @since 3.0
+	constant playercolor PLAYER_COLOR_BLACK = ConvertPlayerColor(24)
+
 	// 种族 人类
 	constant race RACE_HUMAN = ConvertRace(1)
 	// 种族 兽人
@@ -927,6 +962,10 @@ globals
 	constant racepreference RACE_PREF_RANDOM = ConvertRacePref(32)
 	// 预设种族 用户可选择
 	constant racepreference RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
+	// 预设种族 被遗忘者
+	// @since 3.0
+	constant racepreference RACE_PREF_FORSAKEN = ConvertRacePref(128)
+
 	// 玩家控制者类型 用户
 	// 默认值在情节-玩家设置编辑，游戏初始化时会按房间的玩家使用情况(槽位是否有打开/无玩家，玩家是电脑还是用户)再次设置
 	constant mapcontrol MAP_CONTROL_USER = ConvertMapControl(0)
@@ -1046,6 +1085,24 @@ globals
 	// 玩家槽状态 玩家已离开游戏
 	constant playerslotstate PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
 
+	// 迷雾类型 线性
+	// @since 3.0
+	constant fogstyle FOG_STYLE_LINEAR = ConvertFogStyle(0)
+	// 迷雾类型 指数
+	// @since 3.0
+	constant fogstyle FOG_STYLE_EXP = ConvertFogStyle(1)
+	// 迷雾类型 指数2
+	// @since 3.0
+	constant fogstyle FOG_STYLE_EXP2 = ConvertFogStyle(2)
+	// 迷雾类型 高度
+	// @since 3.0
+	constant fogstyle FOG_STYLE_HEIGHT = ConvertFogStyle(3)
+	// 迷雾类型 新指数
+	// @since 3.0
+	constant fogstyle FOG_STYLE_NEW_EXP = ConvertFogStyle(4)
+	// 迷雾类型 新指数2
+	// @since 3.0
+	constant fogstyle FOG_STYLE_NEW_EXP_2 = ConvertFogStyle(5)
 
 	// Sound Constants
 	
@@ -1531,7 +1588,12 @@ globals
 	constant playerunitevent EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
 	// 玩家单位事件 堆叠物品
 	constant playerunitevent EVENT_PLAYER_UNIT_STACK_ITEM = ConvertPlayerUnitEvent(319)
-	
+	// 玩家单位事件 装备物品
+	// @since 3.0
+	constant playerunitevent EVENT_PLAYER_UNIT_EQUIP_ITEM = ConvertPlayerUnitEvent(321)
+	// 玩家单位事件 取消装备物品
+	// @since 3.0
+	constant playerunitevent EVENT_PLAYER_UNIT_UNEQUIP_ITEM = ConvertPlayerUnitEvent(323)
 	
 	// For use with TriggerRegisterUnitEvent
 	
@@ -1555,8 +1617,13 @@ globals
 	constant unitevent EVENT_UNIT_PAWN_ITEM = ConvertUnitEvent(294)
 	// 单位事件 堆叠物品
 	constant unitevent EVENT_UNIT_STACK_ITEM = ConvertUnitEvent(318)
-	
-	
+	// 单位事件 装备物品
+	// @since 3.0
+	constant unitevent EVENT_UNIT_EQUIP_ITEM = ConvertUnitEvent(320)
+	// 单位事件 取消装备物品
+	// @since 3.0
+	constant unitevent EVENT_UNIT_UNEQUIP_ITEM = ConvertUnitEvent(322)
+
 	// Limit Event API constants
 	// variable, // variable, // Limit Event API constants    
 	// player state, game state, and unit state events
@@ -7185,6 +7252,11 @@ native ChooseRandomItem takes integer level returns integer
 // 随机选择物品分类-指定等级
 // 默认用于市场随机出售物品分类
 native ChooseRandomItemEx takes itemtype whichType, integer level returns integer
+// 随机选择物品分类-指定过滤条件
+// @param equipmentType 装备类型
+// @param itemTag 物品标签
+// @since 3.0
+native ChooseRandomItemExWithFilter takes itemtype whichType, integer level, equipmentType whichEquipmentType, itemTag whichTag returns integer
 // 设置随机种子
 // 默认用于统一电影播放效果
 native SetRandomSeed takes integer seed returns nothing
@@ -7200,7 +7272,44 @@ native ResetTerrainFog takes nothing returns nothing
 native SetUnitFog takes real a, real b, real c, real d, real e returns nothing
 // 设置地形迷雾 [R]
 native SetTerrainFogEx takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
-// 对指定玩家显示文本(自动限时) [R]
+// 设置地形迷雾 [V]
+// @since 3.0
+native SetTerrainFogExV takes integer style, real zstart, real zend, real density, real heightStart, real heightEnd, real linearStart, real linearEnd, real red, real green, real blue returns nothing
+// 设置地形迷雾风格
+// @since 3.0
+native BlzSetTerrainFogStyle takes fogstyle style returns nothing
+// 设置地形迷雾Z轴初始值
+// @since 3.0
+native BlzSetTerrainFogZStart takes real zStart returns nothing
+// 设置地形迷雾Z轴初始值
+// @since 3.0
+native BlzSetTerrainFogZEnd takes real ZEnd returns nothing
+// 设置地形迷雾密度
+// @since 3.0
+native BlzSetTerrainFogDensity takes real density returns nothing
+// 设置地形迷雾初始高度
+// @since 3.0
+native BlzSetTerrainFogHeightStart takes real heightStart returns nothing
+// 设置地形迷雾结束高度
+// @since 3.0
+native BlzSetTerrainFogHeightEnd takes real heightEnd returns nothing
+// 设置地形迷雾线性初始值
+// @since 3.0
+native BlzSetTerrainFogLinearStart takes real linearStart returns nothing
+// 设置地形迷雾结束值
+// @since 3.0
+native BlzSetTerrainFogLinearEnd takes real linearEnd returns nothing
+// 设置地形迷雾最大线性密度
+// @since 3.0
+native BlzSetTerrainFogMaxLinearDensity takes real maxLinearDensity returns nothing
+// 允许/禁止 地形迷雾覆盖天空
+// @since 3.0
+native BlzSetTerrainFogDrawOverSky takes boolean drawOverSky returns nothing
+// 设置地形迷雾颜色
+// @since 3.0
+native BlzSetTerrainFogColor takes real red, real green, real blue returns nothing
+
+	// 对指定玩家显示文本(自动限时) [R]
 native DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing
 // 对指定玩家显示文本(指定时间) [R]
 native DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
@@ -7274,6 +7383,31 @@ native SetIntroShotModel takes string introModelPath returns nothing
 native EnableWorldFogBoundary takes boolean b returns nothing
 // 播放指定电影(所有玩家)（按模式名称）
 native PlayModelCinematic takes string modelName returns nothing
+// 预加载游戏过场电影
+// @since 3.0
+native BlzPreloadModelCinematicGame takes string modelName returns boolean
+// 获取游戏过场电影累计数量
+// @since 3.0
+native BlzGetModelCinematicGameShotCount  takes nothing returns integer
+// 获取游戏过场电影当前数量
+// @since 3.0
+native BlzGetModelCinematicGameCurrentShot  takes nothing returns integer
+// 获取游戏过场电影剩余时间
+// @since 3.0
+native BlzGetModelCinematicGameRemainingTime  takes nothing returns real
+// 播放游戏过场电影(指定位置)
+// @since 3.0
+native BlzPlayModelCinematicGameAtPosition  takes string modelName, real posX, real posY, real posZ, real RotZ returns nothing
+// 启用/禁用 过场电影
+// @since 3.0
+native BlzSetCinematicEnabledDE     takes boolean enable returns nothing
+// 设置最小阴影投射点灯光计数
+// @since 3.0
+native BlzSetMinShadowCastingPointLightCount takes integer count returns nothing
+// 获取最小阴影投射点灯光计数
+// @since 3.0
+native BlzGetMinShadowCastingPointLightCount takes nothing returns integer
+
 // 播放指定电影(所有玩家)（按电影名称）
 native PlayCinematic takes string movieName returns nothing
 // 强制玩家按下特定UI键
@@ -7650,10 +7784,24 @@ native SetCameraRotateMode takes real x, real y, real radiansToSweep, real durat
 native SetCameraField takes camerafield whichField, real value, real duration returns nothing
 // 调整镜头属性(所有玩家)
 native AdjustCameraField takes camerafield whichField, real offset, real duration returns nothing
+// 允许/禁止 修改镜头属性
+// @since 3.0
+native SetCameraFieldControlledByInput takes camerafield whichField, boolean controlled returns nothing
+// 获取修改镜头属性是否允许修改
+// @since 3.0
+native GetCameraFieldControlledByInput takes camerafield whichField returns boolean
+
 // 锁定镜头到单位(所有玩家) [R]
 native SetCameraTargetController takes unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
 // 锁定镜头到单位(固定镜头源)(所有玩家) [R]
 native SetCameraOrientController takes unit whichUnit, real xoffset, real yoffset returns nothing
+// 设置镜头类型(所有玩家)
+// @since 3.0
+native BlzCameraSetCameraType takes integer cameraType returns nothing
+// 获取镜头类型(所有玩家)
+// @since 3.0
+native BlzCameraGetCameraType takes nothing returns integer
+
 // 创建镜头
 native CreateCameraSetup takes nothing returns camerasetup
 // 创建镜头(指定属性)
@@ -7683,6 +7831,14 @@ native BlzCameraSetupSetLabel takes camerasetup whichSetup, string label returns
 // 获取镜头标签
 // @since 1.33
 native BlzCameraSetupGetLabel takes camerasetup whichSetup returns string
+// 设置镜头类型(指定镜头)
+// @since 3.0
+native BlzCameraSetupSetCameraType takes camerasetup whichSetup, integer cameraType returns nothing
+// 获取镜头类型(指定镜头)
+// @since 3.0
+native BlzCameraSetupGetCameraType takes camerasetup whichSetup returns integer
+
+
 // 摇晃镜头朝向
 native CameraSetTargetNoise takes real mag, real velocity returns nothing
 // 摇晃镜头源
@@ -7698,6 +7854,7 @@ native CameraSetSmoothingFactor takes real factor returns nothing
 native CameraSetFocalDistance takes real distance returns nothing
 // 设置镜头景深比例
 native CameraSetDepthOfFieldScale takes real scale returns nothing
+
 // 设置滤镜文本内容（从指定文件获取）
 native SetCineFilterTexture takes string filename returns nothing
 // 设置滤镜混合模式
@@ -7718,6 +7875,7 @@ native SetCineFilterDuration takes real duration returns nothing
 native DisplayCineFilter takes boolean flag returns nothing
 // 查询滤镜是否显示
 native IsCineFilterDisplayed takes nothing returns boolean
+
 // 设置电影场景
 native SetCinematicScene takes integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
 // 结束电影场景
@@ -7726,8 +7884,16 @@ native EndCinematicScene takes nothing returns nothing
 native ForceCinematicSubtitles takes boolean flag returns nothing
 // 启用/禁用 电影声音
 native SetCinematicAudio takes boolean cinematicAudio returns nothing
+
 // 获取镜头指定空白值
 native GetCameraMargin takes integer whichMargin returns real
+
+// 允许/禁止 阻挡镜头(指定区域)
+// @since 3.0
+native EnableCameraBlocker takes rect r, boolean flag returns nothing
+// 添加镜头阻挡
+// @since 3.0
+native AddCameraBlocker takes rect where returns nothing
 
 // These return values for the local players camera only...
 // These return values for the local players camera only...
@@ -7843,6 +8009,9 @@ native ResumeMusic takes nothing returns nothing
 native PlayThematicMusic takes string musicFileName returns nothing
 // 跳播主题音乐(指定淡入) [R]
 native PlayThematicMusicEx takes string musicFileName, integer frommsecs returns nothing
+// 允许/禁止 失去焦点时暂停主题音乐
+// @since 3.0
+native BlzPauseThematicMusicOnFocusLost takes boolean pause returns nothing
 // 停止主题音乐[C]
 native EndThematicMusic takes nothing returns nothing
 
@@ -8007,6 +8176,59 @@ native GetAbilitySoundById takes integer abilityId, soundtype t returns string
 native GetTerrainCliffLevel takes real x, real y returns integer
 // 设置水面颜色 [R]
 native SetWaterBaseColor takes integer red, integer green, integer blue, integer alpha returns nothing
+// 设置水高级参数(不支持指定环境映射强度)
+// @param useColor 启用/禁用 颜色
+// @param vertexDisplacement 顶点位移
+// @param minOpacity 最小不透明度
+// @param maxOpacity 最大不透明度
+// @param reflectivity 反射率
+// @param emissivity 放射率
+// @param emissivity 边缘柔软度
+// @param waveStrength 波浪强度
+// @since 3.0
+native SetHDWaterParams takes integer red, integer green, integer blue, boolean useColor, integer vertexDisplacement, integer minOpacity, integer maxOpacity, integer reflectivity, integer emissivity, integer edgeSoftness, integer waveStrength returns nothing
+// 设置水高级参数 [Ex](支持指定环境映射强度)
+// @param override 启用/禁用 覆盖颜色
+// @param vertexDisplacement 顶点位移
+// @param minOpacity 最小不透明度
+// @param maxOpacity 最大不透明度
+// @param reflectivity 反射率
+// @param emissivity 放射率
+// @param emissivity 边缘柔软度
+// @param waveStrength 波浪强度
+// @param envMapStrength 环境映射强度
+// @since 3.0
+native SetHDWaterParamsEx takes integer red, integer green, integer blue, boolean override, integer vertexDisplacement, integer minOpacity, integer maxOpacity, integer reflectivity, integer emissivity, integer edgeSoftness, integer waveStrength, integer envMapStrength returns nothing
+// 设置水颜色(高清)
+// @since 3.0
+native BlzSetHDWaterColor takes integer red, integer green, integer blue returns nothing
+// 启用/禁用 覆盖水颜色(高清)
+// @since 3.0
+native BlzSetHDWaterColorOverride takes boolean override returns nothing
+// 设置水顶点位移(高清)
+// @since 3.0
+native BlzSetHDWaterVertexDisplacement takes integer vertexDisplacement returns nothing
+// 设置水最小不透明度(高清)
+// @since 3.0
+native BlzSetHDWaterMinOpacity takes integer minOpacity returns nothing
+// 设置水最大不透明度(高清)
+// @since 3.0
+native BlzSetHDWaterMaxOpacity takes integer maxOpacity returns nothing
+// 设置水反射率(高清)
+// @since 3.0
+native BlzSetHDWaterReflectivity takes integer reflectivity returns nothing
+// 设置水放射率(高清)
+// @since 3.0
+native BlzSetHDWaterEmissivity takes integer emissivity returns nothing
+// 设置水边缘柔软度(高清)
+// @since 3.0
+native BlzSetHDWaterEdgeSoftness takes integer edgeSoftness returns nothing
+// 设置水波浪强度(高清)
+// @since 3.0
+native BlzSetHDWaterWaveStrength takes integer waveStrength returns nothing
+// 设置水环境映射强度(高清)
+// @since 3.0
+native BlzSetHDWaterEnvMapStrength takes integer envMapStrengthy returns nothing
 // 启用/禁用 水面变形
 native SetWaterDeforms takes boolean val returns nothing
 // 获取指定坐标地形类型 [R]
@@ -8018,9 +8240,11 @@ native GetTerrainVariance takes real x, real y returns integer
 native SetTerrainType takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
 // 查询路径类型是否指定类型(指定坐标) [R]
 native IsTerrainPathable takes real x, real y, pathingtype t returns boolean
+// 设置地形可通行性
+// @since 3.0
+native BlzIsTerrainPathableEx takes real x, real y, pathingtype t returns boolean
 // 设置路径类型状态(指定坐标) [R]
 native SetTerrainPathable takes real x, real y, pathingtype t, boolean flag returns nothing
-
 
 // Image API
 //
@@ -8104,7 +8328,58 @@ native SetDoodadAnimation takes real x, real y, real radius, integer doodadID, b
 // @param animName 动画名称
 // @param animRandom 是否随机播放
 native SetDoodadAnimationRect takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
-
+// 设置指定地表装饰物动画(单个地表装饰物)
+// @since 3.0
+native BlzSetSingleDoodadAnimation takes integer index, string animName, boolean animRandom returns nothing
+// 设置指定类型地表装饰物颜色
+// @param nearestOnly 是否只修改最接近范围内装饰物
+// @since 3.0
+native SetDoodadColor takes real x, real y, real radius, integer doodadID, boolean nearestOnly, playercolor whichColor returns nothing
+// 设置指定区域地表装饰物颜色
+// @since 3.0
+native SetDoodadColorRect takes rect r, integer doodadID, playercolor whichColor returns nothing
+// 设置指定地表装饰物颜色(单个地表装饰物)
+// @since 3.0
+native BlzSetSingleDoodadColor takes integer index, playercolor whichColor returns nothing
+// 获取指定地表装饰物 X 坐标(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadX takes integer index returns real
+// 获取指定地表装饰物 Y 坐标(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadY takes integer index returns real
+// 获取指定地表装饰物 Z 坐标(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadZ takes integer index returns real
+// 获取指定地表装饰物 X 轴缩放(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadScaleX takes integer index returns real
+// 获取指定地表装饰物 Y 轴缩放(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadScaleY takes integer index returns real
+// 获取指定地表装饰物 Z 轴缩放(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadScaleZ takes integer index returns real
+// 允许/禁止 指定地表装饰物使用模型坐标轴(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadIsUsingModelAxes takes integer index returns boolean
+// 获取指定地表装饰物横摇(X 轴)(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadYaw takes integer index returns real
+// 获取指定地表装饰物纵摇(Z 轴)(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadPitch takes integer index returns real
+// 获取指定地表装饰物滚摇(Y 轴)(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadRoll takes integer index returns real
+// 获取指定地表装饰物变化(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadVariation takes integer index returns integer
+// 获取指定地表装饰物类型(单个地表装饰物)
+// @since 3.0
+native BlzGetDoodadId takes integer index returns integer
+// 获取地表装饰物数量
+// @since 3.0
+native BlzGetNumDoodads takes nothing returns integer
 
 // Computer AI interface
 //
@@ -8366,6 +8641,10 @@ native BlzGetUnitAttackCooldown takes unit whichUnit, integer weaponIndex return
 // 不支持攻击模式2
 // @since 1.33
 native BlzSetUnitAttackCooldown takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
+// 重置指定单位攻击
+// @param weaponIndex 武器引索，似乎只有输入1才有效
+// @since 3.0
+native BlzResetUnitAttack takes unit whichUnit, integer weaponIndex returns nothing
 // 设置指定特效颜色(指定玩家的颜色)
 native BlzSetSpecialEffectColorByPlayer takes effect whichEffect, player whichPlayer returns nothing
 // 设置指定特效颜色(指定颜色)
@@ -8414,6 +8693,15 @@ native BlzSpecialEffectAddSubAnimation takes effect whichEffect, subanimtype whi
 native BlzPlaySpecialEffect takes effect whichEffect, animtype whichAnim returns nothing
 // 播放指定特效动画(指定持续时间)
 native BlzPlaySpecialEffectWithTimeScale takes effect whichEffect, animtype whichAnim, real timeScale returns nothing
+// 设置指定特效动画混合时间
+// @since 3.0
+native BlzSetSpecialEffectAnimationBlendTime takes effect whichEffect, real blendTime returns nothing
+// 队列指定特效动画(指定动画)
+// @since 3.0
+native BlzQueueSpecialEffectAnimation takes effect whichEffect, string whichAnimation returns nothing
+// 设置指定特效动画(指定动画)
+// @since 3.0
+native BlzSetSpecialEffectAnimation takes effect whichEffect, string whichAnimation returns nothing
 // 获取指定动画类型名称
 native BlzGetAnimName takes animtype whichAnim returns string
 // 获取指定单位护甲值
@@ -8429,6 +8717,10 @@ native BlzUnitHideAbility takes unit whichUnit, integer abilId, boolean flag ret
 // 禁用指定单位技能
 // @since 1.33
 native BlzUnitDisableAbility takes unit whichUnit, integer abilId, boolean flag, boolean hideUI returns nothing
+// 启用/禁用 指定单位光环
+// @param affectsUI 启用/禁用 特效UI
+// @since 3.0
+native BlzUnitEnableAuras takes unit whichUnit, boolean enable, boolean affectsUI returns nothing
 // 取消指定单位限时生命
 // @since 1.33
 native BlzUnitCancelTimedLife takes unit whichUnit returns nothing
@@ -8453,10 +8745,10 @@ native BlzGetAbilityManaCost takes integer abilId, integer level returns integer
 // 获取技能冷却时间
 // @returns 指定技能在指定等级下的基础冷却时间（秒）
 native BlzGetAbilityCooldown takes integer abilId, integer level returns real
-// 设置技能冷却时间
+// 设置指定单位技能冷却时间(指定等级)
 // @since 1.33
 native BlzSetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level, real cooldown returns nothing
-// 获取单位技能冷却时间
+// 获取指定单位技能冷却时间
 // @returns 指定单位该技能在该等级配置的冷却时间（秒）
 // @since 1.33
 native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer level returns real
@@ -8465,6 +8757,21 @@ native BlzGetUnitAbilityCooldown takes unit whichUnit, integer abilId, integer l
 // @returns 当前剩余冷却时间（秒）；不可用或未触发冷却时通常为 0
 // @since 1.33
 native BlzGetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId returns real
+// 获取指定单位技能冷却时间百分比
+// @since 3.0
+native BlzGetUnitAbilityCooldownPercent takes unit whichUnit, integer abilId returns real
+// 设置指定单位技能剩余冷却时间
+// @since 3.0
+native BlzSetUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId, real duration returns nothing
+// 设置指定单位技能冷却时间百分比
+// @since 3.0
+native BlzSetUnitAbilityCooldownPercent takes unit whichUnit, integer abilId, real percent returns nothing
+// 调整指定单位技能剩余冷却时间
+// @since 3.0
+native BlzAdjustUnitAbilityCooldownRemaining takes unit whichUnit, integer abilId, real duration returns nothing
+// 调整指定单位技能冷却时间百分比
+// @since 3.0
+native BlzAdjustUnitAbilityCooldownPercent takes unit whichUnit, integer abilId, real percent returns nothing
 // 设置单位结束技能冷却
 // @since 1.33
 native BlzEndUnitAbilityCooldown takes unit whichUnit, integer abilCode returns nothing
@@ -8683,6 +8990,9 @@ native BlzFrameCageMouse takes framehandle frame, boolean enable returns nothing
 native BlzFrameSetValue takes framehandle frame, real value returns nothing
 // 获取 原生 UI框架/控件句柄 数值
 native BlzFrameGetValue takes framehandle frame returns real
+// 设置 原生 UI框架/控件句柄 文本自动滚动
+// @since 3.0
+native BlzTextAreaFrameSetAutoScroll takes framehandle frame, boolean value returns nothing
 // 设置 原生 UI框架/控件句柄 最小和最大值
 native BlzFrameSetMinMaxValue takes framehandle frame, real minValue, real maxValue returns nothing
 // 设置 原生 UI框架/控件句柄 滚动梯级
@@ -8751,6 +9061,21 @@ native BlzGetTriggerPlayerKey takes nothing returns oskeytype
 native BlzGetTriggerPlayerMetaKey takes nothing returns integer
 // 获取触发的按键被按下
 native BlzGetTriggerPlayerIsKeyDown takes nothing returns boolean
+// 判断指定特殊按键是否按下
+// @since 3.0
+native BlzIsMetaKeyPressed takes integer metakey returns boolean
+// 判断触发按键是否按下
+// @since 3.0
+native BlzIsKeyPressed takes oskeytype key returns boolean
+// 判断鼠标按钮是否按下(指定鼠标按钮类型)
+// @since 3.0
+native BlzIsMouseButtonPressed takes mousebuttontype mouseButtonType returns boolean
+// 获取鼠标的屏幕 X 坐标
+// @since 3.0
+native BlzGetMouseScreenPosX takes nothing returns integer
+// 获取鼠标的屏幕 Y 坐标
+// @since 3.0
+native BlzGetMouseScreenPosYtakes nothing returns integer
 // 启用/禁用 光标
 native BlzEnableCursor takes boolean enable returns nothing
 // 设置鼠标位置
@@ -8763,6 +9088,18 @@ native BlzGetLocalClientHeight takes nothing returns integer
 native BlzIsLocalClientActive takes nothing returns boolean
 // 获取鼠标聚焦的单位
 native BlzGetMouseFocusUnit takes nothing returns unit
+// 指定像素 X 坐标 转换为 UI框架/控件句柄 X 坐标
+// @since 3.0
+native BlzPixelToFrameX takes integer pixelX returns real
+// 指定像素 Y 坐标 转换为 UI框架/控件句柄 Y 坐标
+// @since 3.0
+native BlzPixelToFrameY takes integer pixelY returns real
+// 指定 UI框架/控件句柄 X 坐标 转换为 像素 X 坐标
+// @since 3.0
+native BlzFrameToPixelX takes real frameX returns integer
+// 指定 UI框架/控件句柄 Y 坐标 转换为 像素 Y 坐标
+// @since 3.0
+native BlzFrameToPixelY takes real frameY returns integer
 // 设置小地图图标贴图
 native BlzChangeMinimapTerrainTex takes string texFile returns boolean
 // 获取(游戏当前使用的本地化)语言
@@ -9039,4 +9376,83 @@ native BlzUnitClearOrders takes unit whichUnit, boolean onlyQueued returns nothi
 // @since 1.33
 // stops the current order and optionally clears the queue
 native BlzUnitForceStopOrder takes unit whichUnit, boolean clearQueue returns nothing
+
+// 创建可破坏物(指定纵摇滚动)
+// @since 3.0
+native BlzCreateDestructablePitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation returns destructable
+// 创建可破坏物(指定纵摇滚动(含 Z 坐标))
+// @since 3.0
+native BlzCreateDestructableZPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation returns destructable
+// 创建可破坏物(毁坏的)(指定纵摇滚动)
+// @since 3.0
+native BlzCreateDeadDestructablePitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation returns destructable
+// 创建可破坏物(毁坏的)(指定纵摇滚动(含 Z 坐标))
+// @since 3.0
+native BlzCreateDeadDestructableZPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation returns destructable
+// 创建可破坏物(指定皮肤)(指定纵摇滚动)
+// @since 3.0
+native BlzCreateDestructableWithSkinPitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable
+// 创建可破坏物(指定皮肤)(指定纵摇滚动(含 Z 坐标))
+// @since 3.0
+native BlzCreateDestructableZWithSkinPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable
+// 创建可破坏物(毁坏的)(指定皮肤)(指定纵摇滚动)
+// @since 3.0
+native BlzCreateDeadDestructableWithSkinPitchRoll takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable
+// 创建可破坏物(毁坏的)(指定皮肤)(指定纵摇滚动(含 Z 坐标))
+// @since 3.0
+native BlzCreateDeadDestructableZWithSkinPitchRoll takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId returns destructable
+
+// 创建可破坏物(指定颜色)
+// @since 3.0
+native BlzCreateDestructableWithColor takes integer objectid, real x, real y, real face, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(指定颜色(含 Z 坐标))
+// @since 3.0
+native BlzCreateDestructableZWithColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(毁坏的)(指定颜色)
+// @since 3.0
+native BlzCreateDeadDestructableWithColor takes integer objectid, real x, real y, real face, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(毁坏的)(指定颜色(含 Z 坐标))
+// @since 3.0
+native BlzCreateDeadDestructableZWithColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(指定皮肤)(指定颜色)
+// @since 3.0
+native BlzCreateDestructableWithSkinColor takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId, playercolor color returns destructable
+// 创建可破坏物(指定皮肤)(指定颜色(含 Z 坐标))
+// @since 3.0
+native BlzCreateDestructableZWithSkinColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId, playercolor color returns destructable
+// 创建可破坏物(指定皮肤)(毁坏的)(指定颜色)
+// @since 3.0
+native BlzCreateDeadDestructableWithSkinColor takes integer objectid, real x, real y, real face, real scale, integer variation, integer skinId, playercolor color returns destructable
+// 创建可破坏物(指定皮肤)(毁坏的)(指定颜色(含 Z 坐标))
+// @since 3.0
+native BlzCreateDeadDestructableZWithSkinColor takes integer objectid, real x, real y, real z, real face, real scale, integer variation, integer skinId, playercolor color returns destructable
+// 创建可破坏物(指定纵摇滚动和颜色)
+// @since 3.0
+native BlzCreateDestructablePitchRollWithColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(指定纵摇滚动(含 Z 坐标)和颜色)
+// @since 3.0
+native BlzCreateDestructableZPitchRollWithColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(毁坏的)(指定纵摇滚动和颜色)
+// @since 3.0
+native BlzCreateDeadDestructablePitchRollWithColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(毁坏的)(指定纵摇滚动(含 Z 坐标)和颜色)
+// @since 3.0
+native BlzCreateDeadDestructableZPitchRollWithColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, playercolor color returns destructable
+// 创建可破坏物(指定皮肤)(指定纵摇滚动和颜色)
+// @since 3.0
+native BlzCreateDestructableWithSkinPitchRollColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable
+// 创建可破坏物(指定皮肤)(指定纵摇滚动(含 Z 坐标)和颜色)
+// @since 3.0
+native BlzCreateDestructableZWithSkinPitchRollColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable
+// 创建可破坏物(毁坏的)(指定皮肤)(指定纵摇滚动和颜色)
+// @since 3.0
+native BlzCreateDeadDestructableWithSkinPitchRollColor takes integer objectid, real x, real y, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable
+// 创建可破坏物(毁坏的)(指定皮肤)(指定纵摇滚动(含 Z 坐标)和颜色)
+// @since 3.0
+native BlzCreateDeadDestructableZWithSkinPitchRollColor takes integer objectid, real x, real y, real z, real face, real roll, real pitch, real scale, integer variation, integer skinId, playercolor color returns destructable
+
+// 设置指定可破坏物顶点颜色
+// @since 3.0
+native SetDestructableVertexColor takes destructable whichDestructable, integer red, integer green, integer blue, integer alpha returns nothing
+
 //endregion
