@@ -9293,7 +9293,7 @@ native BlzGetTriggerPlayerIsKeyDown takes nothing returns boolean
 // 查询指定特殊按键是否按下
 // @since 3.0
 native BlzIsMetaKeyPressed takes integer metakey returns boolean
-// 查询触发按键是否按下
+// 查询指定键盘按键类型是否按下
 // @since 3.0
 native BlzIsKeyPressed takes oskeytype key returns boolean
 // 查询鼠标按钮是否按下(指定鼠标按钮类型)
