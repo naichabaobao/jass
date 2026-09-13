@@ -165,10 +165,10 @@ globals
     // 玩家标识，标记敌方玩家，默认值8
     // 部分官方战役AI脚本的变量
     constant integer GRAY           = 8
-    // 玩家标识，标记敌方玩家，默认9
+    // 玩家标识，标记敌方玩家，默认值9
     // 部分官方战役AI脚本的变量
     constant integer LIGHT_BLUE     = 9
-    // 玩家标识，标记敌方玩家，默认10
+    // 玩家标识，标记敌方玩家，默认值10
     // 部分官方战役AI脚本的变量
     constant integer GREEN          = 10
     // 玩家标识，标记敌方玩家
