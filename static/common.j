@@ -7512,7 +7512,7 @@ native BlzSetTerrainFogStyle takes fogstyle style returns nothing
 // 设置地形迷雾Z轴初始值
 // @since 3.0
 native BlzSetTerrainFogZStart takes real zStart returns nothing
-// 设置地形迷雾Z轴初始值
+// 设置地形迷雾Z轴结束值
 // @since 3.0
 native BlzSetTerrainFogZEnd takes real ZEnd returns nothing
 // 设置地形迷雾密度
