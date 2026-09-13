@@ -6212,13 +6212,13 @@ native SetUnitAnimationByIndex takes unit whichUnit, integer whichAnimation retu
 native SetUnitAnimationWithRarity takes unit whichUnit, string whichAnimation, raritycontrol rarity returns nothing
 // 添加/删除 指定单位指定动画附加名 [R]
 native AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing
-// 允许 指定单位英雄光圈
+// 开启 指定单位英雄光圈
 // @since 3.0
 native AllowHeroGlowOnUnit takes unit whichUnit returns nothing
-// 禁止 指定单位英雄光圈
+// 关闭 指定单位英雄光圈
 // @since 3.0
 native DisallowHeroGlowOnUnit takes unit whichUnit returns nothing
-// 查询指定单位英雄光圈是否允许
+// 查询指定单位英雄光圈开关状态
 // @since 3.0
 native HeroGlowIsAllowedOnUnit takes unit whichUnit returns boolean
 
@@ -8946,8 +8946,8 @@ native BlzUnitHideAbility takes unit whichUnit, integer abilId, boolean flag ret
 // 禁用指定单位技能
 // @since 1.33
 native BlzUnitDisableAbility takes unit whichUnit, integer abilId, boolean flag, boolean hideUI returns nothing
-// 启用/禁用 指定单位光环
-// @param affectsUI 启用/禁用 特效UI
+// 开启/关闭 指定单位光环
+// @param affectsUI 开启/关闭 特效UI
 // @since 3.0
 native BlzUnitEnableAuras takes unit whichUnit, boolean enable, boolean affectsUI returns nothing
 // 取消指定单位限时生命
