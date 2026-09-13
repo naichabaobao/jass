@@ -6212,13 +6212,13 @@ native SetUnitAnimationByIndex takes unit whichUnit, integer whichAnimation retu
 native SetUnitAnimationWithRarity takes unit whichUnit, string whichAnimation, raritycontrol rarity returns nothing
 // 添加/删除 指定单位指定动画附加名 [R]
 native AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing
-// 允许 英雄光圈
+// 允许 指定单位英雄光圈
 // @since 3.0
 native AllowHeroGlowOnUnit takes unit whichUnit returns nothing
-// 禁止 英雄光圈
+// 禁止 指定单位英雄光圈
 // @since 3.0
 native DisallowHeroGlowOnUnit takes unit whichUnit returns nothing
-// 查询指定单位光圈是否允许
+// 查询指定单位英雄光圈是否允许
 // @since 3.0
 native HeroGlowIsAllowedOnUnit takes unit whichUnit returns boolean
 
