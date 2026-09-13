@@ -7527,7 +7527,7 @@ native BlzSetTerrainFogHeightEnd takes real heightEnd returns nothing
 // 设置地形迷雾线性初始值
 // @since 3.0
 native BlzSetTerrainFogLinearStart takes real linearStart returns nothing
-// 设置地形迷雾结束值
+// 设置地形迷雾线性结束值
 // @since 3.0
 native BlzSetTerrainFogLinearEnd takes real linearEnd returns nothing
 // 设置地形迷雾最大线性密度
