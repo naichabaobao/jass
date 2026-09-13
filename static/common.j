@@ -8412,7 +8412,7 @@ native SetWaterBaseColor takes integer red, integer green, integer blue, integer
 // @param maxOpacity 最大不透明度
 // @param reflectivity 反射率
 // @param emissivity 放射率
-// @param emissivity 边缘柔软度
+// @param edgeSoftness 边缘柔软度
 // @param waveStrength 波浪强度
 // @since 3.0
 native SetHDWaterParams takes integer red, integer green, integer blue, boolean useColor, integer vertexDisplacement, integer minOpacity, integer maxOpacity, integer reflectivity, integer emissivity, integer edgeSoftness, integer waveStrength returns nothing
@@ -8423,7 +8423,7 @@ native SetHDWaterParams takes integer red, integer green, integer blue, boolean 
 // @param maxOpacity 最大不透明度
 // @param reflectivity 反射率
 // @param emissivity 放射率
-// @param emissivity 边缘柔软度
+// @param edgeSoftness 边缘柔软度
 // @param waveStrength 波浪强度
 // @param envMapStrength 环境映射强度
 // @since 3.0
