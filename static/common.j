@@ -209,7 +209,7 @@ type textaligntype extends handle
 type frameeventtype extends handle
 // 键盘按键类型
 type oskeytype extends handle
-// 元密钥类型
+// 特殊按键类型
 // @since 3.0
 type metakeytype extends handle
 // 技能整数域
@@ -287,7 +287,7 @@ type equipmentType extends handle
 // 物品标签
 // @since 3.0
 type itemTag extends handle
-// 装载槽
+// 装备槽
 // @since 3.0
 type loadoutslot extends handle
 
@@ -468,7 +468,7 @@ constant native ConvertEquipmentType takes integer i returns equipmentType
 // 转换整数成物品标签
 // @since 3.0
 constant native ConvertItemTag takes integer i returns itemTag
-// 转换整数装载槽
+// 转换整数成装备槽
 // @since 3.0
 constant native ConvertLoadoutSlot takes integer i returns loadoutslot
 
@@ -1591,7 +1591,7 @@ globals
 	// 玩家单位事件 装备物品
 	// @since 3.0
 	constant playerunitevent EVENT_PLAYER_UNIT_EQUIP_ITEM = ConvertPlayerUnitEvent(321)
-	// 玩家单位事件 取消装备物品
+	// 玩家单位事件 卸下装备物品
 	// @since 3.0
 	constant playerunitevent EVENT_PLAYER_UNIT_UNEQUIP_ITEM = ConvertPlayerUnitEvent(323)
 	
@@ -1620,7 +1620,7 @@ globals
 	// 单位事件 装备物品
 	// @since 3.0
 	constant unitevent EVENT_UNIT_EQUIP_ITEM = ConvertUnitEvent(320)
-	// 单位事件 取消装备物品
+	// 单位事件 卸下装备物品
 	// @since 3.0
 	constant unitevent EVENT_UNIT_UNEQUIP_ITEM = ConvertUnitEvent(322)
 
@@ -1717,16 +1717,119 @@ globals
 	constant itemtype ITEM_TYPE_CAMPAIGN = ConvertItemType(5)
 	// 物品分类 混杂(假)
 	constant itemtype ITEM_TYPE_MISCELLANEOUS = ConvertItemType(6)
+	// 物品分类 装备
+	// @since 3.0
+	constant itemtype ITEM_TYPE_EQUIPMENT = ConvertItemType(7)
 	// 物品分类 未知
-	constant itemtype ITEM_TYPE_UNKNOWN = ConvertItemType(7)
+	// 3.0 转换整数从7改为8
+	constant itemtype ITEM_TYPE_UNKNOWN = ConvertItemType(8)
 	// 物品分类 任何
-	constant itemtype ITEM_TYPE_ANY = ConvertItemType(8)
-	
+	// 3.0 转换整数从7改为9
+	constant itemtype ITEM_TYPE_ANY = ConvertItemType(9)
 	// 弃用物品分类，应改用力量提升分类
 	// Deprecated, should use ITEM_TYPE_POWERUP
 	constant itemtype ITEM_TYPE_TOME = ConvertItemType(2)
-	
-	
+
+
+//===================================================
+// Item Equipment Type Constants for use with ChooseRandomItemExWithFilter()
+//===================================================
+
+    // 装备类型 无
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_NONE = ConvertEquipmentType(0)
+    // 装备类型 头部
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_HEAD = ConvertEquipmentType(1)
+    // 装备类型 胸部
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_CHEST = ConvertEquipmentType(2)
+    // 装备类型 手套
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_GLOVES = ConvertEquipmentType(3)
+    // 装备类型 鞋子
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_BOOTS = ConvertEquipmentType(4)
+    // 装备类型 戒指
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_RING = ConvertEquipmentType(5)
+    // 装备类型 主手
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_PRIMARY = ConvertEquipmentType(6)
+    // 装备类型 副手
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_OFFHAND = ConvertEquipmentType(7)
+    // 装备类型 装饰品
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_TRINKET = ConvertEquipmentType(8)
+    // 装备类型 任何
+    // @since 3.0
+    constant equipmentType EQUIPMENT_TYPE_ANY = ConvertEquipmentType(9)
+
+//===================================================
+// Item Tag Type Constants for use with ChooseRandomItemExWithFilter()
+//===================================================
+
+    // 物品标签 未定义
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_UNDEFINED = ConvertItemTag(0)
+    // 物品标签 可丢弃
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_DROPPABLE = ConvertItemTag(1)
+    // 物品标签 任务奖励
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_QUESTREWARD = ConvertItemTag(2)
+    // 物品标签 BOSS掉落
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_BOSSDROP = ConvertItemTag(3)
+    // 物品标签 秘密
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_SECRET = ConvertItemTag(4)
+    // 物品标签 谜题
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_PUZZLE = ConvertItemTag(5)
+    // 物品标签 世界
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_WORLD = ConvertItemTag(6)
+    // 物品标签 商店
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_SHOP = ConvertItemTag(7)
+    // 物品标签 任何
+    // @since 3.0
+    constant itemTag ITEMTAG_TYPE_ANY = ConvertItemTag(8)
+
+//===================================================
+// Equipment slot constants
+//===================================================
+
+    // 装备槽 头部
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_HEAD = ConvertLoadoutSlot(0)
+    // 装备槽 胸部
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_CHEST = ConvertLoadoutSlot(1)
+    // 装备槽 手套
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_GLOVES = ConvertLoadoutSlot(2)
+    // 装备槽 鞋子
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_BOOTS = ConvertLoadoutSlot(3)
+    // 装备槽 主戒
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_RING = ConvertLoadoutSlot(4)
+    // 装备槽 副戒
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_RINGALT = ConvertLoadoutSlot(5)
+    // 装备槽 主手
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_PRIMARY = ConvertLoadoutSlot(6)
+    // 装备槽 副手
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_OFFHAND = ConvertLoadoutSlot(7)
+    // 装备槽 装饰品
+    // @since 3.0
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_TRINKET = ConvertLoadoutSlot(8)
+
 	// Animatable Camera Fields
 	
 	// 镜头属性 镜头距离(距离到目标)
@@ -1751,6 +1854,16 @@ globals
 	constant camerafield CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 	// 镜头属性 局部滚摇(Y 轴)
 	constant camerafield CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
+	// 镜头属性 景深距离
+	// @since 3.0
+	constant camerafield CAMERA_FIELD_DEPTH_OF_FIELD_DISTANCE = ConvertCameraField(11)
+	// 镜头属性 景深比例
+	// @since 3.0
+	constant camerafield CAMERA_FIELD_DEPTH_OF_FIELD_SCALE = ConvertCameraField(12)
+	// 镜头属性 滤光溶剂
+	// @since 3.0
+	constant camerafield CAMERA_FIELD_ZABSOLUTE = ConvertCameraField(13)
+
 	// 混合模式 无混合
 	constant blendmode BLEND_MODE_NONE = ConvertBlendMode(0)
 	// 混合模式 无视混合
@@ -2511,6 +2624,25 @@ globals
 	// @since 1.33
 	constant oskeytype OSKEY_OEM_CLEAR = ConvertOsKeyType($FE)
 
+//===================================================
+// Meta Key constants
+//===================================================
+
+    // 特殊按键 无
+    // @since 3.0
+    constant integer METAKEY_NONE = 0
+    // 特殊按键 SHIFT 键
+    // @since 3.0
+    constant integer METAKEY_SHIFT = 1
+    // 特殊按键 CTRL 键
+    // @since 3.0
+    constant integer METAKEY_CTRL = 2
+    // 特殊按键 ALT 键
+    // @since 3.0
+    constant integer METAKEY_ALT = 4
+    // 特殊按键 Windows 键
+    // @since 3.0
+    constant integer METAKEY_WINKEYS = 8
 
 	// Instanced Object Operation API constants
 
@@ -4187,6 +4319,12 @@ globals
 	constant unitbooleanfield UNIT_BF_SELECTION_CIRCLE_ON_WATER = ConvertUnitBooleanField('usew')
 	// 单位布尔值域 美术 - 深水区有阴影 ('ushr')
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
+	// 单位布尔值域 美术 - 显示空对地 ('uatg')
+	// @since 3.0
+	constant unitbooleanfield UNIT_BF_SHOW_AIR_TO_GROUND = ConvertUnitBooleanField('uatg')
+	// 单位布尔值域 美术 - 强制显示生命值 ('ufhp')
+	// @since 3.0
+	constant unitbooleanfield UNIT_BF_FORCE_DISPLAY_HP = ConvertUnitBooleanField('ufhp')
 
 	// 单位字符串域 文本 - 名称 ('unam')
 	constant unitstringfield UNIT_SF_NAME = ConvertUnitStringField('unam')
@@ -4707,8 +4845,12 @@ native SetPlayerAlliance takes player sourcePlayer, player otherPlayer, alliance
 // @param rate 税率
 native SetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
 // 设置指定玩家预设种族
-// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
+// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE、RACE_PREF_FORSAKEN]
 native SetPlayerRacePreference takes player whichPlayer, racepreference whichRacePreference returns nothing
+// 设置玩家种族皮肤
+// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE、RACE_PREF_FORSAKEN]
+// @since 3.0
+native SetPlayerRaceSkin takes player whichPlayer, racepreference whichRacePreference returns nothing
 // 设置指定玩家种族可选性
 // 房间是否允许选择种族
 native SetPlayerRaceSelectable takes player whichPlayer, boolean value returns nothing
@@ -4743,7 +4885,7 @@ native GetPlayerSlotState takes player whichPlayer returns playerslotstate
 native GetPlayerTaxRate takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
 // 查询指定玩家预设种族是否指定种族
 // 若情节–玩家未设置指定的种族（必须固定出生点才生效），则取房间玩家自主选择的种族，使用随机时应该返回否
-// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE]
+// 可选项[RACE_PREF_HUMAN、RACE_PREF_ORC、RACE_PREF_NIGHTELF、RACE_PREF_UNDEAD、RACE_PREF_DEMON、RACE_PREF_RANDOM、RACE_PREF_USER_SELECTABLE、RACE_PREF_FORSAKEN]
 native IsPlayerRacePrefSet takes player whichPlayer, racepreference pref returns boolean
 // 获取指定玩家名字
 native GetPlayerName takes player whichPlayer returns string
@@ -5451,6 +5593,16 @@ constant native GetManipulatingUnit takes nothing returns unit
 // EVENT_PLAYER_UNIT_USE_ITEM
 constant native GetManipulatedItem takes nothing returns item
 
+// 事件响应 获取装备的物品(对应装备物品事件)
+// @since 3.0
+// EVENT_PLAYER_UNIT_EQUIP_ITEM
+constant native GetEquippedItem takes nothing returns item
+
+// 事件响应 获取卸下装备的物品(对应卸下装备物品事件)
+// @since 3.0
+// EVENT_PLAYER_UNIT_UNEQUIP_ITEM
+constant native GetUnequippedItem takes nothing returns item
+
 
 // 事件响应 获取被拾取的物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
@@ -5726,6 +5878,12 @@ native TriggerSyncStart takes nothing returns nothing
 // 触发器同步准备完成
 // 用于异步时统一数据
 native TriggerSyncReady takes nothing returns nothing
+// 判断触发器是否正在运行
+// @since 3.0
+native BlzTriggerIsRunning takes trigger whichTrigger returns boolean
+// 判断触发器是否已停止运行(中断)
+// @since 3.0
+native BlzTriggerInterrupt takes trigger whichTrigger returns nothing
 
 
 // Widget API
@@ -5786,6 +5944,9 @@ native QueueDestructableAnimation takes destructable d, string whichAnimation re
 native SetDestructableAnimation takes destructable d, string whichAnimation returns nothing
 // 设置指定可破坏物动画播放速度 [R]
 native SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
+// 设置指定可破坏物颜色
+// @since 3.0
+native SetDestructableColor takes destructable d, playercolor color returns nothing
 // 显示/隐藏 指定可破坏物[R]
 // 隐藏后反隐也看不到，但其碰撞体积仍可生效
 native ShowDestructable takes destructable d, boolean flag returns nothing
@@ -5815,6 +5976,9 @@ native GetItemX takes item i returns real
 native GetItemY takes item i returns real
 // 移动指定物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
+// 设置指定物品颜色
+// @since 3.0
+native SetItemColor takes item whichItem, playercolor whichColor returns nothing
 // 允许/禁止 指定物品死亡时掉落
 native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 // 允许/禁止 指定物品被丢弃
@@ -5827,6 +5991,12 @@ native SetItemPlayer takes item whichItem, player whichPlayer, boolean changeCol
 native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
 // 查询指定物品是否无敌
 native IsItemInvulnerable takes item whichItem returns boolean
+// 查询指定物品是否被装备
+// @since 3.0
+native IsItemEquipped takes item whichItem returns boolean
+// 查询指定物品是否在扩展物品栏中
+// @since 3.0
+native IsItemInBag takes item whichItem returns boolean
 // 显示/隐藏 指定物品 [R]
 // 隐藏后反隐也看不到
 native SetItemVisible takes item whichItem, boolean show returns nothing
@@ -5867,6 +6037,12 @@ native SetItemCharges takes item whichItem, integer charges returns nothing
 native GetItemUserData takes item whichItem returns integer
 // 设置指定物品自定义值
 native SetItemUserData takes item whichItem, integer data returns nothing
+// 获取物品装备类型
+// @since 3.0
+native GetItemEquipmentType takes item whichItem returns equipmentType
+// 获取物品标签
+// @since 3.0
+native GetItemTag takes item whichItem returns itemTag
 
 
 // Unit API
@@ -6036,6 +6212,23 @@ native SetUnitAnimationByIndex takes unit whichUnit, integer whichAnimation retu
 native SetUnitAnimationWithRarity takes unit whichUnit, string whichAnimation, raritycontrol rarity returns nothing
 // 添加/删除 指定单位指定动画附加名 [R]
 native AddUnitAnimationProperties takes unit whichUnit, string animProperties, boolean add returns nothing
+// 允许 英雄光圈
+// @since 3.0
+native AllowHeroGlowOnUnit takes unit whichUnit returns nothing
+// 禁止 英雄光圈
+// @since 3.0
+native DisallowHeroGlowOnUnit takes unit whichUnit returns nothing
+// 查询指定单位光圈是否允许
+// @since 3.0
+native HeroGlowIsAllowedOnUnit takes unit whichUnit returns boolean
+
+// 
+// @since 3.0
+native BlzGetUnitAnimationDuration takes unit whichUnit, string whichAnimation returns real
+// 
+// @since 3.0
+native BlzGetUnitAnimationDurationByIndex takes unit whichUnit, integer index returns real
+
 
 // 设置指定单位身体朝向
 native SetUnitLookAt takes unit whichUnit, string whichBone, unit lookAtTarget, real offsetX, real offsetY, real offsetZ returns nothing
@@ -6144,6 +6337,9 @@ native SetUnitPointValueByType takes integer unitType, integer newPointValue ret
 // 创建物品(指定单位和物品) [R]
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
+// 查询单位是否装备指定物品
+// @since 3.0
+native UnitEquipItem takes unit whichUnit, item whichItem returns boolean
 // 创建物品(指定单位和物品类型)
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
@@ -6159,13 +6355,46 @@ native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // 单位死亡或删除后，也能正常丢弃
 // @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
+// 卸下指定装备(指定单位和物品)
+// @since 3.0
+native UnitUnequipItem takes unit whichUnit, item whichItem returns nothing
+// 卸下指定装备(指定单位和装备槽)
+// @since 3.0
+native UnitUnequipItemFromSlot takes unit whichUnit, loadoutslot slot returns item
 // 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
+// 查询单位扩展物品栏中是否拥有装备(指定单位和物品)
+// @since 3.0
+native UnitHasItemBagged takes unit whichUnit, item whichItem returns boolean
 // 获取单位持有的物品(指定物品栏格数)
 // @param itemSlot 物品栏格数：0-5
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
 // 获取已存档物品的物品栏格数（指定单位）
 native UnitInventorySize takes unit whichUnit returns integer
+native UnitExtendedInventorySize takes unit whichUnit returns integer
+
+// 获取指定单位持有的物品(指定扩展物品栏格数)
+// @since 3.0
+native UnitItemInBagSlot takes unit whichUnit, integer itemSlot returns item
+// 获取指定单位持有的物品(指定装备栏)
+// @since 3.0
+native UnitItemInEquipmentSlot takes unit whichUnit, loadoutslot itemSlot returns item
+// 查询指定装备是否被指定单位装备
+// @since 3.0
+native UnitHasItemEquipped takes unit whichUnit, item whichItem returns boolean
+// 查询指定单位指定装备栏是否为空
+// @since 3.0
+native UnitHasLoadoutSlotEmpty takes unit whichUnit, loadoutslot itemSlot returns boolean
+// 查询指定单位任意装备栏是否有装备
+// @since 3.0
+native UnitHasAnyItemEquiped takes unit whichUnit returns boolean
+// 查询指定单位是否已装备指定类型的装备
+// @since 3.0
+native UnitHasItemEquipmentOfType takes unit whichUnit, equipmentType equipmentId returns boolean
+// 查询指定单位是否可以装备指定类型的装备
+// 该装备类型的装备槽被占用时返回否
+// @since 3.0
+native UnitCanEquipItemOfEquipmentType takes unit whichUnit, equipmentType equipmentId returns boolean
 
 // 发布丢弃物品命令(指定坐标) [R]
 // 丢弃成功的前提是该物品允许丢弃
@@ -7246,13 +7475,13 @@ native ChooseRandomCreep takes integer level returns integer
 // 获取随机中立被动玩家建筑单位的单位类型
 // 默认用于地图初始化时创建随机中立被动单位(如商店、泉水等)
 native ChooseRandomNPBuilding takes nothing returns integer
-// 随机选择物品-所有等级
+// 随机选择物品(所有等级)
 // 默认用于市场随机出售物品
 native ChooseRandomItem takes integer level returns integer
-// 随机选择物品分类-指定等级
+// 随机选择物品分类(指定等级)
 // 默认用于市场随机出售物品分类
 native ChooseRandomItemEx takes itemtype whichType, integer level returns integer
-// 随机选择物品分类-指定过滤条件
+// 随机选择物品分类(指定过滤条件)
 // @param equipmentType 装备类型
 // @param itemTag 物品标签
 // @since 3.0
