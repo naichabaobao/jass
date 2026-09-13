@@ -8431,7 +8431,7 @@ native SetHDWaterParamsEx takes integer red, integer green, integer blue, boolea
 // 设置水颜色(高清)
 // @since 3.0
 native BlzSetHDWaterColor takes integer red, integer green, integer blue returns nothing
-// 启用/禁用 覆盖水颜色(高清)
+// 开启/关闭 覆盖水颜色(高清)
 // @since 3.0
 native BlzSetHDWaterColorOverride takes boolean override returns nothing
 // 设置水顶点位移(高清)
