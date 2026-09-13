@@ -7482,6 +7482,8 @@ native ChooseRandomItem takes integer level returns integer
 // 默认用于市场随机出售物品分类
 native ChooseRandomItemEx takes itemtype whichType, integer level returns integer
 // 随机选择物品分类(指定过滤条件)
+// @param itemtype 物品类型
+// @param level 物品等级
 // @param equipmentType 装备类型
 // @param itemTag 物品标签
 // @since 3.0
