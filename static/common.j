@@ -7530,7 +7530,7 @@ native BlzSetTerrainFogLinearStart takes real linearStart returns nothing
 // 设置地形迷雾线性结束值
 // @since 3.0
 native BlzSetTerrainFogLinearEnd takes real linearEnd returns nothing
-// 设置地形迷雾最大线性密度
+// 设置地形迷雾最大线性密度(最大不透明度)
 // @since 3.0
 native BlzSetTerrainFogMaxLinearDensity takes real maxLinearDensity returns nothing
 // 允许/禁止 地形迷雾覆盖天空
@@ -7540,7 +7540,7 @@ native BlzSetTerrainFogDrawOverSky takes boolean drawOverSky returns nothing
 // @since 3.0
 native BlzSetTerrainFogColor takes real red, real green, real blue returns nothing
 
-	// 对指定玩家显示文本(自动限时) [R]
+// 对指定玩家显示文本(自动限时) [R]
 native DisplayTextToPlayer takes player toPlayer, real x, real y, string message returns nothing
 // 对指定玩家显示文本(指定时间) [R]
 native DisplayTimedTextToPlayer takes player toPlayer, real x, real y, real duration, string message returns nothing
