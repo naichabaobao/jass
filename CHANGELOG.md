@@ -1,4 +1,7 @@
-#### 1.9.19 (pre-release)
+#### 1.9.21
+- 添加3.0.0 API
+
+#### 1.9.20 & 1.9.19(pre-release)
 - LSP 排障能力完善：新增**状态栏指示器**——LSP 接管时显示 `✓ JASS LSP`（tooltip 列出已接管特性），启动中显示转圈，服务端不可用/崩溃回落内置实现时显示 `⚠ JASS 内置模式`（tooltip 携带回落原因），点击直达「输出 → JASS Language Server」面板，新增命令 `jass.showLspOutput`。至此「LSP 开了但感觉不对」可以按三步定位：看状态栏 → `npm run test:lsp-probe`（绕开客户端直接驱动 exe 走完整 LSP 会话，验证 initialize/诊断/hover/documentSymbol/标准库零误报）→ 看输出面板日志。
 - 新增**旧版扩展共存检测**：激活时若发现旧版「Warcraft-III-VJassHelper」（`jass.warcraft-iii-vjasshelper`）仍在启用，弹出一次性警告——该扩展同样为 JASS 注册悬停/诊断等特性，与本扩展同时启用会结果重复、互相干扰（其旧版本还会因内置 `data` 目录缺失抛出 `data\blizzard.j ENOENT` 未处理异常）。仅提示不干预。
 - 修复 handle 变量赋值后的「Possible null value used」误报（`set gg_trg_X = CreateTrigger()` 后每次当参数使用都被警告）：赋值路径的 mayBeNull 评估与声明处语义对齐——此前仅凭 RHS 是 handle 类型（如 `CreateTrigger()` 返回 `trigger`）就把变量重新标记为可能为 null，现仅当 RHS 是字面 `null` 或 RHS 变量本身可能为 null 时才标记；赋值链传播（`set b = a`，a 可能为 null）与「无初始化直接使用」的正确警告保留。`analyzer.test.ts` 新增 4 个回归用例，`parser-bugs.test.ts` 新增 4 组 textmacro 特殊形态覆盖（函数生成器宏占位符作函数名/返回类型+逗号前后空格、参数含空格与占位符拼接、生成 struct 成员与方法、空参数列表与 optional 调用）。
