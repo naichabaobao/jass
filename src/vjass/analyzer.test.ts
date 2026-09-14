@@ -1934,6 +1934,154 @@ endfunction`,
         }
     );
 
+    // ========== 回归: return null 误报 ==========
+    // 无标准库（单文件分析）时，native handle 类型（player/unit 等）走 FALLBACK_HANDLE_TYPE_NAMES
+    // 回退集合，return null 必须放行，不应误报类型不匹配
+    testSemantic(
+        "returns player 函数中 return null 不应误报类型不匹配",
+        `function Controller takes integer i returns player
+if i >= 0 then
+return Player(i)
+endif
+return null
+endfunction`,
+        (errors) => {
+            return !errors.errors.some(e =>
+                e.message.includes("Return type") || e.message.includes("Invalid return type")
+            );
+        }
+    );
+
+    // ========== 回归: handle 变量赋值后使用不应误报「可能为 null」==========
+    // 修复前：赋值路径仅凭 RHS 是 handle 类型就重新标记 mayBeNull，
+    // 导致 set gg_trg_X = CreateTrigger() 之后的每次使用都被误报。
+    // 赋值语义应与声明处一致：仅字面 null 或 RHS 本身可能为 null 时才标记。
+    testSemantic(
+        "set gg_trg = CreateTrigger() 后作为参数使用不应误报可能为 null",
+        `globals
+    trigger gg_trg_SpellTrigger = null
+endglobals
+function cond takes nothing returns boolean
+    return true
+endfunction
+function act takes nothing returns nothing
+endfunction
+function InitTrig_SpellTrigger takes nothing returns nothing
+set gg_trg_SpellTrigger = CreateTrigger()
+call TriggerRegisterAnyUnitEventBJ(gg_trg_SpellTrigger, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+call TriggerAddCondition(gg_trg_SpellTrigger, Condition(function cond))
+call TriggerAddAction(gg_trg_SpellTrigger, function act)
+endfunction`,
+        (errors) => {
+            return !errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
+    testSemantic(
+        "local handle 无初始化声明后经 CreateXxx() 赋值再使用不应误报可能为 null",
+        `function UseGroup takes group g returns nothing
+endfunction
+function Test takes nothing returns nothing
+local group g
+set g = CreateGroup()
+call UseGroup(g)
+endfunction`,
+        (errors) => {
+            return !errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
+    testSemantic(
+        "赋值链传播可能为 null（set b = a，a 可能为 null）应保留警告",
+        `function KillUnit takes unit u returns nothing
+endfunction
+function Test takes nothing returns nothing
+local unit a = null
+local unit b
+set b = a
+call KillUnit(b)
+endfunction`,
+        (errors) => {
+            return errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
+    testSemantic(
+        "无初始化局部变量直接使用应保留警告",
+        `function KillUnit takes unit u returns nothing
+endfunction
+function Test takes nothing returns nothing
+local unit u
+call KillUnit(u)
+endfunction`,
+        (errors) => {
+            return errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
+    // ========== 测试 43.5: textmacro 模板体不应被语义检查误报 ==========
+    console.log("\n【测试 43.5】textmacro 模板体占位符不误报");
+
+    // 正常的 textmacro 定义 + runtextmacro 展开：模板体（$TYPE$ 占位符）不应报任何错误
+    testSemantic(
+        "textmacro 模板体占位符不应误报类型/符号错误",
+        `//! textmacro CREATE_SAVE_FUNC takes TYPE, FUNC_SUFFIX
+function Save$TYPE$ takes hashtable ht, integer key, integer subkey, $TYPE$ value returns nothing
+call Save$FUNC_SUFFIX$Handle(ht, key, subkey, value)
+endfunction
+function Load$TYPE$ takes hashtable ht, integer key, integer subkey returns $TYPE$
+return Load$FUNC_SUFFIX$Handle(ht, key, subkey)
+endfunction
+//! endtextmacro
+//! runtextmacro CREATE_SAVE_FUNC("unit", "Unit")
+//! runtextmacro CREATE_SAVE_FUNC("real", "Real")
+
+function main takes nothing returns nothing
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0 &&
+                !errors.warnings.some(w => w.message.includes("$"));
+        }
+    );
+
+    // 用户实际场景：占位符作函数名/返回类型的函数生成器宏，
+    // 两次展开（其中一次逗号前后带空格）+ 生成函数被调用，不应有任何误报
+    testSemantic(
+        "函数生成器宏两次展开后生成函数可正常调用（含逗号前后空格的参数）",
+        `//! textmacro bb takes name, type
+function $name$ takes nothing returns $type$
+return ""
+endfunction
+//! endtextmacro
+//! runtextmacro bb("kkk_func1" , "string")
+//! runtextmacro bb("kkk_func2", "string")
+
+function caller takes nothing returns nothing
+    local string s = kkk_func1()
+    set s = kkk_func2()
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0 &&
+                !errors.warnings.some(w => w.message.includes("$"));
+        }
+    );
+
+    // 防御性场景：解析错位导致模板体以真实 FunctionDeclaration 泄漏到顶层时，
+    // 名字/类型带 $NAME$ 占位符的代码不应产生任何语义误报（JASS 合法标识符不含 $）
+    testSemantic(
+        "模板体泄漏为顶层函数时占位符不应误报",
+        `function Save$TYPE$ takes hashtable ht, integer key, integer subkey, $TYPE$ value returns nothing
+call Save$FUNC_SUFFIX$Handle(ht, key, subkey, value)
+endfunction
+function Load$TYPE$ takes hashtable ht, integer key, integer subkey returns $TYPE$
+return Load$FUNC_SUFFIX$Handle(ht, key, subkey)
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0 &&
+                !errors.warnings.some(w => w.message.includes("$"));
+        }
+    );
+
     // ========== 测试 44: 继承和方法覆盖问题 ==========
     console.log("\n【测试 44】继承和方法覆盖问题");
 

@@ -9310,8 +9310,8 @@ native BlzIsMouseButtonPressed takes mousebuttontype mouseButtonType returns boo
 // @since 3.00
 native BlzGetMouseScreenPosX takes nothing returns integer
 // 获取鼠标的屏幕 Y 坐标
-// @since 3.00
-native BlzGetMouseScreenPosYtakes nothing returns integer
+// @since 3.0.0
+native BlzGetMouseScreenPosY takes nothing returns integer
 // 启用/禁用 光标
 native BlzEnableCursor takes boolean enable returns nothing
 // 设置鼠标位置

@@ -77,6 +77,41 @@ npm install
 
 **查找优先级**（编译检查）：`jass.compiler.check*` > `jass.compiler.*` > 扩展内置 `static/` 版本。
 
+##### `jass.lsp` - 接入 ydwe-compiler 语言服务器（实验性）
+
+扩展内置了一个 Rust 实现的编译器语言服务器（Windows 为 `static/ydwe-compiler.exe`，Linux 为 `static/ydwe-compiler`），
+它支持以 LSP 模式运行（`--lsp`）。开启 `jass.lsp` 后，**悬停提示（hover）与错误诊断（diagnostics）**改由该语言服务器接管，
+其余能力（补全、跳转、大纲、格式化等）仍由扩展自带的 TypeScript 实现提供。
+
+```json
+{
+  "jass.lsp": true,
+  "jass.lsp.trace.server": "off"
+}
+```
+
+**配置项说明**：
+
+| 配置项 | 说明 | 默认值 |
+| --- | --- | --- |
+| `jass.lsp` | 是否启用语言服务器接管 hover / 诊断。**实验性功能**，默认关闭 | `false` |
+| `jass.lsp.trace.server` | LSP 通信日志级别：`off` / `messages` / `verbose` | `"off"` |
+
+**服务器路径说明**：语言服务器**不支持自定义路径**，固定使用扩展内置 `static/` 目录下与当前平台匹配的二进制
+（Windows：`ydwe-compiler.exe`；Linux/macOS：`ydwe-compiler`）。Linux/macOS 首次启用时，扩展会把内置二进制
+拷贝到扩展全局存储目录并赋予可执行权限后运行（VSIX 打包会丢失可执行位）。
+
+**行为说明**：
+
+- 切换该开关会**自动重启语言服务器**，无需重新加载窗口。
+- 任何一步不可用（二进制缺失、未启用 `lsp` 功能、启动失败或中途退出）都会**自动回落到扩展内置实现**，
+  不会出现「hover 突然没了」的情况；失败原因记录在「输出 → JASS Language Server」面板。
+- 诊断来源标签为 `ydwe-compiler`，与内置实现的 `jass` / `zinc` 区分开。
+- 命令面板提供 **JASS: 重启语言服务器（ydwe-compiler）**。
+
+> 内置语言服务器需以 `cargo build --release --features lsp` 构建才会启用 LSP；
+> 未启用该 feature 的产物执行 `--lsp` 会立刻退出并打印提示。
+
 #### 创建配置文件
 
 可以通过以下方式创建配置文件：
@@ -598,12 +633,18 @@ endstruct
 
 ## 📝 版本信息
 
-- **当前版本**: 1.9.16
-- **VS Code 版本要求**: 1.63+
-- **common.j 版本**: 3.00
-- **物编数据版本**: 2.03
+- **当前版本**: 1.9.19 (pre-release)
+- **VS Code 版本要求**: 1.67+
+- **common.j 版本**: 3.0.0
+- **物编数据版本**: 3.0.0
 
 ### 近期重要更新（最近 5 次）
+
+#### v1.9.19 (pre-release)
+- 实验性接入 `ydwe-compiler` 语言服务器：新增 `jass.lsp` 配置（默认关闭），开启后 hover 与错误诊断由内置 Rust 编译器（`--lsp` 模式）接管，失败自动回落内置实现。
+- `common.j` / `blizzard.j` / `common.ai` 适配魔兽争霸 III 3.0.0 API（补全 `@since` 标注与新增原生函数）。
+- 新增 pjass 编译检查标准库分离配置（`jass.compiler.check*` 等）与 `jass.additionalExtensions`。
+- 修复 `return null` 在 handle 类型返回值上的语义误报；支持 `integer(x)` 等类型转换表达式与 `library requires nothing`。
 
 #### v1.9.16
 - 新增 JASS 编译检查功能（基于 `pjass.exe`）：编辑区右键 `JASS` 子菜单提供三种检查模式（触发器 / 自定义库 / AI 脚本），结果输出到 `JASS 编译检查` 面板。

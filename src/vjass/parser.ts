@@ -956,6 +956,28 @@ export class Parser {
             } else if (opToken.type === TokenType.OperatorNotEqual) {
                 operatorName = "!=";
                 this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorPlus) {
+                operatorName = "+";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorMinus) {
+                operatorName = "-";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorMultiply) {
+                operatorName = "*";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorDivide) {
+                operatorName = "/";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorAssign) {
+                // 赋值运算符 operator =
+                operatorName = "=";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorLessEqual) {
+                operatorName = "<=";
+                this.lexer.next();
+            } else if (opToken.type === TokenType.OperatorGreaterEqual) {
+                operatorName = ">=";
+                this.lexer.next();
             }
             // 处理自定义运算符（标识符，如 x, x=）
             else if (opToken.type === TokenType.Identifier) {
@@ -970,7 +992,7 @@ export class Parser {
                     operatorName = customOpName;
                 }
             } else {
-                this.error(`Invalid operator name '${opToken.value}'. Expected [], []=, <, >, ==, !=, or identifier`);
+                this.error(`Invalid operator name '${opToken.value}'. Expected [], []=, +, -, *, /, =, <, >, <=, >=, ==, !=, or identifier`);
                 return null;
             }
         } else {
@@ -2361,6 +2383,12 @@ export class Parser {
         // 支持 requires/needs/uses，它们功能相同
         while (this.checkValue("requires") || this.checkValue("needs") || this.checkValue("uses")) {
             this.lexer.next(); // 消费 requires/needs/uses
+
+            // 支持 `requires nothing`（无依赖）的合法写法
+            if (this.checkValue("nothing")) {
+                this.lexer.next(); // 消费 nothing
+                break;
+            }
             
             // 解析依赖列表（用逗号分隔）
             let firstDep = true;
@@ -2866,25 +2894,37 @@ export class Parser {
         
         this.lexer.next(); // 消费 //! textmacro 行
         
-        // 收集 body 内容，直到遇到 //! endtextmacro
+        // 收集 body 内容，直到遇到 **本层** 的 //! endtextmacro
         // 注意：由于已经进行了词法分析，我们需要收集 token 并重建代码行
         // 为了简化，我们按行收集 token，然后重建每行的内容
+        //
+        // 嵌套支持：宏体内部可以再定义 //! textmacro（YDWE 允许）。必须按深度配对，
+        // 否则内层的 //! endtextmacro 会被误认为本层结束标记：
+        // 宏 1 提前截断 → 真正的 endtextmacro 悬空 → 后续宏定义整体错位，
+        // 后续宏的模板体以真实 FunctionDeclaration 泄漏进 AST（占位符 $X$ 被当普通
+        // 标识符解析成功、parse 零错误），进而在语义分析时产生大量必然误报。
         const bodyLines: string[] = [];
         let endPos = startPos;
         let foundEnd = false;
         let lastLineNumber = startPos.line;
+        let nestedDepth = 0; // 宏体内嵌套 //! textmacro 的深度
         
         while (!this.isAtEnd()) {
             const token = this.lexer.current()!;
             
-            // 检查是否是 //! endtextmacro
+            // 检查是否是 //! textmacro / //! endtextmacro
             if (this.isTextMacroDirective()) {
                 const directiveValue = token.value || "";
                 if (/^\s*endtextmacro\b/i.test(directiveValue)) {
-                    endPos = token.end;
-                    this.lexer.next(); // 消费 //! endtextmacro
-                    foundEnd = true;
-                    break;
+                    if (nestedDepth === 0) {
+                        endPos = token.end;
+                        this.lexer.next(); // 消费 //! endtextmacro
+                        foundEnd = true;
+                        break;
+                    }
+                    // 嵌套层的 endtextmacro：作为宏体内容，由下方行收集逻辑消费
+                } else if (/^\s*textmacro\b/i.test(directiveValue)) {
+                    nestedDepth++; // 嵌套的 //! textmacro 定义，计入深度后作为宏体内容收集
                 }
             }
             
@@ -2913,7 +2953,10 @@ export class Parser {
                 if (this.isTextMacroDirective()) {
                     const dirValue = currentToken.value || "";
                     if (/^\s*endtextmacro\b/i.test(dirValue)) {
-                        break; // 遇到 endtextmacro，停止收集
+                        if (nestedDepth === 0) {
+                            break; // 本层的 endtextmacro，停止收集（由外层消费）
+                        }
+                        nestedDepth--; // 嵌套层的 endtextmacro：作为宏体 token 收集
                     }
                 }
                 
@@ -2933,7 +2976,9 @@ export class Parser {
                     if (t.start.position > lastEndPos) {
                         parts.push(' '.repeat(t.start.position - lastEndPos));
                     }
-                    parts.push(t.value);
+                    // 指令 token 的 value 不含 //! 前缀（词法层剥离），重建时补回，
+                    // 保证嵌套 textmacro 展开后仍是合法指令行
+                    parts.push(t.type === TokenType.TextMacroDirective ? `//!${t.value}` : t.value);
                     lastEndPos = t.end.position;
                 }
                 
@@ -4447,6 +4492,26 @@ export class Parser {
                 // thistype 单独使用，作为类型或表达式
                 return new ThistypeExpression(thistypeToken.start, thistypeToken.end);
             }
+        }
+
+        // 类型转换表达式：基本类型关键字后跟 '('，如 integer(x)、real(y)、string(i)
+        // 类型关键字被词法器识别为专用 token（TypeInteger 等），而非 Identifier，
+        // 若不加处理会落到函数末尾的 return null，导致 return/赋值的值被丢弃（误报“必须返回值”等）。
+        if (
+            token.type === TokenType.TypeInteger ||
+            token.type === TokenType.TypeReal ||
+            token.type === TokenType.TypeString ||
+            token.type === TokenType.TypeBoolean ||
+            token.type === TokenType.TypeCode ||
+            token.type === TokenType.TypeHandle
+        ) {
+            this.lexer.next(); // 消费类型关键字
+            if (this.check(TokenType.LeftParen)) {
+                const typeIdent = new Identifier(token.value, token.start, token.end);
+                return this.parseTypecastExpression(typeIdent);
+            }
+            // 类型关键字在表达式上下文中单独出现（无括号），非法用法
+            return null;
         }
 
         // 函数表达式（function functionName，类型为 code）

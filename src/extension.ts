@@ -38,6 +38,10 @@ import { CodeActionProvider } from './provider/code-action-provider';
 import { WorkspaceSymbolProvider } from './provider/workspace-symbol-provider';
 import { DocumentInfoManager } from './provider/document-info-manager';
 
+// 实验性：ydwe-compiler(exe) 语言服务器接入
+import { LSP_DOCUMENT_SELECTOR, LspModeController } from './lsp/lsp-mode-controller';
+import { JassFeatureId } from './lsp/takeover';
+
 // JASS 语言选择器（同时支持已保存的 file 和未保存的 untitled 两种 scheme）
 const jassSelector: vscode.DocumentSelector = [
     { scheme: 'file', language: 'jass' },
@@ -269,7 +273,7 @@ function enhanceKeywordDocHtml(html: string): string {
   }
 
   function highlightCode(raw) {
-    const lines = raw.split('\\n');
+    const lines = raw.split('\n');
     return lines.map((line) => {
       const commentIndex = line.indexOf('//');
       let codePart = line;
@@ -391,131 +395,239 @@ export async function activate(context: vscode.ExtensionContext) {
         console.error('❌ Failed to initialize SpecialFileManager:', error);
     }
 
-    // 创建 CompletionProvider（需要传入 DataEnterManager）
-    const completionProvider = new CompletionProvider(dataEnterManager);
+    // ============================================================
+    // 语言特性注册
+    //
+    // 语言特性分两类：
+    //  1. 独占特性（nativeFeatureFactories）：可被 `jass.lsp` 接入的 exe 语言服务器接管。
+    //     由 LspModeController 决定当前装「原生实现」还是让位给服务端，两者互斥，
+    //     避免 VSCode 把两套结果合并（补全重复、hover 出现两段）。
+    //  2. 常驻特性：在下方直接注册，与 LSP 模式无关。
+    // ============================================================
 
-    // 注册代码补全提供者
-    // 触发字符包括引号、斜杠等，以及所有字母数字字符
+    // dataEnterManager 已在上面完成初始化；取局部常量，便于在工厂闭包中安全使用
+    const manager: DataEnterManager = dataEnterManager;
+
+    // 触发字符：代码补全（引号、斜杠 + 所有字母数字与下划线、点号）
     const triggerChars = [
         "\"", "/", "\\",
         ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789_.".split("")
     ];
-    
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            jassSelector,
-            completionProvider,
-            ...triggerChars
-        )
-    );
+    // 触发字符：特殊文件（字符串/数值/路径等字面量）补全
+    const specialCompletionTriggerChars = [
+        '"', "'", ..."0123456789xbBX$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$".split("")
+    ];
+    // 触发字符：参数提示
+    const signatureTriggerChars = [
+        "(",
+        ",",
+        ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split("")
+    ];
 
-    // 创建并注册特殊文件补全提供者
-    const specialCompletionProvider = new SpecialCompletionProvider();
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            jassSelector,
-            specialCompletionProvider,
-            '"', "'", ..."0123456789xbBX$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$".split("")
-        )
-    );
+    // 按扩展名匹配的 Zinc 文件选择器
+    const zincFileSelector = { scheme: 'file', pattern: '**/*.zn' };
 
-    // 创建并注册 ZincCompletionProvider（Zinc 文件专用补全提供者）
-    const zincCompletionProvider = new ZincCompletionProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            jassZincSelector,
-            zincCompletionProvider,
-            ...triggerChars
-        )
-    );
+    /**
+     * 各语言特性的原生实现工厂。
+     *
+     * 约定：
+     * - 工厂返回该特性对应的全部 disposable，调用即完成注册；
+     * - 未列出的特性视为「没有原生等价物」（符号高亮、语义着色）；
+     * - 每次模式切换都会重新调用工厂，因此内部不要持有跨次状态。
+     */
+    const nativeFeatureFactories: Partial<Record<JassFeatureId, () => vscode.Disposable[]>> = {
+        // 代码补全：vJASS + 特殊文件字面量 + Zinc
+        completion: () => {
+            const completionProvider = new CompletionProvider(manager);
+            const specialCompletionProvider = new SpecialCompletionProvider();
+            const zincCompletionProvider = new ZincCompletionProvider(manager);
+            return [
+                vscode.languages.registerCompletionItemProvider(
+                    jassSelector,
+                    completionProvider,
+                    ...triggerChars
+                ),
+                vscode.languages.registerCompletionItemProvider(
+                    jassSelector,
+                    specialCompletionProvider,
+                    ...specialCompletionTriggerChars
+                ),
+                vscode.languages.registerCompletionItemProvider(
+                    jassZincSelector,
+                    zincCompletionProvider,
+                    ...triggerChars
+                )
+            ];
+        },
 
-    // 创建并注册 SignatureHelpProvider（参数提示支持）
-    const signatureHelpProvider = new SignatureHelpProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerSignatureHelpProvider(
-            jassSelector,
-            signatureHelpProvider,
-            "(",
-            ",",
-            ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split("")
-        )
-    );
+        // 参数提示：vJASS + Zinc
+        signatureHelp: () => {
+            const signatureHelpProvider = new SignatureHelpProvider(manager);
+            const zincSignatureHelpProvider = new ZincSignatureHelpProvider(manager);
+            return [
+                vscode.languages.registerSignatureHelpProvider(
+                    jassSelector,
+                    signatureHelpProvider,
+                    ...signatureTriggerChars
+                ),
+                vscode.languages.registerSignatureHelpProvider(
+                    jassZincSelector,
+                    zincSignatureHelpProvider,
+                    ...signatureTriggerChars
+                )
+            ];
+        },
 
-    // 创建并注册 ZincSignatureHelpProvider（Zinc 文件专用参数提示支持）
-    const zincSignatureHelpProvider = new ZincSignatureHelpProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerSignatureHelpProvider(
-            jassZincSelector,
-            zincSignatureHelpProvider,
-            "(",
-            ",",
-            ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".split("")
-        )
-    );
+        // 文档大纲：vJASS + Zinc
+        documentSymbol: () => {
+            const outlineProvider = new OutlineProvider(manager);
+            const zincOutlineProvider = new ZincOutlineProvider(manager);
+            return [
+                vscode.languages.registerDocumentSymbolProvider(
+                    jassSelector,
+                    outlineProvider
+                ),
+                vscode.languages.registerDocumentSymbolProvider(
+                    jassZincSelector,
+                    zincOutlineProvider
+                )
+            ];
+        },
 
-    // 创建并注册 OutlineProvider（文档大纲支持）
-    const outlineProvider = new OutlineProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerDocumentSymbolProvider(
-            jassSelector,
-            outlineProvider
-        )
-    );
+        // 悬停提示：vJASS + 特殊文件 + Zinc
+        hover: () => {
+            const hoverProvider = new HoverProvider(manager);
+            const specialHoverProvider = new SpecialHoverProvider();
+            const zincHoverProvider = new ZincHoverProvider(manager);
+            return [
+                vscode.languages.registerHoverProvider(
+                    jassSelector,
+                    hoverProvider
+                ),
+                { dispose: () => hoverProvider.dispose() },
+                vscode.languages.registerHoverProvider(
+                    jassSelector,
+                    specialHoverProvider
+                ),
+                vscode.languages.registerHoverProvider(
+                    jassZincSelector,
+                    zincHoverProvider
+                ),
+                { dispose: () => zincHoverProvider.dispose() }
+            ];
+        },
 
-    // 创建并注册 ZincOutlineProvider（Zinc 文件专用文档大纲支持）
-    const zincOutlineProvider = new ZincOutlineProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerDocumentSymbolProvider(
-            jassZincSelector,
-            zincOutlineProvider
-        )
-    );
+        // 跳转定义：vJASS + 特殊文件 + Zinc
+        // （关键字文档跳转是独立开关 jass.keywordDefinition，属常驻特性，见下方）
+        definition: () => {
+            const definitionProvider = new DefinitionProvider(manager);
+            const specialDefinitionProvider = new SpecialDefinitionProvider();
+            const zincDefinitionProvider = new ZincDefinitionProvider(manager);
+            return [
+                vscode.languages.registerDefinitionProvider(
+                    jassSelector,
+                    definitionProvider
+                ),
+                vscode.languages.registerDefinitionProvider(
+                    jassSelector,
+                    specialDefinitionProvider
+                ),
+                vscode.languages.registerDefinitionProvider(
+                    jassZincSelector,
+                    zincDefinitionProvider
+                )
+            ];
+        },
 
-    // 创建并注册 HoverProvider（悬停信息支持）
-    const hoverProvider = new HoverProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            jassSelector,
-            hoverProvider
-        )
-    );
-    context.subscriptions.push({
-        dispose: () => {
-            hoverProvider.dispose();
+        /**
+         * 内联提示（参数名/类型）：实验特性，由 `jass.hint` 控制，默认关闭。
+         * 关闭时返回空数组，等价于「不注册」——同时保持注册表条目的语义。
+         */
+        inlayHints: () => {
+            const hintEnabled = vscode.workspace
+                .getConfiguration('jass')
+                .get<boolean>('hint', false);
+            if (!hintEnabled) {
+                return [];
+            }
+
+            const inlayHintsProvider = new InlayHintsProvider(manager);
+            const zincInlayHintsProvider = new ZincInlayHintsProvider(manager);
+            return [
+                vscode.languages.registerInlayHintsProvider(
+                    jassSelector,
+                    inlayHintsProvider
+                ),
+                vscode.languages.registerInlayHintsProvider(
+                    zincFileSelector,
+                    zincInlayHintsProvider
+                ),
+                { dispose: () => zincInlayHintsProvider.dispose() }
+            ];
+        },
+
+        // 错误诊断：vJASS + Zinc
+        diagnostics: () => {
+            const diagnosticProvider = new DiagnosticProvider(manager);
+            const zincDiagnosticProvider = new ZincDiagnosticProvider(manager);
+
+            // jass.config.json 重新加载时同步诊断配置
+            const onConfigReload = (): void => {
+                const config = manager.getConfig();
+                if (config?.diagnostics) {
+                    diagnosticProvider.updateDiagnosticsConfig(config.diagnostics);
+                }
+            };
+            manager.onConfigReload(onConfigReload);
+
+            // 初始诊断配置
+            const initialConfig = manager.getConfig();
+            if (initialConfig?.diagnostics) {
+                diagnosticProvider.updateDiagnosticsConfig(initialConfig.diagnostics);
+            }
+
+            return [
+                diagnosticProvider.getDiagnosticCollection(),
+                zincDiagnosticProvider.getDiagnosticCollection(),
+                { dispose: () => manager.offConfigReload(onConfigReload) },
+                { dispose: () => diagnosticProvider.dispose() },
+                { dispose: () => zincDiagnosticProvider.dispose() }
+            ];
         }
+    };
+
+    // ------------------------------------------------------------
+    // LSP 模式控制器：`jass.lsp` 开启时，由 exe 的 `--lsp` 接管上表中的部分特性
+    // ------------------------------------------------------------
+    const lspModeController = new LspModeController({
+        context,
+        nativeFeatureFactories,
+        documentSelector: LSP_DOCUMENT_SELECTOR
+    });
+    context.subscriptions.push({
+        dispose: () => lspModeController.dispose()
     });
 
-    // 创建并注册特殊文件悬停提供者
-    const specialHoverProvider = new SpecialHoverProvider();
     context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            jassSelector,
-            specialHoverProvider
-        )
+        vscode.workspace.onDidChangeConfiguration((e) => {
+            // 日志级别无需重启，直接下发给客户端
+            if (e.affectsConfiguration('jass.lsp.trace.server')) {
+                lspModeController.refreshTraceLevel();
+            }
+            // 开关或 exe 路径变化：整体重建特性归属
+            // 注意 'jass.lsp' 会同时匹配 jass.lsp.* 子项，因此上面的 trace 分支先处理
+            if (e.affectsConfiguration('jass.lsp')) {
+                void lspModeController.apply();
+            }
+            // 内联提示的开关只影响原生实现，不涉及 LSP 归属
+            if (e.affectsConfiguration('jass.hint')) {
+                lspModeController.refreshNativeFeature('inlayHints');
+            }
+        })
     );
 
-    // 创建并注册 ZincHoverProvider（Zinc 文件专用悬停信息支持）
-    const zincHoverProvider = new ZincHoverProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerHoverProvider(
-            jassZincSelector,
-            zincHoverProvider
-        )
-    );
-    context.subscriptions.push({
-        dispose: () => {
-            zincHoverProvider.dispose();
-        }
-    });
-
-    // 创建并注册 DefinitionProvider（跳转到定义支持，不含关键字文档）
-    const definitionProvider = new DefinitionProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerDefinitionProvider(
-            jassSelector,
-            definitionProvider
-        )
-    );
+    // 按当前配置决定每个特性由谁负责
+    await lspModeController.apply();
 
     // 关键字文档跳转（独立 Provider，由 jass.keywordDefinition 控制，默认关闭）
     const keywordDefinitionProvider = new KeywordDefinitionProvider(dataEnterManager);
@@ -523,24 +635,6 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDefinitionProvider(
             jassSelector,
             keywordDefinitionProvider
-        )
-    );
-
-    // 创建并注册特殊文件定义提供者
-    const specialDefinitionProvider = new SpecialDefinitionProvider();
-    context.subscriptions.push(
-        vscode.languages.registerDefinitionProvider(
-            jassSelector,
-            specialDefinitionProvider
-        )
-    );
-
-    // 创建并注册 ZincDefinitionProvider（Zinc 文件专用定义提供者）
-    const zincDefinitionProvider = new ZincDefinitionProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerDefinitionProvider(
-            jassZincSelector,
-            zincDefinitionProvider
         )
     );
 
@@ -577,113 +671,6 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    // 创建并注册 InlayHintsProvider（参数类型提示支持）
-    // 这是一个测试特性，默认不开启，需要通过配置 jass.hint 启用
-    let inlayHintsProvider: InlayHintsProvider | undefined;
-    let zincInlayHintsProvider: ZincInlayHintsProvider | undefined;
-    let inlayHintsDisposables: vscode.Disposable[] = [];
-
-    // 注册或注销 hint 提供者的函数
-    const updateHintProviders = () => {
-        const config = vscode.workspace.getConfiguration('jass');
-        const hintEnabled = config.get<boolean>('hint', false);
-
-        // 先清理现有的注册
-        inlayHintsDisposables.forEach(d => d.dispose());
-        inlayHintsDisposables = [];
-
-        if (hintEnabled && dataEnterManager) {
-            // 创建并注册 InlayHintsProvider（vJASS）
-            inlayHintsProvider = new InlayHintsProvider(dataEnterManager);
-            inlayHintsDisposables.push(
-                vscode.languages.registerInlayHintsProvider(
-                    jassSelector,
-                    inlayHintsProvider
-                )
-            );
-
-            // 创建并注册 ZincInlayHintsProvider（Zinc 文件专用类型提示支持）
-            zincInlayHintsProvider = new ZincInlayHintsProvider(dataEnterManager);
-            inlayHintsDisposables.push(
-                vscode.languages.registerInlayHintsProvider(
-                    { scheme: 'file', pattern: '**/*.zn' },
-                    zincInlayHintsProvider
-                )
-            );
-            inlayHintsDisposables.push({
-                dispose: () => {
-                    zincInlayHintsProvider?.dispose();
-                }
-            });
-        } else {
-            // 如果禁用，清理提供者实例
-            if (inlayHintsProvider) {
-                inlayHintsProvider = undefined;
-            }
-            if (zincInlayHintsProvider) {
-                zincInlayHintsProvider.dispose();
-                zincInlayHintsProvider = undefined;
-            }
-        }
-    };
-
-    // 初始化 hint 提供者（根据配置）
-    updateHintProviders();
-
-    // 监听配置变化，动态更新 hint 提供者
-    context.subscriptions.push(
-        vscode.workspace.onDidChangeConfiguration((e) => {
-            if (e.affectsConfiguration('jass.hint')) {
-                updateHintProviders();
-            }
-        })
-    );
-
-    // 将 hint 相关的 disposable 添加到订阅中
-    context.subscriptions.push({
-        dispose: () => {
-            inlayHintsDisposables.forEach(d => d.dispose());
-            if (zincInlayHintsProvider) {
-                zincInlayHintsProvider.dispose();
-            }
-        }
-    });
-
-    // 创建并注册 DiagnosticProvider（语法错误和警告提示支持）
-    const diagnosticProvider = new DiagnosticProvider(dataEnterManager);
-    context.subscriptions.push(diagnosticProvider.getDiagnosticCollection());
-    
-    // 监听配置重新加载，更新诊断提供者
-    if (dataEnterManager) {
-        dataEnterManager.onConfigReload(() => {
-            const config = dataEnterManager?.getConfig();
-            if (config?.diagnostics) {
-                diagnosticProvider.updateDiagnosticsConfig(config.diagnostics);
-            }
-        });
-        
-        // 初始化诊断配置
-        const initialConfig = dataEnterManager.getConfig();
-        if (initialConfig?.diagnostics) {
-            diagnosticProvider.updateDiagnosticsConfig(initialConfig.diagnostics);
-        }
-    }
-    
-    context.subscriptions.push({
-        dispose: () => {
-            diagnosticProvider.dispose();
-        }
-    });
-
-    // 创建并注册 ZincDiagnosticProvider（Zinc 文件专用诊断支持）
-    const zincDiagnosticProvider = new ZincDiagnosticProvider(dataEnterManager);
-    context.subscriptions.push(zincDiagnosticProvider.getDiagnosticCollection());
-    context.subscriptions.push({
-        dispose: () => {
-            zincDiagnosticProvider.dispose();
-        }
-    });
-
     // 基于ast的格式化存在一下问题，因而保守使用之前的格式化方式
     // 创建并注册 FormattingProvider（vJass 代码格式化支持）
     const formattingProvider = new DocumentFormattingSortEditProvider();
@@ -697,7 +684,6 @@ export async function activate(context: vscode.ExtensionContext) {
     // 创建并注册 ZincFormattingProvider（Zinc 代码格式化支持）
     // 使用文件扩展名选择器，支持 .zn 文件
     const zincFormattingProvider = new ZincFormattingProvider(dataEnterManager);
-    const zincFileSelector = { scheme: 'file', pattern: '**/*.zn' };
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             zincFileSelector,
@@ -794,6 +780,50 @@ export async function activate(context: vscode.ExtensionContext) {
             }
         })
     );
+
+    // 注册命令：重启语言服务器（实验性功能 jass.lsp）
+    context.subscriptions.push(
+        vscode.commands.registerCommand('jass.restartLspServer', async () => {
+            const config = vscode.workspace.getConfiguration('jass');
+            if (!config.get<boolean>('lsp', false)) {
+                const choice = await vscode.window.showInformationMessage(
+                    'jass.lsp 当前处于关闭状态，语言特性由扩展内置实现提供。是否开启并接入 ydwe-compiler 语言服务器？',
+                    '开启',
+                    '取消'
+                );
+                if (choice !== '开启') {
+                    return;
+                }
+                // 写入后由配置变更监听触发重建，无需在这里再调一次 restart
+                await config.update('lsp', true, vscode.ConfigurationTarget.Workspace);
+                return;
+            }
+
+            await lspModeController.restart();
+            vscode.window.showInformationMessage('JASS 语言服务器已重启。');
+        })
+    );
+
+    // 旧版扩展共存检测：Warcraft-III-VJassHelper（jass.warcraft-iii-vjasshelper）同样
+    // 为 JASS 语言注册补全/悬停/诊断，与本扩展同时启用会导致特性重复、结果互相叠加；
+    // 其旧版本还会因内置 data 目录缺失抛出 `data\blizzard.j ENOENT` 未处理异常。
+    // 这里只提示不干预，由用户决定是否禁用旧版。
+    const legacyExtension = vscode.extensions.getExtension('jass.warcraft-iii-vjasshelper');
+    if (legacyExtension) {
+        void vscode.window.showWarningMessage(
+            '检测到旧版扩展「Warcraft-III-VJassHelper」与本扩展同时启用。两者都会为 JASS 提供' +
+            '悬停/诊断等功能，会导致结果重复或相互干扰（旧版还会报 data\\blizzard.j 缺失错误）。',
+            '打开扩展面板',
+            '忽略'
+        ).then((choice) => {
+            if (choice === '打开扩展面板') {
+                void vscode.commands.executeCommand(
+                    'workbench.extensions.search',
+                    '@installed Warcraft-III-VJassHelper'
+                );
+            }
+        });
+    }
 
     // 注册命令：打开关键字文档 Webview（供 KeywordDefinitionProvider 在启用 jass.keywordDefinition 时调用）
     context.subscriptions.push(

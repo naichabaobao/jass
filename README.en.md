@@ -73,6 +73,36 @@ The `jass.compiler.*` settings decouple "standard libraries used for displaying 
 
 **Lookup priority (compile check)**: `jass.compiler.check*` > `jass.compiler.*` > bundled `static/` version.
 
+### `jass.lsp` - ydwe-compiler language server (experimental)
+
+The extension bundles a Rust-based compiler language server (Windows: `static/ydwe-compiler.exe`, Linux: `static/ydwe-compiler`)
+which can run in LSP mode (`--lsp`). When `jass.lsp` is enabled, **hover and diagnostics** are taken over by this language server,
+while all other features (completion, definition, outline, formatting, etc.) are still provided by the extension's built-in TypeScript implementation.
+
+```json
+{
+  "jass.lsp": true,
+  "jass.lsp.trace.server": "off"
+}
+```
+
+| Setting | Description | Default |
+| --- | --- | --- |
+| `jass.lsp` | Let the bundled language server take over hover / diagnostics. **Experimental**, disabled by default | `false` |
+| `jass.lsp.trace.server` | LSP communication log level: `off` / `messages` / `verbose` | `"off"` |
+
+**Server path**: the language server path is **not configurable** — it always uses the platform-matched binary bundled in the extension's `static/` directory (Windows: `ydwe-compiler.exe`; Linux/macOS: `ydwe-compiler`). On Linux/macOS, the extension copies the bundled binary to its global storage and marks it executable on first use (VSIX packaging loses the executable bit).
+
+**Behavior notes**:
+
+- Toggling the switch **restarts the language server automatically**; no window reload required.
+- If anything goes wrong (binary missing, `lsp` feature not enabled, startup failure or unexpected exit), the extension **falls back to its built-in implementation** automatically; the reason is logged in the `JASS Language Server` output channel.
+- Diagnostics from the server are tagged with the source `ydwe-compiler`, distinct from the built-in `jass` / `zinc` sources.
+- Command palette: **JASS: Restart Language Server (ydwe-compiler)**.
+
+> The bundled language server must be built with `cargo build --release --features lsp` to enable LSP;
+> a binary without this feature exits immediately when run with `--lsp`.
+
 ### JASS compile check usage
 
 The extension bundles a `pjass.exe` syntax checker. Right-click in the editor → `JASS` submenu to choose a check mode:

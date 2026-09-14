@@ -47,7 +47,6 @@ export function removeComment(content: string, collection: { errors: SimpleError
                         state = 2;
                         chars.push(" ", " ");
                         index++;
-                        position++;
                         blockCommentStart = {
                             line: lineNumber,
                             position: position
@@ -77,22 +76,17 @@ export function removeComment(content: string, collection: { errors: SimpleError
                 
             case 2: // 块注释状态
                 if (char === "*" && nextChar === "/") {
-                    // 检测到块注释结束标记 */
+                    // 检测到块注释结束标记 */：用两个空格替换，保持长度不变
                     state = 0;
+                    chars.push(" ", " ");
                     index++; // 跳过下一个字符 '/'
-                    position++;
-                    if (blockCommentStart.line == lineNumber) {
-                        console.log(position);
-                        for (let c = 0; c < position - blockCommentStart.position; c++) {
-                            chars.push(" ");
-                        }
-                    } else {
-                        for (let c = 0; c < (position + 1); c++) {
-                            chars.push(" ");
-                        }
-                    }
-                } else if (char == "\n") {
+                } else if (char === "\n") {
+                    // 保留换行，保证行号与后续字符偏移不偏移
                     chars.push("\n");
+                } else {
+                    // 注释体内的每个字符（非换行）都替换为空格，保持列偏移一致。
+                    // 修复：原实现对注释体字符直接丢弃，导致多行块注释中间行被整行清空（缩起来）、整段长度变短、后续基于字符偏移的定位全部错位。
+                    chars.push(" ");
                 }
                 break;
                 

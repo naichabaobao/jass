@@ -2199,7 +2199,7 @@ endfunction
 function StartExpansion takes integer qty, integer hall returns boolean
     local integer count
     local integer town
-    local unit    peon
+    local unit    u_peon
     local integer gold_cost
 
     set count = TownCount(hall)
@@ -2224,9 +2224,9 @@ function StartExpansion takes integer qty, integer hall returns boolean
         return true
     endif
 
-    set peon = GetExpansionPeon()
-    if peon != null then
-        return SetExpansion(peon,hall)
+    set u_peon = GetExpansionPeon()
+    if u_peon != null then
+        return SetExpansion(u_peon,hall)
     endif
 
     return true

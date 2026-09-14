@@ -25,6 +25,7 @@ import {
     OperatorType,
     AssignmentStatement,
     BooleanLiteral,
+    NullLiteral,
     IntegerLiteral,
     RealLiteral,
     StringLiteral,
@@ -520,8 +521,13 @@ export class SemanticAnalyzer {
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
             isConstant: node.isConstant || false,
-            isInitialized: node.initializer !== null && node.initializer !== undefined,  // 记录是否有初始化表达式
-            mayBeNull: this.checkIfExpressionIsNull(node.initializer) || this.isHandleType(type || ""),  // 检查是否可能为 null
+            // 数组变量在 JASS 中默认初始化为 0（元素不会未定义），因此视为已初始化，
+            // 避免 local integer array xs 后读取 xs[0] 被误报「使用前可能未初始化」。
+            isInitialized: (node.initializer !== null && node.initializer !== undefined) || node.isArray,  // 记录是否有初始化表达式
+            // 仅在「无初始化表达式」或「初始化为 null」时视为可能为 null。
+            // 不应仅凭类型是 handle 就把所有 handle 变量/成员默认标记为可能为 null，
+            // 否则 local group g = CreateGroup() 这类合法写法会在每次使用时被误报「可能为 null」。
+            mayBeNull: this.checkIfExpressionIsNull(node.initializer),  // 检查是否可能为 null
             arraySize: node.isArray ? node.arraySize : undefined,  // 记录数组大小
             arrayWidth: node.isArray ? node.arrayWidth : undefined,  // 记录二维数组宽度
             arrayHeight: node.isArray ? node.arrayHeight : undefined  // 记录二维数组高度
@@ -558,7 +564,10 @@ export class SemanticAnalyzer {
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
             isConstant: node.isConstant || false,
-            mayBeNull: this.checkIfExpressionIsNull(node.initializer) || this.isHandleType(type || ""),  // 检查是否可能为 null
+            // 仅在「无初始化表达式」或「初始化为 null」时视为可能为 null。
+            // 不应仅凭类型是 handle 就把所有 handle 变量/成员默认标记为可能为 null，
+            // 否则 local group g = CreateGroup() 这类合法写法会在每次使用时被误报「可能为 null」。
+            mayBeNull: this.checkIfExpressionIsNull(node.initializer),  // 检查是否可能为 null
             arraySize: node.isArray ? node.arraySize : undefined,  // 记录数组大小
             arrayWidth: node.isArray ? node.arrayWidth : undefined,  // 记录二维数组宽度
             arrayHeight: node.isArray ? node.arrayHeight : undefined  // 记录二维数组高度
@@ -812,7 +821,10 @@ export class SemanticAnalyzer {
             valueType: type || undefined,
             isReadonly: node.isReadonly || false,
             isConstant: node.isConstant || false,
-            mayBeNull: this.checkIfExpressionIsNull(node.initializer) || this.isHandleType(type || ""),  // 检查是否可能为 null
+            // 仅在「无初始化表达式」或「初始化为 null」时视为可能为 null。
+            // 不应仅凭类型是 handle 就把所有 handle 变量/成员默认标记为可能为 null，
+            // 否则 local group g = CreateGroup() 这类合法写法会在每次使用时被误报「可能为 null」。
+            mayBeNull: this.checkIfExpressionIsNull(node.initializer),  // 检查是否可能为 null
             arraySize: node.isArray ? node.arraySize : undefined,  // 记录数组大小
             arrayWidth: node.isArray ? node.arrayWidth : undefined,  // 记录二维数组宽度
             arrayHeight: node.isArray ? node.arrayHeight : undefined  // 记录二维数组高度
@@ -1013,10 +1025,11 @@ export class SemanticAnalyzer {
      */
     private collectImplement(node: ImplementStatement, structName: string): void {
         const moduleName = node.moduleName.name;
-        // 检查模块是否存在（如果不是 optional）
+        // 检查模块/接口是否存在（如果不是 optional）
         if (!node.isOptional) {
             const moduleSymbol = this.findSymbol(moduleName, SymbolType.MODULE);
-            if (!moduleSymbol) {
+            const interfaceSymbol = this.findSymbol(moduleName, SymbolType.INTERFACE);
+            if (!moduleSymbol && !interfaceSymbol) {
                 // 只有在提供了外部符号表时才报告错误（减少误报）
                 // 如果没有提供外部符号表，可能是其他文件中的模块
                 const hasExternalSymbols = this.externalSymbols.size > 0;
@@ -1024,12 +1037,19 @@ export class SemanticAnalyzer {
                     this.addError(
                         node.start,
                         node.end,
-                        `Module '${moduleName}' not found in current file or other project files`,
-                        `Ensure the module is declared or use the 'optional' keyword`
+                        `Module or interface '${moduleName}' not found in current file or other project files`,
+                        `Ensure the module/interface is declared or use the 'optional' keyword`
                     );
                 }
                 // 如果没有提供外部符号表，可能是其他文件中的模块，不报告错误
             } else {
+                // 记录结构体实现的接口（供类型兼容 / 方法调用解析使用）
+                if (interfaceSymbol) {
+                    if (!this.structInterfaces.has(structName)) {
+                        this.structInterfaces.set(structName, new Set());
+                    }
+                    this.structInterfaces.get(structName)!.add(moduleName);
+                }
                 // 记录结构体实现的模块
                 if (!this.structModules.has(structName)) {
                     this.structModules.set(structName, new Set());
@@ -1142,6 +1162,10 @@ export class SemanticAnalyzer {
         if (!node.name) return;
 
         const name = node.name.name;
+
+        // textmacro 模板体泄漏的函数（名字带 $NAME$ 占位符）不参与符号收集与类型检查
+        if (this.hasTextMacroPlaceholder(name)) return;
+
         const currentScope = this.scopeStack[this.scopeStack.length - 1];
 
         // 检查重复声明
@@ -1240,6 +1264,10 @@ export class SemanticAnalyzer {
         if (!node.name) return;
 
         const name = node.name.name;
+
+        // textmacro 模板体泄漏的 native 声明（名字带 $NAME$ 占位符）不参与检查
+        if (this.hasTextMacroPlaceholder(name)) return;
+
         const currentScope = this.scopeStack[this.scopeStack.length - 1];
 
         // 检查重复声明
@@ -1435,10 +1463,18 @@ export class SemanticAnalyzer {
         } else if (node instanceof HookStatement) {
             this.checkHook(node);
         } else if (node instanceof NativeDeclaration) {
-            this.checkNativeFunctionReturns(node);
+            // textmacro 模板体泄漏的 native 声明跳过检查
+            if (!(node.name && this.hasTextMacroPlaceholder(node.name.name))) {
+                this.checkNativeFunctionReturns(node);
+            }
         } else if (node instanceof FunctionDeclaration) {
-            // 检查函数声明中的多返回值语法错误
-            this.checkFunctionMultipleReturns(node);
+            // textmacro 模板体泄漏的函数（名字带 $NAME$ 占位符）整体跳过语义检查，
+            // 避免对占位符参数/返回类型及模板调用产生必然的误报
+            if (node.name && this.hasTextMacroPlaceholder(node.name.name)) {
+                // 仍需递归子节点吗？函数体不属于 children，直接跳过即可
+            } else {
+                // 检查函数声明中的多返回值语法错误
+                this.checkFunctionMultipleReturns(node);
             
             // 重新建立函数作用域以便 checkReturnStatement 和 checkAssignment 可以找到局部变量
             if (node.body) {
@@ -1495,6 +1531,7 @@ export class SemanticAnalyzer {
                 this.scopeStack.pop();
             } else {
                 this.checkFunctionReturns(node);
+            }
             }
             // 函数声明的子节点已经通过 node.body.body 处理过了，不需要再次递归
             return;
@@ -1765,15 +1802,8 @@ export class SemanticAnalyzer {
                         );
                     }
                 } else if (member instanceof MethodDeclaration) {
-                    // 检查是否是 onDestroy
-                    if (member.name && member.name.name === "onDestroy") {
-                        this.addError(
-                            member.start,
-                            member.end,
-                            `Array struct '${structName}' cannot declare onDestroy method`,
-                            `Remove the onDestroy method`
-                        );
-                    }
+                    // vJASS 中 extends array 结构同样可以声明 onDestroy（由 .destroy() 在 deallocate 后调用），
+                    // 故此处不再对数组结构禁用 onDestroy，避免误报。
                 }
             }
         }
@@ -2671,6 +2701,17 @@ export class SemanticAnalyzer {
                 // 检查变量类型
                 if (varSymbol.valueType) {
                     const varType = varSymbol.valueType;
+                    // thistype 在结构内部等同于当前结构名，需解析为结构才能正确进行成员访问
+                    if (varType.toLowerCase() === "thistype") {
+                        const structName = this.getCurrentStructName();
+                        if (structName) {
+                            return {
+                                typeName: structName,
+                                isStatic: false,
+                                isInterface: false
+                            };
+                        }
+                    }
                     // 检查是否是结构类型
                     const typeSymbol = this.findSymbol(varType, SymbolType.STRUCT);
                     if (typeSymbol) {
@@ -2787,6 +2828,19 @@ export class SemanticAnalyzer {
      * 对于函数调用，返回函数的返回类型；对于其他表达式，返回其类型
      */
     private resolveExpressionType(expr: Expression): string | null {
+        // vJASS 索引重载 operator []：必须在 getType() 之前处理，
+        // 因为 BinaryExpression.getType() 对 Index 算子会错误地返回「索引/左操作数」类型，
+        // 从而短路掉后续对 operator [] 返回类型的解析，导致类型误判（如 real 被误判为 integer）。
+        if (expr instanceof BinaryExpression && expr.operator === OperatorType.Index) {
+            const objectType = this.resolveObjectType(expr.left);
+            if (objectType) {
+                const methodInfo = this.findMethod(objectType.typeName, "[]", objectType.isStatic);
+                if (methodInfo && methodInfo.returnType) {
+                    return methodInfo.returnType;
+                }
+            }
+        }
+
         // 首先尝试使用 getType() 方法
         let type = expr.getType();
         if (type) {
@@ -3036,6 +3090,19 @@ export class SemanticAnalyzer {
     }
 
     /**
+     * 判断文本是否包含 textmacro 占位符（$NAME$）。
+     *
+     * JASS 合法标识符不含 `$`（`$` 仅用于十六进制字面量），因此任何带 `$NAME$`
+     * 的函数名 / 类型名只可能来自 textmacro 模板体泄漏——正常解析时模板体不会
+     * 进入 AST，但一旦解析错位（如模板体内嵌套指令导致 endtextmacro 消费错位），
+     * 模板函数会以真实 FunctionDeclaration 的形态漏进来。此时对其做任何
+     * 类型/符号检查都必然误报，统一跳过。
+     */
+    private hasTextMacroPlaceholder(text: string | null | undefined): boolean {
+        return !!text && text.includes("$");
+    }
+
+    /**
      * 是否处于 textmacro 定义内部（仅对 runtextmacro 展开后的代码做语法检查，textmacro 内部跳过）
      */
     private isInsideTextMacro(): boolean {
@@ -3113,6 +3180,40 @@ export class SemanticAnalyzer {
                         returnType: typeName,
                         parameters: []
                     };
+                }
+            }
+
+            // deallocate() 是 extends array 结构的内置方法（JassHelper 编译为静态方法，
+            // 但允许以 this.deallocate() 实例语法调用），只在数组结构上提供。
+            if (methodName === "deallocate" && targetNode.isArrayStruct) {
+                const declaredDeallocate = this.findDeclaredMethod(targetNode, "deallocate", isStatic);
+                if (declaredDeallocate) {
+                    return declaredDeallocate;
+                } else {
+                    // 默认 deallocate 方法：实例调用无参数，静态调用接受一个结构实例参数
+                    if (isStatic) {
+                        return {
+                            name: "deallocate",
+                            type: SymbolType.METHOD,
+                            node: targetNode,
+                            isPrivate: false,
+                            isPublic: true,
+                            scope: typeName,
+                            returnType: "nothing",
+                            parameters: [{ name: "instance", type: typeName }]
+                        };
+                    } else {
+                        return {
+                            name: "deallocate",
+                            type: SymbolType.METHOD,
+                            node: targetNode,
+                            isPrivate: false,
+                            isPublic: true,
+                            scope: typeName,
+                            returnType: "nothing",
+                            parameters: []
+                        };
+                    }
                 }
             }
 
@@ -3215,20 +3316,24 @@ export class SemanticAnalyzer {
                     // 检查是否是静态方法
                     if (member.isStatic === isStatic) {
                         // 构建方法信息
+                        const structName = targetNode instanceof StructDeclaration && targetNode.name ?
+                            targetNode.name.name :
+                            (targetNode instanceof InterfaceDeclaration && targetNode.name ? targetNode.name.name : "");
+                        // thistype 在结构/接口内部等同于其自身名称，需在此解析为结构名，
+                        // 否则方法返回/参数类型为 thistype 时（如 custom create returns thistype）
+                        // 在结构外部调用（如 local Point a = Point.create(...)）会被误判为类型不兼容。
+                        const resolveThistype = (t: string): string => t.toLowerCase() === "thistype" ? structName : t;
                         const returnType = member.returnType ?
-                            (member.returnType instanceof Identifier ? member.returnType.name : "thistype") : null;
+                            (member.returnType instanceof Identifier ? resolveThistype(member.returnType.name) : resolveThistype("thistype")) : null;
                         const parameters: Array<{ name: string; type: string }> = [];
                         for (const param of member.parameters) {
                             const paramType = param.type ?
-                                (param.type instanceof Identifier ? param.type.name : "thistype") : "nothing";
+                                (param.type instanceof Identifier ? resolveThistype(param.type.name) : resolveThistype("thistype")) : "nothing";
                             parameters.push({
                                 name: param.name.name,
                                 type: paramType
                             });
                         }
-                        const structName = targetNode instanceof StructDeclaration && targetNode.name ?
-                            targetNode.name.name :
-                            (targetNode instanceof InterfaceDeclaration && targetNode.name ? targetNode.name.name : "");
                         return {
                             name: methodName,
                             type: SymbolType.METHOD,
@@ -3332,6 +3437,11 @@ export class SemanticAnalyzer {
      * @returns 是否兼容
      */
     private isTypeCompatible(actualType: string, expectedType: string, contextExpr?: Expression): boolean {
+        // JASS / vJASS 标识符大小写不敏感，类型名比较统一按小写处理，
+        // 避免 Integer(r) 与 returns integer 这类合法写法被误判为类型不匹配。
+        actualType = actualType.toLowerCase();
+        expectedType = expectedType.toLowerCase();
+
         // null 可赋值给任意 handle 类型（JASS 语义）
         if (actualType === "null" && this.isHandleType(expectedType)) {
             return true;
@@ -3435,7 +3545,11 @@ export class SemanticAnalyzer {
             return true; // 没有初始化表达式，可能为 null
         }
         
-        // 检查是否是 null 字面量
+        // 检查是否是 null 字面量（解析器对 return null / = null 生成 NullLiteral 节点）
+        if (expr instanceof NullLiteral) {
+            return true;
+        }
+        // 兼容历史行为：部分路径可能把 null 解析为 Identifier
         if (expr instanceof Identifier && expr.name === "null") {
             return true;
         }
@@ -3476,8 +3590,27 @@ export class SemanticAnalyzer {
         const root = this.resolveTypeRoot(type);
         if (root.toLowerCase() === "handle") return true;
         // 未在符号表中解析到的类型（如 common.j 的 race、effecttype）单独解析时用回退集合
-        if (root === type && !this.findSymbol(type, SymbolType.TYPE) && !this.externalSymbols.has(type)) {
-            return FALLBACK_HANDLE_TYPE_NAMES.has(type.toLowerCase());
+        if (root === type) {
+            // 用户声明的 struct / interface 不是 native handle 类型，
+            // 避免与 native 类型同名冲突（如 struct Unit 与 native unit）
+            // 被误判为「可能为 null 的 handle」，从而在每次方法调用时误报。
+            // 注意：findSymbol 未命中时返回 null（不是 undefined），必须用 null 比较，
+            // 否则所有类型都会被误判为用户类型，FALLBACK_HANDLE_TYPE_NAMES 永远无法生效
+            // （单文件/未加载 common.j 时 return null 赋给 player 等 native handle 会被误报）。
+            const isUserType =
+                this.findSymbol(type, SymbolType.STRUCT) !== null ||
+                this.findSymbol(type, SymbolType.INTERFACE) !== null ||
+                (() => {
+                    const ext = this.externalSymbols.get(type);
+                    return ext !== undefined &&
+                        (ext.type === SymbolType.STRUCT || ext.type === SymbolType.INTERFACE);
+                })();
+            if (isUserType) {
+                return false;
+            }
+            if (!this.findSymbol(type, SymbolType.TYPE) && !this.externalSymbols.has(type)) {
+                return FALLBACK_HANDLE_TYPE_NAMES.has(type.toLowerCase());
+            }
         }
         return false;
     }
@@ -3512,7 +3645,9 @@ export class SemanticAnalyzer {
         // 5. vjass type：type 链解析到根类型、handle 子类型及回退、外部符号表
         const root = this.resolveTypeRoot(type);
         if (basicTypes.has(root.toLowerCase())) return true;
-        if (this.isHandleType(type)) return true;
+        const ih = this.isHandleType(type);
+        if (process.env.JASS_DBG2 === "1") { console.error(`[DBG-VALID] type=${type} root=${root} isHandle=${ih} findType=${this.findSymbol(type, SymbolType.TYPE) !== null} extHas=${this.externalSymbols.has(type)}`); }
+        if (ih) return true;
         const ext = this.externalSymbols.get(type);
         if (ext && (
             ext.type === SymbolType.TYPE ||
@@ -3542,6 +3677,11 @@ export class SemanticAnalyzer {
 
         // textmacro 定义内部或 runtextmacro 展开块内部：不把占位符（如 $TYPE$）当无效类型报错
         if (this.isInsideTextMacro() || this.isNodeInsideTextMacro(typeNode)) {
+            return true;
+        }
+
+        // 带占位符（$NAME$）的类型名只可能来自 textmacro 模板体，合法代码不可能出现，直接放行
+        if (this.hasTextMacroPlaceholder(type)) {
             return true;
         }
 
@@ -3858,9 +3998,20 @@ export class SemanticAnalyzer {
                     }
                 }
 
-                // 更新 mayBeNull 状态（如果赋值给 handle 类型变量）
+                // 更新 mayBeNull 状态（赋值后重新评估，与声明处语义保持一致）：
+                // 仅当 RHS 是字面 null，或 RHS 是本身可能为 null 的变量时才视为可能为 null。
+                // 不应仅凭 RHS 是 handle 类型（如 CreateTrigger()/CreateGroup() 的返回值）
+                // 就把变量重新标记为可能为 null，否则
+                //   set gg_trg_X = CreateTrigger()
+                //   call TriggerRegisterAnyUnitEventBJ(gg_trg_X, ...)
+                // 这类最普通的「先赋值后使用」写法会在每次使用时被误报「可能为 null」。
                 if (symbol.valueType && this.isHandleType(symbol.valueType)) {
-                    symbol.mayBeNull = this.checkIfExpressionIsNull(node.value) || this.isHandleType(this.resolveExpressionType(node.value) || "");
+                    let rhsMayBeNull = this.checkIfExpressionIsNull(node.value);
+                    if (!rhsMayBeNull && node.value instanceof Identifier) {
+                        const rhsSymbol = this.findSymbol(node.value.name);
+                        rhsMayBeNull = rhsSymbol?.mayBeNull === true;
+                    }
+                    symbol.mayBeNull = rhsMayBeNull;
                 }
 
                 // 如果赋值给委托，标记委托为已初始化
@@ -3939,12 +4090,12 @@ export class SemanticAnalyzer {
                             if (actualType !== memberSymbol.valueType) {
                                 // 检查是否是隐式类型转换（如 integer 到 real）
                                 if (this.isImplicitTypeConversion(actualType, memberSymbol.valueType)) {
-                                    // 隐式类型转换，给出警告提示
-                                    this.addWarning(
-                                        node.value.start,
-                                        node.value.end,
-                                        `Implicit type conversion from '${actualType}' to '${memberSymbol.valueType}'. JASS will automatically convert, but consider using explicit type cast for clarity`
-                                    );
+                                // 隐式类型转换，给出警告提示
+                                this.addWarning(
+                                    node.value.start,
+                                    node.value.end,
+                                    `Implicit type conversion from '${actualType}' to '${memberSymbol.valueType}'. JASS will automatically convert, but consider using explicit type cast for clarity`
+                                );
                                 } else if (!this.isTypeCompatible(actualType, memberSymbol.valueType, node.value)) {
                                     // 类型不兼容，给出错误警告
                                     this.addWarning(
@@ -3980,6 +4131,26 @@ export class SemanticAnalyzer {
                             node.target.right.end,
                             `Member '${memberName}' may not exist in ${objectType.isStatic ? "struct" : "struct instance"} '${objectType.typeName}'`
                         );
+                    }
+                }
+            }
+        } else if (node.target instanceof BinaryExpression && node.target.operator === OperatorType.Index) {
+            // 索引赋值，如 v[0] = value，对应 vJASS operator []= 重载
+            const objectType = this.resolveObjectType(node.target.left);
+            if (objectType) {
+                const methodInfo = this.findMethod(objectType.typeName, "[]=", objectType.isStatic);
+                if (methodInfo && methodInfo.parameters && methodInfo.parameters.length > 0) {
+                    // operator []= 的最后一个参数是被赋的值类型（其余为索引参数）
+                    const valueParamType = methodInfo.parameters[methodInfo.parameters.length - 1].type;
+                    if (this.options.checkTypes && valueParamType) {
+                        const actualType = this.resolveExpressionType(node.value);
+                        if (actualType && actualType !== valueParamType && !this.isTypeCompatible(actualType, valueParamType, node.value)) {
+                            this.addWarning(
+                                node.value.start,
+                                node.value.end,
+                                `Type '${actualType}' is incompatible with operator []= parameter type '${valueParamType}'. Cannot assign '${actualType}' to '${valueParamType}'`
+                            );
+                        }
                     }
                 }
             }
@@ -5117,6 +5288,17 @@ export class SemanticAnalyzer {
      */
     private checkStaticIfIdentifier(expr: Identifier): ConstantExpressionResult {
         const name = expr.name;
+
+        // DEBUG_MODE 是 vJASS 预定义的编译期常量（debug 模式编译时为真，否则为假）。
+        // 始终视为合法布尔常量，避免 static if (DEBUG_MODE) 被误报「未定义标识符」。
+        if (name.toUpperCase() === "DEBUG_MODE") {
+            return {
+                isValid: true,
+                isConstant: true,
+                value: false,
+                type: "boolean"
+            };
+        }
 
         // 检查是否是 LIBRARY_ 前缀的库常量
         // 根据文档：库的声明将创建一个名为"LIBRARY_库名称"布尔常量，默认值为真
@@ -6296,7 +6478,10 @@ export function extractAllSymbols(ast: BlockStatement): Map<string, SymbolInfo> 
                 type: SymbolType.TYPE,
                 node: stmt,
                 isPrivate: false,
-                isPublic: true
+                isPublic: true,
+                // 记录基类型，便于 resolveTypeRoot 沿 type 链解析到根类型（如 handle），
+                // 否则 null 赋值给 group 等 handle 子类型会被误判为类型不兼容。
+                valueType: stmt.baseType ? stmt.baseType.name : undefined
             });
         }
         // 提取库声明
