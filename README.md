@@ -633,12 +633,18 @@ endstruct
 
 ## 📝 版本信息
 
-- **当前版本**: 1.9.16
-- **VS Code 版本要求**: 1.63+
-- **common.j 版本**: 2.03
-- **物编数据版本**: 2.03
+- **当前版本**: 1.9.19 (pre-release)
+- **VS Code 版本要求**: 1.67+
+- **common.j 版本**: 3.0.0
+- **物编数据版本**: 3.0.0
 
 ### 近期重要更新（最近 5 次）
+
+#### v1.9.19 (pre-release)
+- 实验性接入 `ydwe-compiler` 语言服务器：新增 `jass.lsp` 配置（默认关闭），开启后 hover 与错误诊断由内置 Rust 编译器（`--lsp` 模式）接管，失败自动回落内置实现。
+- `common.j` / `blizzard.j` / `common.ai` 适配魔兽争霸 III 3.0.0 API（补全 `@since` 标注与新增原生函数）。
+- 新增 pjass 编译检查标准库分离配置（`jass.compiler.check*` 等）与 `jass.additionalExtensions`。
+- 修复 `return null` 在 handle 类型返回值上的语义误报；支持 `integer(x)` 等类型转换表达式与 `library requires nothing`。
 
 #### v1.9.16
 - 新增 JASS 编译检查功能（基于 `pjass.exe`）：编辑区右键 `JASS` 子菜单提供三种检查模式（触发器 / 自定义库 / AI 脚本），结果输出到 `JASS 编译检查` 面板。
