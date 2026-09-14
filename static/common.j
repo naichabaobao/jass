@@ -197,7 +197,7 @@ type ubersplat extends handle
 // 哈希表
 type hashtable extends agent
 // UI框架/控件句柄
-// 3.0从 handle 改为 agent
+// 3.00从 handle 改为 agent
 type framehandle extends agent
 // 原生 UI框架/控件句柄 类型
 type originframetype extends handle
