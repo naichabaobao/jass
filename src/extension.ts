@@ -804,6 +804,27 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // 旧版扩展共存检测：Warcraft-III-VJassHelper（jass.warcraft-iii-vjasshelper）同样
+    // 为 JASS 语言注册补全/悬停/诊断，与本扩展同时启用会导致特性重复、结果互相叠加；
+    // 其旧版本还会因内置 data 目录缺失抛出 `data\blizzard.j ENOENT` 未处理异常。
+    // 这里只提示不干预，由用户决定是否禁用旧版。
+    const legacyExtension = vscode.extensions.getExtension('jass.warcraft-iii-vjasshelper');
+    if (legacyExtension) {
+        void vscode.window.showWarningMessage(
+            '检测到旧版扩展「Warcraft-III-VJassHelper」与本扩展同时启用。两者都会为 JASS 提供' +
+            '悬停/诊断等功能，会导致结果重复或相互干扰（旧版还会报 data\\blizzard.j 缺失错误）。',
+            '打开扩展面板',
+            '忽略'
+        ).then((choice) => {
+            if (choice === '打开扩展面板') {
+                void vscode.commands.executeCommand(
+                    'workbench.extensions.search',
+                    '@installed Warcraft-III-VJassHelper'
+                );
+            }
+        });
+    }
+
     // 注册命令：打开关键字文档 Webview（供 KeywordDefinitionProvider 在启用 jass.keywordDefinition 时调用）
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.openKeywordDocWebview', async (docFileName?: string) => {

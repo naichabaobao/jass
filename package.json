@@ -228,6 +228,10 @@
       {
         "command": "jass.restartLspServer",
         "title": "JASS: 重启语言服务器（ydwe-compiler）"
+      },
+      {
+        "command": "jass.showLspOutput",
+        "title": "JASS: 查看语言服务器日志"
       }
     ],
     "menus": {
@@ -267,6 +271,7 @@
     "test:version-gates": "bun run out/provider/version-gates.test.js",
     "test:type": "node -e \"const { runAnalyzerTypeTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTypeTests();\"",
     "test:anfp": "node -e \"const { runAnalyzerFpTests } = require('./out/vjass/analyzer-fp.test.js'); runAnalyzerFpTests();\"",
+    "test:lsp-probe": "node test-lsp-probe.js",
     "package": "npx @vscode/vsce package",
     "publish:skip-duplicate": "npx @vscode/vsce publish --skip-duplicate --no-dependencies",
     "publish": "npx @vscode/vsce publish --no-dependencies",

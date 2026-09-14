@@ -22,3 +22,5 @@ out/test/**
 # 其他开发期文件
 .gitignore
 vsc-extension-quickstart.md
+# LSP 排障探测脚本（开发期工具，不随扩展发布）
+test-lsp-probe.js

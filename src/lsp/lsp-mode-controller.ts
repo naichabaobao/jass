@@ -93,6 +93,16 @@ export class LspModeController implements vscode.Disposable {
     /** 当前由服务端接管的特性集合；中间件实时读取它 */
     private takeover: ReadonlySet<JassFeatureId> = new Set();
 
+    /**
+     * 状态栏指示器：让「LSP 是否真的接管」一眼可见。
+     * 「感觉不对」时第一件事就是看它——是 LSP 在负责还是内置实现在负责，
+     * 再结合「输出 → JASS Language Server」面板定位原因。
+     */
+    private readonly statusBar: vscode.StatusBarItem;
+    private readonly showOutputCommand: vscode.Disposable;
+    /** 最近一次回落内置实现的原因；展示在状态栏 tooltip 里 */
+    private lastFallbackReason: string | undefined;
+
     /** 串行化 apply：快速切换配置时避免两次 apply 交叉执行 */
     private queue: Promise<void> = Promise.resolve();
     private disposed = false;
@@ -100,6 +110,12 @@ export class LspModeController implements vscode.Disposable {
     constructor(options: LspModeControllerOptions) {
         this.options = options;
         this.outputChannel = vscode.window.createOutputChannel('JASS Language Server');
+        this.showOutputCommand = vscode.commands.registerCommand(
+            'jass.showLspOutput',
+            () => this.outputChannel.show(true)
+        );
+        this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 60);
+        this.statusBar.command = 'jass.showLspOutput';
         this.clientManager = new LspClientManager({
             documentSelector: options.documentSelector,
             outputChannel: this.outputChannel,
@@ -156,10 +172,50 @@ export class LspModeController implements vscode.Disposable {
         this.disposed = true;
         this.registry.dispose();
         this.clientManager.dispose();
+        this.statusBar.dispose();
+        this.showOutputCommand.dispose();
         this.outputChannel.dispose();
     }
 
     // ===== 内部实现 =====
+
+    /**
+     * 刷新状态栏指示器。取值来源：
+     * - `jass.lsp` 关闭 → 隐藏（内置模式是常态，不打扰）；
+     * - 服务端就绪且有接管特性 → `$(check) JASS LSP`；
+     * - 启动中 → `$(sync~spin) JASS LSP`；
+     * - 不可用/已回落 → `$(warning) JASS 内置模式`。
+     */
+    private refreshStatusBar(): void {
+        if (this.disposed) {
+            return;
+        }
+        const enabled = vscode.workspace.getConfiguration('jass').get<boolean>('lsp', false);
+        if (!enabled) {
+            this.statusBar.hide();
+            return;
+        }
+
+        const state = this.clientManager.currentState;
+        if (state === 'running' && this.takeover.size > 0) {
+            this.statusBar.text = '$(check) JASS LSP';
+            this.statusBar.tooltip = new vscode.MarkdownString(
+                '语言特性由 **ydwe-compiler** 接管：' + describeTakeover(this.takeover) +
+                '\n\n点击查看日志（输出 → JASS Language Server）'
+            );
+        } else if (state === 'starting') {
+            this.statusBar.text = '$(sync~spin) JASS LSP';
+            this.statusBar.tooltip = 'ydwe-compiler 语言服务器启动中…';
+        } else {
+            this.statusBar.text = '$(warning) JASS 内置模式';
+            this.statusBar.tooltip = new vscode.MarkdownString(
+                'ydwe-compiler 语言服务器未生效，当前使用扩展内置实现。' +
+                (this.lastFallbackReason ? `\n\n**原因：**${this.lastFallbackReason.split('\n')[0]}` : '') +
+                '\n\n点击查看日志'
+            );
+        }
+        this.statusBar.show();
+    }
 
     /** applyInternal 的兜底包装：任何异常都收敛为「回落到原生实现」 */
     private async applySafely(): Promise<void> {
@@ -172,6 +228,8 @@ export class LspModeController implements vscode.Disposable {
             const detail = error instanceof Error ? error.message : String(error);
             this.takeover = new Set();
             this.installAllNativeFeatures();
+            this.lastFallbackReason = detail;
+            this.refreshStatusBar();
             this.log(`LSP 接管流程异常，已回落扩展内置实现：${detail}`);
         }
     }
@@ -187,11 +245,15 @@ export class LspModeController implements vscode.Disposable {
             await this.clientManager.stop();
             this.takeover = new Set();
             this.installAllNativeFeatures();
+            this.lastFallbackReason = undefined;
+            this.refreshStatusBar();
             this.log('jass.lsp 关闭，全部语言特性使用扩展内置实现');
             return;
         }
 
         this.log('jass.lsp 已开启（实验性），准备接入 exe 语言服务器');
+        this.lastFallbackReason = undefined;
+        this.refreshStatusBar();
 
         const resolution = resolveServerLaunch(
             this.options.context.extensionPath,
@@ -250,6 +312,7 @@ export class LspModeController implements vscode.Disposable {
             );
         }
         this.log(`LSP 接管完成：${describeTakeover(effective)}`);
+        this.refreshStatusBar();
     }
 
     private installAllNativeFeatures(): void {
@@ -281,6 +344,8 @@ export class LspModeController implements vscode.Disposable {
         }
         this.takeover = new Set();
         this.installAllNativeFeatures();
+        this.lastFallbackReason = detail;
+        this.refreshStatusBar();
         this.log(`${detail}，已回落到扩展内置实现`);
 
         const choice = await vscode.window.showWarningMessage(
@@ -300,6 +365,8 @@ export class LspModeController implements vscode.Disposable {
         await this.clientManager.stop();
         this.takeover = new Set();
         this.installAllNativeFeatures();
+        this.lastFallbackReason = reason;
+        this.refreshStatusBar();
         this.log(`已回落扩展内置实现。原因：${reason}`);
 
         const choice = await vscode.window.showErrorMessage(
