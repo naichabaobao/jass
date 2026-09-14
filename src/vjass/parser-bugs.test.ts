@@ -234,6 +234,29 @@ endfunction
 `
         },
         {
+            name: "textmacro 嵌套定义（深度配对，不应截断外层宏）",
+            code: `
+//! textmacro OUTER takes P
+//! textmacro INNER takes X
+    set $X$ = 1
+//! endtextmacro
+    set $P$ = 2
+//! endtextmacro
+
+//! textmacro CREATE_SAVE_FUNC takes TYPE, FUNC_SUFFIX
+function Save$TYPE$ takes hashtable ht, integer key, integer subkey, $TYPE$ value returns nothing
+call Save$FUNC_SUFFIX$Handle(ht, key, subkey, value)
+endfunction
+//! endtextmacro
+
+//! runtextmacro OUTER("q")
+//! runtextmacro CREATE_SAVE_FUNC("unit", "Unit")
+
+function after takes nothing returns nothing
+endfunction
+`
+        },
+        {
             name: "array struct (extends array)",
             code: `
 struct Point extends array
@@ -529,6 +552,20 @@ endstruct
             ok,
             ok ? "" : "错误: " + errMsgs.slice(0, 4).join(" | ")
         );
+
+        // 结构不变量：顶层不允许出现名字带 $ 的函数声明。
+        // JASS 合法标识符不含 $，此类节点只可能是 textmacro 模板体因解析错位
+        // 泄漏成了真实函数（如嵌套 textmacro 深度不配对导致外层宏提前截断），
+        // 即便没有语法错误也是结构性 bug，必须在此暴露。
+        const leakedMacros = body.filter(
+            (s): s is any => s.constructor.name === "FunctionDeclaration" &&
+                typeof (s as any).name?.name === "string" &&
+                (s as any).name.name.includes("$")
+        );
+        if (leakedMacros.length > 0) {
+            failed++;
+            console.log(`  ✗ ${c.name} —— textmacro 模板体泄漏为顶层函数: ${leakedMacros.map((f: any) => f.name.name).join(", ")}`);
+        }
     }
 
     console.log(`\n误报扫描：用例 ${cases.length}，发现误报 ${falsePositiveCount}，通过 ${passed}，失败 ${failed}`);
