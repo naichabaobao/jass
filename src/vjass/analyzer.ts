@@ -1162,6 +1162,10 @@ export class SemanticAnalyzer {
         if (!node.name) return;
 
         const name = node.name.name;
+
+        // textmacro 模板体泄漏的函数（名字带 $NAME$ 占位符）不参与符号收集与类型检查
+        if (this.hasTextMacroPlaceholder(name)) return;
+
         const currentScope = this.scopeStack[this.scopeStack.length - 1];
 
         // 检查重复声明
@@ -1260,6 +1264,10 @@ export class SemanticAnalyzer {
         if (!node.name) return;
 
         const name = node.name.name;
+
+        // textmacro 模板体泄漏的 native 声明（名字带 $NAME$ 占位符）不参与检查
+        if (this.hasTextMacroPlaceholder(name)) return;
+
         const currentScope = this.scopeStack[this.scopeStack.length - 1];
 
         // 检查重复声明
@@ -1455,10 +1463,18 @@ export class SemanticAnalyzer {
         } else if (node instanceof HookStatement) {
             this.checkHook(node);
         } else if (node instanceof NativeDeclaration) {
-            this.checkNativeFunctionReturns(node);
+            // textmacro 模板体泄漏的 native 声明跳过检查
+            if (!(node.name && this.hasTextMacroPlaceholder(node.name.name))) {
+                this.checkNativeFunctionReturns(node);
+            }
         } else if (node instanceof FunctionDeclaration) {
-            // 检查函数声明中的多返回值语法错误
-            this.checkFunctionMultipleReturns(node);
+            // textmacro 模板体泄漏的函数（名字带 $NAME$ 占位符）整体跳过语义检查，
+            // 避免对占位符参数/返回类型及模板调用产生必然的误报
+            if (node.name && this.hasTextMacroPlaceholder(node.name.name)) {
+                // 仍需递归子节点吗？函数体不属于 children，直接跳过即可
+            } else {
+                // 检查函数声明中的多返回值语法错误
+                this.checkFunctionMultipleReturns(node);
             
             // 重新建立函数作用域以便 checkReturnStatement 和 checkAssignment 可以找到局部变量
             if (node.body) {
@@ -1515,6 +1531,7 @@ export class SemanticAnalyzer {
                 this.scopeStack.pop();
             } else {
                 this.checkFunctionReturns(node);
+            }
             }
             // 函数声明的子节点已经通过 node.body.body 处理过了，不需要再次递归
             return;
@@ -3073,6 +3090,19 @@ export class SemanticAnalyzer {
     }
 
     /**
+     * 判断文本是否包含 textmacro 占位符（$NAME$）。
+     *
+     * JASS 合法标识符不含 `$`（`$` 仅用于十六进制字面量），因此任何带 `$NAME$`
+     * 的函数名 / 类型名只可能来自 textmacro 模板体泄漏——正常解析时模板体不会
+     * 进入 AST，但一旦解析错位（如模板体内嵌套指令导致 endtextmacro 消费错位），
+     * 模板函数会以真实 FunctionDeclaration 的形态漏进来。此时对其做任何
+     * 类型/符号检查都必然误报，统一跳过。
+     */
+    private hasTextMacroPlaceholder(text: string | null | undefined): boolean {
+        return !!text && text.includes("$");
+    }
+
+    /**
      * 是否处于 textmacro 定义内部（仅对 runtextmacro 展开后的代码做语法检查，textmacro 内部跳过）
      */
     private isInsideTextMacro(): boolean {
@@ -3647,6 +3677,11 @@ export class SemanticAnalyzer {
 
         // textmacro 定义内部或 runtextmacro 展开块内部：不把占位符（如 $TYPE$）当无效类型报错
         if (this.isInsideTextMacro() || this.isNodeInsideTextMacro(typeNode)) {
+            return true;
+        }
+
+        // 带占位符（$NAME$）的类型名只可能来自 textmacro 模板体，合法代码不可能出现，直接放行
+        if (this.hasTextMacroPlaceholder(type)) {
             return true;
         }
 

@@ -1952,6 +1952,47 @@ endfunction`,
         }
     );
 
+    // ========== 测试 43.5: textmacro 模板体不应被语义检查误报 ==========
+    console.log("\n【测试 43.5】textmacro 模板体占位符不误报");
+
+    // 正常的 textmacro 定义 + runtextmacro 展开：模板体（$TYPE$ 占位符）不应报任何错误
+    testSemantic(
+        "textmacro 模板体占位符不应误报类型/符号错误",
+        `//! textmacro CREATE_SAVE_FUNC takes TYPE, FUNC_SUFFIX
+function Save$TYPE$ takes hashtable ht, integer key, integer subkey, $TYPE$ value returns nothing
+call Save$FUNC_SUFFIX$Handle(ht, key, subkey, value)
+endfunction
+function Load$TYPE$ takes hashtable ht, integer key, integer subkey returns $TYPE$
+return Load$FUNC_SUFFIX$Handle(ht, key, subkey)
+endfunction
+//! endtextmacro
+//! runtextmacro CREATE_SAVE_FUNC("unit", "Unit")
+//! runtextmacro CREATE_SAVE_FUNC("real", "Real")
+
+function main takes nothing returns nothing
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0 &&
+                !errors.warnings.some(w => w.message.includes("$"));
+        }
+    );
+
+    // 防御性场景：解析错位导致模板体以真实 FunctionDeclaration 泄漏到顶层时，
+    // 名字/类型带 $NAME$ 占位符的代码不应产生任何语义误报（JASS 合法标识符不含 $）
+    testSemantic(
+        "模板体泄漏为顶层函数时占位符不应误报",
+        `function Save$TYPE$ takes hashtable ht, integer key, integer subkey, $TYPE$ value returns nothing
+call Save$FUNC_SUFFIX$Handle(ht, key, subkey, value)
+endfunction
+function Load$TYPE$ takes hashtable ht, integer key, integer subkey returns $TYPE$
+return Load$FUNC_SUFFIX$Handle(ht, key, subkey)
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0 &&
+                !errors.warnings.some(w => w.message.includes("$"));
+        }
+    );
+
     // ========== 测试 44: 继承和方法覆盖问题 ==========
     console.log("\n【测试 44】继承和方法覆盖问题");
 
