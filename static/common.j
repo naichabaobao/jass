@@ -210,7 +210,7 @@ type frameeventtype extends handle
 // 键盘按键类型
 type oskeytype extends handle
 // 特殊按键类型
-// @since 3.0.0.0
+// @since 3.0.0
 type metakeytype extends handle
 // 技能整数域
 type abilityintegerfield extends handle
@@ -8416,7 +8416,7 @@ native SetWaterBaseColor takes integer red, integer green, integer blue, integer
 // @param maxOpacity 最大不透明度
 // @param reflectivity 反射率
 // @param emissivity 放射率
-// @param edgeSoftness 边缘柔软度
+// @param edgeSoftness 边缘柔和度
 // @param waveStrength 波浪强度
 // @since 3.0.0
 native SetHDWaterParams takes integer red, integer green, integer blue, boolean useColor, integer vertexDisplacement, integer minOpacity, integer maxOpacity, integer reflectivity, integer emissivity, integer edgeSoftness, integer waveStrength returns nothing
@@ -8427,7 +8427,7 @@ native SetHDWaterParams takes integer red, integer green, integer blue, boolean 
 // @param maxOpacity 最大不透明度
 // @param reflectivity 反射率
 // @param emissivity 放射率
-// @param edgeSoftness 边缘柔软度
+// @param edgeSoftness 边缘柔和度
 // @param waveStrength 波浪强度
 // @param envMapStrength 环境映射强度
 // @since 3.0.0
@@ -8453,7 +8453,7 @@ native BlzSetHDWaterReflectivity takes integer reflectivity returns nothing
 // 设置水放射率(高清)
 // @since 3.0.0
 native BlzSetHDWaterEmissivity takes integer emissivity returns nothing
-// 设置水边缘柔软度(高清)
+// 设置水边缘柔和度(高清)
 // @since 3.0.0
 native BlzSetHDWaterEdgeSoftness takes integer edgeSoftness returns nothing
 // 设置水波浪强度(高清)
