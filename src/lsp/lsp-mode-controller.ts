@@ -193,17 +193,15 @@ export class LspModeController implements vscode.Disposable {
 
         this.log('jass.lsp 已开启（实验性），准备接入 exe 语言服务器');
 
-        const resolution = resolveServerLaunch(this.options.context.extensionPath);
-        if (resolution.missingConfiguredPath) {
-            await this.fallback(
-                `jass.lsp.path 指向的文件不存在：${resolution.missingConfiguredPath}`
-            );
-            return;
-        }
+        const resolution = resolveServerLaunch(
+            this.options.context.extensionPath,
+            this.options.context.globalStorageUri.fsPath
+        );
         if (!resolution.launch) {
             await this.fallback(
-                '未找到 ydwe-compiler 可执行文件。已尝试 jass.lsp.path、系统 PATH、' +
-                    '工作区 target/{release,debug} 与扩展内置 static/。'
+                `未找到与当前平台（${process.platform}）匹配的内置语言服务器 ` +
+                    `static/ydwe-compiler${process.platform === 'win32' ? '.exe' : ''}。` +
+                    '扩展包可能不完整，请重新安装。'
             );
             return;
         }

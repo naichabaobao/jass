@@ -149,13 +149,7 @@
         "jass.lsp": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "**实验性功能**。启用后，悬停提示（hover）、错误诊断（diagnostics）等语言特性改由内置的 `static/ydwe-compiler.exe --lsp` 语言服务器接管；关闭时使用扩展自带的 TypeScript 实现。\n\n服务端不可用（找不到可执行文件、未启用 `lsp` 功能、启动失败或中途退出）时会自动回落到内置实现，并在「输出 → JASS Language Server」面板记录原因。\n\n切换该项后会自动重启语言服务器，无需重新加载窗口。"
-        },
-        "jass.lsp.path": {
-          "type": "string",
-          "format": "file",
-          "default": "",
-          "markdownDescription": "ydwe-compiler 可执行文件路径（供 `jass.lsp` 使用）。留空时按顺序查找：系统 `PATH` → 工作区 `target/release|debug` → 扩展内置 `static/ydwe-compiler(.exe)`。\n\n支持 `${workspaceFolder}` 变量，例如 `${workspaceFolder}/../ydwe-compiler/target/release/ydwe-compiler.exe`。"
+          "markdownDescription": "**实验性功能**。启用后，悬停提示（hover）、错误诊断（diagnostics）等语言特性改由扩展内置的 `static/` 目录下语言服务器（Windows 为 `ydwe-compiler.exe`，Linux 为 `ydwe-compiler`）接管；关闭时使用扩展自带的 TypeScript 实现。\n\n服务端不可用（二进制缺失、未启用 `lsp` 功能、启动失败或中途退出）时会自动回落到内置实现，并在「输出 → JASS Language Server」面板记录原因。\n\n切换该项后会自动重启语言服务器，无需重新加载窗口。"
         },
         "jass.lsp.trace.server": {
           "type": "string",

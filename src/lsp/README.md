@@ -1,15 +1,21 @@
 # `src/lsp` —— 实验性：接入 ydwe-compiler 语言服务器
 
 `jass.lsp`（默认 `false`）开启后，扩展会把**部分语言特性**交给内置的
-`static/ydwe-compiler.exe --lsp`（Rust 实现的语言服务器），其余特性继续由
+语言服务器（Rust 实现，Windows 为 `static/ydwe-compiler.exe`，Linux 为
+`static/ydwe-compiler`，以 `--lsp` 运行），其余特性继续由
 `src/provider/*` 的 TypeScript 实现提供。
+
+**服务器路径不支持配置**：固定使用扩展内置 `static/` 下与平台匹配的二进制。
+Linux/macOS 上首次启用时会把内置二进制拷贝到扩展 globalStorage 并
+`chmod 0o755` 后运行——VSIX 是 zip 包，从 Windows 打包会丢失可执行位，
+直接执行扩展目录内的文件会 EACCES；副本按 size+mtime 自动跟随内置文件更新。
 
 ## 模块划分
 
 | 文件 | 职责 |
 | --- | --- |
 | `takeover.ts` | 声明「哪些特性可被接管」+「服务端能力 → 特性 id」映射，纯函数、无状态 |
-| `server-resolver.ts` | 定位 exe（配置 → PATH → 工作区 target → 扩展内置），以及 `--lsp` 可用性探测 |
+| `server-resolver.ts` | 定位平台对应的内置二进制（Linux/macOS 负责拷贝赋权），以及 `--lsp` 可用性探测 |
 | `lsp-client-manager.ts` | `vscode-languageclient` 生命周期：启动 / 能力协商 / trace / 停止 / 崩溃上报 + 能力屏蔽中间件 |
 | `lsp-mode-controller.ts` | 模式切换总控：`FeatureRegistry` 保证同一特性只有一套实现生效；失败一律回落原生实现 |
 
@@ -75,10 +81,12 @@ Warcraft III API 版本过滤、vJASS 库跨文件解析等能力，服务端暂
 
 ## 服务端产物要求
 
-`static/ydwe-compiler.exe` 必须用 **带 `lsp` feature** 的方式构建：
+内置语言服务器必须用 **带 `lsp` feature** 的方式构建，产物按平台放入 `static/`：
 
 ```bash
 cargo build --release --features lsp
+# Windows 产物 → static/ydwe-compiler.exe
+# Linux 产物   → static/ydwe-compiler
 ```
 
 未启用该 feature 的产物执行 `--lsp` 会立刻退出并打印

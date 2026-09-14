@@ -75,14 +75,13 @@ npm install
 
 ### `jass.lsp` - ydwe-compiler 言語サーバー（実験的）
 
-拡張には Rust 製コンパイラ `static/ydwe-compiler.exe` が内蔵されており、LSP モード（`--lsp`）で実行できます。
+拡張には Rust 製コンパイラ言語サーバー（Windows: `static/ydwe-compiler.exe`、Linux: `static/ydwe-compiler`）が内蔵されており、LSP モード（`--lsp`）で実行できます。
 `jass.lsp` を有効にすると、**ホバー情報と診断（diagnostics）**がこの言語サーバーに引き継がれ、
 その他の機能（補完・定義ジャンプ・アウトライン・フォーマットなど）は引き続き拡張内蔵の TypeScript 実装が提供します。
 
 ```json
 {
   "jass.lsp": true,
-  "jass.lsp.path": "",
   "jass.lsp.trace.server": "off"
 }
 ```
@@ -90,19 +89,18 @@ npm install
 | 設定 | 説明 | デフォルト |
 | --- | --- | --- |
 | `jass.lsp` | 内蔵言語サーバーによるホバー / 診断の引き継ぎを有効化。**実験的機能**、デフォルトは無効 | `false` |
-| `jass.lsp.path` | `ydwe-compiler` 実行ファイルのパス。`${workspaceFolder}` をサポート。空の場合は自動検索 | `""` |
 | `jass.lsp.trace.server` | LSP 通信ログレベル：`off` / `messages` / `verbose` | `"off"` |
 
-**実行ファイルの検索順序**: `jass.lsp.path` → システム `PATH` → ワークスペース `target/release|debug` → 拡張組み込み `static/ydwe-compiler.exe`。
+**サーバーのパス**: 言語サーバーのパスは**設定できません**。常に拡張内蔵 `static/` ディレクトリから現在のプラットフォームに合ったバイナリを使用します（Windows: `ydwe-compiler.exe`、Linux/macOS: `ydwe-compiler`）。Linux/macOS で初めて有効にした際、拡張は内蔵バイナリをグローバルストレージにコピーして実行権限を付与してから実行します（VSIX パッケージ化では実行権限が失われるため）。
 
 **動作仕様**:
 
 - スイッチを切り替えると言語サーバーが**自動的に再起動**されます。ウィンドウの再読み込みは不要です。
-- 何らかの問題（実行ファイルが見つからない、`lsp` フィーチャーが無効、起動失敗・予期しない終了）が発生した場合は、**自動的に内蔵実装へフォールバック**します。原因は `JASS Language Server` 出力チャンネルに記録されます。
+- 何らかの問題（バイナリが見つからない、`lsp` フィーチャーが無効、起動失敗・予期しない終了）が発生した場合は、**自動的に内蔵実装へフォールバック**します。原因は `JASS Language Server` 出力チャンネルに記録されます。
 - サーバーからの診断にはソース `ydwe-compiler` が付き、内蔵実装の `jass` / `zinc` と区別されます。
 - コマンドパレット：**JASS: 言語サーバーを再起動（ydwe-compiler）**。
 
-> 内蔵の `ydwe-compiler.exe` は `cargo build --release --features lsp` でビルドする必要があります。
+> 内蔵言語サーバーは `cargo build --release --features lsp` でビルドする必要があります。
 > このフィーチャー無しでビルドされたバイナリは `--lsp` を付けると即座に終了します。
 
 ### JASS コンパイルチェックの使い方
