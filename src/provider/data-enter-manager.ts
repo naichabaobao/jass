@@ -1958,6 +1958,18 @@ export class DataEnterManager {
     }
 
     /**
+     * 注销配置重新加载回调。
+     * 供「按配置动态创建/销毁的消费者」使用（例如 LSP 模式切换时重建诊断提供者），
+     * 避免回调在实例销毁后仍然堆积。
+     */
+    public offConfigReload(callback: () => void): void {
+        const index = this.configReloadCallbacks.indexOf(callback);
+        if (index >= 0) {
+            this.configReloadCallbacks.splice(index, 1);
+        }
+    }
+
+    /**
      * 配置重新加载时触发回调
      */
     private triggerConfigReloadCallbacks(): void {

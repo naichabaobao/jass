@@ -7,8 +7,10 @@ src/test
 *.vsix
 *.log
 *.zip
+*.txt
 ./test.j
 *.temp
 .workbuddy/
 .creator/
 .cursor/
+.workbuddy/

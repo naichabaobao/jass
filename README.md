@@ -77,6 +77,41 @@ npm install
 
 **查找优先级**（编译检查）：`jass.compiler.check*` > `jass.compiler.*` > 扩展内置 `static/` 版本。
 
+##### `jass.lsp` - 接入 ydwe-compiler 语言服务器（实验性）
+
+扩展内置了一个 Rust 实现的编译器 `static/ydwe-compiler.exe`，它支持以 LSP 模式运行（`--lsp`）。
+开启 `jass.lsp` 后，**悬停提示（hover）与错误诊断（diagnostics）**改由该语言服务器接管，
+其余能力（补全、跳转、大纲、格式化等）仍由扩展自带的 TypeScript 实现提供。
+
+```json
+{
+  "jass.lsp": true,
+  "jass.lsp.path": "",
+  "jass.lsp.trace.server": "off"
+}
+```
+
+**配置项说明**：
+
+| 配置项 | 说明 | 默认值 |
+| --- | --- | --- |
+| `jass.lsp` | 是否启用 exe 语言服务器接管 hover / 诊断。**实验性功能**，默认关闭 | `false` |
+| `jass.lsp.path` | `ydwe-compiler` 可执行文件路径，支持 `${workspaceFolder}`。留空时自动查找 | `""` |
+| `jass.lsp.trace.server` | LSP 通信日志级别：`off` / `messages` / `verbose` | `"off"` |
+
+**可执行文件查找顺序**：`jass.lsp.path` → 系统 `PATH` → 工作区 `target/release|debug` → 扩展内置 `static/ydwe-compiler.exe`。
+
+**行为说明**：
+
+- 切换该开关会**自动重启语言服务器**，无需重新加载窗口。
+- 任何一步不可用（找不到 exe、exe 未启用 `lsp` 功能、启动失败或中途退出）都会**自动回落到扩展内置实现**，
+  不会出现「hover 突然没了」的情况；失败原因记录在「输出 → JASS Language Server」面板。
+- 诊断来源标签为 `ydwe-compiler`，与内置实现的 `jass` / `zinc` 区分开。
+- 命令面板提供 **JASS: 重启语言服务器（ydwe-compiler）**。
+
+> 内置的 `ydwe-compiler.exe` 需以 `cargo build --release --features lsp` 构建才会启用 LSP；
+> 未启用该 feature 的产物执行 `--lsp` 会立刻退出并打印提示。
+
 #### 创建配置文件
 
 可以通过以下方式创建配置文件：

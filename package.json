@@ -18,7 +18,7 @@
     "语言支持"
   ],
   "engines": {
-    "vscode": "^1.63.0"
+    "vscode": "^1.67.0"
   },
   "markdown": "github",
   "categories": [
@@ -88,6 +88,26 @@
             "2.03"
           ],
           "markdownDescription": "Warcraft III API version preference for completion behavior. In legacy versions (`1.20/1.24/1.26a/1.27/1.27a`), APIs marked by `@since` newer than selected version are filtered out. In other versions, newer APIs are de-prioritized. Items without version tags are unchanged."
+        },
+        "jass.lsp": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "**实验性功能**。启用后，悬停提示（hover）、错误诊断（diagnostics）等语言特性改由内置的 `static/ydwe-compiler.exe --lsp` 语言服务器接管；关闭时使用扩展自带的 TypeScript 实现。\n\n服务端不可用（找不到可执行文件、未启用 `lsp` 功能、启动失败或中途退出）时会自动回落到内置实现，并在「输出 → JASS Language Server」面板记录原因。\n\n切换该项后会自动重启语言服务器，无需重新加载窗口。"
+        },
+        "jass.lsp.path": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "ydwe-compiler 可执行文件路径（供 `jass.lsp` 使用）。留空时按顺序查找：系统 `PATH` → 工作区 `target/release|debug` → 扩展内置 `static/ydwe-compiler(.exe)`。\n\n支持 `${workspaceFolder}` 变量，例如 `${workspaceFolder}/../ydwe-compiler/target/release/ydwe-compiler.exe`。"
+        },
+        "jass.lsp.trace.server": {
+          "type": "string",
+          "default": "off",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "markdownDescription": "语言服务器的 JSON-RPC 通信日志级别。设为 `verbose` 后可在「输出 → JASS Language Server」面板查看报文。"
         }
       }
     },
@@ -152,6 +172,10 @@
       {
         "command": "jass.openReplacementSymbol",
         "title": "JASS: Open Replacement Symbol"
+      },
+      {
+        "command": "jass.restartLspServer",
+        "title": "JASS: 重启语言服务器（ydwe-compiler）"
       }
     ],
     "menus": {
@@ -179,7 +203,7 @@
     "compile": "tsc  -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
-    "test": "npm run test:parser && npm run test:analyzer && npm run test:comment && npm run test:bugscan",
+    "test": "npm run test:parser && npm run test:analyzer && npm run test:comment && npm run test:bugscan && npm run test:anfp",
     "test:e2e": "node out/test/runTest.js",
     "test:parser": "bun run out/vjass/parser.test.js",
     "test:comment": "bun run out/vjass/comment.test.js",
@@ -190,6 +214,7 @@
     "test:completion-version": "bun run out/provider/completion-version-filter.test.js",
     "test:version-gates": "bun run out/provider/version-gates.test.js",
     "test:type": "node -e \"const { runAnalyzerTypeTests } = require('./out/vjass/analyzer.test.js'); runAnalyzerTypeTests();\"",
+    "test:anfp": "node -e \"const { runAnalyzerFpTests } = require('./out/vjass/analyzer-fp.test.js'); runAnalyzerFpTests();\"",
     "package": "npx @vscode/vsce package",
     "publish:skip-duplicate": "npx @vscode/vsce publish --skip-duplicate --no-dependencies",
     "publish": "npx @vscode/vsce publish --no-dependencies",
@@ -198,10 +223,10 @@
     "fix-dependencies": "npm install --production"
   },
   "devDependencies": {
-    "@types/node": "^14.14.31",
     "@types/mocha": "^10.0.7",
-    "@vscode/test-electron": "^2.5.2",
+    "@types/node": "^14.14.31",
     "@types/vscode": "^1.49.3",
+    "@vscode/test-electron": "^2.5.2",
     "mocha": "^10.8.2",
     "typescript": "^4.9.4"
   },
@@ -209,5 +234,8 @@
     "url": "https://github.com/naichabaobao/jass/issues"
   },
   "author": "家猫hoo",
-  "license": "GPL"
+  "license": "GPL",
+  "dependencies": {
+    "vscode-languageclient": "^8.1.0"
+  }
 }
