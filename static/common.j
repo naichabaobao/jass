@@ -4319,7 +4319,7 @@ globals
 	constant unitbooleanfield UNIT_BF_SELECTION_CIRCLE_ON_WATER = ConvertUnitBooleanField('usew')
 	// 单位布尔值域 美术 - 深水区有阴影 ('ushr')
 	constant unitbooleanfield UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
-	// 单位布尔值域 美术 - 显示飞行单位的地面坐标 ('uatg')
+	// 单位布尔值域 美术 - 显示飞行单位地面坐标 ('uatg')
 	// 星际二飞行单位坐标UI指示工具(地面垂直线)
 	// @since 3.0.0
 	constant unitbooleanfield UNIT_BF_SHOW_AIR_TO_GROUND = ConvertUnitBooleanField('uatg')
