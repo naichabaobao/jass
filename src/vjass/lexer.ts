@@ -890,7 +890,8 @@ export class Lexer implements ILexer {
                     // 特殊处理 [] 和 []= 运算符
                     if (char === '[' && nextChar === ']') {
                         // 检查是否是 []=
-                        const thirdChar = this.peekChar(2);
+                        // 注意：advance() 已将 position 移动到 ']' 处，故 '=' 在 peekChar(1)
+                        const thirdChar = this.peekChar(1);
                         if (thirdChar === '=') {
                             // 识别为 []=
                             type = TokenType.OperatorIndexAssign;

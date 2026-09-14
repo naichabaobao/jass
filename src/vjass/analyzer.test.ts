@@ -1934,6 +1934,24 @@ endfunction`,
         }
     );
 
+    // ========== 回归: return null 误报 ==========
+    // 无标准库（单文件分析）时，native handle 类型（player/unit 等）走 FALLBACK_HANDLE_TYPE_NAMES
+    // 回退集合，return null 必须放行，不应误报类型不匹配
+    testSemantic(
+        "returns player 函数中 return null 不应误报类型不匹配",
+        `function Controller takes integer i returns player
+if i >= 0 then
+return Player(i)
+endif
+return null
+endfunction`,
+        (errors) => {
+            return !errors.errors.some(e =>
+                e.message.includes("Return type") || e.message.includes("Invalid return type")
+            );
+        }
+    );
+
     // ========== 测试 44: 继承和方法覆盖问题 ==========
     console.log("\n【测试 44】继承和方法覆盖问题");
 

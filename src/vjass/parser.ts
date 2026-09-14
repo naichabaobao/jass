@@ -2383,6 +2383,12 @@ export class Parser {
         // 支持 requires/needs/uses，它们功能相同
         while (this.checkValue("requires") || this.checkValue("needs") || this.checkValue("uses")) {
             this.lexer.next(); // 消费 requires/needs/uses
+
+            // 支持 `requires nothing`（无依赖）的合法写法
+            if (this.checkValue("nothing")) {
+                this.lexer.next(); // 消费 nothing
+                break;
+            }
             
             // 解析依赖列表（用逗号分隔）
             let firstDep = true;
@@ -4469,6 +4475,26 @@ export class Parser {
                 // thistype 单独使用，作为类型或表达式
                 return new ThistypeExpression(thistypeToken.start, thistypeToken.end);
             }
+        }
+
+        // 类型转换表达式：基本类型关键字后跟 '('，如 integer(x)、real(y)、string(i)
+        // 类型关键字被词法器识别为专用 token（TypeInteger 等），而非 Identifier，
+        // 若不加处理会落到函数末尾的 return null，导致 return/赋值的值被丢弃（误报“必须返回值”等）。
+        if (
+            token.type === TokenType.TypeInteger ||
+            token.type === TokenType.TypeReal ||
+            token.type === TokenType.TypeString ||
+            token.type === TokenType.TypeBoolean ||
+            token.type === TokenType.TypeCode ||
+            token.type === TokenType.TypeHandle
+        ) {
+            this.lexer.next(); // 消费类型关键字
+            if (this.check(TokenType.LeftParen)) {
+                const typeIdent = new Identifier(token.value, token.start, token.end);
+                return this.parseTypecastExpression(typeIdent);
+            }
+            // 类型关键字在表达式上下文中单独出现（无括号），非法用法
+            return null;
         }
 
         // 函数表达式（function functionName，类型为 code）
