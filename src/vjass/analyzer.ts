@@ -3998,9 +3998,20 @@ export class SemanticAnalyzer {
                     }
                 }
 
-                // 更新 mayBeNull 状态（如果赋值给 handle 类型变量）
+                // 更新 mayBeNull 状态（赋值后重新评估，与声明处语义保持一致）：
+                // 仅当 RHS 是字面 null，或 RHS 是本身可能为 null 的变量时才视为可能为 null。
+                // 不应仅凭 RHS 是 handle 类型（如 CreateTrigger()/CreateGroup() 的返回值）
+                // 就把变量重新标记为可能为 null，否则
+                //   set gg_trg_X = CreateTrigger()
+                //   call TriggerRegisterAnyUnitEventBJ(gg_trg_X, ...)
+                // 这类最普通的「先赋值后使用」写法会在每次使用时被误报「可能为 null」。
                 if (symbol.valueType && this.isHandleType(symbol.valueType)) {
-                    symbol.mayBeNull = this.checkIfExpressionIsNull(node.value) || this.isHandleType(this.resolveExpressionType(node.value) || "");
+                    let rhsMayBeNull = this.checkIfExpressionIsNull(node.value);
+                    if (!rhsMayBeNull && node.value instanceof Identifier) {
+                        const rhsSymbol = this.findSymbol(node.value.name);
+                        rhsMayBeNull = rhsSymbol?.mayBeNull === true;
+                    }
+                    symbol.mayBeNull = rhsMayBeNull;
                 }
 
                 // 如果赋值给委托，标记委托为已初始化

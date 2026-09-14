@@ -1952,6 +1952,73 @@ endfunction`,
         }
     );
 
+    // ========== 回归: handle 变量赋值后使用不应误报「可能为 null」==========
+    // 修复前：赋值路径仅凭 RHS 是 handle 类型就重新标记 mayBeNull，
+    // 导致 set gg_trg_X = CreateTrigger() 之后的每次使用都被误报。
+    // 赋值语义应与声明处一致：仅字面 null 或 RHS 本身可能为 null 时才标记。
+    testSemantic(
+        "set gg_trg = CreateTrigger() 后作为参数使用不应误报可能为 null",
+        `globals
+    trigger gg_trg_SpellTrigger = null
+endglobals
+function cond takes nothing returns boolean
+    return true
+endfunction
+function act takes nothing returns nothing
+endfunction
+function InitTrig_SpellTrigger takes nothing returns nothing
+set gg_trg_SpellTrigger = CreateTrigger()
+call TriggerRegisterAnyUnitEventBJ(gg_trg_SpellTrigger, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+call TriggerAddCondition(gg_trg_SpellTrigger, Condition(function cond))
+call TriggerAddAction(gg_trg_SpellTrigger, function act)
+endfunction`,
+        (errors) => {
+            return !errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
+    testSemantic(
+        "local handle 无初始化声明后经 CreateXxx() 赋值再使用不应误报可能为 null",
+        `function UseGroup takes group g returns nothing
+endfunction
+function Test takes nothing returns nothing
+local group g
+set g = CreateGroup()
+call UseGroup(g)
+endfunction`,
+        (errors) => {
+            return !errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
+    testSemantic(
+        "赋值链传播可能为 null（set b = a，a 可能为 null）应保留警告",
+        `function KillUnit takes unit u returns nothing
+endfunction
+function Test takes nothing returns nothing
+local unit a = null
+local unit b
+set b = a
+call KillUnit(b)
+endfunction`,
+        (errors) => {
+            return errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
+    testSemantic(
+        "无初始化局部变量直接使用应保留警告",
+        `function KillUnit takes unit u returns nothing
+endfunction
+function Test takes nothing returns nothing
+local unit u
+call KillUnit(u)
+endfunction`,
+        (errors) => {
+            return errors.warnings.some(w => w.message.includes("Possible null value used"));
+        }
+    );
+
     // ========== 测试 43.5: textmacro 模板体不应被语义检查误报 ==========
     console.log("\n【测试 43.5】textmacro 模板体占位符不误报");
 
@@ -1970,6 +2037,28 @@ endfunction
 //! runtextmacro CREATE_SAVE_FUNC("real", "Real")
 
 function main takes nothing returns nothing
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0 &&
+                !errors.warnings.some(w => w.message.includes("$"));
+        }
+    );
+
+    // 用户实际场景：占位符作函数名/返回类型的函数生成器宏，
+    // 两次展开（其中一次逗号前后带空格）+ 生成函数被调用，不应有任何误报
+    testSemantic(
+        "函数生成器宏两次展开后生成函数可正常调用（含逗号前后空格的参数）",
+        `//! textmacro bb takes name, type
+function $name$ takes nothing returns $type$
+return ""
+endfunction
+//! endtextmacro
+//! runtextmacro bb("kkk_func1" , "string")
+//! runtextmacro bb("kkk_func2", "string")
+
+function caller takes nothing returns nothing
+    local string s = kkk_func1()
+    set s = kkk_func2()
 endfunction`,
         (errors) => {
             return errors.errors.length === 0 &&

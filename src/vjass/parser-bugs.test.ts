@@ -257,6 +257,71 @@ endfunction
 `
         },
         {
+            name: "textmacro 函数生成器（占位符作函数名/返回类型，逗号前后带空格的调用）",
+            code: `
+//! textmacro bb takes name, type
+function $name$ takes nothing returns $type$
+return ""
+endfunction
+//! endtextmacro
+//! runtextmacro bb("kkk_func1" , "string")
+//! runtextmacro bb("kkk_func2", "string")
+
+function caller takes nothing returns nothing
+    local string s = kkk_func1()
+    set s = kkk_func2()
+endfunction
+`
+        },
+        {
+            name: "textmacro 参数含空格/特殊内容（引号内空格、占位符拼接、多次引用同一占位符）",
+            code: `
+//! textmacro MAKER takes base, label
+function do_$base$_x takes nothing returns nothing
+    call BJDebugMsg("$label$ $base$ $label$")
+endfunction
+//! endtextmacro
+//! runtextmacro MAKER("fire bolt", "A B")
+//! runtextmacro MAKER("ice","C")
+
+function use2 takes nothing returns nothing
+    call do_fire_bolt_x()
+    call do_ice_x()
+endfunction
+`
+        },
+        {
+            name: "textmacro 生成 struct 成员与方法（占位符在类型/成员名位置）",
+            code: `
+//! textmacro ADD_FIELD takes t, n
+struct F_$n$_$t$
+    $t$ m_$n$
+    method get_$n$ takes nothing returns $t$
+        return m_$n$
+    endmethod
+endstruct
+//! endtextmacro
+//! runtextmacro ADD_FIELD("integer", "hp")
+//! runtextmacro ADD_FIELD("real", "ratio")
+
+function use3 takes nothing returns nothing
+    local F_hp_integer f = F_hp_integer.create()
+    call BJDebugMsg(I2S(f.get_hp()))
+endfunction
+`
+        },
+        {
+            name: "textmacro 空参数列表 / optional / 括号前后无空格与多余空白混合",
+            code: `
+//! textmacro NOARG
+function zero_arg takes nothing returns nothing
+endfunction
+//! endtextmacro
+//! runtextmacro NOARG()
+//! runtextmacro optional MISSING_MACRO
+`
+        },
+        {
             name: "array struct (extends array)",
             code: `
 struct Point extends array
