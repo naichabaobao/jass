@@ -321,8 +321,10 @@ export class LspModeController implements vscode.Disposable {
     }
 }
 
-/** 语言服务器覆盖的文档选择器（与 package.json 中的语言 id 对应） */
+/** 语言服务器覆盖的文档选择器（与 extension.ts 的 jassSelector 对齐，含 untitled） */
 export const LSP_DOCUMENT_SELECTOR: DocumentSelector = [
     { scheme: 'file', language: 'jass' },
-    { scheme: 'file', language: 'jass-zinc' }
+    { scheme: 'untitled', language: 'jass' },
+    { scheme: 'file', language: 'jass-zinc' },
+    { scheme: 'untitled', language: 'jass-zinc' }
 ];

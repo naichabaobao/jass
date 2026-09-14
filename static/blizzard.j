@@ -78,6 +78,12 @@ globals
 
     // 物品栏格子上限，默认6
     constant integer bj_MAX_INVENTORY = 6
+    // 扩展物品栏格子上限，默认30
+    // @since 3.0.0
+    constant integer bj_MAX_EXTENDED_INVENTORY =  30
+    // 装备数量上限，默认9
+    // @since 3.0.0
+    constant integer bj_MAX_EQUIPMENT_INVENTORY =  9
     // 玩家数量上限（12/24，不含中立玩家，以1.29区分）
     constant integer bj_MAX_PLAYERS = GetBJMaxPlayers()
     // 中立受害玩家编号（13/25，以1.29区分）
@@ -287,6 +293,12 @@ globals
     constant integer bj_CAMPAIGN_INDEX_XU = 7
     // 战役过场电影索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_INDEX_XO = 8
+    // 战役过场电影索引 被遗忘的王国被人族战役（9）
+    // @since 3.0.0
+    constant integer bj_CAMPAIGN_INDEX_RH = 9
+    // 战役过场电影索引 被遗忘的王国被遗忘者战役（10）
+    // @since 3.0.0
+    constant integer bj_CAMPAIGN_INDEX_RU = 10
 
     // Campaign offset constants (for mission indexing)
 
@@ -308,6 +320,12 @@ globals
     constant integer bj_CAMPAIGN_OFFSET_XU = 7
     // 战役关卡索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_OFFSET_XO = 8
+    // 战役过场电影索引 被遗忘的王国被人族战役（0）
+    // @since 3.0.0
+    constant integer bj_CAMPAIGN_OFFSET_RH = 0
+    // 战役过场电影索引 被遗忘的王国被遗忘者战役（1）
+    // @since 3.0.0
+    constant integer bj_CAMPAIGN_OFFSET_RU = 1
 
     // Mission indexing constants
     // Tutorial
@@ -322,6 +340,7 @@ globals
     constant integer bj_MISSION_INDEX_T03 = bj_CAMPAIGN_OFFSET_T * 1000 + 3
     // 战役关卡 混乱之治教程战役04（bj_CAMPAIGN_OFFSET_T * 1000 + 4）
     constant integer bj_MISSION_INDEX_T04 = bj_CAMPAIGN_OFFSET_T * 1000 + 4
+
     // Human
 
     // 战役关卡 混乱之治人族战役01（bj_CAMPAIGN_OFFSET_H * 1000 + 0）
@@ -348,6 +367,7 @@ globals
     constant integer bj_MISSION_INDEX_H10 = bj_CAMPAIGN_OFFSET_H * 1000 + 10
     // 战役关卡 混乱之治人族战役09（bj_CAMPAIGN_OFFSET_H * 1000 + 11）
     constant integer bj_MISSION_INDEX_H11 = bj_CAMPAIGN_OFFSET_H * 1000 + 11
+
     // Undead
 
     // 战役关卡 混乱之治不死族战役01（bj_CAMPAIGN_OFFSET_U * 1000 + 0）
@@ -370,6 +390,7 @@ globals
     constant integer bj_MISSION_INDEX_U10 = bj_CAMPAIGN_OFFSET_U * 1000 + 8
     // 战役关卡 混乱之治不死族战役08（bj_CAMPAIGN_OFFSET_U * 1000 + 9）
     constant integer bj_MISSION_INDEX_U11 = bj_CAMPAIGN_OFFSET_U * 1000 + 9
+
     // Orc
 
     // 战役关卡 混乱之治兽族战役01（bj_CAMPAIGN_OFFSET_O * 1000 + 0）
@@ -394,6 +415,7 @@ globals
     constant integer bj_MISSION_INDEX_O09 = bj_CAMPAIGN_OFFSET_O * 1000 + 9
     // 战役关卡 混乱之治兽族战役09（bj_CAMPAIGN_OFFSET_O * 1000 + 10）
     constant integer bj_MISSION_INDEX_O10 = bj_CAMPAIGN_OFFSET_O * 1000 + 10
+
     // Night Elf
 
     // 战役关卡 混乱之治暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_N * 1000 + 0）
@@ -416,6 +438,7 @@ globals
     constant integer bj_MISSION_INDEX_N08 = bj_CAMPAIGN_OFFSET_N * 1000 + 8
     // 战役关卡 混乱之治暗夜精灵族战役08（bj_CAMPAIGN_OFFSET_N * 1000 + 9）
     constant integer bj_MISSION_INDEX_N09 = bj_CAMPAIGN_OFFSET_N * 1000 + 9
+
     // Expansion Night Elf
 
     // 战役关卡 冰封王座暗夜精灵族战役01（bj_CAMPAIGN_OFFSET_XN * 1000 + 0）
@@ -440,6 +463,7 @@ globals
     constant integer bj_MISSION_INDEX_XN09 = bj_CAMPAIGN_OFFSET_XN * 1000 + 9
     // 战役关卡 冰封王座暗夜精灵族战役08结局（bj_CAMPAIGN_OFFSET_XN * 1000 + 10）
     constant integer bj_MISSION_INDEX_XN10 = bj_CAMPAIGN_OFFSET_XN * 1000 + 10
+
     // Expansion Human
 
     // 战役关卡 冰封王座人族战役01（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 0）
@@ -462,6 +486,7 @@ globals
     constant integer bj_MISSION_INDEX_XH08 = bj_CAMPAIGN_OFFSET_XH * 1000 + 8
     // 战役关卡 冰封王座人族战役06 结局（bj_j_CAMPAIGN_OFFSET_XH * 1000 + 9）
     constant integer bj_MISSION_INDEX_XH09 = bj_CAMPAIGN_OFFSET_XH * 1000 + 9
+
     // Expansion Undead
 
     // 战役关卡 冰封王座不死族战役01（bj_j_CAMPAIGN_OFFSET_XU * 1000 + 0）
@@ -503,6 +528,39 @@ globals
     // 战役关卡 冰封王座兽族（额外战役）04（bj_CAMPAIGN_OFFSET_XO * 1000 + 3）
     constant integer bj_MISSION_INDEX_XO03 = bj_CAMPAIGN_OFFSET_XO * 1000 + 3
 
+    // Rebirth Human
+
+    // 战役关卡 被遗忘的王国人族01（bj_CAMPAIGN_OFFSET_RH * 1000 + 0）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RH00 = bj_CAMPAIGN_OFFSET_RH * 1000 + 0
+    // 战役关卡 被遗忘的王国人族02（bj_CAMPAIGN_OFFSET_RH * 1000 + 1）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RH01 = bj_CAMPAIGN_OFFSET_RH * 1000 + 1
+    // 战役关卡 被遗忘的王国人族03（bj_CAMPAIGN_OFFSET_RH * 1000 + 2）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RH02 = bj_CAMPAIGN_OFFSET_RH * 1000 + 2
+    // 战役关卡 被遗忘的王国人族04（bj_CAMPAIGN_OFFSET_RH * 1000 + 3）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RH03 = bj_CAMPAIGN_OFFSET_RH * 1000 + 3
+    // 战役关卡 被遗忘的王国人族05（bj_CAMPAIGN_OFFSET_RH * 1000 + 4）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RH04 = bj_CAMPAIGN_OFFSET_RH * 1000 + 4
+
+    // Rebirth Undead
+
+    // 战役关卡 被遗忘的王国被遗忘者01（bj_CAMPAIGN_OFFSET_RU * 1000 + 0）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RU00 = bj_CAMPAIGN_OFFSET_RU * 1000 + 0
+    // 战役关卡 被遗忘的王国被遗忘者02（bj_CAMPAIGN_OFFSET_RU * 1000 + 1）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RU01 = bj_CAMPAIGN_OFFSET_RU * 1000 + 1
+    // 战役关卡 被遗忘的王国被遗忘者03（bj_CAMPAIGN_OFFSET_RU * 1000 + 2）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RU02 = bj_CAMPAIGN_OFFSET_RU * 1000 + 2
+    // 战役关卡 被遗忘的王国被遗忘者04（bj_CAMPAIGN_OFFSET_RU * 1000 + 3）
+    // @since 3.0.0
+    constant integer bj_MISSION_INDEX_RU03 = bj_CAMPAIGN_OFFSET_RU * 1000 + 3
+
     // Cinematic indexing constants
 
     // 战役过场电影名称 教程（0）
@@ -527,6 +585,12 @@ globals
     constant integer bj_CINEMATICINDEX_XOP = 9
     // 战役过场电影名称 冰封王座结尾（10）
     constant integer bj_CINEMATICINDEX_XED = 10
+    // 战役过场电影名称 被遗忘的王国人族开场（11）
+    // @since 3.0.0
+    constant integer bj_CINEMATICINDEX_HFO = 11
+    // 战役过场电影名称 被遗忘的王国被遗忘者结尾（12）
+    // @since 3.0.0
+    constant integer bj_CINEMATICINDEX_UFE = 12
 
     // Alliance settings
 
@@ -549,9 +613,9 @@ globals
 
     // Keyboard Event Types
 
-    // 键盘事件  按下按键
+    // 键盘事件 按下按键
     constant integer bj_KEYEVENTTYPE_DEPRESS = 0
-    // 键盘事件  松开按键
+    // 键盘事件 松开按键
     constant integer bj_KEYEVENTTYPE_RELEASE = 1
 
     // Keyboard Event Keys
@@ -564,6 +628,9 @@ globals
     constant integer bj_KEYEVENTKEY_DOWN = 2
     // 键盘按键事件 方向键（上）
     constant integer bj_KEYEVENTKEY_UP = 3
+    // 键盘按键事件 按键（A）
+    // @since 3.0.0
+    constant integer bj_KEYEVENTKEY_A = 4
 
     // Mouse Event Types
 
@@ -1153,6 +1220,15 @@ globals
     integer bj_livingPlayerUnitsTypeId = 0
     // 最后死亡的单位/物品/可破坏物
     widget bj_lastDyingWidget = null
+    // 所有单位英雄光圈开关标识，默认开（true）
+    // @since 3.0.0
+    boolean bj_HeroGlowAllUnitsFlag = true
+    // 所有单位光环开关标识，默认开（true）
+    // @since 3.0.0
+    boolean bj_enableAurasAllUnits = true
+    // 所有单位光环特效UI开关标识，默认开（true）
+    // @since 3.0.0
+    boolean bj_affectsUIAurasAllUnits = true
 
     // Random distribution vars
 
@@ -1226,7 +1302,13 @@ globals
     // 最后创建的小地图（任务）图标
     minimapicon bj_lastCreatedMinimapIcon = null
     // 最后创建的按钮特效
-	commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
+    commandbuttoneffect bj_lastCreatedCommandButtonEffect = null
+    // 最后装备的物品
+    // @since 3.0.0
+    item bj_lastEquippedItem = null
+    // 最后卸载的装备
+    // @since 3.0.0
+    item bj_lastUnequippedItem = null
 
     // Filter function vars
 
@@ -1252,6 +1334,12 @@ globals
 
     // 需要清理单位组标识，默认不需要（false）
     boolean bj_wantDestroyGroup = false
+    // 需要异步销毁的特效
+    // @since 3.0.0
+    effect bj_destroyEffectAsyncEffect = null
+    // 异步销毁特效的延迟时间
+    // @since 3.0.0
+    real bj_destroyEffectAsyncTime = 0
 
     // Instanced Operation Results
 
@@ -1279,7 +1367,29 @@ function BJDebugMsg takes string msg returns nothing
     endloop
 endfunction
 
+//***************************************************************************
+//*
+//*  Memory Cleanup Functions
+//*
+//***************************************************************************
 
+// 设置 需要清理单位组标识(bj_wantDestroyGroup) 为 true
+// @since 3.0.0
+function SetWantDestroyGroupBJ takes nothing returns nothing
+	set bj_wantDestroyGroup = true
+endfunction
+
+// 设置 需要清理单位组标识(bj_wantDestroyGroup) 为 false
+// @since 3.0.0
+function ClearWantDestroyGroupBJ takes nothing returns nothing
+	set bj_wantDestroyGroup = false
+endfunction
+
+// 查询 需要清理单位组标识(bj_wantDestroyGroup) 当前值
+// @since 3.0.0
+function GetWantDestroyGroupBJ takes nothing returns boolean
+	return bj_wantDestroyGroup
+endfunction
 
 //***************************************************************************
 //*
@@ -2055,6 +2165,15 @@ function SetCameraFieldForPlayer takes player whichPlayer, camerafield whichFiel
     endif
 endfunction
 
+// 允许/禁止 修改指定玩家指定镜头的镜头属性
+// @since 3.0.0
+function SetCameraFieldControlledByInputForPlayer takes player whichPlayer, camerafield whichField, boolean controlled returns nothing
+    if (GetLocalPlayer() == whichPlayer) then
+        // Use only local code (no net traffic) within this block to avoid desyncs.
+        call SetCameraFieldControlledByInput(whichField, controlled)
+    endif
+endfunction
+
 
 // 锁定镜头目标到单位
 function SetCameraTargetControllerNoZForPlayer takes player whichPlayer, unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
@@ -2546,6 +2665,24 @@ function TriggerRegisterPlayerMouseEventBJ takes trigger trig, player whichPlaye
     endif
 endfunction
 
+// 查询鼠标按钮是否按下(指定鼠标按钮类型)
+// @since 3.0.0
+function IsMouseButtonPressedBJ takes mousebuttontype mouseButtonType returns boolean
+    return BlzIsMouseButtonPressed(mouseButtonType)
+endfunction
+
+// 查询指定特殊按键是否按下
+// @since 3.0.0
+function IsMetaKeyPressedBJ takes integer metakey returns boolean
+    return BlzIsMetaKeyPressed(metakey)
+endfunction
+
+// 查询指定键盘按键类型是否按下
+// @since 3.0.0
+function IsKeyPressedBJ takes oskeytype key returns boolean
+    return BlzIsKeyPressed(key)
+endfunction
+
 
 // 玩家胜利事件
 function TriggerRegisterPlayerEventVictory takes trigger trig, player whichPlayer returns event
@@ -2931,6 +3068,88 @@ function SetWaterBaseColorBJ takes real red, real green, real blue, real transpa
     call SetWaterBaseColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 endfunction
 
+// 设置水高级参数 [Ex](支持指定环境映射强度)
+// @param override 启用/禁用 覆盖颜色
+// @param vertexDisplacement 顶点位移
+// @param minOpacity 最小不透明度
+// @param maxOpacity 最大不透明度
+// @param reflectivity 反射率
+// @param emissivity 放射率
+// @param edgeSoftness 边缘柔和度
+// @param waveStrength 波浪强度
+// @param envMapStrength 环境映射强度
+// @since 3.0.0
+function SetHDWaterParamsExBJ takes real red, real green, real blue, boolean override, integer vertexDisplacement, integer minOpacity, integer maxOpacity, integer reflectivity, integer emissivity, integer edgeSoftness, integer waveStrength, integer envMapStrength returns nothing
+    call SetHDWaterParamsEx (PercentTo255(red), PercentTo255(green), PercentTo255(blue), override, vertexDisplacement, minOpacity, maxOpacity, reflectivity, emissivity, edgeSoftness, waveStrength, envMapStrength)
+endfunction
+
+// 设置水颜色(高清)
+// 设置后自动覆盖水颜色(高清)
+// @since 3.0.0
+function BlzSetHDWaterColorBJ takes real red, real green, real blue returns nothing	
+	call BlzSetHDWaterColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue))
+	call BlzSetHDWaterColorOverride(true)
+endfunction
+
+// 覆盖水颜色(高清)
+// @since 3.0.0
+function BlzSetHDWaterColorOverrideBJ takes nothing returns nothing
+	call BlzSetHDWaterColorOverride(true)
+endfunction
+
+// 取消覆盖水颜色(高清)
+// @since 3.0.0
+function BlzClearHDWaterColorOverrideBJ takes nothing returns nothing
+	call BlzSetHDWaterColorOverride(false)
+endfunction
+
+// 设置水顶点位移(高清)
+// @since 3.0.0
+function BlzSetHDWaterVertexDisplacementBJ takes integer vertexDisplacement returns nothing
+	call BlzSetHDWaterVertexDisplacement(vertexDisplacement)
+endfunction
+
+// 设置水最小不透明度(高清)
+// @since 3.0.0
+function BlzSetHDWaterMinOpacityBJ takes integer minOpacity returns nothing
+	call BlzSetHDWaterMinOpacity(minOpacity)
+endfunction
+
+// 设置水最大不透明度(高清)
+// @since 3.0.0
+function BlzSetHDWaterMaxOpacityBJ takes integer maxOpacity returns nothing
+	call BlzSetHDWaterMaxOpacity(maxOpacity)
+endfunction
+
+// 设置水反射率(高清)
+// @since 3.0.0
+function BlzSetHDWaterReflectivityBJ takes integer reflectivity returns nothing
+	call BlzSetHDWaterReflectivity(reflectivity)
+endfunction
+
+// 设置水放射率(高清)
+// @since 3.0.0
+function BlzSetHDWaterEmissivityBJ takes integer emissivity returns nothing
+	call BlzSetHDWaterEmissivity(emissivity)
+endfunction
+
+// 设置水边缘柔和度(高清)
+// @since 3.0.0
+function BlzSetHDWaterEdgeSoftnessBJ takes integer edgeSoftness returns nothing
+	call BlzSetHDWaterEdgeSoftness(edgeSoftness)
+endfunction
+
+// 设置水波浪强度(高清)
+// @since 3.0.0
+function BlzSetHDWaterWaveStrengthBJ takes integer waveStrength returns nothing
+	call BlzSetHDWaterWaveStrength(waveStrength)
+endfunction
+
+// 设置水环境映射强度(高清)
+// @since 3.0.0
+function BlzSetHDWaterEnvMapStrengthBJ takes integer envMapStrengthy returns nothing
+	call BlzSetHDWaterEnvMapStrength(envMapStrengthy)
+endfunction
 
 // 创建可见度修正器(矩形区域)
 function CreateFogModifierRectSimple takes player whichPlayer, fogstate whichFogState, rect r, boolean afterUnits returns fogmodifier
@@ -3009,14 +3228,94 @@ endfunction
 
 
 // 设置地形迷雾 
-//@param style 风格，输入0,1,2[对应直线，指数1，指数2]
-//@param zstart Z 轴开始值
-//@param zend Z 轴结束值
-//@param density 密度
+// @param style 风格，输入0,1,2,3,4,5[对应线性，指数，指数平方，高度，新指数，新指数平方]
+// @param zstart Z 轴初始值
+// @param zend Z 轴结束值
+// @param density 密度
 function SetTerrainFogExBJ takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
     call SetTerrainFogEx(style, zstart, zend, density, red * 0.01, green * 0.01, blue * 0.01)
 endfunction
 
+// 设置地形迷雾 [V]
+// @param style 风格，输入0,1,2,3,4,5[对应线性，指数，指数平方，高度，新指数，新指数平方]
+// @param zstart Z 轴初始值
+// @param zend Z 轴结束值
+// @param density 密度
+// @param heightStart 初始高度
+// @param heightEnd 结束高度
+// @param linearStart 线性初始值
+// @param linearEnd 线性结束值
+// @since 3.0.0
+function SetTerrainFogExVBJ takes integer style, real zstart, real zend, real density, real heightStart, real heightEnd, real linearStart, real linearEnd, real red, real green, real blue returns nothing
+    call SetTerrainFogExV(style, zstart, zend, density, heightStart, heightEnd, linearStart, linearEnd, red * 0.01, green * 0.01, blue * 0.01)
+endfunction
+
+// 设置地形迷雾样式
+// @since 3.0.0
+function BlzSetTerrainFogStyleBJ takes fogstyle style returns nothing
+    call BlzSetTerrainFogStyle(style)
+endfunction
+
+// 设置地形迷雾Z轴初始值
+// @since 3.0.0
+function BlzSetTerrainFogZStartBJ takes real zStart returns nothing
+    call BlzSetTerrainFogZStart(zStart)
+endfunction
+
+// 设置地形迷雾Z轴结束值
+// @since 3.0.0
+function BlzSetTerrainFogZEndBJ takes real zEnd returns nothing
+    call BlzSetTerrainFogZEnd(zEnd)
+endfunction
+
+// 设置地形迷雾密度
+// @since 3.0.0
+function BlzSetTerrainFogDensityBJ takes real density returns nothing
+    call BlzSetTerrainFogDensity(density)
+endfunction
+
+// 设置地形迷雾初始高度
+// @since 3.0.0
+function BlzSetTerrainFogHeightStartBJ takes real heightStart returns nothing
+    call BlzSetTerrainFogHeightStart(heightStart)
+endfunction
+
+// 设置地形迷雾结束高度
+// @since 3.0.0
+function BlzSetTerrainFogHeightEndBJ takes real heightEnd returns nothing
+    call BlzSetTerrainFogHeightEnd(heightEnd)
+endfunction
+
+// 设置地形迷雾线性初始值
+// @since 3.0.0
+function BlzSetTerrainFogLinearStartBJ takes real linearStart returns nothing
+    call BlzSetTerrainFogLinearStart(linearStart)
+endfunction
+
+// 设置地形迷雾线性结束值
+// @since 3.0.0
+function BlzSetTerrainFogLinearEndBJ takes real linearEnd returns nothing
+    call BlzSetTerrainFogLinearEnd(linearEnd)
+endfunction
+
+// 设置地形迷雾最大线性密度(最大不透明度)
+// @since 3.0.0
+// It refers to max opacity
+function BlzSetTerrainFogMaxLinearDensityBJ takes real maxLinearDensity returns nothing
+    call BlzSetTerrainFogMaxLinearDensity(maxLinearDensity)
+endfunction
+
+// 允许/禁止 地形迷雾覆盖天空
+// @since 3.0.0
+function BlzSetTerrainFogDrawOverSkyBJ takes boolean drawOverSky returns nothing
+    call BlzSetTerrainFogDrawOverSky(drawOverSky)
+endfunction
+
+// 设置地形迷雾颜色
+// @since 3.0.0
+function BlzSetTerrainFogColorBJ takes real red, real green, real blue returns nothing
+    call BlzSetTerrainFogColor(red * 0.01, green * 0.01, blue * 0.01)
+endfunction
 
 // 重置 地形迷雾
 function ResetTerrainFogBJ takes nothing returns nothing
@@ -3035,13 +3334,98 @@ function SetDoodadAnimationRectBJ takes string animName, integer doodadID, rect 
     call SetDoodadAnimationRect(r, doodadID, animName, false)
 endfunction
 
+// 设置指定地表装饰物动画(单个地表装饰物)
+// @since 3.0.0
+function BlzSetSingleDoodadAnimationBJ takes string animName, integer index returns nothing
+    call BlzSetSingleDoodadAnimation(index, animName, false)
+endfunction
 
 // 添加/删除 单位动画 附加名
 function AddUnitAnimationPropertiesBJ takes boolean add, string animProperties, unit whichUnit returns nothing
     call AddUnitAnimationProperties(whichUnit, animProperties, add)
 endfunction
 
+// 设置指定类型地表装饰物颜色
+// @since 3.0.0
+function SetDoodadColorBJ takes playercolor color, integer doodadID, real radius, location center returns nothing
+    call SetDoodadColor(GetLocationX(center), GetLocationY(center), radius, doodadID, false, color)
+endfunction
 
+// 设置指定区域地表装饰物颜色
+// @since 3.0.0
+function SetDoodadColorRectBJ takes playercolor color, integer doodadID, rect r returns nothing
+    call SetDoodadColorRect(r, doodadID, color)
+endfunction
+
+// 设置指定地表装饰物颜色(单个地表装饰物)
+// @since 3.0.0
+function BlzSetSingleDoodadColorBJ takes playercolor color, integer index returns nothing
+    call BlzSetSingleDoodadColor(index, color)
+endfunction
+
+// 开启 指定单位英雄光圈
+// @since 3.0.0
+function AllowHeroGlowOnUnitBJ takes unit whichUnit returns nothing
+    call AllowHeroGlowOnUnit(whichUnit)
+endfunction
+
+// 关闭 指定单位英雄光圈
+// @since 3.0.0
+function DisallowHeroGlowOnUnitBJ takes unit whichUnit returns nothing
+    call DisallowHeroGlowOnUnit(whichUnit)
+endfunction
+
+// 切换指定单位英雄光圈开关状态
+// @since 3.0.0
+function ToggleHeroGlowOnAllUnitsBJEnum takes nothing returns nothing
+    if bj_HeroGlowAllUnitsFlag then
+        call AllowHeroGlowOnUnit(GetEnumUnit())
+    else
+        call DisallowHeroGlowOnUnit(GetEnumUnit())
+    endif
+endfunction
+
+// 切换所有单位英雄光圈开关状态
+// @since 3.0.0
+function ToggleHeroGlowOnAllUnitsBJ takes boolean allow returns nothing
+    local integer index
+    local player  indexPlayer
+    local group   g
+
+    set bj_HeroGlowAllUnitsFlag = allow
+    set g = CreateGroup()
+    set index = 0
+    loop
+        set indexPlayer = Player( index )
+
+        // Enumerate and allow/disallow glow on every unit owned by the player.
+        call GroupEnumUnitsOfPlayer( g, indexPlayer, null )
+        call ForGroup( g, function ToggleHeroGlowOnAllUnitsBJEnum )
+        call GroupClear( g )
+
+        set index = index + 1
+        exitwhen index == bj_MAX_PLAYER_SLOTS
+    endloop
+    call DestroyGroup(g)
+endfunction
+
+// 开启 所有单位英雄光圈
+// @since 3.0.0
+function AllowHeroGlowOnAllUnitsBJ takes nothing returns nothing
+    call ToggleHeroGlowOnAllUnitsBJ(true)
+endfunction
+
+// 关闭 所有单位英雄光圈
+// @since 3.0.0
+function DisallowHeroGlowOnAllUnitsBJ takes nothing returns nothing
+    call ToggleHeroGlowOnAllUnitsBJ(false)
+endfunction
+
+// 查询指定单位英雄光圈开关状态
+// @since 3.0.0
+function HeroGlowIsAllowedOnUnitBJ takes unit whichUnit returns boolean
+    return HeroGlowIsAllowedOnUnit(whichUnit)
+endfunction
 
 // 创建图像
 function CreateImageBJ takes string file, real size, location where, real zOffset, integer imageType returns image
@@ -3680,6 +4064,29 @@ function GetLastCreatedEffectBJ takes nothing returns effect
 endfunction
 
 
+// 摧毁 在等待实际时间(bj_destroyEffectAsyncTime)后需要异步销毁的特效(bj_destroyEffectAsyncEffect)
+// 实际时间使用 TriggerSleepAction 进行等待，bj_destroyEffectAsyncTime 和 bj_destroyEffectAsyncEffect 必须同时使用
+// Note: this function should be used in conjunction with the one below, which is the only one that is really exposed in GUI
+// @since 3.0.0
+function DestroyEffectAsyncBJ takes nothing returns nothing
+	local effect localEffect = bj_destroyEffectAsyncEffect
+	local real localTime = bj_destroyEffectAsyncTime
+	
+	call TriggerSleepAction(localTime)
+	call DestroyEffect(localEffect)
+endfunction
+
+// 摧毁指定特效(设置延迟时间)
+// 在 DestroyEffectAsyncBJ 执行
+// @since 3.0.0
+function DestroyEffectAfterTimeBJ takes effect whichEffect, real time returns nothing
+	// Save arguments to globals
+	set bj_destroyEffectAsyncEffect = whichEffect
+	set bj_destroyEffectAsyncTime = time
+	
+	// Externalize to an async thread
+	call ExecuteFunc("DestroyEffectAsyncBJ")
+endfunction
 
 //***************************************************************************
 //*
@@ -3855,7 +4262,37 @@ function UnitRemoveItemSwapped takes item whichItem, unit whichHero returns noth
     call UnitRemoveItem(whichHero, whichItem)
 endfunction
 
+// 查询英雄是否装备指定物品
+// 物品将被标记为 bj_lastEquippedItem
+// @since 3.0.0
+function UnitEquipItemSwapped takes item whichItem, unit whichHero returns boolean
+    local boolean success = UnitEquipItem(whichHero, whichItem)
+    if (success) then
+        set bj_lastEquippedItem = whichItem
+    endif
+    
+    return success
+endfunction
 
+// 为指定英雄装备指定物品
+// 会先创建物品，创建的物品被标记为 bj_lastCreatedItem
+// 装备成功时，创建的物品被标记为 bj_lastEquippedItem
+// @since 3.0.0
+function UnitEquipItemByIdSwapped takes integer itemId, unit whichHero returns item
+    // Create the item at the hero's feet first, and then give it to him.
+    // This is to ensure that the item will be left at the hero's feet if
+    // his inventory is full.
+    local boolean success
+    
+    set bj_lastCreatedItem = CreateItem(itemId, GetUnitX(whichHero), GetUnitY(whichHero))
+    set success = UnitEquipItem(whichHero, bj_lastCreatedItem)
+    
+    if (success) then
+        set bj_lastEquippedItem = bj_lastCreatedItem
+    endif
+
+    return bj_lastCreatedItem
+endfunction
 
 // 丢弃物品（指定单位指定物品栏格子）
 // 包括不可丢弃的物品
@@ -3865,6 +4302,22 @@ endfunction
 function UnitRemoveItemFromSlotSwapped takes integer itemSlot, unit whichHero returns item
     set bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot - 1)
     return bj_lastRemovedItem
+endfunction
+
+// 卸下指定装备(指定单位和物品)
+// 卸下的装备会被标记为 bj_lastUnequippedItem
+// @since 3.0.0
+function UnitUnequipItemSwapped takes unit whichHero, item whichItem returns nothing
+    set bj_lastUnequippedItem = whichItem
+    call UnitUnequipItem(whichHero, whichItem)
+endfunction
+
+// 卸下指定装备(指定单位和装备穿戴槽)
+// 卸下的装备会被标记为 bj_lastUnequippedItem
+// @since 3.0.0
+function UnitUnequipItemFromSlotSwapped takes unit whichHero, loadoutslot slot returns item
+    set bj_lastUnequippedItem = UnitUnequipItemFromSlot(whichHero, slot)
+    return bj_lastUnequippedItem
 endfunction
 
 
@@ -3884,6 +4337,18 @@ endfunction
 // 获取最后丢弃的物品
 function GetLastRemovedItem takes nothing returns item
     return bj_lastRemovedItem
+endfunction
+
+// 获取最后装备的物品(bj_lastEquippedItem)
+// @since 3.0.0
+function GetLastEquippedItem takes nothing returns item
+    return bj_lastEquippedItem
+endfunction
+
+// 获取最后卸载的装备(bj_lastUnequippedItem)
+// @since 3.0.0
+function GetLastUnequippedItem takes nothing returns item
+    return bj_lastUnequippedItem
 endfunction
 
 
@@ -4063,6 +4528,18 @@ function UnitItemInSlotBJ takes unit whichUnit, integer itemSlot returns item
     return UnitItemInSlot(whichUnit, itemSlot - 1)
 endfunction
 
+// 获取指定单位持有的物品(指定扩展物品栏格数)
+// @since 3.0.0
+function UnitItemInBagSlotBJ takes unit whichUnit, integer itemSlot returns item
+    return UnitItemInBagSlot(whichUnit, itemSlot-1)
+endfunction
+
+// 获取指定单位持有的物品(指定装备栏)
+// @since 3.0.0
+function UnitItemInEquipmentSlotBJ takes unit whichUnit, loadoutslot slot returns item
+    return UnitItemInEquipmentSlot(whichUnit, slot)
+endfunction
+
 
 // 获取物品在物品栏的格数（指定物品类型）
 // Translates 0-based slot indices to 1-based slot indices.
@@ -4095,12 +4572,150 @@ function GetItemOfTypeFromUnitBJ takes unit whichUnit, integer itemId returns it
     endif
 endfunction
 
-
 // 查询英雄是否已有物品（指定物品类型）
 function UnitHasItemOfTypeBJ takes unit whichUnit, integer itemId returns boolean
     return GetInventoryIndexOfItemTypeBJ(whichUnit, itemId) > 0
 endfunction
 
+// 查询指定物品类型的物品在指定单位的扩展物品栏格数
+// @since 3.0.0
+function GetInventoryBagIndexOfItemTypeBJ takes unit whichUnit, integer itemId returns integer
+    local integer index
+    local item    indexItem
+
+    set index = 0
+    loop
+        set indexItem = UnitItemInBagSlot(whichUnit, index)
+        if (indexItem != null) and (GetItemTypeId(indexItem) == itemId) then
+            return index + 1
+        endif
+
+        set index = index + 1
+        exitwhen index >= bj_MAX_EXTENDED_INVENTORY
+    endloop
+    return 0
+endfunction
+
+// 获取指定单位持有的物品类型的物品(指定扩展物品栏格数)
+// @since 3.0.0
+function GetItemOfTypeFromUnitBagBJ takes unit whichUnit, integer itemId returns item
+    local integer index = GetInventoryBagIndexOfItemTypeBJ(whichUnit, itemId)
+
+    if (index == 0) then
+        return null
+    else
+        return UnitItemInBagSlot(whichUnit, index - 1)
+    endif
+endfunction
+
+// 查询指定单位的扩展物品栏中是否拥有指定类型的物品
+// @since 3.0.0
+function UnitHasItemOfTypeBaggedBJ takes unit whichUnit, integer itemId returns boolean
+    return GetInventoryBagIndexOfItemTypeBJ(whichUnit, itemId) > 0
+endfunction
+
+// 获取指定单位的扩展物品栏格是否拥有指定装备类别的物品
+// 查到第一个同类型装备就返回该扩展物品栏格数，没有返回0
+// @since 3.0.0
+function GetInventoryBagIndexOfEquipmentTypeBJ takes unit whichUnit, equipmentType whichEquipmentType returns integer
+    local integer index
+    local item    indexItem
+
+    set index = 0
+    loop
+        set indexItem = UnitItemInBagSlot(whichUnit, index)
+        if (indexItem != null) and (GetItemEquipmentType(indexItem) == whichEquipmentType) then
+            return index + 1
+        endif
+
+        set index = index + 1
+        exitwhen index >= bj_MAX_EXTENDED_INVENTORY
+    endloop
+    return 0
+endfunction
+
+// 获取指定单位扩展装备栏中指定装备类别的物品
+// 获取扩展装备栏中第一个同类型装备
+// @since 3.0.0
+function GetItemOfEquipmentTypeFromUnitBagBJ takes unit whichUnit, equipmentType whichEquipmentType returns item
+    local integer index = GetInventoryBagIndexOfEquipmentTypeBJ(whichUnit, whichEquipmentType)
+
+    if (index == 0) then
+        return null
+    else
+        return UnitItemInBagSlot(whichUnit, index - 1)
+    endif
+endfunction
+
+// 获取指定单位的扩展物品栏格是否拥有指定物品类型的物品
+// 查到第一个同类型装备就返回该扩展物品栏格数，没有返回0
+// @since 3.0.0
+function GetEquipmentInventoryIndexOfItemTypeBJ takes unit whichUnit, integer itemId returns integer
+    local integer index
+    local item    indexItem
+
+    set index = 0
+    loop
+        set indexItem = UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index))
+        if (indexItem != null) and (GetItemTypeId(indexItem) == itemId) then
+            return index + 1
+        endif
+
+        set index = index + 1
+        exitwhen index >= bj_MAX_EQUIPMENT_INVENTORY
+    endloop
+    return 0
+endfunction
+
+// 获取指定单位的装备穿戴槽是否拥有指定装备类别的物品
+// 查到第一个同类型装备就返回该装备穿戴槽数，没有返回0
+// @since 3.0.0
+function GetEquipmentInventoryIndexOfEquipmentTypeBJ takes unit whichUnit, equipmentType whichEquipmentType returns integer
+    local integer index
+    local item    indexItem
+
+    set index = 0
+    loop
+        set indexItem = UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index))
+        if (indexItem != null) and (GetItemEquipmentType(indexItem) == whichEquipmentType) then
+            return index + 1
+        endif
+
+        set index = index + 1
+        exitwhen index >= bj_MAX_EQUIPMENT_INVENTORY
+    endloop
+    return 0
+endfunction
+
+// 获取指定单位是否装备指定物品类型的物品
+// @since 3.0.0
+function GetItemEquippedByHeroOfTypeBJ takes unit whichUnit, integer itemId returns item
+    local integer index = GetEquipmentInventoryIndexOfItemTypeBJ(whichUnit, itemId)
+
+    if (index == 0) then
+        return null
+    else
+        return UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index - 1))
+    endif
+endfunction
+
+// 获取指定单位装备穿戴槽是否拥有指定装备类别的物品
+// @since 3.0.0
+function GetItemEquippedByHeroOfEquipmentTypeBJ takes unit whichUnit, equipmentType whichEquipmentType returns item
+    local integer index = GetEquipmentInventoryIndexOfEquipmentTypeBJ(whichUnit, whichEquipmentType)
+
+    if (index == 0) then
+        return null
+    else
+        return UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index - 1))
+    endif
+endfunction
+
+// 获取指定单位扩展物品栏是否拥有指定物品类型的物品
+// @since 3.0.0
+function UnitHasItemOfTypeEquippedBJ takes unit whichUnit, integer itemId returns boolean
+    return GetEquipmentInventoryIndexOfItemTypeBJ(whichUnit, itemId) > 0
+endfunction
 
 // 获取指定单位拥有物品的数量
 // 只判断所有物品格是否被占，不统计物品堆叠，即只返回0~6
@@ -4120,12 +4735,52 @@ function UnitInventoryCount takes unit whichUnit returns integer
     return count
 endfunction
 
-
 // 获取指定单位的物品栏格数
 function UnitInventorySizeBJ takes unit whichUnit returns integer
     return UnitInventorySize(whichUnit)
 endfunction
 
+// 获取指定单位扩展物品栏的物品数量
+// @since 3.0.0
+function UnitExtendedInventoryCount takes unit whichUnit returns integer
+    local integer index = 0
+    local integer count = 0
+
+    loop
+        if (UnitItemInBagSlot(whichUnit, index) != null) then
+            set count = count + 1
+        endif
+
+        set index = index + 1
+        exitwhen index >= bj_MAX_EXTENDED_INVENTORY
+    endloop
+
+    return count
+endfunction
+
+// 获取已存档物品的物品栏格数（指定单位）
+// @since 3.0.0
+function UnitExtendedInventorySizeBJ takes unit whichUnit returns integer
+    return UnitExtendedInventorySize(whichUnit)
+endfunction
+
+// 获取指定单位已装备的装备数量
+// @since 3.0.0
+function UnitEquipmentCount takes unit whichUnit returns integer
+    local integer index = 0
+    local integer count = 0
+
+    loop
+        if (UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index)) != null) then
+            set count = count + 1
+        endif
+
+        set index = index + 1
+        exitwhen index >= bj_MAX_EQUIPMENT_INVENTORY
+    endloop
+
+    return count
+endfunction
 
 // 设置物品 无敌/可攻击
 function SetItemInvulnerableBJ takes item whichItem, boolean flag returns nothing
@@ -4174,6 +4829,15 @@ function ChooseRandomItemExBJ takes integer level, itemtype whichType returns in
     return ChooseRandomItemEx(whichType, level)
 endfunction
 
+// 随机选择物品分类(指定过滤条件)
+// @param itemtype 物品类型
+// @param level 物品等级
+// @param equipmentType 装备类别
+// @param itemTag 物品标签
+// @since 3.0.0
+function ChooseRandomItemExWithFilterBJ takes integer level, itemtype whichType, equipmentType whichEquipmentType, itemTag whichTag returns integer
+    return ChooseRandomItemExWithFilter(whichType, level, whichEquipmentType, whichTag)
+endfunction
 
 // 获取随机中立建筑物类型，默认用于开始游戏时创建随机中立建筑
 function ChooseRandomNPBuildingBJ takes nothing returns integer
@@ -4962,6 +5626,73 @@ endfunction
 // 暂停指定单位触发器动作
 function IsUnitPausedBJ takes unit whichUnit returns boolean
     return IsUnitPaused(whichUnit)
+endfunction
+
+// 开启/关闭 选取单位光环
+// @param affectsUI 开启/关闭 特效UI
+// @since 3.0.0
+function BlzAllUnitsEnableAurasBJEnum takes nothing returns nothing
+    call BlzUnitEnableAuras( GetEnumUnit(), bj_enableAurasAllUnits, bj_affectsUIAurasAllUnits )
+endfunction
+
+// 开启/关闭 所有单位光环
+// @since 3.0.0
+function BlzAllUnitsEnableAurasBJ takes boolean enable, boolean affectsUI returns nothing
+    local integer index
+    local player  indexPlayer
+    local group   g
+
+    set bj_enableAurasAllUnits = enable
+    set bj_affectsUIAurasAllUnits = affectsUI
+    set g = CreateGroup()
+    set index = 0
+    loop
+        set indexPlayer = Player( index )
+
+        // Enumerate and enable/disable auras on every unit owned by the player.
+        call GroupEnumUnitsOfPlayer( g, indexPlayer, null )
+        call ForGroup( g, function BlzAllUnitsEnableAurasBJEnum )
+        call GroupClear( g )
+
+        set index = index + 1
+        exitwhen index == bj_MAX_PLAYER_SLOTS
+    endloop
+    call DestroyGroup(g)
+endfunction
+
+// 开启 被选取单位光环及特效UI
+// @since 3.0.0
+//===========================================================================
+function BlzAllUnitsEnableAurasBJEnum takes nothing returns nothing
+    call BlzUnitEnableAuras( GetEnumUnit(), bj_enableAurasAllUnits, bj_affectsUIAurasAllUnits )
+endfunction
+
+// 开启/关闭 指定单位光环及特效UI
+// @param enable 开启/关闭 光环
+// @param affectsUI 开启/关闭 特效UI
+// @since 3.0.0
+//===========================================================================
+function BlzAllUnitsEnableAurasBJ takes boolean enable, boolean affectsUI returns nothing
+    local integer index
+    local player  indexPlayer
+    local group   g
+
+    set bj_enableAurasAllUnits = enable
+    set bj_affectsUIAurasAllUnits = affectsUI
+    set g = CreateGroup()
+    set index = 0
+    loop
+        set indexPlayer = Player( index )
+
+        // Enumerate and enable/disable auras on every unit owned by the player.
+        call GroupEnumUnitsOfPlayer( g, indexPlayer, null )
+        call ForGroup( g, function BlzAllUnitsEnableAurasBJEnum )
+        call GroupClear( g )
+
+        set index = index + 1
+        exitwhen index == bj_MAX_PLAYER_SLOTS
+    endloop
+    call DestroyGroup(g)
 endfunction
 
 
@@ -6206,6 +6937,15 @@ function QueueUnitAnimationBJ takes unit whichUnit, string whichAnimation return
     call QueueUnitAnimation(whichUnit, whichAnimation)
 endfunction
 
+// 设置指定可破坏物顶点颜色
+// 与common.j不同的是，此处的alpha值被反转以显示为透明度，并且所有参数都被视为百分比而不是数值
+// @since 3.0.0
+// This version differs from the common.j interface in that the alpha value
+// is reversed so as to be displayed as transparency, and all four parameters
+// are treated as percentages rather than bytes.
+function SetDestructableVertexColorBJ takes destructable whichDestructable, real red, real green, real blue, real transparency returns nothing
+    call SetDestructableVertexColor(whichDestructable, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0-transparency))
+endfunction
 
 // 设置可破坏物动画
 function SetDestructableAnimationBJ takes destructable d, string whichAnimation returns nothing
@@ -6808,6 +7548,10 @@ function CustomDefeatDialogBJ takes player whichPlayer, string message returns n
 
     if bj_isSinglePlayer then
         set t = CreateTrigger()
+        call TriggerRegisterDialogButtonEvent( t, DialogAddButton( d, GetLocalizedString( "GAMEOVER_LOAD" ), GetLocalizedHotkey("GAMEOVER_LOAD") ) )
+        call TriggerAddAction( t, function CustomDefeatLoadBJ )
+
+        set t = CreateTrigger()
         call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_RESTART"), GetLocalizedHotkey("GAMEOVER_RESTART")))
         call TriggerAddAction(t, function CustomDefeatRestartBJ)
 
@@ -6816,10 +7560,6 @@ function CustomDefeatDialogBJ takes player whichPlayer, string message returns n
             call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_REDUCE_DIFFICULTY"), GetLocalizedHotkey("GAMEOVER_REDUCE_DIFFICULTY")))
             call TriggerAddAction(t, function CustomDefeatReduceDifficultyBJ)
         endif
-
-        set t = CreateTrigger()
-        call TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_LOAD"), GetLocalizedHotkey("GAMEOVER_LOAD")))
-        call TriggerAddAction(t, function CustomDefeatLoadBJ)
     endif
 
     set t = CreateTrigger()
@@ -8139,6 +8879,14 @@ function GetLastTransmissionDurationBJ takes nothing returns real
     return bj_lastTransmissionDuration
 endfunction
 
+// 允许/禁止 阻挡镜头(指定区域，指定玩家)
+// @since 3.0.0
+function SetCameraBlockerForPlayerBJ takes rect r, boolean flag, player whichPlayer returns nothing
+    if (GetLocalPlayer() == whichPlayer) then
+        // Use only local code (no net traffic) within this block to avoid desyncs.
+        call EnableCameraBlocker(r,flag)
+    endif
+endfunction
 
 // 开启/关闭 电影字幕显示
 function ForceCinematicSubtitlesBJ takes boolean flag returns nothing
@@ -8546,6 +9294,10 @@ function SetCampaignMenuRaceBJ takes integer campaignNumber returns nothing
         call SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XU)
     elseif(campaignNumber == bj_CAMPAIGN_INDEX_XO) then
         call SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XO)
+    elseif (campaignNumber == bj_CAMPAIGN_INDEX_RH) then
+        call SetCampaignMenuRace(RACE_HUMAN)
+    elseif (campaignNumber == bj_CAMPAIGN_INDEX_RU) then
+        call SetCampaignMenuRace(RACE_UNDEAD)
     else
         // Unrecognized campaign - ignore the request
     endif
@@ -8582,6 +9334,10 @@ function SetCampaignAvailableBJ takes boolean available, integer campaignNumber 
         set campaignOffset = bj_CAMPAIGN_OFFSET_XU
     elseif(campaignNumber == bj_CAMPAIGN_INDEX_XO) then
         set campaignOffset = bj_CAMPAIGN_OFFSET_XO
+    elseif (campaignNumber == bj_CAMPAIGN_INDEX_RH) then
+        set campaignOffset = bj_CAMPAIGN_OFFSET_RH
+    elseif (campaignNumber == bj_CAMPAIGN_INDEX_RU) then
+        set campaignOffset = bj_CAMPAIGN_OFFSET_RU
     else
         set campaignOffset = campaignNumber
     endif
@@ -8627,6 +9383,12 @@ function SetCinematicAvailableBJ takes boolean available, integer cinematicIndex
     elseif(cinematicIndex == bj_CINEMATICINDEX_XED) then
         call SetEdCinematicAvailable(bj_CAMPAIGN_OFFSET_XU, available)
         call PlayCinematic("OutroX")
+    elseif (cinematicIndex == bj_CINEMATICINDEX_HFO) then
+        call SetOpCinematicAvailable( bj_CAMPAIGN_OFFSET_RH, available )
+        call PlayCinematic( "IntroRE" )
+    elseif (cinematicIndex == bj_CINEMATICINDEX_UFE) then
+        call SetEdCinematicAvailable( bj_CAMPAIGN_INDEX_RU, available )
+        call PlayCinematic( "OutroRE" )
     else
         // Unrecognized cinematic - ignore the request.
     endif
@@ -9947,6 +10709,7 @@ function MeleeStartingHeroLimit takes nothing returns nothing
         call ReducePlayerTechMaxAllowed(Player(index), 'Nalc', bj_MELEE_HERO_TYPE_LIMIT)
         call ReducePlayerTechMaxAllowed(Player(index), 'Ntin', bj_MELEE_HERO_TYPE_LIMIT)
         call ReducePlayerTechMaxAllowed(Player(index), 'Nfir', bj_MELEE_HERO_TYPE_LIMIT)
+        call ReducePlayerTechMaxAllowed(Player(index), 'Npal', bj_MELEE_HERO_TYPE_LIMIT)
 
         set index = index + 1
         exitwhen index == bj_MAX_PLAYERS
@@ -12464,4 +13227,11 @@ endfunction
 // 不支持攻击模式2
 function BlzSetUnitWeaponStringFieldBJ takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns nothing
     set bj_lastInstObjFuncSuccessful = BlzSetUnitWeaponStringField(whichUnit, whichField, index, value)
+endfunction
+
+// 开启/关闭 指定单位光环
+// @param affectsUI 开启/关闭 特效UI
+// @since 3.0.0
+function BlzEnableAuras takes unit whichUnit, boolean enable returns nothing
+    call BlzUnitEnableAuras(whichUnit, enable, false)
 endfunction

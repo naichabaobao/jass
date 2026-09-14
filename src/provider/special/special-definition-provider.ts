@@ -107,8 +107,8 @@ export class SpecialDefinitionProvider implements vscode.DefinitionProvider {
                     let endColumn: number;
 
                     if (literal.type === 'string' || literal.type === 'mark') {
-                        startColumn = literal.column; // 开始引号位置
-                        endColumn = literal.column + 1 + literal.content.length; // 结束引号位置
+                        startColumn = literal.column;
+                        endColumn = literal.column + 1 + literal.content.length;
                     } else {
                         startColumn = literal.column;
                         endColumn = literal.column + literal.content.length;

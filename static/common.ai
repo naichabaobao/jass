@@ -712,6 +712,7 @@ globals
     // 科技 萨满祭司专家/大师级训练
     constant integer UPG_ORC_SHAMAN     = 'Rost'
     // 科技 尖刺障碍/中级尖刺障碍/高级尖刺障碍
+    // 重制版只能升到中级
     constant integer UPG_ORC_SPIKES     = 'Rosp'
     // 科技 加强型防御
     constant integer UPG_ORC_BURROWS    = 'Rorb'
@@ -874,11 +875,11 @@ globals
     constant integer BONEYARD           = 'ubon'
     // 石像鬼尖塔（不死族）（测试版内容，正式版无此单位 'ugsp'）
     constant integer GARG_SPIRE         = 'ugsp'
-    // 大墓地/浮空城
+    // 大墓地/浮空城(亡灵一本基地)
     constant integer NECROPOLIS_1       = 'unpl'    // normal
-    // 亡者大厅
+    // 亡者大厅(亡灵二本基地)
     constant integer NECROPOLIS_2       = 'unp1'    // upgraded once
-    // 黑色城堡
+    // 黑色城堡(亡灵三本基地)
     constant integer NECROPOLIS_3       = 'unp2'    // full upgrade
     // 献祭深渊
     constant integer SAC_PIT            = 'usap'
@@ -1075,11 +1076,11 @@ globals
     constant integer ANCIENT_WAR        = 'eaom'
     // 风之古树
     constant integer ANCIENT_WIND       = 'eaow'
-    // 纪元之树（暗夜二本）
+    // 纪元之树（暗夜二本基地）
     constant integer TREE_AGES          = 'etoa'
-    // 永恒之树（暗夜三本）
+    // 永恒之树（暗夜三本基地）
     constant integer TREE_ETERNITY      = 'etoe'
-    // 生命之树（暗夜一本）
+    // 生命之树（暗夜一本基地）
     constant integer TREE_LIFE          = 'etol'
     // 守护古树
     constant integer ANCIENT_PROTECT    = 'etrp'
@@ -1344,7 +1345,7 @@ globals
 
     //--------------------------------------------------------------------
 
-    // 当前AI玩家
+    // 当前AI玩家(默认需先运行InitAI才能使用，标准AI默认在StandardAI中执行)
     player  ai_player
     // 等待时间
     integer sleep_seconds
@@ -1358,7 +1359,7 @@ globals
     integer total_wood              = 0
     // 黄金预存数，使用后AI会一直保留该数量的黄金不使用
     // 该值默认为0，需自行赋值，在完成指定的训练/建造/研究后请手动清零，否则AI会一直保持这笔存款
-    // 如果需要存木，请自行在 OneBuildLoop 添加
+    // 如果需要存木，请手动在 OneBuildLoop 添加自定义变量
     integer gold_buffer             = 0 // usually for potion money
     // AI难度，该变量用于统一对地图难度、战难度和难度，便于书写和检索
     integer difficulty              = NORMAL
@@ -1428,16 +1429,16 @@ globals
     integer min_creeps              = -1
     // 最大野怪（中立敌对玩家单位）等级，默认-1
     integer max_creeps              = -1
-    // 允许AI开设第一座基地标识，默认为是
+    // 允许AI建立第一座基地标识，默认为是
     boolean harvest_town1           = true
-    // 允许AI开设第二座基地标识，默认为是
+    // 允许AI建立第二座基地标识，默认为是
     boolean harvest_town2           = true
-    // 允许AI开设第三座基地标识，默认为是
+    // 允许AI建立第三座基地标识，默认为是
     boolean harvest_town3           = true
     // 战役人口建筑建造模式标识，默认为是
     // 官方仅在战役功能中使用，未使用时无影响
     boolean do_campaign_farms       = true
-    // 二发英雄已训练标识，默认为否
+    // 二发英雄同类型单位存活数量大于1标识，默认为否
     boolean two_heroes              = false
     // 允许获取飞行野怪（中立敌对玩家单位）标识，默认为否
     // 攻击线程会自动设置
@@ -1835,7 +1836,7 @@ endfunction
 //============================================================================
 
 // 研究指定科技
-// 简单难度AI默认只升一级
+// 简单难度AI只升第一级
 function SetBuildUpgr takes integer qty, integer unitid returns nothing
     if MeleeDifficulty() != MELEE_NEWBIE or qty == 1 then
         call SetBuildAll(BUILD_UPGRADE,qty,unitid,-1)

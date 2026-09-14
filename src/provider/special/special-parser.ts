@@ -44,6 +44,38 @@ export abstract class SpecialParser {
     }
 
     /**
+     * 提取前置注释（向上查找连续的注释行）
+     * @param lines 所有行
+     * @param currentLineIndex 当前行索引（字面量所在行）
+     * @returns 合并后的注释文本
+     */
+    protected extractLeadingComments(lines: string[], currentLineIndex: number): string | undefined {
+        const commentLines: string[] = [];
+        
+        // 从当前行的上一行开始向上查找
+        for (let i = currentLineIndex - 1; i >= 0; i--) {
+            const trimmedLine = lines[i].trim();
+            if (trimmedLine.startsWith('//')) {
+                const commentText = trimmedLine.substring(2).trim();
+                if (commentText) {
+                    commentLines.unshift(commentText);
+                }
+            } else if (trimmedLine === '') {
+                // 遇到空行，如果已经收集到注释则停止（注释块结束）
+                if (commentLines.length > 0) {
+                    break;
+                }
+                // 还没收集到注释，继续向上查找（跳过前导空行）
+            } else {
+                // 遇到非空非注释行，停止
+                break;
+            }
+        }
+
+        return commentLines.length > 0 ? commentLines.join('\n') : undefined;
+    }
+
+    /**
      * 检查是否包含废弃标记
      */
     protected isDeprecated(description?: string): boolean {

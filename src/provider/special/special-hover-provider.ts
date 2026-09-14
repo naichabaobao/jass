@@ -6,11 +6,11 @@ import { SpecialLiteral } from './special-parser';
  * 特殊文件悬停提供者
  */
 export class SpecialHoverProvider implements vscode.HoverProvider {
-    provideHover(
+    async provideHover(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.Hover> {
+    ): Promise<vscode.Hover | null> {
         try {
             // 检查配置是否启用（使用 literal.hover 配置项）
             const hoverEnabled = vscode.workspace.getConfiguration("jass").get<boolean>("literal.hover", true);
@@ -18,12 +18,23 @@ export class SpecialHoverProvider implements vscode.HoverProvider {
                 return null;
             }
 
+            const specialFileManager = SpecialFileManager.getInstance();
+
+            // 等待初始化完成（最多等待2秒）
+            try {
+                await Promise.race([
+                    specialFileManager.waitForInitialization(),
+                    new Promise<void>((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
+                ]);
+            } catch (e) {
+                // 初始化超时则继续
+            }
+
             const hoverContents: vscode.MarkdownString[] = [];
             const lineText = document.lineAt(position.line).text;
             const textBeforeCursor = lineText.substring(0, position.character);
             const textAfterCursor = lineText.substring(position.character);
 
-            const specialFileManager = SpecialFileManager.getInstance();
             let matchingLiterals: SpecialLiteral[] = [];
             let literalContent: string | null = null;
             let hoverRange: vscode.Range | undefined;
