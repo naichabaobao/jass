@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cJass 1.4.0.2 参考手册</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --sidebar-width: 280px;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --sidebar-active: #3b82f6;
+            --sidebar-text: #94a3b8;
+            --sidebar-text-active: #ffffff;
+            --main-bg: #ffffff;
+            --main-text: #1e293b;
+            --code-bg: #1e1e2e;
+            --accent: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--main-bg);
+            color: var(--main-text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        .sidebar-version {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--sidebar-text);
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .sidebar-nav {
+            padding: 16px 0;
+        }
+        .nav-item {
+            display: block;
+            padding: 6px 20px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-active);
+        }
+        .nav-item.active {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-active);
+            border-left-color: var(--sidebar-active);
+        }
+        .nav-item.level-1 {
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #e2e8f0;
+        }
+        .nav-item.level-2 {
+            padding-left: 32px;
+            font-size: 13px;
+        }
+        .nav-item.level-3 {
+            padding-left: 48px;
+            font-size: 12px;
+            color: #64748b;
+        }
+        .main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+        .content {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 40px 48px;
+        }
+        h1.page-title {
+            font-size: 36px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        h1.section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--main-text);
+            margin: 48px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--accent);
+        }
+        h2.subsection-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--main-text);
+            margin: 36px 0 16px;
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+        }
+        h3.subsubsection-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--main-text);
+            margin: 28px 0 12px;
+            padding-left: 16px;
+            border-left: 3px solid #8b5cf6;
+        }
+        p {
+            margin-bottom: 16px;
+            color: #334155;
+        }
+        .para-wrapper b, .para-wrapper strong {
+            font-weight: 600;
+        }
+        .para-wrapper a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .para-wrapper a:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .code-header {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 16px;
+            font-size: 12px;
+            color: #6c7086;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-header::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff5f56;
+            box-shadow: 16px 0 0 #ffbd2e, 32px 0 0 #27c93f;
+        }
+        .code-body {
+            padding: 16px 20px;
+            overflow-x: auto;
+            font-family: "Fira Code", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cdd6f4;
+            tab-size: 4;
+        }
+        .code-body pre {
+            margin: 0;
+            white-space: pre;
+        }
+        .kw { color: #c0392b; font-weight: bold; }
+        .tp { color: #2980b9; }
+        .st { color: #008700; }
+        .cm { color: #6a9955; font-style: italic; }
+        .fn { color: #c0392b; }
+        .nb { color: #2980b9; }
+        .op { color: #666; }
+        .pp { color: #c0392b; }
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            font-size: 0.9em;
+            color: #c0392b;
+        }
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 1001;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .mobile-toggle { display: block; }
+            .content { padding: 24px 20px; }
+        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+        .anchor-link {
+            color: var(--accent);
+            text-decoration: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            margin-left: 8px;
+        }
+        h1.section-title:hover .anchor-link,
+        h2.subsection-title:hover .anchor-link,
+        h3.subsubsection-title:hover .anchor-link {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+    
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-logo">cJass</span>
+            <span class="sidebar-version">1.4.0.2</span>
+        </div>
+        <nav class="sidebar-nav"><a href="#htoc1" class="nav-item level-1">Usage</a>
+<a href="#htoc2" class="nav-item level-1">Syntax innovations</a>
+<a href="#htoc3" class="nav-item level-2">Clarity</a>
+<a href="#htoc4" class="nav-item level-2">Variables declaration</a>
+<a href="#htoc5" class="nav-item level-2">Operators</a>
+<a href="#htoc6" class="nav-item level-3">Increment and decrement</a>
+<a href="#htoc7" class="nav-item level-3">Assignment operators</a>
+<a href="#htoc8" class="nav-item level-3">Logical operations</a>
+<a href="#htoc9" class="nav-item level-2">Blocks</a>
+<a href="#htoc10" class="nav-item level-2">Loops</a>
+<a href="#htoc11" class="nav-item level-2">Simplified function declaration</a>
+<a href="#htoc12" class="nav-item level-2">Endline manipulation</a>
+<a href="#htoc13" class="nav-item level-1">Macrodefinitions</a>
+<a href="#htoc14" class="nav-item level-2">General</a>
+<a href="#htoc15" class="nav-item level-2">Visibility scopes</a>
+<a href="#htoc16" class="nav-item level-2">setdef and undef directives</a>
+<a href="#htoc17" class="nav-item level-2">Defines with arguments</a>
+<a href="#htoc18" class="nav-item level-2">Define overloading</a>
+<a href="#htoc19" class="nav-item level-2">Some constructs, used in defines</a>
+<a href="#htoc20" class="nav-item level-2">Predefined macros</a>
+<a href="#htoc21" class="nav-item level-2">Define usage examples</a>
+<a href="#htoc22" class="nav-item level-3">Function hooks</a>
+<a href="#htoc23" class="nav-item level-3">Default arguments emulation</a>
+<a href="#htoc24" class="nav-item level-1">Preprocessor</a>
+<a href="#htoc25" class="nav-item level-2">Including external files</a>
+<a href="#htoc26" class="nav-item level-2">Conditional compilation</a>
+<a href="#htoc27" class="nav-item level-2">Other directives</a>
+<a href="#htoc28" class="nav-item level-1">Other elements</a>
+<a href="#htoc29" class="nav-item level-2">Enumerations</a>
+<a href="#htoc30" class="nav-item level-1">Standard libraries</a>
+<a href="#htoc31" class="nav-item level-2">cj_types and cj_typesEx</a>
+<a href="#htoc32" class="nav-item level-2">cj_order and cj_antibj_base</a>
+<a href="#htoc33" class="nav-item level-2">cj_print</a>
+<a href="#htoc34" class="nav-item level-3">Function list</a>
+<a href="#htoc35" class="nav-item level-3">Format string</a>
+<a href="#htoc36" class="nav-item level-1">Credits and thanks</a>
+</nav>
+    </aside>
+    
+    <main class="main">
+        <div class="content"><h1 id="htoc1" class="page-title">Usage<a href="#htoc1" class="anchor-link">#</a></h1>
+<div class="para-wrapper"><p>
+The easiest way to start using the cJass parser is to download and install <a href="files/?cJassSetup.exe">distribution</a>. Please note, that you will need <a href="http://www.wc3c.net/showthread.php?t=90999">Jass New Gen Pack</a> for correct installation of cJass. During the installation process, all required changes in NewGen files will be made automatically. All that you need to do after installation is to run World Editor and start getting benefits from using cJass syntax.</p></div>
+<h1 id="htoc2" class="section-title">Syntax innovations<a href="#htoc2" class="anchor-link">#</a></h1>
+<h2 id="htoc3" class="subsection-title">Clarity<a href="#htoc3" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+As you know, JASS2 scripting language was created by Blizzard Entertainment for usage in Warcraft III. Its syntax looks alo like Turing and is neither short nor laconic. You must use <code><b>call</b></code> keyword for function calls, <code><b>set</b></code> for variable setting and <code><b>local</b></code> to declare local variables. You also have to isolate global variables to stand-alone block:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">globals</span><span class="tp">integer</span> f = 12
+  <span class="kw">endglobals</span><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">local</span><span class="tp">integer</span> i
+      <span class="kw">call</span>DoNothing()
+      <span class="kw">set</span> i = f + 3
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>While using cJass, parser automatically determines the meaning of an expression depending on the context, so we can easily omit all these keywords to reach better code readability:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="tp">integer</span> f = 12
+  
+  <span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="tp">integer</span> i
+      DoNothing()
+      i = f + 3
+  <span class="kw">endfunction</span></pre></div></div>
+<h2 id="htoc4" class="subsection-title">Variables declaration<a href="#htoc4" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+In JASS2 all local variables have to be declared at the beginning of the function. While using cJass, you can declare local variables anywhere inside the function.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> onKill <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="tp">unit</span> u = <span class="fn">GetTriggerUnit</span>()
+      <span class="kw">if</span> (<span class="fn">GetUnitTypeId</span>(u) == <span class="kw">'hfoo'</span>) <span class="kw">then</span><span class="fn">ReviveUnit</span>(u)
+      <span class="kw">else</span><span class="tp">effect</span> sfx = <span class="fn">AddSpecialEffect</span>(<span class="st">"deatheffect.mdx"</span>, <span class="fn">GetUnitX</span>(u), <span class="fn">GetUnitY</span>(u))
+          Sleep(1)
+          <span class="fn">DestroyEffect</span>(sfx)
+      <span class="kw">endif</span><span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>The parser will move all local variable declarations to the beginning of the function. As in JASS2 variables can be initialized inside the declaration, cJass will also move the initialization if the variable is initialized with exact value:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span>DoNothing()
+      <span class="tp">integer</span> i = 0                       <span class="cm">// declaration will be moved completels,</span><span class="tp">location</span> l = <span class="fn">Location</span>(0,0)      <span class="cm">// this variable will be initialized here</span><span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>After compilation it will become:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">local</span><span class="tp">integer</span> i = 0
+      <span class="kw">local</span><span class="tp">location</span> l
+      <span class="kw">call</span>DoNothing()
+      <span class="kw">set</span> l = <span class="fn">Location</span>(0,0)
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>cJass syntax also lets you declare variables of the same type on the same line, separating them by commas. These variables can also be initialized here:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="tp">integer</span> i = 7, j, k</pre></div></div>
+<h2 id="htoc5" class="subsection-title">Operators<a href="#htoc5" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+cJass syntax introduces new operators to make the life of programmers easier and to increase code readability.</p></div>
+<h3 id="htoc6" class="subsubsection-title">Increment and decrement<a href="#htoc6" class="anchor-link">#</a></h3>
+<div class="para-wrapper"><p>
+Increment <code>++</code> (increasing by 1) and decrement <code>--</code> (decreasing by 1) operators are unary (they have only one operand). They can be used alone on the line or be part of complex expression:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="tp">integer</span> a = 7
+      a++                     <span class="cm">// now, a = 8</span><span class="tp">integer</span> b; b = 3 + a--  <span class="cm">// now, a = 7, b = 11</span>
+      b--                     <span class="cm">// now, b = 10</span><span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>which will become:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">local</span><span class="tp">integer</span> a = 7
+      <span class="kw">local</span><span class="tp">integer</span> b
+      <span class="kw">set</span> a = a + 1
+      <span class="kw">set</span> b = 3 + a
+      <span class="kw">set</span> a = a - 1
+      <span class="kw">set</span> b = b - 1
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>These operators can be written either in prefix (when operator is before variable) or in postfix (when operator is after variable) notation. While using them alone, it doesnt really matter, but they will behave differently as part of complex expression. Prefix operator changes the variable and then its new value is passed to the expression, postfix operator passes the value to the expression and then changes the variable.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="tp">integer</span> a = 7
+      <span class="tp">integer</span> b = ++a     <span class="cm">// now, a = 8,  b = 8</span><span class="tp">integer</span> c = a + b-- <span class="cm">// now, a = 8,  b = 7, c = 16</span><span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>which will be compiled as the following:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">local</span><span class="tp">integer</span> a = 7
+      <span class="kw">local</span><span class="tp">integer</span> b
+      <span class="kw">local</span><span class="tp">integer</span> c
+      <span class="kw">set</span> a = a + 1
+      <span class="kw">set</span> b = a
+      <span class="kw">set</span> c = a + b
+      <span class="kw">set</span> b = b - 1
+  <span class="kw">endfunction</span></pre></div></div>
+<h3 id="htoc7" class="subsubsection-title">Assignment operators<a href="#htoc7" class="anchor-link">#</a></h3>
+<div class="para-wrapper"><p>
+cJass syntax implements different assignment operators, which can help shorten code. For example,
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  a = a + 2</pre></div></div>
+<div class="para-wrapper"><p>can be shortened using <em>the compound summation operator</em> <code>+=</code>:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  a += 2</pre></div></div>
+<div class="para-wrapper"><p>Operator <code>+=</code> adds the expression to the right to operand on the left. The same principle is used to form other compound operators: <code>-=</code>, <code>*=</code> and <code>/=</code>. 
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="tp">integer</span> a = 3, b = 5, c = 4, d = 6
+      a += 7  <span class="cm">// as a result, a = 10</span>
+      b -= 4  <span class="cm">// as a result, b = 1</span>
+      c *= 5  <span class="cm">// as a result, c = 20</span>
+      d /= 3  <span class="cm">// as a result, d = 2</span><span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>is compiled as:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">local</span><span class="tp">integer</span> a = 3
+      <span class="kw">local</span><span class="tp">integer</span> b = 5
+      <span class="kw">local</span><span class="tp">integer</span> c = 4
+      <span class="kw">local</span><span class="tp">integer</span> d = 6
+      <span class="kw">set</span> a = a + 7
+      <span class="kw">set</span> b = b - 4
+      <span class="kw">set</span> c = c * 5
+      <span class="kw">set</span> d = d / 3
+  <span class="kw">endfunction</span></pre></div></div>
+<h3 id="htoc8" class="subsubsection-title">Logical operations<a href="#htoc8" class="anchor-link">#</a></h3>
+<div class="para-wrapper"><p>
+While using cJass syntax, all logical operators can be written in simplified way. You can either use it, or use default implementation - whatever you favor.</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">boolean</span> a, <span class="tp">boolean</span> b <span class="kw">returns</span><span class="tp">nothing</span><span class="tp">boolean</span> c
+      <span class="kw">if</span> (a && b) <span class="kw">then</span><span class="cm">// a and b</span>
+          c = !b              <span class="cm">// not b</span><span class="kw">else</span>
+          c = b || a          <span class="cm">// b or a</span><span class="kw">endif</span><span class="kw">endfunction</span></pre></div></div>
+<h2 id="htoc9" class="subsection-title">Blocks<a href="#htoc9" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+JASS2 syntax is rather verbose and uses block limiting using keywords. cJass introduces ligthweight block declaraions using curly brackets: now you can simply specify block name and surround its contents with curly brackets.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="tp">integer</span> i = 0
+      <span class="kw">loop</span> {
+          <span class="kw">exitwhen</span> i > 5
+          i++
+      }
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>Such notation can be used with all JASS2 blocks (<code><b>loop</b></code>, <code><b>if</b></code>, <code><b>else</b></code> and <code><b>elseif</b></code>) and vJass extension blocks (<code><b>library</b></code>, <code><b>scope</b></code>, <code><b>struct</b></code>, <code><b>interface</b></code> and <code><b>module</b></code>). While using short notation in <code><b>if</b></code> and <code><b>elseif</b></code> blocks, the following <code><b>then</b></code> keyord can be omited:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">integer</span> i <span class="kw">returns</span><span class="tp">integer</span><span class="kw">if</span> (i > 3) {
+          <span class="kw">return</span> --i
+      } <span class="kw">else</span> {
+          BJDebugMsg(<span class="st">"i <= 3"</span>)
+      }
+      <span class="kw">return</span> i
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>which in plain jass will be:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">integer</span> i <span class="kw">returns</span><span class="tp">integer</span><span class="kw">if</span> (i > 3) <span class="kw">then</span><span class="kw">set</span> i = i - 1
+          <span class="kw">return</span> i
+      <span class="kw">else</span><span class="kw">call</span>BJDebugMsg(<span class="st">"i <= 3"</span>)
+      <span class="kw">endif</span><span class="kw">return</span> i
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p><b>Notice:</b> this block syntax isnt mandatory, so you can easily use default notation.</p></div>
+<h2 id="htoc10" class="subsection-title">Loops<a href="#htoc10" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+In cJass syntax, <code><b>whilenot</b></code> loop is introduced as an analog of widely used loop with pre-condition. The way of using this loop is identical to the default one: after <code><b>whilenot</b></code> operator the loop-ending condition is specified:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">integer</span> num, <span class="tp">integer</span> pow <span class="kw">returns</span><span class="tp">integer</span><span class="tp">integer</span> res = 1, i = 0
+      <span class="kw">whilenot</span> (i++ >= pow) {
+          res *= num
+      }
+      <span class="kw">return</span> res
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>is same as the following:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">integer</span> num, <span class="tp">integer</span> pow <span class="kw">returns</span><span class="tp">integer</span><span class="kw">local</span><span class="tp">integer</span> res = 1
+      <span class="kw">local</span><span class="tp">integer</span> i = 0
+      <span class="kw">loop</span><span class="kw">exitwhen</span> (i >= pow)
+          <span class="kw">set</span> i = i + 1
+          <span class="kw">set</span> res = res * num
+      <span class="kw">endloop</span><span class="kw">return</span> res
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>There also is the form of this loop, that places the loop-ending condition afther the loops body:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">integer</span> num, <span class="tp">integer</span> pow <span class="kw">returns</span><span class="tp">integer</span><span class="tp">integer</span> res = 1, i = 0
+      do {
+          res *= num
+      } <span class="kw">whilenot</span> (i++ >= pow)
+      <span class="kw">return</span> res
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>will be compiled to:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">integer</span> num, <span class="tp">integer</span> pow <span class="kw">returns</span><span class="tp">integer</span><span class="kw">local</span><span class="tp">integer</span> res = 1
+      <span class="kw">local</span><span class="tp">integer</span> i = 0
+      <span class="kw">loop</span><span class="kw">set</span> res = res * num
+          <span class="kw">exitwhen</span> (i >= pow)
+          <span class="kw">set</span> i = i + 1
+      <span class="kw">endloop</span><span class="kw">return</span> res
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>You can also use <code>do</code> keyword as a synonim to <code><b>loop</b></code>.</p></div>
+<h2 id="htoc11" class="subsection-title">Simplified function declaration<a href="#htoc11" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+For increased usability and code clarity, cJass syntax implements simplified notation of functions and vJass methods. In general, it looks like
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="tp">nothing</span> test(<span class="tp">integer</span> x) {
+      BJDebugMsg(<span class="fn">I2S</span>(x))
+  }</pre></div></div>
+<div class="para-wrapper"><p>Now lets see, what all this means. At first, you have to indicate the return value type (in the above example its <code><font color="#0054A8">nothing</font></code> because the function returns nothing), which is followed by function name and arguments (please note, that the arguments should be enclosed in round braces, if a function takes nothing, these braces can be empty), and in the end goes the function body, enclosed in curly brackets. For example, here is the above code after compilation:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">integer</span> x <span class="kw">returns</span><span class="tp">nothing</span><span class="kw">call</span>BJDebugMsg(<span class="fn">I2S</span>(x))
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>This notation also applies to vJass methods, the parser will determine if the declaration should become function or method.</p></div>
+<div class="para-wrapper"><p><a name="endl"></a></p></div>
+<h2 id="htoc12" class="subsection-title">Endline manipulation<a href="#htoc12" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+cJass gives you the ability to freely manipulate line endings in your code. These symbols allow you to split one declaration into maly lines or write more than one command on a single line:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="tp">nothing</span> RandomUnit(<span class="tp">integer</span> pIndex) {
+      Sleep(1)
+      <span class="tp">unit</span> u; u = <span class="fn">CreateUnit</span>( <span class="fn">Player</span>(pIndex),  \
+                  <span class="fn">GetRandomInt</span>(<span class="kw">'H000'</span>, <span class="kw">'H009'</span>),\
+                  <span class="fn">GetRandomReal</span>(-100, 100),    \
+                  <span class="fn">GetRandomReal</span>(-100, 100),    \
+                  <span class="fn">GetRandomReal</span>(0, 360))
+      Sleep(2)
+      <span class="fn">RemoveUnit</span>(u)
+  }</pre></div></div>
+<div class="para-wrapper"><p>The <code>;</code> symbol will be replaced to the linebreak and <code>\ </code> symbol merges the lines.</p></div>
+<h1 id="htoc13" class="section-title">Macrodefinitions<a href="#htoc13" class="anchor-link">#</a></h1>
+<div class="para-wrapper"><p>
+<em>Defines</em> are one of the key cJass benefits. Macro processing is done completely on code parsing (on map save), which allows you to achieve high code readability and flexibility without its overcomplication.</p></div>
+<h2 id="htoc14" class="subsection-title">General<a href="#htoc14" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+At first look, you can imagine the processing of defines as a simple replace of macro names with their values (as if you used a SearchnReplace in your favorite text editor).</p></div>
+<div class="para-wrapper"><p>Keyword <code><b>define</b></code> is used when defining macros:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> FOOTMAN = <span class="kw">'hfoo'</span></pre></div></div>
+<div class="para-wrapper"><p>hereby <code>FOOTMAN</code> is macros name, which you can use later in your code, and <code><b><em><code>'hfoo'</code></em></b></code> is the value, to which all references will be replaced. For example,
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> FOOTMAN = <span class="kw">'hfoo'</span><span class="tp">nothing</span> test() {
+      <span class="fn">CreateUnit</span>(<span class="fn">GetLocalPlayer</span>(), FOOTMAN, 0, 0, 0)
+  }</pre></div></div>
+<div class="para-wrapper"><p>will compile to the following:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="fn">CreateUnit</span>(<span class="fn">GetLocalPlayer</span>(), <span class="kw">'hfoo'</span>, 0, 0, 0)
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>You can write multiple defines using <code><b>define</b></code> and enclosing the block in curly brackets:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> {
+      FOOTMAN = <span class="kw">'hfoo'</span>
+      MAGE = <span class="kw">'Hblm'</span>
+  }</pre></div></div>
+<div class="para-wrapper"><p>You can use either <code><b>define</b></code>, or <code>#</code><code><b>define</b></code> notation - it doesnt matter.</p></div>
+<div class="para-wrapper"><p>For those, who prefer classic JASS2 syntax, there is another macro definition style:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span>
+      FOOTMAN = <span class="kw">'hfoo'</span>
+      MAGE = <span class="kw">'Hblm'</span><span class="kw">enddefine</span></pre></div></div>
+<div class="para-wrapper"><p>Usually, macro names contain only letters, numbers and underscores. However, what should you do if you need to have some kinds of special symbols in the defines name? In such cases you can use inequality signs:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> <GetPlayableMapRect()> = bj_mapInitialPlayableArea</pre></div></div>
+<div class="para-wrapper"><p>If you need a multiline define, then simply enclose its body in curly brackets:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> msg = {
+                  BJDebugMsg(<span class="st">"one!"</span>)
+                  BJDebugMsg(<span class="st">"two!"</span>)
+               }</pre></div></div>
+<h2 id="htoc15" class="subsection-title">Visibility scopes<a href="#htoc15" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+Macros can be defined as private inside of scopes, libraries, structs and modules using <code><b>private</b></code> keyword:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">scope</span> test {
+      #<span class="kw">define</span><span class="kw">private</span> FOOT = <span class="kw">'HBlm'</span>
+  }</pre></div></div>
+<div class="para-wrapper"><p>In this case private defines will not conflict with other defines with same names in global scope of visibility:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> msg = <span class="st">"X"</span><span class="tp">nothing</span> test () {
+      BJDebugMsg(<span class="st">"Global = "</span> + msg)
+  }
+  
+  <span class="kw">library</span> A {
+      #<span class="kw">define</span><span class="kw">private</span> msg = <span class="st">"A"</span><span class="tp">nothing</span> testA () {
+          BJDebugMsg(<span class="st">"Library A = "</span> + msg)
+      }
+  }
+  
+  <span class="kw">scope</span> B {
+      #<span class="kw">define</span><span class="kw">private</span> msg = <span class="st">"B"</span><span class="tp">nothing</span> testB () {
+          BJDebugMsg(<span class="st">"Scope B = "</span> + msg)
+      }
+  }</pre></div></div>
+<div class="para-wrapper"><p>After compilation we get:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">call</span>BJDebugMsg(<span class="st">"Global = "</span> + <span class="st">"X"</span>)
+  <span class="kw">endfunction</span><span class="kw">library</span> A
+      <span class="kw">function</span> testA <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">call</span>BJDebugMsg(<span class="st">"Library A = "</span> + <span class="st">"A"</span>)
+      <span class="kw">endfunction</span><span class="kw">endlibrary</span><span class="kw">scope</span> B
+      <span class="kw">function</span> testB <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">call</span>BJDebugMsg(<span class="st">"Scope B = "</span> + <span class="st">"B"</span>)
+      <span class="kw">endfunction</span><span class="kw">endscope</span></pre></div></div>
+<h2 id="htoc16" class="subsection-title">setdef and undef directives<a href="#htoc16" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+If you define a macro with the name which is already used by another macro (this doesnt apply to private defines in nested elements), cJass will show an error and stop compilation. If you want to change the value of an existing macrodefinition, you should use <code><b>setdef</b></code> directive. To undo macro definitions, you can use the <code><b>undef</b></code> directive, after which the macro will be undefined. 
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="tp">nothing</span> test1 () {
+      #<span class="kw">define</span> msg = <span class="st">"text"</span>BJDebugMsg(msg) <span class="cm">// will print "text"</span>
+  
+      #<span class="kw">setdef</span> msg = <span class="st">"other text"</span>BJDebugMsg(msg) <span class="cm">// will print "other text"</span>
+  
+      #<span class="kw">undef</span> msg
+  
+      BJDebugMsg(msg) <span class="cm">// won't be replaced</span>
+  }</pre></div></div>
+<h2 id="htoc17" class="subsection-title">Defines with arguments<a href="#htoc17" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+To widen the range of possible macrodefinition usages, defines, which take arguments were implemented. A macro can take arbitary number of arguments, which can be used in the macros body similiar to how the functions arguments are used. The arguments can be of any type? parser does no type checks, so you should call macros with care, always checking the value types.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> msg(playerid,text) = <span class="fn">DisplayTextToPlayer</span>(<span class="fn">Player</span>(playerid), text, 0, 0)</pre></div></div>
+<div class="para-wrapper"><p><b><font color="red"> Attention!</font></b> As parser doesnt perform typechecks, all typesafety should be controlled by the coder.</p></div>
+<h2 id="htoc18" class="subsection-title">Define overloading<a href="#htoc18" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+You can define more than one macro with same names as soon as they take different number of arguments: such defines are called overloaded. Depending on the number of arguments passed, parder decides what macro to call.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> {
+      msg(text)              = <span class="fn">DisplayTextToPlayer</span>(<span class="fn">GetLocalPlayer</span>(), text, 0, 0)
+      msg(text,playerid)     = <span class="fn">DisplayTextToPlayer</span>(<span class="fn">Player</span>(playerid), text, 0, 0)
+      msg(text,playerid,x,y) = <span class="fn">DisplayTextToPlayer</span>(<span class="fn">Player</span>(playerid), text, x, y)
+  }
+  
+  <span class="tp">nothing</span> test() {
+      msg(<span class="st">"test 1"</span>)
+      msg(<span class="st">"test 2"</span>, 1)
+      msg(<span class="st">"test 3"</span>, 2, 0.1, 0.1)
+  }</pre></div></div>
+<div class="para-wrapper"><p>will be compiled to the following:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">call</span><span class="fn">DisplayTextToPlayer</span>(<span class="fn">GetLocalPlayer</span>(), <span class="st">"test 1"</span>, 0, 0)
+      <span class="kw">call</span><span class="fn">DisplayTextToPlayer</span>(<span class="fn">Player</span>(1), <span class="st">"test 2"</span>, 0, 0)
+      <span class="kw">call</span><span class="fn">DisplayTextToPlayer</span>(<span class="fn">Player</span>(2), <span class="st">"test 3"</span>, 0.1, 0.1)
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p><b><font color="red"> Attention!</font></b> If the group of overloaded defines has the one with no arguments, it should always be followed by empty parenthesis.</p></div>
+<h2 id="htoc19" class="subsection-title">Some constructs, used in defines<a href="#htoc19" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+Sometimes you need to output one of the macros arguments as text (please note: not the arguments value - if the argument is a variable, its name will be the result). For such cases there is <code>``</code> instruction, which represents its argument as string. You can also use concatenation operator <code>##</code>, which merges expressions on both sides of it (unlike the previous one, this operator can be used anytime, not only in defines).
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> register_func(type) = {
+                                <span class="tp">nothing</span> func_##type (type t) {
+                                    BJDebugMsg(`type`)
+                                }
+                               }
+  
+  register_func(<span class="tp">real</span>)</pre></div></div>
+<div class="para-wrapper"><p>which will become:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> func_real <span class="kw">takes</span><span class="tp">real</span> t <span class="kw">returns</span><span class="tp">nothing</span><span class="kw">call</span>BJDebugMsg(<span class="st">"real"</span>)
+  <span class="kw">endfunction</span></pre></div></div>
+<h2 id="htoc20" class="subsection-title">Predefined macros<a href="#htoc20" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+cJass introduces some predefined macros for usage by coders. All of them are replaced to their values at the compilation stage.</p></div>
+<div class="para-wrapper"><p><code>DATE</code>  returns current date in yyyy.mm.dd format.</p></div>
+<div class="para-wrapper"><p><code>TIME</code>  returns current time in hh:mm:ss format.</p></div>
+<div class="para-wrapper"><p><code>COUNTER</code>  returns integer starting from 0, every use increases this number by 1. Heres an example of usage:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> unique_name = func_##COUNTER
+  
+  <span class="tp">void</span> unique_name () {}   <span class="cm">// void func_0 () {}</span><span class="tp">void</span> unique_name () {}   <span class="cm">// void func_1 () {}</span><span class="tp">void</span> unique_name () {}   <span class="cm">// void func_2 () {}</span></pre></div></div>
+<div class="para-wrapper"><p><code>DEBUG</code>  returns 1 if "Debug mode" checkbox is checked, else returns 0. Is used in conditional compilation (see <a href="#cond">4.1</a>) to add sets of actions, which exist only in debug mode.</p></div>
+<div class="para-wrapper"><p><code>FUNCNAME</code>  returns the name of the function, where its used.</p></div>
+<div class="para-wrapper"><p><code>WAR3VER</code>  returns <code>WAR3VER_23</code> or <code>WAR3VER_24</code> depending on the position of the version switch in cJass menu. Can be used in conditional compilation blocks (see <a href="#cond">4.1</a>) to maintain two map versions: 1.23- and 1.24+ compatible. For example:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> H2I(h) = GetHandleId(h)
+  
+  #<span class="kw">if</span> WAR3VER == WAR3VER_23
+      #<span class="kw">undef</span> H2I
+      <span class="tp">integer</span> H2I (<span class="tp">handle</span> h) { <span class="kw">return</span> h; <span class="kw">return</span> 0 }
+  #<span class="kw">endif</span></pre></div></div>
+<div class="para-wrapper"><p>All predefined macros return <em>non-string</em> value. To represent them as string, you can use either stringizing operator or formatted output (see <a href="#print">6.2</a>)</p></div>
+<h2 id="htoc21" class="subsection-title">Define usage examples<a href="#htoc21" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+In this section there are some examples of macro usage for solving of non-trivial tasks.
+</p></div>
+<h3 id="htoc22" class="subsubsection-title">Function hooks<a href="#htoc22" class="anchor-link">#</a></h3>
+<div class="para-wrapper"><p>
+The need to do some set of actions when calling native functions pops out sometimes. In such cases people create some wrapper functions and call them instead. Using cJass macrodefinitions, you can easily replace the calls of some function to the call to your own wrapper function, or to a set of actions.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> {
+      <span class="fn">SetUnitPosition</span> = SetUnitPosition_hook
+  
+      <span class="fn">RemoveUnit</span>(u) = {
+          BJDebugMsg(<span class="st">"A unit is being removed!"</span>)
+          Remove##Unit(u)
+      }
+  }
+  
+  <span class="tp">boolean</span> SetUnitPosition_hook (<span class="tp">unit</span> u, <span class="tp">real</span> x, <span class="tp">real</span> y) {
+      BJDebugMsg(<span class="st">"We're moving the unit to ("</span> + <span class="fn">R2S</span>(x) + <span class="st">","</span> + <span class="fn">R2S</span>(y) + <span class="st">")"</span>)
+      SetUnit##Position(u, x, y)
+      <span class="kw">return</span> (<span class="fn">GetUnitX</span>(u) == x) && (<span class="fn">GetUnitY</span>(u) == y)
+  }
+  
+  <span class="tp">nothing</span> test() {
+      <span class="tp">unit</span> u = <span class="fn">CreateUnit</span>(<span class="fn">Player</span>(0), <span class="kw">'hfoo'</span>, 0, 0, 0)
+      <span class="kw">if</span> (<span class="fn">SetUnitPosition</span>(u, 100, 300)) { BJDebugMsg(<span class="st">"Landed successfully!"</span>) }
+      <span class="fn">RemoveUnit</span>(u)
+  }</pre></div></div>
+<div class="para-wrapper"><p>which will be compiled to the following:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> SetUnitPosition_hook <span class="kw">takes</span><span class="tp">unit</span> u, <span class="tp">real</span> x, <span class="tp">real</span> y <span class="kw">returns</span><span class="tp">boolean</span><span class="kw">call</span>BJDebugMsg(<span class="st">"We're moving the unit to ("</span> + <span class="fn">R2S</span>(x) + <span class="st">","</span> + <span class="fn">R2S</span>(y) + <span class="st">")"</span>)
+      <span class="kw">call</span><span class="fn">SetUnitPosition</span>(u, x, y)
+      <span class="kw">return</span> (<span class="fn">GetUnitX</span>(u) == x) and (<span class="fn">GetUnitY</span>(u) == y)
+  <span class="kw">endfunction</span><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">local</span><span class="tp">unit</span> u = <span class="fn">CreateUnit</span>(<span class="fn">Player</span>(0), <span class="kw">'hfoo'</span>, 0, 0, 0)
+      <span class="kw">if</span> (SetUnitPosition_hook(u, 100, 300)) <span class="kw">then</span><span class="kw">call</span>BJDebugMsg(<span class="st">"Landed successfully!"</span>)
+      <span class="kw">endif</span><span class="kw">call</span>BJDebugMsg(<span class="st">"A unit is being removed!"</span>)
+      <span class="kw">call</span><span class="fn">RemoveUnit</span>(u)
+  <span class="kw">endfunction</span></pre></div></div>
+<div class="para-wrapper"><p>Now its time for some explanations. To replace the <code><font color="#7F007F">RemoveUnit</font></code> function to the set of actions, we simply define a macro with the same name, so all the calls to this function will be replaced to this macros contents. Please note that inside of this macro the name of hooked function is written using the concatenation operator. This is done to prevent the parser from trying to replace it to this macros contents as it has this name too. To replace the calls to <code><font color="#7F007F">SetUnitPosition</font></code> to our wrapper, we simply declare the wrapper function and replace all calls to the native with the calls to our wrapper.</p></div>
+<h3 id="htoc23" class="subsubsection-title">Default arguments emulation<a href="#htoc23" class="anchor-link">#</a></h3>
+<div class="para-wrapper"><p>
+Many programming languages allow you to assign default values to functions arguments. In such cases these arguments can be easily omitted if youre ok with their default values. Such behaviour can be emulated in cJass using overloaded macrodefinitions and concatenation operator.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> {
+      <span class="fn">CreateUnit</span>(p, id) = Create##Unit(p, id, 0, 0, 0)
+      <span class="fn">CreateUnit</span>(p, id, x, y) = Create##Unit(p, id, x, y, 0)
+      <span class="fn">CreateUnit</span>(p, id, x, y, f) = Create##Unit(p, id, x, y, f)
+  }
+  
+  <span class="tp">nothing</span> test() {
+      <span class="fn">CreateUnit</span>(<span class="fn">Player</span>(0), <span class="kw">'hfoo'</span>)
+      <span class="fn">CreateUnit</span>(<span class="fn">Player</span>(1), <span class="kw">'Hblm'</span>, 100, 231)
+      <span class="fn">CreateUnit</span>(<span class="fn">Player</span>(2), <span class="kw">'Ewar'</span>, 382, 16, 42)
+  }</pre></div></div>
+<div class="para-wrapper"><p>I think, you already know, what youll see now:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">function</span> test <span class="kw">takes</span><span class="tp">nothing</span><span class="kw">returns</span><span class="tp">nothing</span><span class="kw">call</span><span class="fn">CreateUnit</span>(<span class="fn">Player</span>(0), <span class="kw">'hfoo'</span>, 0, 0, 0)
+      <span class="kw">call</span><span class="fn">CreateUnit</span>(<span class="fn">Player</span>(1), <span class="kw">'Hblm'</span>, 100, 231, 0)
+      <span class="kw">call</span><span class="fn">CreateUnit</span>(<span class="fn">Player</span>(2), <span class="kw">'Ewar'</span>, 382, 16, 42)
+  <span class="kw">endfunction</span></pre></div></div>
+<h1 id="htoc24" class="section-title">Preprocessor<a href="#htoc24" class="anchor-link">#</a></h1>
+<div class="para-wrapper"><p>
+<em>Preprocessor</em> directives are first to be parsed during map code processing. Because of this, you can use them to do some interesting things.</p></div>
+<h2 id="htoc25" class="subsection-title">Including external files<a href="#htoc25" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+Sometimes its comfortable to keep parts of code (e.g. libraries, systems, spells, etc. which you use often) in external files. To include code from external files theres <code><b>include</b></code> directive, which should be followed by string with file name you want to include. If files are in the <code><font color="#0000AA"><em><code>"..\AdicHelper\lib\"</code></em></font></code> subfolder or in the map folder, you can write file name without a path to it. Also its possible to include files from other folders, but you should write full path to it.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">include</span><span class="st">"myClasses.j"</span><span class="cm">// "(newgen path)\AdicHelper\lib\myClasses.j" or "(map path)\myClasses.j" will be included</span><span class="kw">include</span><span class="st">"D:\\dev\\Warcraft 3\\my_mega_system.j"</span></pre></div></div>
+<div class="para-wrapper"><p>The code within included files can be written using both cJass and vJass syntax.</p></div>
+<div class="para-wrapper"><p><b><font color="red"> Attention!</font></b> Dont forget about double backslash in file path: <code>\\</code></p></div>
+<div class="para-wrapper"><p>Sometimes, things happen that one external file is included to the map several times (for example, by different libraries). In such cases inevitable errors happen because of code duplication, which wed like to avoid. For such cases, cJass introduces the <code>#</code><code>guard</code><code> </code><code>ID</code> directive, which prevents files with same IDs to be included more than once. ID can be any word, composed from letters, numbers and underscores, but its good to use the file name with all extra symbols replaced to underscores. For example in <code><font color="#0000AA"><em><code>"my-system.j"</code></em></font></code> external file the ID can be <code>#</code><code>guard</code><code> </code><code>my_system_j</code>.</p></div>
+<div class="para-wrapper"><p><b><font color="red"> Attention!</font></b> The <code>#</code><code>guard</code> directive has to be the written on the first line of external file.</p></div>
+<div class="para-wrapper"><p><a name="cond"></a></p></div>
+<h2 id="htoc26" class="subsection-title">Conditional compilation<a href="#htoc26" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+cJass syntax introduces useful conditional compilation commands. Using them you can include or exclude specified blocks of code during map parsing. Controlling elements of this construct can be values, defines or enums (see <a href="#enum">5</a>). Their syntax is the following:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> CONTROL = 3
+  
+  #<span class="kw">if</span> CONTROL == 3
+      <span class="cm">// code</span>
+  #<span class="kw">elseif</span> CONTROL == 1
+      <span class="cm">// alternative code</span>
+  #<span class="kw">else</span><span class="cm">// more other code</span>
+  #<span class="kw">endif</span></pre></div></div>
+<div class="para-wrapper"><p>Currently, only <code>==</code> and <code>!=</code> comparison operations are supported.</p></div>
+<div class="para-wrapper"><p>In such conditional blocks you can write any code with one limitation: they shouldnt contain identical define declarations:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">if</span> 1 != 0
+      #<span class="kw">define</span> msg = <span class="st">"hello!"</span>
+  #<span class="kw">else</span>
+      #<span class="kw">define</span> msg = <span class="st">"good bye!"</span>
+  #<span class="kw">endif</span></pre></div></div>
+<div class="para-wrapper"><p>If you try to save this code, parser will throw the define redeclaration error. If you want to use code, similar to above, you should declare the macrodefinition before conditional translation blocks and set its value in those blocks with <code><b>setdef</b></code> directive:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> msg
+  
+  #<span class="kw">if</span> 1 != 0
+      #<span class="kw">setdef</span> msg = <span class="st">"hello!"</span>
+  #<span class="kw">else</span>
+      #<span class="kw">setdef</span> msg = <span class="st">"good bye!"</span>
+  #<span class="kw">endif</span></pre></div></div>
+<div class="para-wrapper"><p>Condiitonal compilation directives can also be triggered by a state of flag - macrodefinition with a special value.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  #<span class="kw">define</span> MY_FLAG = true
+  
+  #<span class="kw">if</span> MY_FLAG
+      <span class="cm">// code</span>
+  #<span class="kw">else</span><span class="cm">// alternative code</span>
+  #<span class="kw">endif</span></pre></div></div>
+<div class="para-wrapper"><p>The <code>#</code><code><b>if</b></code><code> </code><code>value</code> directive will work only if the compared macrodefinition has a value of <code>true</code> or 1. You can use the <code>DEBUG</code> predefined macro to write code, which is compiled only in debug mode.</p></div>
+<h2 id="htoc27" class="subsection-title">Other directives<a href="#htoc27" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+Sometimes you need to stop compilation if some requirements are not met. In such cases the <code>#</code><code>error</code><code> </code><code><font color="#0000AA"><em><code>"MESSAGE"</code></em></font></code> directive will help you. It stops the compilation, showing the defined message. Best used inside of conditional compilation blocks.</p></div>
+<h1 id="htoc28" class="section-title">Other elements<a href="#htoc28" class="anchor-link">#</a></h1>
+<div class="para-wrapper"><p>
+This chapter describes some syntax constructions, that were not mentioned above, although not less important.</p></div>
+<div class="para-wrapper"><p><a name="enum"></a></p></div>
+<h2 id="htoc29" class="subsection-title">Enumerations<a href="#htoc29" class="anchor-link">#</a></h2>
+<div class="para-wrapper"><p>
+<em>Enumeration</em> is a type, that can contain values specified by coder. Integer constants can be declared as enumeration members. E.g.:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">enum</span> { RED, GREEN, BLUE }</pre></div></div>
+<div class="para-wrapper"><p>declares three named integer constants and sets values to them. Values are assigned atomatically starting from 0, in other words, enumeration is similar to the following:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> {
+      RED = 0
+      GREEN = 1
+      BLUE = 2
+  }</pre></div></div>
+<div class="para-wrapper"><p>Enumerations can also be named:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">enum</span> (color) { RED, GREEN, BLUE }</pre></div></div>
+<div class="para-wrapper"><p>Named enumerations have their own internal counter - value of their elements will start from zero. Using several unnamed enumerations will continue the numeration of their values:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">enum</span> { FOOTMAN, MAGE }            <span class="cm">// FOOTMAN == 0, MAGE == 1</span><span class="kw">enum</span> (color) { RED, GREEN, BLUE } <span class="cm">// RED == 0, GREEN == 1, BLUE == 2</span><span class="kw">enum</span> { WARDEN, ARCHER}            <span class="cm">// WARDEN == 2, ARCHER == 3</span></pre></div></div>
+<div class="para-wrapper"><p>Enumerations also support default JASS2 syntax:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">enum</span> (color)
+      RED
+      GREEN
+      BLUE
+  <span class="kw">endenum</span></pre></div></div>
+<div class="para-wrapper"><p>Enumerations can be used in conditional translation blocks:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">library</span> SomeLib {
+  
+      <span class="kw">enum</span> (LIB_SPACE) { STD_SPACE, ALT_SPACE, DEBUG_SPACE }
+  
+      <span class="cm">// choose your namespace !</span><span class="kw">define</span><span class="kw">private</span> SOMELIB_SPACE = STD_SPACE <span class="cm">// what space to use</span>
+  
+      #<span class="kw">if</span> SOMELIB_SPACE == STD_SPACE
+          <span class="tp">void</span> SomeFunc(<span class="tp">int</span> a) {
+              <span class="cm">// base</span>
+          }
+      #<span class="kw">elseif</span> SOMELIB_SPACE == ALT_SPACE
+          <span class="tp">void</span> SomeFunc(<span class="tp">int</span> a) {
+              <span class="cm">// alt</span>
+          }
+      #<span class="kw">elseif</span> SOMELIB_SPACE == DEBUG_SPACE
+          <span class="tp">void</span> SomeFunc(<span class="tp">int</span> a) {
+              <span class="cm">// debug</span>
+          }
+      #<span class="kw">endif</span>
+  
+  }</pre></div></div>
+<div class="para-wrapper"><p>Or instead of named integer constants as markers for some actions:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">enum</span> (moves) { MOVING_ANIM_STATE_WALK, MOVING_ANIM_STATE_WALKBACK, MOVING_ANIM_STATE_STOP }
+  
+  <span class="tp">void</span> MovingAnimationControl (<span class="tp">unit</span> u, <span class="tp">integer</span> state) {
+      <span class="kw">if</span> (state == MOVING_ANIM_STATE_WALK) {
+          SetUnitTimeScale(u, 1)
+          SetUnitAnimationByIndex(u, <span class="st">"Walk"</span> )
+      } <span class="kw">elseif</span> (state == MOVING_ANIM_STATE_WALKBACK) {
+          SetUnitTimeScale(u, -1)
+          SetUnitAnimationByIndex(u, <span class="st">"Walk"</span> )
+      } <span class="kw">elseif</span> (state == MOVING_ANIM_STATE_STOP) {
+          SetUnitAnimation(u,<span class="st">"Stand"</span>)
+          SetUnitTimeScale(u, 1)
+      }
+  }</pre></div></div>
+<h1 id="htoc30" class="section-title">Standard libraries<a href="#htoc30" class="anchor-link">#</a></h1>
+<div class="para-wrapper"><p>
+The cJass default package includes standard libraries, which can be used in your maps because they will definitely be on target computer if cJass is installed there. You can find them in <em>"lib"</em> subfolder of your <em>"AdicHelper"</em> directory. These files were created specially for ease of coding and some light optimizations. You simply <code><b>include</b></code> the ones you need in your map. All standard included files have <em>"cj_"</em> prefix and <em>".j"</em> extension.</p></div>
+<h2 id="htoc31" class="subsection-title">cj_types and cj_typesEx<a href="#htoc31" class="anchor-link">#</a></h2>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">include</span><span class="st">"cj_types.j"</span><span class="kw">include</span><span class="st">"cj_typesEx.j"</span><span class="kw">include</span><span class="st">"cj_types_priv.j"</span><span class="kw">include</span><span class="st">"cj_typesEx_priv.j"</span></pre></div></div>
+<div class="para-wrapper"><p>These libraries contain macrodefinitions, aimed to make JASS2 type usage closer to C++. In the first one, aliases for main types and keywords are defined:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> {
+      <span class="tp">int</span>   = <span class="tp">integer</span><span class="tp">bool</span>  = <span class="tp">boolean</span><span class="tp">void</span>  = <span class="tp">nothing</span><span class="tp">float</span> = <span class="tp">real</span>
+      while = <span class="kw">whilenot</span> not
+      break = <span class="kw">exitwhen</span> true
+  }</pre></div></div>
+<div class="para-wrapper"><p>In the second, constructs like <code>new</code><code> &lt;</code><code>type</code><code>&gt;</code> are defined for main handle types:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">define</span> <new timer> = <span class="fn">CreateTimer</span>()</pre></div></div>
+<div class="para-wrapper"><p>You can read the full list by opening <em>"cj_typesEx.j"</em> in any text editor.</p></div>
+<div class="para-wrapper"><p>There also are versions of these files for usage inside of libraries, where all defines are private so they wont affect anything outside you library. They have <em>"_priv"</em> suffix in the filename.</p></div>
+<h2 id="htoc32" class="subsection-title">cj_order and cj_antibj_base<a href="#htoc32" class="anchor-link">#</a></h2>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">include</span><span class="st">"cj_order.j"</span><span class="kw">include</span><span class="st">"cj_antibj_base.j"</span></pre></div></div>
+<div class="para-wrapper"><p>These libraries aim for ease usage and slight map optimization on save.</p></div>
+<div class="para-wrapper"><p>First of them replaces all calls to order conversion functions like <code><font color="#7F007F">OrderId</font></code><code>(</code><code><font color="#0000AA"><em><code>"smart"</code></em></font></code><code>)</code> to corresponding integer values and implements defines like <code>order_smart</code> for integer values of all existing orders. </p></div>
+<div class="para-wrapper"><p>The other one performs light optimization when functions and constants from <em>"Blizzard.j"</em> are used in the map. Constants are replaced to their values and many functions are replaced to their analogs from <em>"common.j"</em>. Please note, that these optimizations also work for GUI triggers of your map.</p></div>
+<div class="para-wrapper"><p><a name="print"></a></p></div>
+<h2 id="htoc33" class="subsection-title">cj_print<a href="#htoc33" class="anchor-link">#</a></h2>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="kw">include</span><span class="st">"cj_print.j"</span></pre></div></div>
+<div class="para-wrapper"><p>By including this file, you gain access to output formatting functions. The templates, used for formatting, are defined by specially formatted string (format string). Arguments, passed to formatting functions, should follow the foemat string in exact order, stated in format string.
+</p></div>
+<h3 id="htoc34" class="subsubsection-title">Function list<a href="#htoc34" class="anchor-link">#</a></h3>
+<div class="para-wrapper"><p>
+In function descriptions format string is declared as <code><font color="#0054A8">string</font></code><code> </code><code>format</code> and arguments are <code>...</code> These functions can be used without arguments, in this case they will simply use given string as input.</p></div>
+<div class="para-wrapper"><p>The <code>sprintf</code> function formats a string and returns it as a result. Its compiled to a simple statement, not a function call.</p></div>
+<div class="para-wrapper"><p>The <code>printf</code> function outputs the formatted string to local player. The output is done using <code><font color="#7F007F">DisplayTimedTextToPlayer</font></code> function.</p></div>
+<div class="para-wrapper"><p>The following function do same things, as their standard analogs, but take a format string and arguments list instead of their default string argument.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="tp">void</span>     sBJDebugMsg                 (<span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sDisplayTextToPlayer        (<span class="tp">player</span> p, <span class="tp">real</span> x, <span class="tp">real</span> y, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sDisplayTimedTextToPlayer   (<span class="tp">player</span> p, <span class="tp">real</span> x, <span class="tp">real</span> y, <span class="tp">real</span> time, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sDisplayTimedTextFromPlayer (<span class="tp">player</span> p, <span class="tp">real</span> x, <span class="tp">real</span> y, <span class="tp">real</span> time, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sSetTextTagText             (<span class="tp">texttag</span> t, <span class="tp">string</span> format, ..., <span class="tp">real</span> h)
+  <span class="tp">void</span>     sQuestSetTitle              (<span class="tp">quest</span> q, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sQuestSetDescription        (<span class="tp">quest</span> q, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sQuestItemSetDescription    (<span class="tp">questitem</span> q, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sMultiboardSetTitleText     (<span class="tp">multiboard</span> m, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sMultiboardSetItemsValue    (<span class="tp">multiboard</span> m, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sMultiboardSetItemValue     (<span class="tp">multiboarditem</span> m, <span class="tp">string</span> format, ...)
+  <span class="tp">void</span>     sDialogSetMessage           (<span class="tp">dialog</span> d, <span class="tp">string</span> format, ...)
+  <span class="tp">button</span>   sDialogAddButton            (<span class="tp">dialog</span> d, <span class="tp">string</span> format, ..., <span class="tp">int</span> hotkey)
+  <span class="tp">button</span>   sDialogAddQuitButton        (<span class="tp">dialog</span> d, <span class="tp">bool</span> b, <span class="tp">string</span> format, ..., <span class="tp">int</span> hotkey)
+  <span class="tp">void</span>     sLeaderboardAddItem         (<span class="tp">leaderboard</span> l, <span class="tp">string</span> format, ..., <span class="tp">player</span> p)</pre></div></div>
+<h3 id="htoc35" class="subsubsection-title">Format string<a href="#htoc35" class="anchor-link">#</a></h3>
+<div class="para-wrapper"><p>
+The formatting string is a template for arguments substitution. All the characters of this string excluding control sequences are copied to the resulting string without changes. Usually, control sequences start with <code>%</code> symbol (to output the percent sign, you have to escape it using backslash symbol <code>\%</code>). Control sequences also contain name of the type of substituted variable. By default, the following types are defined:
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre>  %p     - <span class="tp">player</span> name, <span class="kw">takes</span><span class="tp">player</span> variable
+  %pc    - colored <span class="tp">player</span> name, <span class="kw">takes</span><span class="tp">player</span> variable
+  %i     - decimal number, <span class="kw">takes</span><span class="tp">integer</span>
+  %igold - decimal number, gold-colored, <span class="kw">takes</span><span class="tp">integer</span>
+  %ilumb - decimal number, lumber-colored, <span class="kw">takes</span><span class="tp">integer</span>
+  %ip    - <span class="tp">player</span> name, <span class="kw">takes</span><span class="tp">integer</span> (<span class="tp">player</span> id)
+  %ipc   - colored <span class="tp">player</span> name, <span class="kw">takes</span><span class="tp">integer</span> (<span class="tp">player</span> id)
+  %b     - <span class="tp">boolean</span>, prints <span class="st">"true"</span> or <span class="st">"false"</span>
+  %r     - floating number without extra formatting, <span class="kw">takes</span><span class="tp">real</span>
+  %s     - <span class="tp">string</span>, <span class="kw">if</span> a direct value is passed, it will be cleanly merged
+  %v     - variable, an argument is directly copied to output
+  %h     - decimal number, descriptor id is passed as an argument</pre></div></div>
+<div class="para-wrapper"><p>Furthermore, the user can define his own markup for any additional argument types. To do this, you have to redefine the <code>cj_sprintf_argTyp_User</code> macro.
+</p></div>
+<div class="code-block"><div class="code-header">cJass</div><div class="code-body"><pre><span class="cm">// here we define our own type handlers</span><span class="kw">setdef</span> cj_sprintf_argTyp_User = <span class="cm">/* markup */</span><span class="cm">// here we use prints with our markup, eg. in our library</span><span class="cm">// then we roll back our markup not to mess with other libraries etc.</span><span class="kw">setdef</span> cj_sprintf_argTyp_User =</pre></div></div>
+<div class="para-wrapper"><p>Lets look into the type definition syntax by the exaple of <code>%</code><code>i</code> type:</p></div>
+<div class="para-wrapper"><p><img src="http://cjass.xgm.ru/files/format-en.png"/> </p></div>
+<div class="para-wrapper"><p><b><font color="red"> Attention!</font></b> The <code>%</code> symbol will lead the World Editor to strange behaviour if used in the Custom Script section. To use string formatting functions there, you should use the <code>^</code> symbol as a control sequence start marker.</p></div>
+<h1 id="htoc36" class="section-title">Credits and thanks<a href="#htoc36" class="anchor-link">#</a></h1>
+</div>
+    </main>
+    
+    <script>
+        const sections = document.querySelectorAll('[id]');
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        function activateNav(anchor) {
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + anchor) {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            if (current) activateNav(current);
+        });
+        
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelector('.sidebar').classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>
