@@ -1,5 +1,6 @@
-#### 1.9.21
-- 添加3.0.0 API
+#### 1.9.21 & 1.9.22
+- 添加完善3.0.0 API
+- lsp服务器更新至0.3.0
 
 #### 1.9.20 & 1.9.19(pre-release)
 - LSP 排障能力完善：新增**状态栏指示器**——LSP 接管时显示 `✓ JASS LSP`（tooltip 列出已接管特性），启动中显示转圈，服务端不可用/崩溃回落内置实现时显示 `⚠ JASS 内置模式`（tooltip 携带回落原因），点击直达「输出 → JASS Language Server」面板，新增命令 `jass.showLspOutput`。至此「LSP 开了但感觉不对」可以按三步定位：看状态栏 → `npm run test:lsp-probe`（绕开客户端直接驱动 exe 走完整 LSP 会话，验证 initialize/诊断/hover/documentSymbol/标准库零误报）→ 看输出面板日志。

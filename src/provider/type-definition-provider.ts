@@ -9,7 +9,7 @@ import {
     InterfaceDeclaration,
     Identifier
 } from '../vjass/ast';
-import { extractLeadingComments, parseComment } from './comment-parser';
+import { isStatementAllowedForApiVersion as gateIsStatementAllowed } from './version-gate';
 
 /**
  * 基于新 AST 系统的类型定义提供者
@@ -22,77 +22,10 @@ export class TypeDefinitionProvider implements vscode.TypeDefinitionProvider {
     }
 
     private isStatementAllowedForApiVersion(stmt: Statement, filePath: string): boolean {
-        const configuredVersion = this.getConfiguredApiVersion();
-        if (!configuredVersion || !this.isStrictLegacyApiVersion(configuredVersion)) {
-            return true;
-        }
-        const sinceVersion = this.extractSinceVersionFromStatement(stmt, filePath);
-        if (!sinceVersion) {
-            return true;
-        }
-        return this.compareVersions(sinceVersion, configuredVersion) <= 0;
-    }
-
-    private getConfiguredApiVersion(): string | null {
-        const value = vscode.workspace.getConfiguration('jass').get<string>('apiVersion', 'off');
-        if (!value || value === 'off') {
-            return null;
-        }
-        return value;
-    }
-
-    private isStrictLegacyApiVersion(version: string): boolean {
-        const normalized = version.toLowerCase();
-        return normalized === '1.20' ||
-            normalized === '1.24' ||
-            normalized === '1.26a' ||
-            normalized === '1.27' ||
-            normalized === '1.27a';
-    }
-
-    private extractSinceVersionFromStatement(stmt: Statement, filePath: string): string | null {
-        if (!stmt.start) {
-            return null;
-        }
+        if (!stmt.start) return true;
         const fileContent = this.dataEnterManager.getFileContent(filePath);
-        if (!fileContent) {
-            return null;
-        }
-        const commentLines = extractLeadingComments(fileContent, stmt.start.line);
-        if (commentLines.length === 0) {
-            return null;
-        }
-        const parsedComment = parseComment(commentLines);
-        const sinceText = (parsedComment.since || parsedComment.version || '').trim();
-        if (!sinceText) {
-            return null;
-        }
-        const versionToken = sinceText.match(/(\d+\.\d+(?:\.\d+)?[a-z]?)/i);
-        return versionToken?.[1] || null;
-    }
-
-    private compareVersions(left: string, right: string): number {
-        const l = this.parseVersion(left);
-        const r = this.parseVersion(right);
-        if (!l || !r) {
-            return 0;
-        }
-        if (l.major !== r.major) return l.major - r.major;
-        if (l.minor !== r.minor) return l.minor - r.minor;
-        if (l.patch !== r.patch) return l.patch - r.patch;
-        return l.suffix - r.suffix;
-    }
-
-    private parseVersion(input: string): { major: number; minor: number; patch: number; suffix: number } | null {
-        const match = input.toLowerCase().match(/^(\d+)\.(\d+)(?:\.(\d+))?([a-z])?$/);
-        if (!match) {
-            return null;
-        }
-        const major = Number(match[1]);
-        const minor = Number(match[2]);
-        const patch = match[3] ? Number(match[3]) : 0;
-        const suffix = match[4] ? (match[4].charCodeAt(0) - 96) : 0;
-        return { major, minor, patch, suffix };
+        if (!fileContent) return true;
+        return gateIsStatementAllowed(fileContent, stmt.start.line);
     }
 
     provideTypeDefinition(

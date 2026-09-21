@@ -382,7 +382,8 @@ export class LspModeController implements vscode.Disposable {
     }
 
     private log(message: string): void {
-        this.outputChannel.appendLine(`[jass.lsp] ${message}`);
+        const ts = new Date().toISOString().slice(11, 23); // HH:MM:SS.mmm
+        this.outputChannel.appendLine(`[jass.lsp ${ts}] ${message}`);
     }
 }
 

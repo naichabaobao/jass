@@ -593,6 +593,70 @@ export async function activate(context: vscode.ExtensionContext) {
                 { dispose: () => diagnosticProvider.dispose() },
                 { dispose: () => zincDiagnosticProvider.dispose() }
             ];
+        },
+
+        // 查找引用：vJASS
+        references: () => {
+            const referenceProvider = new ReferenceProvider(manager);
+            return [
+                vscode.languages.registerReferenceProvider(
+                    jassSelector,
+                    referenceProvider
+                )
+            ];
+        },
+
+        // 工作区符号搜索
+        workspaceSymbol: () => {
+            const workspaceSymbolProvider = new WorkspaceSymbolProvider(manager);
+            return [
+                vscode.languages.registerWorkspaceSymbolProvider(workspaceSymbolProvider)
+            ];
+        },
+
+        // 查找实现：vJASS
+        implementation: () => {
+            const implementationProvider = new ImplementationProvider(manager);
+            return [
+                vscode.languages.registerImplementationProvider(
+                    jassSelector,
+                    implementationProvider
+                )
+            ];
+        },
+
+        // 代码操作（Quick Fix）：vJASS
+        codeAction: () => {
+            const codeActionProvider = new CodeActionProvider(manager);
+            return [
+                vscode.languages.registerCodeActionsProvider(
+                    jassSelector,
+                    codeActionProvider,
+                    {
+                        providedCodeActionKinds: [vscode.CodeActionKind.QuickFix]
+                    }
+                )
+            ];
+        },
+
+        // 代码格式化：vJASS + Zinc
+        formatting: () => {
+            const formattingProvider = new DocumentFormattingSortEditProvider();
+            const zincFormattingProvider = new ZincFormattingProvider(manager);
+            return [
+                vscode.languages.registerDocumentFormattingEditProvider(
+                    jassSelector,
+                    formattingProvider
+                ),
+                vscode.languages.registerDocumentFormattingEditProvider(
+                    zincFileSelector,
+                    zincFormattingProvider
+                ),
+                vscode.languages.registerDocumentRangeFormattingEditProvider(
+                    zincFileSelector,
+                    zincFormattingProvider
+                )
+            ];
         }
     };
 
@@ -647,56 +711,6 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    // 创建并注册 ReferenceProvider（查找引用支持）
-    const referenceProvider = new ReferenceProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerReferenceProvider(
-            jassSelector,
-            referenceProvider
-        )
-    );
-
-    // 创建并注册 WorkspaceSymbolProvider（工作区符号搜索支持）
-    const workspaceSymbolProvider = new WorkspaceSymbolProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerWorkspaceSymbolProvider(workspaceSymbolProvider)
-    );
-
-    // 创建并注册 ImplementationProvider（查找实现支持）
-    const implementationProvider = new ImplementationProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerImplementationProvider(
-            jassSelector,
-            implementationProvider
-        )
-    );
-
-    // 基于ast的格式化存在一下问题，因而保守使用之前的格式化方式
-    // 创建并注册 FormattingProvider（vJass 代码格式化支持）
-    const formattingProvider = new DocumentFormattingSortEditProvider();
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            jassSelector,
-            formattingProvider
-        )
-    );
-
-    // 创建并注册 ZincFormattingProvider（Zinc 代码格式化支持）
-    // 使用文件扩展名选择器，支持 .zn 文件
-    const zincFormattingProvider = new ZincFormattingProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            zincFileSelector,
-            zincFormattingProvider
-        )
-    );
-    context.subscriptions.push(
-        vscode.languages.registerDocumentRangeFormattingEditProvider(
-            zincFileSelector,
-            zincFormattingProvider
-        )
-    );
-
     // 创建并注册 JassDocumentColorProvider（颜色提供者支持）
     const documentColorProvider = new JassDocumentColorProvider();
     context.subscriptions.push(
@@ -712,18 +726,6 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDocumentLinkProvider(
             jassSelector,
             documentLinkProvider
-        )
-    );
-
-    // 创建并注册 CodeActionProvider（代码操作支持，用于接口方法未实现的快速修复）
-    const codeActionProvider = new CodeActionProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerCodeActionsProvider(
-            jassSelector,
-            codeActionProvider,
-            {
-                providedCodeActionKinds: [vscode.CodeActionKind.QuickFix]
-            }
         )
     );
 

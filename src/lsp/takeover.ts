@@ -16,9 +16,10 @@ import { ServerCapabilities } from 'vscode-languageclient/node';
 /**
  * 可被语言服务器接管的语言特性 id。
  *
- * 注意：`documentHighlight` / `semanticTokens` 没有对应的原生实现，
- * 它们只是「是否允许服务端额外输出」的开关——未接管时通过中间件屏蔽，
- * 避免出现“没让服务端接管却多了高亮”的意外行为。
+ * 注意：`documentHighlight` / `semanticTokens` / `codeLens` / `foldingRange`
+ * / `rename` / `selectionRange` / `callHierarchy` / `typeHierarchy` 没有对应的
+ * 原生实现，它们只是「是否允许服务端额外输出」的开关——未接管时通过中间件屏蔽，
+ * 避免出现"没让服务端接管却多了高亮/折叠/重命名入口"的意外行为。
  */
 export type JassFeatureId =
     | 'diagnostics'
@@ -27,9 +28,20 @@ export type JassFeatureId =
     | 'definition'
     | 'signatureHelp'
     | 'documentSymbol'
+    | 'workspaceSymbol'
     | 'inlayHints'
     | 'documentHighlight'
-    | 'semanticTokens';
+    | 'semanticTokens'
+    | 'codeAction'
+    | 'codeLens'
+    | 'formatting'
+    | 'foldingRange'
+    | 'implementation'
+    | 'references'
+    | 'rename'
+    | 'selectionRange'
+    | 'callHierarchy'
+    | 'typeHierarchy';
 
 /** 全部特性，顺序稳定，供注册/注销循环使用 */
 export const ALL_JASS_FEATURES: readonly JassFeatureId[] = [
@@ -39,9 +51,20 @@ export const ALL_JASS_FEATURES: readonly JassFeatureId[] = [
     'definition',
     'signatureHelp',
     'documentSymbol',
+    'workspaceSymbol',
     'inlayHints',
     'documentHighlight',
-    'semanticTokens'
+    'semanticTokens',
+    'codeAction',
+    'codeLens',
+    'formatting',
+    'foldingRange',
+    'implementation',
+    'references',
+    'rename',
+    'selectionRange',
+    'callHierarchy',
+    'typeHierarchy'
 ];
 
 /**
@@ -64,9 +87,20 @@ export const FEATURE_LABELS: Readonly<Record<JassFeatureId, string>> = {
     definition: '跳转定义',
     signatureHelp: '参数提示',
     documentSymbol: '文档大纲',
+    workspaceSymbol: '工作区符号搜索',
     inlayHints: '内联提示',
     documentHighlight: '符号高亮',
-    semanticTokens: '语义着色'
+    semanticTokens: '语义着色',
+    codeAction: '代码操作（Quick Fix）',
+    codeLens: '代码提示镜',
+    formatting: '代码格式化',
+    foldingRange: '代码折叠',
+    implementation: '查找实现',
+    references: '查找引用',
+    rename: '符号重命名',
+    selectionRange: '选区范围',
+    callHierarchy: '调用层级',
+    typeHierarchy: '类型层级'
 };
 
 /** 服务端能力字段 -> 特性 id 的映射 */
@@ -76,9 +110,20 @@ const CAPABILITY_FEATURE_MAP: ReadonlyArray<readonly [keyof ServerCapabilities, 
     ['definitionProvider', 'definition'],
     ['signatureHelpProvider', 'signatureHelp'],
     ['documentSymbolProvider', 'documentSymbol'],
+    ['workspaceSymbolProvider', 'workspaceSymbol'],
     ['inlayHintProvider', 'inlayHints'],
     ['documentHighlightProvider', 'documentHighlight'],
-    ['semanticTokensProvider', 'semanticTokens']
+    ['semanticTokensProvider', 'semanticTokens'],
+    ['codeActionProvider', 'codeAction'],
+    ['codeLensProvider', 'codeLens'],
+    ['documentFormattingProvider', 'formatting'],
+    ['foldingRangeProvider', 'foldingRange'],
+    ['implementationProvider', 'implementation'],
+    ['referencesProvider', 'references'],
+    ['renameProvider', 'rename'],
+    ['selectionRangeProvider', 'selectionRange'],
+    ['callHierarchyProvider', 'callHierarchy'],
+    ['typeHierarchyProvider', 'typeHierarchy']
 ];
 
 /**

@@ -58,7 +58,10 @@ function runVersionFilterTests() {
             return originalRequire.apply(this, arguments as any);
         };
         try {
+            // 同时清除 completion-provider 及其依赖 version-gate 的缓存
+            // （version-gate 在模块加载时会捕获 vscode mock 的引用）
             delete require.cache[require.resolve("./completion-provider")];
+            delete require.cache[require.resolve("./version-gate")];
             const providerModule = require("./completion-provider");
             fn(providerModule, vscodeMock);
         } finally {
