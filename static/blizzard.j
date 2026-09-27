@@ -6055,13 +6055,16 @@ function UnitDamageTargetBJ takes unit whichUnit, unit target, real amount, atta
     return UnitDamageTarget(whichUnit, target, amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
 endfunction
 
-// 获取指定单位治疗量
+// 立即治疗指定单位(指定治疗量)
+// 该治疗量默认计入数据统计
 // @since 3.0.0
 function UnitHealBJ takes unit whichUnit, real life returns real
     return BlzUnitHeal(whichUnit, whichUnit, life, false, true)
 endfunction
 
-// 获取指定单位治疗量(从其他源)
+// 立即治疗指定单位(指定治疗量，指定治疗源单位)
+// 治疗量计入源单位，仅用于数据统计
+// 该治疗量默认计入数据统计
 // @since 3.0.0
 function UnitHealFromOtherBJ takes unit whichUnit, unit source, real life returns real
     return BlzUnitHeal(whichUnit, source, life, false, true)
