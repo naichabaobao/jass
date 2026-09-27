@@ -1343,10 +1343,10 @@ globals
     // @since 3.0.0
     real bj_destroyEffectAsyncTime = 0
     // 需要异步销毁或删除的特效
-    // @since 3.0.0
+    // @since 3.0.1
     effect bj_destroyOrRemoveEffectAsyncEffect = null
     // 异步销毁或删除特效的延迟时间
-    // @since 3.0.0
+    // @since 3.0.1
     real bj_destroyOrRemoveEffectAsyncTime = 0
 
 
@@ -4127,7 +4127,7 @@ endfunction
 
 // 等待实际时间(bj_destroyEffectAsyncTime)结束后删除需要异步的特效(bj_destroyOrRemoveEffectAsyncTime)
 // 实际时间使用 TriggerSleepAction 进行等待，bj_destroyOrRemoveEffectAsyncTime 和 bj_destroyOrRemoveEffectAsyncTime 必须同时使用
-// @since 3.0.0
+// @since 3.0.1
 // Note: this function should be used in conjunction with the one below, which is the only one that is really exposed in GUI
 function RemoveEffectAsyncBJ takes nothing returns nothing
 	local effect localEffect = bj_destroyOrRemoveEffectAsyncEffect
@@ -4139,7 +4139,7 @@ endfunction
 
 // 删除指定特效(设置延迟时间)
 // 在 RemoveEffectAsyncBJ 执行
-// @since 3.0.0
+// @since 3.0.1
 function RemoveEffectAfterTimeBJ takes effect whichEffect, real time returns nothing
 	// Save arguments to globals
 	set bj_destroyOrRemoveEffectAsyncEffect = whichEffect
@@ -4908,7 +4908,7 @@ endfunction
 // @param itemTag 物品标签
 // @param includeInvalidMorphs 是否包含无效变形
 // @param includeNonPickRandom 是否包含非随机选择
-// @since 3.0.0
+// @since 3.0.1
 function ChooseRandomItemExWithFilterAndIncludesBJ takes integer level, itemtype whichType, equipmentType whichEquipmentType, itemTag whichTag, boolean includeInvalidMorphs, boolean includeNonPickRandom returns integer
     return ChooseRandomItemExWithFilterAndIncludes(whichType, level, whichEquipmentType, whichTag, includeInvalidMorphs, includeNonPickRandom)
 endfunction
@@ -6057,7 +6057,7 @@ endfunction
 
 // 立即治疗指定单位(指定治疗量)
 // 仅回复到最大生命值，超量数值不参与返回和统计，相当于造假奶妈数据
-// @since 3.0.0
+// @since 3.0.1
 function UnitHealBJ takes unit whichUnit, real life returns real
     return BlzUnitHeal(whichUnit, whichUnit, life, false, true)
 endfunction
@@ -6065,7 +6065,7 @@ endfunction
 // 立即治疗指定单位(指定治疗量，指定治疗源单位)
 // @param source 治疗量计入哪个单位，仅用于数据统计
 // 仅回复到最大生命值，超量数值不参与返回和统计，相当于造假奶妈数据
-// @since 3.0.0
+// @since 3.0.1
 function UnitHealFromOtherBJ takes unit whichUnit, unit source, real life returns real
     return BlzUnitHeal(whichUnit, source, life, false, true)
 endfunction
