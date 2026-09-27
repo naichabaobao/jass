@@ -4088,6 +4088,12 @@ function DestroyEffectBJ takes effect whichEffect returns nothing
     call DestroyEffect(whichEffect)
 endfunction
 
+// 删除特效
+// @since 3.0.0
+function RemoveEffectBJ takes effect whichEffect returns nothing
+    call BlzRemoveEffect(whichEffect)
+endfunction
+
 
 // 获取最后创建的特效
 function GetLastCreatedEffectBJ takes nothing returns effect
@@ -4095,8 +4101,8 @@ function GetLastCreatedEffectBJ takes nothing returns effect
 endfunction
 
 
-// 摧毁 在等待实际时间(bj_destroyEffectAsyncTime)后需要异步销毁的特效(bj_destroyEffectAsyncEffect)
-// 实际时间使用 TriggerSleepAction 进行等待，bj_destroyEffectAsyncTime 和 bj_destroyEffectAsyncEffect 必须同时使用
+// 等待实际时间(bj_destroyEffectAsyncTime)结束后销毁需要异步的特效(bj_destroyOrRemoveEffectAsyncTime)
+// 实际时间使用 TriggerSleepAction 进行等待，bj_destroyOrRemoveEffectAsyncTime 和 bj_destroyOrRemoveEffectAsyncTime 必须同时使用
 // Note: this function should be used in conjunction with the one below, which is the only one that is really exposed in GUI
 // @since 3.0.0
 function DestroyEffectAsyncBJ takes nothing returns nothing
@@ -4118,6 +4124,31 @@ function DestroyEffectAfterTimeBJ takes effect whichEffect, real time returns no
 	// Externalize to an async thread
 	call ExecuteFunc("DestroyEffectAsyncBJ")
 endfunction
+
+// 等待实际时间(bj_destroyEffectAsyncTime)结束后删除需要异步的特效(bj_destroyOrRemoveEffectAsyncTime)
+// 实际时间使用 TriggerSleepAction 进行等待，bj_destroyOrRemoveEffectAsyncTime 和 bj_destroyOrRemoveEffectAsyncTime 必须同时使用
+// @since 3.0.0
+// Note: this function should be used in conjunction with the one below, which is the only one that is really exposed in GUI
+function RemoveEffectAsyncBJ takes nothing returns nothing
+	local effect localEffect = bj_destroyOrRemoveEffectAsyncEffect
+	local real localTime = bj_destroyOrRemoveEffectAsyncTime
+	
+	call TriggerSleepAction(localTime)
+	call BlzRemoveEffect(localEffect)
+endfunction
+
+// 删除指定特效(设置延迟时间)
+// 在 RemoveEffectAsyncBJ 执行
+// @since 3.0.0
+function RemoveEffectAfterTimeBJ takes effect whichEffect, real time returns nothing
+	// Save arguments to globals
+	set bj_destroyOrRemoveEffectAsyncEffect = whichEffect
+	set bj_destroyOrRemoveEffectAsyncTime = time
+	
+	// Externalize to an async thread
+	call ExecuteFunc("RemoveEffectAsyncBJ")
+endfunction
+
 
 //***************************************************************************
 //*
@@ -6022,6 +6053,18 @@ endfunction
 // 伤害单位/物品/可破坏物（指定单位）
 function UnitDamageTargetBJ takes unit whichUnit, unit target, real amount, attacktype whichAttack, damagetype whichDamage returns boolean
     return UnitDamageTarget(whichUnit, target, amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
+endfunction
+
+// 获取指定单位治疗量
+// @since 3.0.0
+function UnitHealBJ takes unit whichUnit, real life returns real
+    return BlzUnitHeal(whichUnit, whichUnit, life, false, true)
+endfunction
+
+// 获取指定单位治疗量(从其他源)
+// @since 3.0.0
+function UnitHealFromOtherBJ takes unit whichUnit, unit source, real life returns real
+    return BlzUnitHeal(whichUnit, source, life, false, true)
 endfunction
 
 //***************************************************************************
