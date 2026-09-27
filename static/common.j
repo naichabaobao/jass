@@ -6769,6 +6769,14 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
 // @param weaponType 武器声音类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
+// 获取指定单位治疗量
+// @param whichUnit 指定单位
+// @param source 治疗来源单位
+// @param life 生命值
+// @param isItem 是否物品
+// @param applyStatBonuses 应用统计奖励
+// @since 3.0.0
+native BlzUnitHeal takes unit whichUnit, unit source, real life, boolean isItem, boolean applyStatBonuses returns real
 
 // 发布命令(无目标)
 // @param order 技能命令字符串可在 记录物编的文件 找到
@@ -6896,6 +6904,9 @@ native GetUnitUserData takes unit whichUnit returns integer
 // 设置指定单位自定义值
 native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
+// 重置指定单位天赋
+// @since 3.0.0
+native BlzResetUnitTalents takes unit whichUnit returns nothing
 
 // Player API
 
@@ -8529,6 +8540,10 @@ native AddSpecialEffectLoc takes string modelName, location where returns effect
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
 // 销毁特效
 native DestroyEffect takes effect whichEffect returns nothing
+// 删除特效
+// @since 3.0.0
+native BlzRemoveEffect takes effect whichEffect returns nothing
+
 // 新建特效(按字符串指定技能，绑定到坐标)
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
 // 新建特效(按字符串指定技能，绑定到点)
