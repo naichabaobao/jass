@@ -6056,15 +6056,15 @@ function UnitDamageTargetBJ takes unit whichUnit, unit target, real amount, atta
 endfunction
 
 // 立即治疗指定单位(指定治疗量)
-// 该治疗量默认计入数据统计
+// 仅回复到最大生命值，超量数值不参与返回和统计，相当于造假奶妈数据
 // @since 3.0.0
 function UnitHealBJ takes unit whichUnit, real life returns real
     return BlzUnitHeal(whichUnit, whichUnit, life, false, true)
 endfunction
 
 // 立即治疗指定单位(指定治疗量，指定治疗源单位)
-// 治疗量计入源单位，仅用于数据统计
-// 该治疗量默认计入数据统计
+// @param source 治疗量计入哪个单位，仅用于数据统计
+// 仅回复到最大生命值，超量数值不参与返回和统计，相当于造假奶妈数据
 // @since 3.0.0
 function UnitHealFromOtherBJ takes unit whichUnit, unit source, real life returns real
     return BlzUnitHeal(whichUnit, source, life, false, true)
