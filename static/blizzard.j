@@ -1352,7 +1352,7 @@ globals
 
     // Instanced Operation Results
 
-    // 最后的值域操作结果标识/实例函数调用结果标识，默认成功（true）
+    // 最后的 值域操作/实例函数调用 结果标识，默认成功（true）
     boolean bj_lastInstObjFuncSuccessful = true
 endglobals
 
