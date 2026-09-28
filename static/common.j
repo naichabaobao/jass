@@ -7612,7 +7612,7 @@ native UnitPoolAddUnitType takes unitpool whichPool, integer unitId, real weight
 // 删除指定单位池的指定单位ID [R]
 native UnitPoolRemoveUnitType takes unitpool whichPool, integer unitId returns nothing
 // 随机创建单位池的单位(指定单位所属玩家)(指定坐标) [R]
-// 默认用于创建随机中立敌对单位
+// 默认用于创建随机中立敌对或中立被动单位
 native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, real y, real facing returns unit
 
 // 新建物品池 [R]
@@ -7680,10 +7680,10 @@ native SetTerrainFogExV takes integer style, real zstart, real zend, real densit
 // 设置地形迷雾样式
 // @since 3.0.0
 native BlzSetTerrainFogStyle takes fogstyle style returns nothing
-// 设置地形迷雾Z轴初始值
+// 设置地形迷雾 Z 轴初始值
 // @since 3.0.0
 native BlzSetTerrainFogZStart takes real zStart returns nothing
-// 设置地形迷雾Z轴结束值
+// 设置地形迷雾 Z 轴结束值
 // @since 3.0.0
 native BlzSetTerrainFogZEnd takes real ZEnd returns nothing
 // 设置地形迷雾密度
@@ -8196,10 +8196,10 @@ native GetCameraFieldControlledByInput takes camerafield whichField returns bool
 native SetCameraTargetController takes unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
 // 锁定镜头到单位(固定镜头源)(所有玩家) [R]
 native SetCameraOrientController takes unit whichUnit, real xoffset, real yoffset returns nothing
-// 查询摄像头是否允许使用热键锁定
+// 查询镜头是否允许使用快捷键锁定
 // @since 3.0.1
 native BlzGetCameraAllowsHotkeyTargetLock takes nothing returns boolean
-// 允许/禁止 摄像头使用热键锁定
+// 允许/禁止 镜头使用快捷键锁定
 // @since 3.0.1
 native BlzSetCameraAllowsHotkeyTargetLock takes boolean allows returns nothing
 // 设置镜头类型(所有玩家)
