@@ -254,7 +254,7 @@ const FALLBACK_HANDLE_TYPE_NAMES = new Set([
     "gamedifficulty", "gametype", "mapflag", "mapvisibility", "mapsetting", "mapdensity",
     "playerslotstate", "volumegroup", "camerafield", "camerasetup", "playercolor",
     "placement", "startlocprio", "raritycontrol", "igamestate", "fgamestate", "gamestate",
-    "playerstate", "playerscore", "playergameresult", "gamespeed", "mapcontrol",
+    "playerstate", "playerscore", "playergameresult", "gamespeed", "mapcontrol", "weapontype",
     "itemtype", "weathereffect", "terraindeformation", "minimapicon", "commandbuttoneffect","fogstyle","equipmentType","itemTag","loadoutslot",
     "race", "racepreference", "version", "effecttype", "soundtype", "pathingtype", "fogstate",
     "ability", "buff", "agent", "attacktype", "damagetype", "unittype", "alliancetype",
