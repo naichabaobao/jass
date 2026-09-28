@@ -548,16 +548,16 @@ globals
 
     // Rebirth Undead
 
-    // 战役关卡 被遗忘者王国被遗忘者01（bj_CAMPAIGN_OFFSET_RU * 1000 + 0）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)01（bj_CAMPAIGN_OFFSET_RU * 1000 + 0）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU00 = bj_CAMPAIGN_OFFSET_RU * 1000 + 0
-    // 战役关卡 被遗忘者王国被遗忘者02（bj_CAMPAIGN_OFFSET_RU * 1000 + 1）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)02（bj_CAMPAIGN_OFFSET_RU * 1000 + 1）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU01 = bj_CAMPAIGN_OFFSET_RU * 1000 + 1
-    // 战役关卡 被遗忘者王国被遗忘者03（bj_CAMPAIGN_OFFSET_RU * 1000 + 2）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)03（bj_CAMPAIGN_OFFSET_RU * 1000 + 2）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU02 = bj_CAMPAIGN_OFFSET_RU * 1000 + 2
-    // 战役关卡 被遗忘者王国被遗忘者04（bj_CAMPAIGN_OFFSET_RU * 1000 + 3）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)04（bj_CAMPAIGN_OFFSET_RU * 1000 + 3）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU03 = bj_CAMPAIGN_OFFSET_RU * 1000 + 3
 
@@ -588,7 +588,7 @@ globals
     // 战役过场电影名称 被遗忘者王国人族开场（11）
     // @since 3.0.0
     constant integer bj_CINEMATICINDEX_HFO = 11
-    // 战役过场电影名称 被遗忘者王国被遗忘者结尾（12）
+    // 战役过场电影名称 被遗忘者王国不死族(被遗忘者)结尾（12）
     // @since 3.0.0
     constant integer bj_CINEMATICINDEX_UFE = 12
 
