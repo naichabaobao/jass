@@ -293,10 +293,10 @@ globals
     constant integer bj_CAMPAIGN_INDEX_XU = 7
     // 战役过场电影索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_INDEX_XO = 8
-    // 战役过场电影索引 被遗忘者王国被人族战役（9）
+    // 战役过场电影索引 被遗忘者王国人族战役（9）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_INDEX_RH = 9
-    // 战役过场电影索引 被遗忘者王国被遗忘者战役（10）
+    // 战役过场电影索引 被遗忘者王国不死族(被遗忘者)战役（10）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_INDEX_RU = 10
 
@@ -320,10 +320,10 @@ globals
     constant integer bj_CAMPAIGN_OFFSET_XU = 7
     // 战役关卡索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_OFFSET_XO = 8
-    // 战役过场电影索引 被遗忘者王国被人族战役（0）
+    // 战役关卡索引 被遗忘者王国人族战役（0）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_OFFSET_RH = 0
-    // 战役过场电影索引 被遗忘者王国被遗忘者战役（1）
+    // 战役关卡索引 被遗忘者王国不死族(被遗忘者)战役（1）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_OFFSET_RU = 1
 
