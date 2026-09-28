@@ -3283,8 +3283,8 @@ endfunction
 
 // 设置地形迷雾样式
 // @since 3.0.0
-function BlzSetTerrainFogStyleBJ takes fogstyle style returns nothing
-    call BlzSetTerrainFogStyle(style)
+function BlzSetTerrainFogStyleBJ takes integer style returns nothing
+    call BlzSetTerrainFogStyle(ConvertFogStyle(style))
 endfunction
 
 // 设置地形迷雾Z轴初始值
@@ -4089,11 +4089,10 @@ function DestroyEffectBJ takes effect whichEffect returns nothing
 endfunction
 
 // 删除特效
-// @since 3.0.0
+// @since 3.0.1
 function RemoveEffectBJ takes effect whichEffect returns nothing
     call BlzRemoveEffect(whichEffect)
 endfunction
-
 
 // 获取最后创建的特效
 function GetLastCreatedEffectBJ takes nothing returns effect
