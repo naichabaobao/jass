@@ -563,32 +563,32 @@ globals
 
     // Cinematic indexing constants
 
-    // 战役过场电影名称 教程（0）
+    // 战役过场电影索引 教程（0）
     constant integer bj_CINEMATICINDEX_TOP = 0
-    // 战役过场电影名称 人族开场（1）
+    // 战役过场电影索引 人族开场（1）
     constant integer bj_CINEMATICINDEX_HOP = 1
-    // 战役过场电影名称 人族结尾（2）
+    // 战役过场电影索引 人族结尾（2）
     constant integer bj_CINEMATICINDEX_HED = 2
-    // 战役过场电影名称 兽族开场（3）
+    // 战役过场电影索引 兽族开场（3）
     constant integer bj_CINEMATICINDEX_OOP = 3
-    // 战役过场电影名称 兽族结尾（4）
+    // 战役过场电影索引 兽族结尾（4）
     constant integer bj_CINEMATICINDEX_OED = 4
-    // 战役过场电影名称 不死族开场（5）
+    // 战役过场电影索引 不死族开场（5）
     constant integer bj_CINEMATICINDEX_UOP = 5
-    // 战役过场电影名称 不死族结尾（6）
+    // 战役过场电影索引 不死族结尾（6）
     constant integer bj_CINEMATICINDEX_UED = 6
-    // 战役过场电影名称 暗夜精灵族开场（7）
+    // 战役过场电影索引 暗夜精灵族开场（7）
     constant integer bj_CINEMATICINDEX_NOP = 7
-    // 战役过场电影名称 暗夜精灵族结尾（8）
+    // 战役过场电影索引 暗夜精灵族结尾（8）
     constant integer bj_CINEMATICINDEX_NED = 8
-    // 战役过场电影名称 冰封王座开场（9）
+    // 战役过场电影索引 冰封王座开场（9）
     constant integer bj_CINEMATICINDEX_XOP = 9
-    // 战役过场电影名称 冰封王座结尾（10）
+    // 战役过场电影索引 冰封王座结尾（10）
     constant integer bj_CINEMATICINDEX_XED = 10
-    // 战役过场电影名称 被遗忘者王国人族开场（11）
+    // 战役过场电影索引 被遗忘者王国人族开场（11）
     // @since 3.0.0
     constant integer bj_CINEMATICINDEX_HFO = 11
-    // 战役过场电影名称 被遗忘者王国不死族(被遗忘者)结尾（12）
+    // 战役过场电影索引 被遗忘者王国不死族(被遗忘者)结尾（12）
     // @since 3.0.0
     constant integer bj_CINEMATICINDEX_UFE = 12
 
@@ -620,15 +620,15 @@ globals
 
     // Keyboard Event Keys
 
-    // 键盘按键事件 方向键（左）
+    // 键盘按键 方向键（左）
     constant integer bj_KEYEVENTKEY_LEFT = 0
-    // 键盘按键事件 方向键（右）
+    // 键盘按键 方向键（右）
     constant integer bj_KEYEVENTKEY_RIGHT = 1
-    // 键盘按键事件 方向键（下）
+    // 键盘按键 方向键（下）
     constant integer bj_KEYEVENTKEY_DOWN = 2
-    // 键盘按键事件 方向键（上）
+    // 键盘按键 方向键（上）
     constant integer bj_KEYEVENTKEY_UP = 3
-    // 键盘按键事件 按键（A）
+    // 键盘按键 按键（A）
     // @since 3.0.0
     constant integer bj_KEYEVENTKEY_A = 4
 
@@ -643,11 +643,11 @@ globals
 
     // Transmission timing methods
 
-    // 消息持续时间类型 时间类型 - 增加
+    // 消息持续时间类型 增加
     constant integer bj_TIMETYPE_ADD = 0
-    // 消息持续时间类型 时间类型 - 设为（指定值）
+    // 消息持续时间类型 设为（指定值）
     constant integer bj_TIMETYPE_SET = 1
-    // 消息持续时间类型 时间类型 - 减少
+    // 消息持续时间类型 减少
     constant integer bj_TIMETYPE_SUB = 2
 
     // Camera bounds adjustment methods
@@ -699,11 +699,11 @@ globals
 
     // Leaderboard sorting methods
 
-    // 排行榜排序类型 按分值排序
+    // 排行榜排序方式 按分值排序
     constant integer bj_SORTTYPE_SORTBYVALUE = 0
-    // 排行榜排序类型 按玩家排序
+    // 排行榜排序方式 按玩家排序
     constant integer bj_SORTTYPE_SORTBYPLAYER = 1
-    // 排行榜排序类型 按文本排序
+    // 排行榜排序方式 按文本排序
     constant integer bj_SORTTYPE_SORTBYLABEL = 2
 
     // Cinematic fade filter methods
@@ -717,22 +717,22 @@ globals
 
     // Buff removal methods
 
-    // BUFF属性 按类别删除BUFF 肯定（正面BUFF）
+    // 按类别删除BUFF 肯定（正面BUFF）
     constant integer bj_REMOVEBUFFS_POSITIVE = 0
-    // BUFF属性 按类别删除BUFF 否定（负面BUFF）
+    // 按类别删除BUFF 否定（负面BUFF）
     constant integer bj_REMOVEBUFFS_NEGATIVE = 1
-    // BUFF属性 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
+    // 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
     constant integer bj_REMOVEBUFFS_ALL = 2
-    // BUFF属性 按类别删除BUFF 除生命计时器外的全部BUFF
+    // 按类别删除BUFF 除生命计时外的全部BUFF
     constant integer bj_REMOVEBUFFS_NONTLIFE = 3
 
     // Buff properties - polarity
 
-    // BUFF属性 极性 肯定（正面BUFF）
+    // BUFF极性 肯定（正面BUFF）
     constant integer bj_BUFF_POLARITY_POSITIVE = 0
-    // BUFF属性 极性 否定（负面BUFF）
+    // BUFF极性 否定（负面BUFF）
     constant integer bj_BUFF_POLARITY_NEGATIVE = 1
-    // BUFF属性 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
+    // BUFF极性 肯定 或 否定（正面BUFF 或 负面BUFF）
     constant integer bj_BUFF_POLARITY_EITHER = 2
 
     // Buff properties - resist type
