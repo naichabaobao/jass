@@ -14,7 +14,7 @@ import { CompletionExtractor } from './completion-extractor';
 import { ErrorCollection } from '../vjass/error';
 import { InnerZincParser } from '../vjass/inner-zinc-parser';
 import { ZincProgram } from '../vjass/zinc-ast';
-import { analyzeSemantics, analyzeSemanticsWithAllFiles, SemanticAnalyzerOptions } from '../vjass/analyzer';
+import { analyzeSemantics, analyzeSemanticsWithAllFiles, extractHandleTypeNames, extractAllSymbols, SemanticAnalyzerOptions } from '../vjass/analyzer';
 import { CheckErrorType } from '../vjass/error';
 import { JumpCache, JumpCacheItem } from './jump-cache';
 import { HoverCache } from './hover-cache';
@@ -500,6 +500,8 @@ export class DataEnterManager {
                         // 使用新的方法：先解析所有文件，再进行语义分析
                         const workspaceRoot = this.workspaceRoot || path.dirname(filePath);
                         const standardLibFiles = this.getStandardLibraryFiles(workspaceRoot);
+                        // 由 common.j 推导 handle 类型名集合，作为类型未声明时的回退
+                        const handleTypeNames = this.extractHandleTypeNamesFromLibs(standardLibFiles);
                         // 使用缓存中的所有文件（包括 static 目录的文件），而不是重新扫描文件系统
                         // 注意：如果标准库文件在 getStandardLibraryFiles 中找不到，会从缓存中获取
                         const projectFiles = this.getProjectFilesFromCache(filePath, standardLibFiles);
@@ -515,7 +517,8 @@ export class DataEnterManager {
                                 checkUnused: checkUnused,
                                 checkArrayBounds: checkArrayBounds,
                                 checkHandleLeaks: checkHandleLeaks,
-                                returnBehaviorMode: returnBehaviorMode
+                                returnBehaviorMode: returnBehaviorMode,
+                                handleTypeNames: handleTypeNames
                             }
                         );
                         
@@ -536,9 +539,13 @@ export class DataEnterManager {
                         }
                     } else {
                         // 如果未启用未定义检查，使用旧的简单方法
+                        const workspaceRoot = this.workspaceRoot || path.dirname(filePath);
+                        const standardLibFiles = this.getStandardLibraryFiles(workspaceRoot);
+                        const handleTypeNames = this.extractHandleTypeNamesFromLibs(standardLibFiles);
                         const semanticOptions: SemanticAnalyzerOptions = {
                             checkUndefinedBehavior: false,
-                            returnBehaviorMode: returnBehaviorMode
+                            returnBehaviorMode: returnBehaviorMode,
+                            handleTypeNames: handleTypeNames
                         };
                         const semanticErrors = analyzeSemantics(blockStatement, semanticOptions);
                         
@@ -2185,6 +2192,29 @@ export class DataEnterManager {
         }
         
         return files;
+    }
+
+    /**
+     * 从标准库文件中推导 handle 类型名集合。
+     * 解析 common.j 的 `type X extends handle` 声明，返回所有根类型为 handle 的类型名（小写）。
+     * 用于在类型未声明时回退判断，替代硬编码的类型名列表。
+     * @param standardLibFiles 标准库文件列表
+     * @returns handle 类型名集合
+     */
+    private extractHandleTypeNamesFromLibs(
+        standardLibFiles: Array<{ filePath: string; content: string }>
+    ): Set<string> {
+        const commonJ = standardLibFiles.find(f => path.basename(f.filePath).toLowerCase() === "common.j");
+        if (!commonJ) return new Set();
+        try {
+            const parser = new Parser(commonJ.content);
+            const ast = parser.parse();
+            const symbols = extractAllSymbols(ast);
+            return extractHandleTypeNames(symbols);
+        } catch (error) {
+            console.error(`Failed to extract handle type names from common.j:`, error);
+            return new Set();
+        }
     }
 
     /**

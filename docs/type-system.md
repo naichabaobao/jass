@@ -12,7 +12,7 @@
 ## Handle 类型判断
 
 - **先按声明解析**：若某类型在符号表或外部符号表中声明为 `type X extends handle`（或链式 extends 到 handle），则判为 handle。
-- **回退仅用于未声明**：仅当该类型 **未在当前工程或外部符号表中声明** 时，才使用 `FALLBACK_HANDLE_TYPE_NAMES`（与 common.j 对齐的 handle 类型名集合）判断，用于单独解析如 `blizzard.j` 而未加载 `common.j` 时避免误报。
+- **回退仅用于未声明**：仅当该类型 **未在当前工程或外部符号表中声明** 时，才使用由 `common.j` 推导的 handle 类型名集合（`handleTypeNames`，由 `extractHandleTypeNames` 从 common.j 的 `type X extends handle` 声明生成）判断，用于单独解析如 `blizzard.j` 而未加载 `common.j` 时避免误报。
 - 因此自定义 `type myhandle extends handle` 会正确判为 handle；自定义 `type xxx extends integer array [5]` 会解析到 `integer`，不会误判为 handle。
 
 ## 类型合法性（isValidType）与查询优先级
@@ -36,7 +36,7 @@
 - **resolveTypeRoot**：类型合法性、handle 判断、类型兼容性的基础。
 - **isHandleType**：变量/参数/返回值的 mayBeNull、`null` 赋值与返回值兼容、`checkNullUsage`、赋值后 mayBeNull 更新。
 - **isTypeCompatible**：实参与形参、返回值、赋值、struct/interface 方法签名兼容。
-- **FALLBACK_HANDLE_TYPE_NAMES**：仅当类型未在符号表/外部符号表声明时用于 isHandleType，与 common.j 的 handle 类型名对齐。
+- **handleTypeNames**（由 `extractHandleTypeNames` 从 common.j 推导）：仅当类型未在符号表/外部符号表声明时用于 isHandleType，与 common.j 的 handle 类型名对齐。
 
 ## 与 vjass.docs 的对应关系
 

@@ -60,6 +60,13 @@ export interface SemanticAnalyzerOptions {
     /** 外部符号表（来自标准库和工程目录的其他 jass 文件），用于检查函数是否在其他文件中声明 */
     externalSymbols?: Map<string, SymbolInfo>;
     /**
+     * handle 类型名集合（由 common.j 的 `type X extends handle` 声明推导而来）。
+     * 用于当类型未在当前工程/外部符号表中声明时的回退判断（如单独解析 blizzard.j）。
+     * 若未提供，会在首次使用时从 externalSymbols 中自动推导；若 externalSymbols 也不含
+     * common.j（纯单文件测试），则为空集合，此时 native handle 类型不会被识别为 handle。
+     */
+    handleTypeNames?: Set<string>;
+    /**
      * 返回值检查行为模式
      * - strict: 严格模式，缺少返回路径时报错
      * - legacy: 兼容 return bug，跳过该检查
@@ -238,37 +245,38 @@ const HANDLE_RESOURCE_SPECS: HandleResourceSpec[] = [
 ];
 
 /**
- * common.j / Blizzard.j 中「未在当前工程声明」时的 handle 类型名回退集合。
- * 仅当类型未在符号表/外部符号表中声明时使用，用于单独解析 blizzard.j 时避免误报。
- * 自定义 type XXX extends integer array [5] 等会走符号表解析，不会误判为 handle。
+ * 从符号表中推导 handle 类型名集合。
+ * 遍历所有 `type X extends Y` 声明，沿 valueType 链解析到根类型；
+ * 根类型为 `handle` 的，其名称（小写）即纳入集合。
+ *
+ * 该集合由 common.j 提供，用于在类型未在当前工程/外部符号表声明时
+ * 回退判断（如单独解析 blizzard.j），替代硬编码的类型名列表。
  */
-const FALLBACK_HANDLE_TYPE_NAMES = new Set([
-    "handle", "unit", "item", "location", "trigger", "timer", "effect", "group", "force",
-    "player", "widget", "destructable", "fogmodifier", "hashtable", "rect", "region",
-    "sound", "texttag", "lightning", "image", "ubersplat", "multiboard", "multiboarditem",
-    "trackable", "dialog", "button", "quest", "questitem", "defeatcondition", "timerdialog",
-    "leaderboard", "boarditem", "gamecache", "unitpool", "itempool", "triggercondition",
-    "triggeraction", "boolexpr", "conditionfunc", "filterfunc", "code", "event",
-    "playerunitevent", "unitevent", "limitop", "oplimit", "eventid", "gameevent",
-    "playerevent", "widgetevent", "dialogevent", "unitstate", "aidifficulty",
-    "gamedifficulty", "gametype", "mapflag", "mapvisibility", "mapsetting", "mapdensity",
-    "playerslotstate", "volumegroup", "camerafield", "camerasetup", "playercolor",
-    "placement", "startlocprio", "raritycontrol", "igamestate", "fgamestate", "gamestate",
-    "playerstate", "playerscore", "playergameresult", "gamespeed", "mapcontrol",
-    "itemtype", "weathereffect", "terraindeformation", "minimapicon", "commandbuttoneffect","fogstyle","equipmentType","itemTag","loadoutslot",
-    "race", "racepreference", "version", "effecttype", "soundtype", "pathingtype", "fogstate",
-    "ability", "buff", "agent", "attacktype", "damagetype", "unittype", "alliancetype",
-    "blendmode", "texmapflags", "mousebuttontype", "animtype", "subanimtype",
-    "framehandle", "originframetype", "framepointtype", "textaligntype", "frameeventtype", "oskeytype","metakeytype",
-    "movetype", "targetflag", "armortype", "heroattribute", "defensetype", "regentype",
-    "unitcategory", "pathingflag",
-    "abilitybooleanfield", "abilityintegerfield", "abilityrealfield", "abilitystringfield",
-    "abilitybooleanlevelfield", "abilityintegerlevelfield", "abilityreallevelfield", "abilitystringlevelfield",
-    "abilitybooleanlevelarrayfield", "abilityintegerlevelarrayfield", "abilityreallevelarrayfield", "abilitystringlevelarrayfield",
-    "itembooleanfield", "itemintegerfield", "itemrealfield", "itemstringfield",
-    "unitbooleanfield", "unitintegerfield", "unitrealfield", "unitstringfield",
-    "unitweaponbooleanfield", "unitweaponintegerfield", "unitweaponrealfield", "unitweaponstringfield"
-]);
+export function extractHandleTypeNames(symbols: Map<string, SymbolInfo>): Set<string> {
+    const handleTypes = new Set<string>();
+    for (const [name, symbol] of symbols.entries()) {
+        if (symbol.type !== SymbolType.TYPE) continue;
+        // 沿 valueType 链解析到根类型
+        let root = symbol.valueType;
+        const visited = new Set<string>();
+        visited.add(name.toLowerCase());
+        while (root) {
+            const key = root.toLowerCase();
+            if (visited.has(key)) break;
+            visited.add(key);
+            const next = symbols.get(root);
+            if (next?.type === SymbolType.TYPE && next.valueType) {
+                root = next.valueType;
+            } else {
+                break;
+            }
+        }
+        if (root && root.toLowerCase() === "handle") {
+            handleTypes.add(name.toLowerCase());
+        }
+    }
+    return handleTypes;
+}
 
 /**
  * vJass 语义分析器
@@ -306,6 +314,13 @@ export class SemanticAnalyzer {
     private externalSymbols: Map<string, SymbolInfo> = new Map();
 
     /**
+     * handle 类型名回退集合（由 common.j 推导）。
+     * 若构造时未显式提供，则在首次使用时从 externalSymbols 推导（懒加载）。
+     */
+    private handleTypeNames: Set<string>;
+    private handleTypeNamesResolved = false;
+
+    /**
      * 构造函数
      * @param options 配置选项
      */
@@ -323,6 +338,21 @@ export class SemanticAnalyzer {
         if (options.externalSymbols) {
             this.externalSymbols = options.externalSymbols;
         }
+        // handle 类型名：若显式提供则直接使用；否则标记为待懒加载（从 externalSymbols 推导）
+        this.handleTypeNames = options.handleTypeNames ?? new Set();
+        this.handleTypeNamesResolved = options.handleTypeNames !== undefined;
+    }
+
+    /**
+     * 懒加载：从 externalSymbols 推导 handle 类型名集合。
+     * 仅在首次使用且未显式提供时执行一次。
+     */
+    private ensureHandleTypeNames(): Set<string> {
+        if (!this.handleTypeNamesResolved) {
+            this.handleTypeNames = extractHandleTypeNames(this.externalSymbols);
+            this.handleTypeNamesResolved = true;
+        }
+        return this.handleTypeNames;
     }
 
     /**
@@ -3583,7 +3613,8 @@ export class SemanticAnalyzer {
 
     /**
      * 检查类型是否是 handle 类型（可能为 null）
-     * 先按 type 声明链解析到根类型；仅当类型未声明时使用 FALLBACK_HANDLE_TYPE_NAMES（如单独解析 blizzard.j）
+     * 先按 type 声明链解析到根类型；仅当类型未声明时使用由 common.j 推导的
+     * handleTypeNames 集合回退判断（如单独解析 blizzard.j）
      */
     private isHandleType(type: string): boolean {
         if (!type) return false;
@@ -3595,7 +3626,7 @@ export class SemanticAnalyzer {
             // 避免与 native 类型同名冲突（如 struct Unit 与 native unit）
             // 被误判为「可能为 null 的 handle」，从而在每次方法调用时误报。
             // 注意：findSymbol 未命中时返回 null（不是 undefined），必须用 null 比较，
-            // 否则所有类型都会被误判为用户类型，FALLBACK_HANDLE_TYPE_NAMES 永远无法生效
+            // 否则所有类型都会被误判为用户类型，由 common.j 推导的 handleTypeNames 永远无法生效
             // （单文件/未加载 common.j 时 return null 赋给 player 等 native handle 会被误报）。
             const isUserType =
                 this.findSymbol(type, SymbolType.STRUCT) !== null ||
@@ -3609,7 +3640,7 @@ export class SemanticAnalyzer {
                 return false;
             }
             if (!this.findSymbol(type, SymbolType.TYPE) && !this.externalSymbols.has(type)) {
-                return FALLBACK_HANDLE_TYPE_NAMES.has(type.toLowerCase());
+                return this.ensureHandleTypeNames().has(type.toLowerCase());
             }
         }
         return false;

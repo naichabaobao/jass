@@ -1154,125 +1154,125 @@
 "getitem"
 
 // 技能命令串 净化之火
-// @since 3.0.0
+// @since 3.00
 "cleansingfire"
 
 // 技能命令串 奉献
-// @since 3.0.0
+// @since 3.00
 "consecration"
 
 // 技能命令串 正义之怒
-// @since 3.0.0
+// @since 3.00
 "righteousfury"
 
 // 技能命令串 物品 - 食人魔法师图腾（嗜血）
-// @since 3.0.0
+// @since 3.00
 "booldlust"
 
 // 技能命令串 物品 - 取消食人魔法师图腾（嗜血）激活状态
-// @since 3.0.0
+// @since 3.00
 "booldlustoff"
 
 // 技能命令串 物品 - 食人魔法师图腾（嗜血）激活
-// @since 3.0.0
+// @since 3.00
 "booldluston"
 
 // 技能命令串
 // 多个技能通用
 // 不屈守卫(含所有天赋)，不屈抗争(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "unyieldingguard"
 
 // 技能命令串 严酷信念(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "grimconviction"
 
 // 技能命令串 凋零射击(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "witheringfire"
 
 // 技能命令串 圣光之怒
-// @since 3.0.0
+// @since 3.00
 "holywrath"
 
 // 技能命令串 圣光化身
-// @since 3.0.0
+// @since 3.00
 "undeadvengeance"
 
 // 技能命令串 圣光慈悲(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "lightsmercy"
 
 // 技能命令串 圣光涌动(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "surgeoflight"
 
 // 技能命令串 女妖的哀嚎(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "Locustswarm"
 
 // 技能命令串 心灵控制(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "mindcontrol"
 
 // 技能命令串 战争怒吼(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "warcry"
 
 // 技能命令串 激活指引之手(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "guidinghand"
 
 // 技能命令串 取消指引之手激活状态(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "unguidinghand"
 
 // 技能命令串 挑战号令
-// @since 3.0.0
+// @since 3.00
 "challengingcall"
 
 // 技能命令串 挑衅(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "heroicchallenge"
 
 // 技能命令串 攻城槌(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "batteringram"
 
 // 技能命令串 无情横扫(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "relentlesscleave"
 
 // 技能命令串 横扫攻击(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "sweepingstrike"
 
 // 技能命令串 取消灵魂提灯激活状态(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "unsoullantern"
 
 // 技能命令串 激活灵魂提灯(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "soullantern"
 
 // 技能命令串 碎颅者(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "headsplitter"
 
 // 技能命令串 英勇冲锋(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "valiantcharge"
 
 // 技能命令串 英勇挥砍(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "heroicslash"
 
 // 技能命令串 逮捕(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "apprehend"
 
 // 技能命令串 鼓舞士气(含所有天赋)
-// @since 3.0.0
+// @since 3.00
 "inspirecourage"
 
 // FDF(框架定义) 字母模式
@@ -1885,15 +1885,15 @@
 "CITYSCAPE"
 
 // 地形设置 城邦遗迹
-// @since 3.0.0
+// @since 3.00
 "CITYSCAPE_RUINS"
 
 // 地形设置 洛丹伦首都
-// @since 3.0.0
+// @since 3.00
 "LORDAERPON_CAPITAL"
 
 // 地形设置 洛丹伦首都遗迹
-// @since 3.0.0
+// @since 3.00
 "LORDAERPON_CAPITAL_RUINS"
 
 // 地形设置 村庄
@@ -2470,179 +2470,179 @@
 "Msco"
 
 // 地表纹理 eC - 泥地
-// @since 3.0.0
+// @since 3.00
 "eC13"
 
 // 地表纹理 eC - 烂泥地
-// @since 3.0.0
+// @since 3.00
 "eCt3"
 
 // 地表纹理 eC - 石板砖
-// @since 3.0.0
+// @since 3.00
 "eC12"
 
 // 地表纹理 eC - 圆形地砖
-// @since 3.0.0
+// @since 3.00
 "eCt2"
 
 // 地表纹理 eC - 蓝色大理石
-// @since 3.0.0
+// @since 3.00
 "eCt4"
 
 // 地表纹理 eC - 草地
-// @since 3.0.0
+// @since 3.00
 "eCt5"
 
 // 地表纹理 eC - 红色大理石
-// @since 3.0.0
+// @since 3.00
 "eCt6"
 
 // 地表纹理 eC - 方形地砖
-// @since 3.0.0
+// @since 3.00
 "eCt7"
 
 // 地表纹理 eC - 砖块地砖
-// @since 3.0.0
+// @since 3.00
 "eCt1"
 
 // 地表纹理 eC - 鹅卵石地砖
-// @since 3.0.0
+// @since 3.00
 "eCt8"
 
 // 地表纹理 eC - 修剪的草地
-// @since 3.0.0
+// @since 3.00
 "eCt9"
 
 // 地表纹理 eC - 白色大理石
-// @since 3.0.0
+// @since 3.00
 "eCt0"
 
 // 地表纹理 eC - 菱形地砖
-// @since 3.0.0
+// @since 3.00
 "eC11"
 
 // 地表纹理 uC - 泥地
-// @since 3.0.0
+// @since 3.00
 "uCc1"
 
 // 地表纹理 uC - 烂泥地
-// @since 3.0.0
+// @since 3.00
 "uCc3"
 
 // 地表纹理 uC - 砖块
-// @since 3.0.0
+// @since 3.00
 "uCc2"
 
 // 地表纹理 uC - 雕纹砖
-// @since 3.0.0
+// @since 3.00
 "uCc4"
 
 // 地表纹理 uC - 破碎大理石
-// @since 3.0.0
+// @since 3.00
 "uCc5"
 
 // 地表纹理 uC - 下水道砖
-// @since 3.0.0
+// @since 3.00
 "uCc6"
 
 // 地表纹理 uC - 环形地砖
-// @since 3.0.0
+// @since 3.00
 "uCc7"
 
 // 地表纹理 uC - 纳克萨玛斯砖块
-// @since 3.0.0
+// @since 3.00
 "uCc8"
 
 // 地表纹理 uC - 纳克萨玛斯金属
-// @since 3.0.0
+// @since 3.00
 "uCc9"
 
 // 地表纹理 P - 泥地
-// @since 3.0.0
+// @since 3.00
 "Pdrt"
 
 // 地表纹理 P - 烂泥地
-// @since 3.0.0
+// @since 3.00
 "Pdtr"
 
 // 地表纹理 P - 黑色大理石
-// @since 3.0.0
+// @since 3.00
 "Pblm"
 
 // 地表纹理 P - 砖块
-// @since 3.0.0
+// @since 3.00
 "Pbtl"
 
 // 地表纹理 P - 方形地砖
-// @since 3.0.0
+// @since 3.00
 "Psqd"
 
 // 地表纹理 P - 圆形地砖
-// @since 3.0.0
+// @since 3.00
 "Prtl"
 
 // 地表纹理 P - 草地
-// @since 3.0.0
+// @since 3.00
 "Pgsb"
 
 // 地表纹理 P - 修剪的草地
-// @since 3.0.0
+// @since 3.00
 "Phdg"
 
 // 地表纹理 P - 白色大理石
-// @since 3.0.0
+// @since 3.00
 "Pwmb"
 
 // 地表纹理 RC - 泥地
-// @since 3.0.0
+// @since 3.00
 "RC13"
 
 // 地表纹理 RC - 烂泥地
-// @since 3.0.0
+// @since 3.00
 "RCt3"
 
 // 地表纹理 RC - 石板砖
-// @since 3.0.0
+// @since 3.00
 "RC12"
 
 // 地表纹理 RC - 圆形地砖
-// @since 3.0.0
+// @since 3.00
 "RCt2"
 
 // 地表纹理 RC - 蓝色大理石
-// @since 3.0.0
+// @since 3.00
 "RCt4"
 
 // 地表纹理 RC - 草地
-// @since 3.0.0
+// @since 3.00
 "RCt5"
 
 // 地表纹理 RC - 红色大理石
-// @since 3.0.0
+// @since 3.00
 "RCt6"
 
 // 地表纹理 RC - 方形地砖
-// @since 3.0.0
+// @since 3.00
 "RCt7"
 
 // 地表纹理 RC - 砖块地砖
-// @since 3.0.0
+// @since 3.00
 "RCt1"
 
 // 地表纹理 RC - 鹅卵石地砖
-// @since 3.0.0
+// @since 3.00
 "RCt8"
 
 // 地表纹理 RC - 修剪的草地
-// @since 3.0.0
+// @since 3.00
 "RCt9"
 
 // 地表纹理 RC - 白色大理石
-// @since 3.0.0
+// @since 3.00
 "RCt0"
 
 // 地表纹理 RC - 菱形地砖
-// @since 3.0.0
+// @since 3.00
 "RC11"
 
 // 地形形状/刷子类型 圆形
@@ -3087,9 +3087,9 @@
 "OutroX"
 
 // 电影过场电影名称 被遗忘的王国人族开场（11）
-// @since 3.0.0
+// @since 3.00
 "IntroRE"
 
 // 电影过场电影名称 被遗忘的王国被遗忘者结尾（12）
-// @since 3.0.0
+// @since 3.00
 "OutroRE"

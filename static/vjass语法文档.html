@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vJASS 语法文档</title>
+<style>
+  :root{
+    --bg:#ffffff; --bg-soft:#f6f7fb; --bg-card:#fbfbfd;
+    --text:#1f2430; --text-soft:#5b6472; --text-faint:#8a93a3;
+    --accent:#4f46e5; --accent-soft:#eef0ff; --accent-line:#d8dcff;
+    --code-bg:#f4f5f9; --code-border:#e3e6ef;
+    --kw:#7c3aed; --ty:#0e7490; --str:#047857; --num:#b45309; --cmt:#94a3b8; --dir:#be185d;
+    --ok:#047857; --ok-bg:#ecfdf5; --ok-line:#a7f3d0;
+    --warn:#b45309; --warn-bg:#fffbeb; --warn-line:#fde68a;
+    --info:#1d4ed8; --info-bg:#eff6ff; --info-line:#bfdbfe;
+    --sidebar-w:264px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  a{color:var(--accent); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  /* ---------- 布局 ---------- */
+  .layout{display:flex; min-height:100vh;}
+  aside.sidebar{
+    width:var(--sidebar-w); flex:0 0 var(--sidebar-w);
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+    background:var(--bg-soft); border-right:1px solid #e8eaf1;
+    padding:22px 14px 40px 20px;
+  }
+  .sidebar .brand{font-weight:700; font-size:17px; margin-bottom:4px;}
+  .sidebar .brand-sub{font-size:12px; color:var(--text-faint); margin-bottom:18px;}
+  .sidebar nav a{
+    display:block; padding:5px 10px; margin:1px 0; border-radius:7px;
+    color:var(--text-soft); font-size:13.5px; line-height:1.45;
+    border-left:3px solid transparent;
+  }
+  .sidebar nav a.sub{padding-left:24px; font-size:12.8px;}
+  .sidebar nav a:hover{background:#ecedf6; text-decoration:none;}
+  .sidebar nav a.active{background:var(--accent-soft); color:var(--accent); border-left-color:var(--accent); font-weight:600;}
+
+  main{flex:1; min-width:0; padding:34px 46px 90px; max-width:980px;}
+  .page-head{margin-bottom:8px;}
+  h1{font-size:30px; margin:0 0 6px; letter-spacing:.5px;}
+  .page-desc{color:var(--text-soft); font-size:14px; margin-bottom:6px;}
+  .verify-line{font-size:12.5px; color:var(--text-faint); border:1px dashed var(--accent-line); background:var(--accent-soft);
+    border-radius:8px; padding:8px 12px; display:inline-block; margin-bottom:28px;}
+  h2{font-size:22px; margin:46px 0 14px; padding-bottom:8px; border-bottom:2px solid #eef0f6; letter-spacing:.3px;}
+  h3{font-size:17px; margin:30px 0 10px; color:#111827;}
+  h4{font-size:15px; margin:20px 0 8px;}
+  p{margin:10px 0;}
+  ul,ol{margin:8px 0; padding-left:26px;}
+  li{margin:4px 0;}
+  code.inline{
+    background:var(--code-bg); border:1px solid var(--code-border); border-radius:5px;
+    padding:1px 6px; font-size:13px;
+    font-family:Consolas,"JetBrains Mono",Menlo,monospace; color:#334155; white-space:nowrap;
+  }
+
+  /* ---------- 代码块 ---------- */
+  .code-card{margin:14px 0; border:1px solid var(--code-border); border-radius:10px; overflow:hidden; background:var(--code-bg);}
+  .code-card .code-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:6px 12px; background:#eceef5; border-bottom:1px solid var(--code-border);
+    font-size:11.5px; color:var(--text-faint); letter-spacing:.4px;
+  }
+  .copy-btn{border:1px solid #d5d9e6; background:#fff; color:var(--text-soft); font-size:11px;
+    border-radius:5px; padding:2px 8px; cursor:pointer;}
+  .copy-btn:hover{border-color:var(--accent); color:var(--accent);}
+  pre{margin:0; padding:12px 16px; overflow-x:auto;}
+  pre code{font-family:Consolas,"JetBrains Mono",Menlo,monospace; font-size:13px; line-height:1.62; color:#24292f;}
+  .tok-kw{color:var(--kw); font-weight:600;}
+  .tok-ty{color:var(--ty);}
+  .tok-str{color:var(--str);}
+  .tok-num{color:var(--num);}
+  .tok-cmt{color:var(--cmt); font-style:italic;}
+  .tok-dir{color:var(--dir);}
+  .tok-dirname{color:var(--dir); font-weight:700;}
+
+  /* ---------- 徽章 / 提示框 ---------- */
+  .badge{display:inline-block; font-size:11px; font-weight:600; border-radius:20px; padding:1px 9px; margin-left:6px; vertical-align:2px; letter-spacing:.3px;}
+  .badge.ver{background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent-line);}
+  .badge.zinc{background:#fdf2f8; color:#be185d; border:1px solid #fbcfe8;}
+  .badge.warnb{background:var(--warn-bg); color:var(--warn); border:1px solid var(--warn-line);}
+  .callout{border-radius:10px; padding:12px 16px; margin:14px 0; font-size:14px; border:1px solid;}
+  .callout b:first-child{display:block; margin-bottom:2px;}
+  .callout.tip{background:var(--ok-bg); border-color:var(--ok-line); color:#065f46;}
+  .callout.warn{background:var(--warn-bg); border-color:var(--warn-line); color:#92400e;}
+  .callout.info{background:var(--info-bg); border-color:var(--info-line); color:#1e40af;}
+
+  /* ---------- 表格 ---------- */
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px;}
+  th,td{border:1px solid #e5e8f0; padding:7px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--bg-soft); font-weight:600; color:#374151;}
+  tr:nth-child(even) td{background:#fafbfe;}
+  td code.inline{white-space:normal;}
+
+  .toc-top{display:grid; grid-template-columns:1fr 1fr; gap:10px 22px; margin:16px 0;}
+  .toc-top a{display:flex; gap:10px; align-items:baseline; padding:9px 14px; border:1px solid #e8eaf1; border-radius:9px; background:var(--bg-card);}
+  .toc-top a:hover{border-color:var(--accent-line); background:var(--accent-soft); text-decoration:none;}
+  .toc-top .n{color:var(--accent); font-weight:700; font-size:13px; min-width:22px;}
+  .toc-top .t{font-weight:600; font-size:14px;}
+  .toc-top .d{display:block; font-size:12px; color:var(--text-faint); font-weight:400;}
+
+  .foot-src{margin-top:52px; padding-top:16px; border-top:1px solid #e8eaf1; color:var(--text-faint); font-size:12.5px;}
+
+  @media (max-width: 960px){
+    .layout{flex-direction:column;}
+    aside.sidebar{position:relative; width:100%; height:auto; border-right:none; border-bottom:1px solid #e8eaf1;}
+    main{padding:26px 20px 60px;}
+    .toc-top{grid-template-columns:1fr;}
+  }
+  @media print{
+    aside.sidebar{display:none;}
+    main{padding:0; max-width:100%;}
+    .copy-btn{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">vJASS 语法文档</div>
+  <div class="brand-sub">基于 JassHelper 官方手册逐条核实</div>
+  <nav id="toc">
+    <a href="#s1">1. 概述</a>
+    <a href="#s1-1" class="sub">1.1 vJASS 与 JASS 的关系</a>
+    <a href="#s1-2" class="sub">1.2 本文档的核实基准</a>
+    <a href="#s2">2. 语法速查表</a>
+    <a href="#s3">3. 词法与基础增强</a>
+    <a href="#s3-1" class="sub">3.1 嵌套块注释</a>
+    <a href="#s3-2" class="sub">3.2 全局声明自由</a>
+    <a href="#s3-3" class="sub">3.3 native 自由声明</a>
+    <a href="#s3-4" class="sub">3.4 局部变量遮蔽修复</a>
+    <a href="#s4">4. Library 与 Scope</a>
+    <a href="#s4-1" class="sub">4.1 library 库</a>
+    <a href="#s4-2" class="sub">4.2 library_once 与 optional</a>
+    <a href="#s4-3" class="sub">4.3 scope 作用域</a>
+    <a href="#s4-4" class="sub">4.4 private / public 封装</a>
+    <a href="#s4-5" class="sub">4.5 SCOPE_PREFIX / SCOPE_PRIVATE</a>
+    <a href="#s4-6" class="sub">4.6 keyword 前置声明</a>
+    <a href="#s5">5. 变量与数组系统</a>
+    <a href="#s5-1" class="sub">5.1 定长数组 sized arrays</a>
+    <a href="#s5-2" class="sub">5.2 二维数组</a>
+    <a href="#s5-3" class="sub">5.3 动态数组 type</a>
+    <a href="#s5-4" class="sub">5.4 存储增强</a>
+    <a href="#s5-5" class="sub">5.5 key 类型</a>
+    <a href="#s6">6. Struct 结构体</a>
+    <a href="#s6-1" class="sub">6.1 声明与成员</a>
+    <a href="#s6-2" class="sub">6.2 创建与销毁</a>
+    <a href="#s6-3" class="sub">6.3 this / thistype</a>
+    <a href="#s6-4" class="sub">6.4 方法 method</a>
+    <a href="#s6-5" class="sub">6.5 静态成员与方法</a>
+    <a href="#s6-6" class="sub">6.6 封装与 readonly</a>
+    <a href="#s6-7" class="sub">6.7 运算符重载 operator</a>
+    <a href="#s6-8" class="sub">6.8 onDestroy / onInit</a>
+    <a href="#s6-9" class="sub">6.9 索引空间扩展</a>
+    <a href="#s6-10" class="sub">6.10 数组成员与数组 struct</a>
+    <a href="#s6-11" class="sub">6.11 继承 extends / super / stub</a>
+    <a href="#s6-12" class="sub">6.12 接口 interface</a>
+    <a href="#s6-13" class="sub">6.13 delegate 委托</a>
+    <a href="#s6-14" class="sub">6.14 module 模块</a>
+    <a href="#s6-15" class="sub">6.15 类型信息与转换</a>
+    <a href="#s7">7. 函数增强</a>
+    <a href="#s7-1" class="sub">7.1 函数即对象</a>
+    <a href="#s7-2" class="sub">7.2 函数接口 function interface</a>
+    <a href="#s8">8. 编译期控制</a>
+    <a href="#s8-1" class="sub">8.1 static if</a>
+    <a href="#s8-2" class="sub">8.2 debug 与 DEBUG_MODE</a>
+    <a href="#s8-3" class="sub">8.3 hook 钩子</a>
+    <a href="#s9">9. 文本宏 Text Macros</a>
+    <a href="#s10">10. 预处理指令</a>
+    <a href="#s11">11. vJASS 与 Zinc 的边界</a>
+    <a href="#s12">12. 限制与性能备忘</a>
+    <a href="#s13">13. 参考来源</a>
+  </nav>
+</aside>
+
+<main>
+
+<div class="page-head">
+  <h1>vJASS 语法文档</h1>
+  <div class="page-desc">Warcraft III JASS 语言扩展（vJass）完整语法参考</div>
+  <div class="verify-line">✅ 本文档所有语法条目均对照 <b>JassHelper 官方手册</b>（jasshelper 0.A.2.A 版本文档）原文逐条核实，未采用社区教程中的讹传（如 vJASS 并不存在的 onCreate 等）。</div>
+</div>
+
+<div class="toc-top">
+  <a href="#s4"><span class="n">04</span><span><span class="t">Library 与 Scope</span><span class="d">库、作用域、private/public、依赖排序</span></span></a>
+  <a href="#s6"><span class="n">06</span><span><span class="t">Struct 结构体</span><span class="d">OOP 核心：方法、运算符、继承、接口、模块</span></span></a>
+  <a href="#s5"><span class="n">05</span><span><span class="t">变量与数组系统</span><span class="d">定长/二维/动态数组、key、存储增强</span></span></a>
+  <a href="#s9"><span class="n">09</span><span><span class="t">文本宏 Text Macros</span><span class="d">编译期文本复制替换</span></span></a>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="s1">1. 概述</h2>
+
+<h3 id="s1-1">1.1 vJASS 与 JASS 的关系</h3>
+<p><b>vJASS 是 JASS 的编译期扩展</b>，由 Vexorian 的 <b>JassHelper</b> 预处理器实现：地图保存时把 vJASS 代码翻译回纯 JASS，再交给游戏执行。官方手册的定位原文：</p>
+<ul>
+  <li>JassHelper is a compiler for the vJass language extension which includes <b>structs, libraries, textmacros and more</b>.</li>
+  <li>vJASS 并非完全的 OOP——手册明确说明它没有传统意义上的继承对象模型，对象不叫 class 而叫 <b>struct</b>；多态由 <b>interface</b> 提供。</li>
+  <li>vJASS 1.0.0 之后语法<b>保持冻结</b>，不再新增语法结构。</li>
+</ul>
+<p>因此，vJASS 的一切能力都受 JASS 本身限制：数组上限 8191、struct 实例上限 8190、无真正指针、字符串不可变等。</p>
+
+<h3 id="s1-2">1.2 本文档的核实基准</h3>
+<table>
+  <tr><th>项目</th><th>内容</th></tr>
+  <tr><td>权威来源</td><td>JassHelper 官方手册（WarRaft 镜像，2024-10-16 更新）全部 96 个章节源文件</td></tr>
+  <tr><td>版本基准</td><td>jasshelper <b>0.A.2.A</b>（文档所载 Changelog 最新版本）</td></tr>
+  <tr><td>辅助来源</td><td>Hive Workshop / TheHelper 社区教程交叉比对（仅作旁证，正文以官方手册为准）</td></tr>
+  <tr><td>特别修正</td><td>多个流行教程声称 vJASS 有 <code class="inline">onCreate</code>、支持 <code class="inline">&amp;&amp;</code>/<code class="inline">||</code>/<code class="inline">+=</code> 等——这些均为讹传或 Zinc 特性，见 <a href="#s11">第 11 节</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="s2">2. 语法速查表</h2>
+<table>
+  <tr><th style="width:170px">特性</th><th>语法骨架</th><th>要点</th></tr>
+  <tr><td>库</td><td><code class="inline">library Name initializer Init requires A, B ... endlibrary</code></td><td>依赖排序、ExecuteFunc 启动 initializer；<code class="inline">needs</code>/<code class="inline">uses</code> 与 <code class="inline">requires</code> 等价</td></tr>
+  <tr><td>作用域</td><td><code class="inline">scope Name ... endscope</code></td><td>可嵌套，不可嵌套 library</td></tr>
+  <tr><td>封装</td><td><code class="inline">private x</code> / <code class="inline">public x</code> / <code class="inline">keyword x</code></td><td>private 编译期改名；public 加 <code class="inline">Name_</code> 前缀；keyword 为前置声明</td></tr>
+  <tr><td>定长数组</td><td><code class="inline">integer array a [500]</code></td><td>全局/静态成员；带 <code class="inline">.size</code>；可突破 8191</td></tr>
+  <tr><td>二维数组</td><td><code class="inline">integer array m [10][20]</code></td><td>实际尺寸 = 宽×高 ≈ 上限 40800</td></tr>
+  <tr><td>动态数组</td><td><code class="inline">type T extends integer array[8]</code></td><td><code class="inline">T.create()/.destroy()</code>，每类型 8190 索引</td></tr>
+  <tr><td>struct</td><td><code class="inline">struct Name ... endstruct</code></td><td>每类型 8190 实例（索引 0 为 null）</td></tr>
+  <tr><td>分配/回收</td><td><code class="inline">Name.create()</code> / <code class="inline">obj.destroy()</code> / <code class="inline">allocate()</code> / <code class="inline">deallocate()</code></td><td>create 超限返回 0；allocate/deallocate 为 private</td></tr>
+  <tr><td>方法</td><td><code class="inline">method / static method ... endmethod</code></td><td>实例方法内 <code class="inline">this</code> 可省略为 <code class="inline">.</code></td></tr>
+  <tr><td>运算符</td><td><code class="inline">method operator&lt; / [] / []= / 名字 / 名字=</code></td><td>仅 <code class="inline">&lt;</code>、<code class="inline">&gt;</code>、<code class="inline">==</code>、下标、属性五种</td></tr>
+  <tr><td>继承</td><td><code class="inline">struct B extends A</code></td><td><code class="inline">stub</code> 方法可被覆盖，<code class="inline">super</code> 调父类实现</td></tr>
+  <tr><td>接口</td><td><code class="inline">interface I ... endinterface</code></td><td><code class="inline">defaults</code> 可选实现，<code class="inline">.exists</code> 探测</td></tr>
+  <tr><td>委托</td><td><code class="inline">delegate A memberName</code></td><td>编译期成员查找回退</td></tr>
+  <tr><td>模块</td><td><code class="inline">module M ... endmodule</code> + <code class="inline">implement M</code></td><td>高级文本宏；可 <code class="inline">implement optional</code></td></tr>
+  <tr><td>函数对象</td><td><code class="inline">Fn.evaluate(x)</code> / <code class="inline">Fn.execute(x)</code> / <code class="inline">Fn.name</code></td><td>自上引用 / 开新线程 / 取编译名</td></tr>
+  <tr><td>函数接口</td><td><code class="inline">function interface FI takes ... returns ...</code></td><td>函数指针；<code class="inline">FI.func</code> 或裸函数名取指针</td></tr>
+  <tr><td>静态条件</td><td><code class="inline">static if COND then ... else ... endif</code></td><td>仅常量布尔 + and/not；编译期裁剪</td></tr>
+  <tr><td>调试</td><td><code class="inline">debug call Foo()</code> / <code class="inline">DEBUG_MODE</code></td><td>非 debug 模式整行移除</td></tr>
+  <tr><td>钩子</td><td><code class="inline">hook RemoveUnit Handler</code></td><td>监听 native / bj 调用</td></tr>
+  <tr><td>文本宏</td><td><code class="inline">//! textmacro T takes A ... //! runtextmacro T("x")</code></td><td>$ARG$ 替换；字符串注释同样被替换</td></tr>
+  <tr><td>范围取反下标</td><td><code class="inline">set a:X = 10</code> ≡ <code class="inline">set X[a]=10</code></td><td>colon 操作符</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="s3">3. 词法与基础增强</h2>
+
+<h3 id="s3-1">3.1 嵌套块注释 <span class="badge ver">vJASS</span></h3>
+<p>在 JASS 的行注释 <code class="inline">//</code> 之外，vJASS 增加 <code class="inline">/* ... */</code> 块注释，且<b>支持嵌套</b>；注释在预处理后从脚本中删除。</p>
+<div class="code-card"><div class="code-head"><span>delimited comments</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">/* 块注释可以 /* 嵌套 */ 继续 */
+function test takes nothing returns nothing
+    call Something( /*5*/ 66) // 行内注释也合法
+endfunction</code></pre></div>
+
+<h3 id="s3-2">3.2 全局声明自由 <span class="badge ver">vJASS</span></h3>
+<p><code class="inline">globals</code> 块可以写在地图脚本任意位置（包括普通触发器里），jasshelper 会把所有全局块<b>合并上移</b>到脚本顶部。约束：</p>
+<ul>
+  <li>初始值只能是<b>编译期常量</b>：<code class="inline">null</code>、数字、<code class="inline">true/false</code>、字符串、十六进制等；</li>
+  <li>不允许函数调用、native 调用，也不允许引用其他全局变量（无法控制合并后的声明顺序）；</li>
+  <li>常量建议大写，JASS 惯例 <code class="inline">udg_</code> 前缀保留给 GUI 全局变量。</li>
+</ul>
+<div class="code-card"><div class="code-head"><span>globals freedom</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">function something takes nothing returns nothing
+    set somearray[SOMETHING_INDEX]=4
+endfunction
+
+globals
+    constant integer SOMETHING_INDEX = 45
+    integer array somearray
+endglobals</code></pre></div>
+<div class="callout info"><b>注意</b>同域的 private/public 全局变量必须<b>先声明后使用</b>，否则 jasshelper 会把它当普通未声明标识符处理。</div>
+
+<h3 id="s3-3">3.3 native 自由声明 <span class="badge ver">vJASS</span> <span class="badge ver">0.9.I.0+</span></h3>
+<p>native 声明本必须紧跟脚本全局区，vJASS 允许写在任意位置并自动归位；若与 common.j 重复声明会被自动删除。</p>
+<div class="code-card"><div class="code-head"><span>native freedom</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">native GetUnitGoldCost takes integer unitid returns integer
+
+function test takes nothing returns nothing
+    call BJDebugMsg("A footman costs : "+I2S( GetUnitGoldCost('hfoo') )+" gold coins" )
+endfunction</code></pre></div>
+
+<h3 id="s3-4">3.4 局部变量遮蔽修复 <span class="badge ver">vJASS</span> <span class="badge ver">0.9.K.0+</span></h3>
+<p>原版 JASS 中局部变量与全局同名会引发不可预测的问题（1.24 补丁前甚至会把整个脚本变成大小写不敏感）。vJASS 预处理阶段会对冲突的局部变量加 <code class="inline">l__</code> 前缀模拟正确的遮蔽，因此<b>局部变量可以放心与任何全局同名</b>。</p>
+<div class="callout tip"><b>标识符约定</b>预处理器生成的名字使用双下划线（如 <code class="inline">scopename__x</code>），自己手写的标识符应<b>避免使用连续双下划线</b>，便于阅读编译产物时区分。</div>
+
+<!-- ============================================================ -->
+<h2 id="s4">4. Library 与 Scope</h2>
+
+<h3 id="s4-1">4.1 library 库</h3>
+<p>WE 保存地图时触发器顺序不可控，函数可能被先用后声明。<code class="inline">library</code> 把一组代码<b>移动到地图脚本顶部</b>，并按依赖关系自动排序：</p>
+<div class="code-card"><div class="code-head"><span>library · 依赖排序</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">library C requires A, B, D
+    function Cfun takes nothing returns nothing
+        call Afun()
+        call Bfun()
+        call Dfun()
+    endfunction
+endlibrary
+
+library D
+    function Dfun takes nothing returns nothing
+    endfunction
+endlibrary
+
+library B requires A
+    function Bfun takes nothing returns nothing
+        call Afun()
+    endfunction
+endlibrary
+
+library A
+    function Afun takes nothing returns nothing
+    endfunction
+endlibrary</code></pre></div>
+<p>编译后脚本顶部顺序为 <code class="inline">A → D → B → C</code>（依赖先入）。规则清单：</p>
+<ul>
+  <li>库名<b>大小写敏感</b>；</li>
+  <li><code class="inline">requires</code>、<code class="inline">needs</code>、<code class="inline">uses</code> 三词等价（官方建议只用 <code class="inline">requires</code>）；</li>
+  <li>依赖出现<b>循环</b>（直接或间接）直接报语法错误；</li>
+  <li><b>library 不可嵌套</b>，也不能写在 scope 内部；</li>
+  <li>0.9.B.0 起，globals 块的合并顺序也由依赖关系保证。</li>
+</ul>
+
+<p><b>initializer</b>：库可以指定初始化函数，经 <code class="inline">ExecuteFunc</code> 在独立线程执行（防止 init 线程崩溃波及主初始化）：</p>
+<div class="code-card"><div class="code-head"><span>library initializer</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">library A initializer InitA requires B
+
+    function InitA takes nothing returns nothing
+        call StoreInteger(B_gamecache , "a_rect" , Rect(-100.0 , 100.0 , -100.0 , 100.0 ) )
+    endfunction
+
+endlibrary
+
+library B initializer InitB
+    globals
+        gamecache B_gamecache
+    endglobals
+
+    function InitB takes nothing returns nothing
+        set B_gamecache=InitGameCache("B")
+    endfunction
+endlibrary</code></pre></div>
+<ul>
+  <li>initializer 必须是 <code class="inline">takes nothing</code> 的函数；</li>
+  <li>执行顺序 = 库的排序顺序：B 排在 A 前，则 B 的 initializer 先执行。</li>
+</ul>
+
+<h3 id="s4-2">4.2 library_once 与 optional 依赖</h3>
+<ul>
+  <li><code class="inline">library_once</code>：与 <code class="inline">library</code> 相同，但同名库重复声明时<b>第二次声明被忽略</b>而不报错——专为文本宏组合设计；</li>
+  <li><code class="inline">optional</code> 依赖 <span class="badge ver">0.9.Z.0+</span>：依赖的库不存在时不报错，库仍会被排到该依赖之后（存在时）；</li>
+  <li>每个 <code class="inline">library NAME</code> 同时生成一个<b>编译期布尔常量</b> <code class="inline">LIBRARY_NAME</code>，供 static if 判断库是否存在。</li>
+</ul>
+<div class="code-card"><div class="code-head"><span>optional 依赖 + LIBRARY_ 常量</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">library OptionalCode requires optional UnitKiller
+    function fun takes nothing returns nothing
+        local unit u = GetTriggerUnit()
+        static if DO_KILL_LIB and LIBRARY_UnitKiller then
+            call UnitKiller(u)
+        else
+            call KillUnit(u)
+        endif
+    endfunction
+endlibrary</code></pre></div>
+
+<h3 id="s4-3">4.3 scope 作用域</h3>
+<p>不需要移动到脚本顶部、只想要命名空间与封装时使用 <code class="inline">scope</code>：</p>
+<div class="code-card"><div class="code-head"><span>scope + private</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">scope GetUnitDebugStr
+
+    private function H2I takes handle h returns integer
+        return h
+        return 0
+    endfunction
+
+    function GetUnitDebugStr takes unit u returns string
+        return GetUnitName(u)+"_"+I2S(H2I(u))
+    endfunction
+
+endscope</code></pre></div>
+<ul>
+  <li><code class="inline">scope Name initializer InitFn</code> 同样支持 initializer，但用的是<b>普通 call</b>（非 ExecuteFunc）——重量级初始化请用 library 或在 initializer 内自行 ExecuteFunc；</li>
+  <li><b>scope 可以嵌套</b>（scope 套 scope、library 套 scope），子作用域视为父作用域的 public 成员；</li>
+  <li>引用嵌套子作用域的 public 成员需要<b>逐级前缀</b>：<code class="inline">Parent_Child_member</code>；</li>
+  <li>同一层级不能重名 scope；不同父作用域的子 scope 可以同名；</li>
+  <li>嵌套子作用域不能重复声明父作用域已声明的 private/全局名（解析器限制，与声明先后有关）。</li>
+</ul>
+
+<h3 id="s4-4">4.4 private / public 封装</h3>
+<table>
+  <tr><th style="width:110px">修饰</th><th>编译期处理</th><th>可见性</th></tr>
+  <tr><td><b>private</b></td><td>改名为 <code class="inline">Name__随机数__</code></td><td>仅所在 scope/library 内部可用，外部无法用前缀 hack 访问</td></tr>
+  <tr><td><b>public</b></td><td>改名为 <code class="inline">Name_成员名</code></td><td>内部直接用原名；外部必须加 <code class="inline">Name_</code> 前缀</td></tr>
+  <tr><td>（无修饰）</td><td>保持原名</td><td>全脚本可见（不推荐，易冲突）</td></tr>
+</table>
+<div class="code-card"><div class="code-head"><span>public 成员与命名前缀</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">library cookiesystem
+    public function ko takes nothing returns nothing
+        call BJDebugMsg("a")
+    endfunction
+
+    function thisisnotpublicnorprivate takes nothing returns nothing
+        call ko()                 // 内部：原名即可
+        call cookiesystem_ko()    // 带前缀也合法
+    endfunction
+endlibrary
+
+function outside takes nothing returns nothing
+    call cookiesystem_ko()        // 外部：必须带前缀
+endfunction</code></pre></div>
+<div class="callout warn"><b>ExecuteFunc 特例</b>public 函数用字符串调用时无论在内外都必须写全名 <code class="inline">ExecuteFunc("cookiesystem_ko")</code>；写原名会崩溃。private 成员则根本无法用字符串引用，除非借助 SCOPE_PRIVATE（下节）。</div>
+<div class="callout tip"><b>InitTrig 特例</b>若把触发器自动生成的 <code class="inline">InitTrig</code> 函数声明为 public，则编译名是 <code class="inline">InitTrig_ScopeName</code>（而非 <code class="inline">ScopeName_InitTrig</code>），可直接对接 WE 触发器命名惯例。</div>
+
+<h3 id="s4-5">4.5 SCOPE_PREFIX / SCOPE_PRIVATE</h3>
+<p>scope/library 内部可用的两个字符串常量，用于 <code class="inline">ExecuteFunc</code>、real 值事件等需要函数名字符串的场合：</p>
+<div class="code-card"><div class="code-head"><span>SCOPE_PREFIX / SCOPE_PRIVATE</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">scope test
+    private function kol takes nothing returns nothing
+        call BJDebugMsg("...")
+    endfunction
+
+    function lala takes nothing returns nothing
+        call ExecuteFunc(SCOPE_PRIVATE+"kol")
+    endfunction
+endscope</code></pre></div>
+
+<h3 id="s4-6">4.6 keyword 前置声明</h3>
+<p>scope 内的 private/public 成员不能先用后声明。当两个函数互相递归又要都保持 private 时，需要 <code class="inline">keyword</code> 先声明占位：</p>
+<div class="code-card"><div class="code-head"><span>keyword</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">scope myScope
+
+   private keyword B   // 先把 B 声明为本 scope 的私有成员
+
+   private function A takes integer i returns nothing
+       if(i!=0) then
+           return B.evaluate(i-1)*2   // B 尚未定义，但 keyword 已生效
+       endif
+       return 0
+   endfunction
+
+   private function B takes integer i returns nothing
+       if(i!=0) then
+           return A(i-1)*3
+       endif
+       return 0
+   endfunction
+
+endscope</code></pre></div>
+
+<!-- ============================================================ -->
+<h2 id="s5">5. 变量与数组系统</h2>
+
+<h3 id="s5-1">5.1 定长数组 sized arrays</h3>
+<p>globals 数组可指定长度（<code class="inline">[长度]</code> 可用常量表达式），目的有二：突破 8191 上限、获得 <code class="inline">.size</code> 字段：</p>
+<div class="code-card"><div class="code-head"><span>sized arrays</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">globals
+    integer array myArray [500]
+    integer array big      [9000]      // 突破 8191
+    constant integer Q= 60000
+    integer array huge     [Q]         // 用常量
+endglobals
+
+function test takes nothing returns nothing
+    local integer i=0
+    call BJDebugMsg(I2S(myArray.size))   // 输出 500
+    loop
+        exitwhen i&gt;=myArray.size
+        set myArray[i]=i
+        set i=i+1
+    endloop
+endfunction</code></pre></div>
+<p>struct 的静态数组成员同样可用：<code class="inline">static integer A[10000]</code>。</p>
+
+<h3 id="s5-2">5.2 二维数组</h3>
+<p>声明形式 <code class="inline">类型 array 名字[宽][高]</code>，本质是用乘法折算的一维数组：</p>
+<ul>
+  <li>实际尺寸 = 宽 × 高，受 <b>≈40800</b> 上限约束；</li>
+  <li>尺寸 &gt; 8191 时访问退化为<b>函数调用</b>（慢），并会生成多个实际数组；</li>
+  <li>字段：<code class="inline">.size</code>（宽×高）、<code class="inline">.width</code>、<code class="inline">.height</code>；</li>
+  <li>仅支持二维；<b>局部变量不允许定长/二维数组</b>。</li>
+</ul>
+<div class="code-card"><div class="code-head"><span>2D arrays</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">globals
+   integer array mat1 [10][20]
+endglobals
+
+function test takes nothing returns nothing
+    call BJDebugMsg(I2S(mat1.size))     // 200 (10 * 20)
+    set mat1[0][1] = 2
+    call BJDebugMsg( I2S( mat1[0][1] ) ) // 2
+endfunction</code></pre></div>
+
+<h3 id="s5-3">5.3 动态数组（type 声明）</h3>
+<p>动态数组是"可动态分配的数组类型"，语法与 struct 似：</p>
+<div class="code-card"><div class="code-head"><span>dynamic arrays</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">type arsample extends integer array[8]
+
+function test takes nothing returns arsample
+ local arsample r=arsample.create()
+ local integer i=0
+     loop
+         exitwhen i==arsample.size   // 数组类型的尺寸常量
+         set r[i]=i
+         set i=i+1
+     endloop
+ return r
+endfunction</code></pre></div>
+<ul>
+  <li>每个动态数组类型共享 <b>8190</b> 个索引；尺寸 100 的类型最多 81 个实例，超限时 <code class="inline">create()</code> 返回 0（debug 模式自动告警）；</li>
+  <li>可套娃：<code class="inline">type iar extends integer array[3]</code> → <code class="inline">type iar_ar extends iar array[3]</code>；</li>
+  <li>动态数组可作为 <b>struct 实例成员</b>（成员类型是动态数组，自己 create/destroy）——这是不定长数组成员的唯一替代；</li>
+  <li>增强存储：<code class="inline">type X extends integer array [200,40000]</code> —— [每份尺寸, 总存储]。</li>
+</ul>
+
+<h3 id="s5-4">5.4 存储增强（Storage Enhancements）</h3>
+<p>超过 8191 的定长数组由 jasshelper 自动拆成多个真实数组 + 换算函数实现，代价：</p>
+<ul>
+  <li>数组读写从一次查表变成<b>函数调用</b>（JASS 中函数调用远慢于查表）；</li>
+  <li>脚本体积显著膨胀（如 20 个成员 + 60000 索引 → 约 40 个新函数）；</li>
+  <li>jasshelper 内部上限：同一大数组最多拆 8 份 ≈ <b>408000</b> 索引。</li>
+</ul>
+<div class="callout tip"><b>建议</b>不需要大空间就不要写增强尺寸；≤8191 时无任何额外开销。可将尺寸定义成常量，让使用者决定是否启用增强。</div>
+
+<h3 id="s5-5">5.5 key 类型</h3>
+<p><code class="inline">key</code> 用于给每个声明生成<b>唯一的整数常量</b>，最典型用途是 hashtable 的键：</p>
+<div class="code-card"><div class="code-head"><span>key</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">globals
+    key AAAA
+    private key BBBB
+    public  key CCCC
+    constant key DDDD  // 加 constant 仅为可读性
+endglobals
+
+private function test takes nothing returns nothing
+    local hashtable ht = InitHashtable()
+    call SaveInteger(ht, AAAA, BBBB, 5)
+    call SaveInteger(ht, AAAA, CCCC, 7)
+    call BJDebugMsg( I2S(BBBB) )  // 每个声明都是不同整数
+endfunction</code></pre></div>
+
+<!-- ============================================================ -->
+<h2 id="s6">6. Struct 结构体</h2>
+
+<h3 id="s6-1">6.1 声明与成员</h3>
+<div class="code-card"><div class="code-head"><span>struct 基础</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct pair
+    integer x=1
+    integer y=2
+endstruct
+
+function pair_sum takes pair A, pair B returns pair
+    local pair C=pair.create()
+    set C.x=A.x+B.x
+    set C.y=A.y+B.y
+    return C
+endfunction</code></pre></div>
+<ul>
+  <li>成员声明：<code class="inline">类型 名字 [= 常量初始值]</code>——初始值<b>必须是编译期常量</b>（不能调用 <code class="inline">create()</code>）；</li>
+  <li>struct 名即新类型，可用于 local、全局、参数、返回值；</li>
+  <li>struct 类型全局变量合法但<b>不能直接初始化</b>（<code class="inline">pair p = pair.create()</code> 非法），需在 init 中赋值；</li>
+  <li>成员不能与已有的方法运算符（operator）重名。</li>
+</ul>
+
+<h3 id="s6-2">6.2 创建与销毁</h3>
+<div class="callout warn"><b>vJASS 没有 onCreate！</b>这是官方手册确认的事实：<code class="inline">create()</code> 只做"分配索引 + 赋默认值"，<b>不存在自动调用的构造回调</b>。需要初始化逻辑时，标准做法是自定义 <code class="inline">static method create</code>（见下）。</div>
+<table>
+  <tr><th style="width:130px">方法</th><th>性质</th><th>说明</th></tr>
+  <tr><td><code class="inline">Name.create(args)</code></td><td>static，可被自定义覆盖</td><td>分配唯一索引并赋默认值；未自定义时直接转调 allocate</td></tr>
+  <tr><td><code class="inline">obj.destroy()</code><br><code class="inline">Name.destroy(obj)</code></td><td>实例/static 两用，可覆盖 <span class="badge ver">0.9.Z.1+</span></td><td>触发 onDestroy 后回收索引；对 0 调用无效果</td></tr>
+  <tr><td><code class="inline">allocate(args)</code></td><td>private static</td><td>仅拿索引不赋值；自定义 create 内部用它；继承链上参数须与父类 create 匹配</td></tr>
+  <tr><td><code class="inline">deallocate()</code></td><td>private static <span class="badge ver">0.9.Z.1+</span></td><td>仅回收索引；供自定义 destroy 调用</td></tr>
+</table>
+<div class="code-card"><div class="code-head"><span>自定义 create（接管初始化）</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct vec
+    real x
+    real y
+    real z
+
+    // create 必须返回 struct 自身类型，参数任意
+    static method create takes real ax, real ay, real az returns vec
+        local vec r= vec.allocate()  // allocate 是 private，但 struct 内部可用
+        set r.x=ax
+        set r.y=ay
+        set r.z=az
+        return r
+    endmethod
+endstruct</code></pre></div>
+<div class="callout info"><b>实例上限 8190</b>struct 底层是平行数组，索引 0 保留为 null，故每类型最多 8190 实例。超限时 <code class="inline">create()</code> 返回 <b>0</b>（debug 模式下编译会插入运行时警告）。可靠写法是检查 <code class="inline">if (p == 0)</code>。</div>
+
+<h3 id="s6-3">6.3 this / thistype / 省略点语法</h3>
+<ul>
+  <li><code class="inline">this</code>：实例方法内指当前实例，本质是<b>整数索引</b>，只读；</li>
+  <li>实例方法内可用单点 <code class="inline">.</code> 代替 <code class="inline">this.</code>：<code class="inline">set .member = value</code>；</li>
+  <li><code class="inline">thistype</code>：struct 体内指代自身类型名的别名（等价于 struct 名），文本宏/模块场景下必备。</li>
+</ul>
+<div class="code-card"><div class="code-head"><span>thistype</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct test
+    thistype array ts
+    method tester takes nothing returns thistype
+        return thistype.allocate()
+    endmethod
+endstruct
+// 等价于把 thistype 全部替换为 test</code></pre></div>
+
+<h3 id="s6-4">6.4 方法 method</h3>
+<ul>
+  <li>语法与函数一致（<code class="inline">takes ... returns ...</code>），可在任意位置调用（全局声明处除外）；</li>
+  <li>实例方法内<b>不要使用</b> <code class="inline">waits</code>、同步 native、<code class="inline">GetTriggeringTrigger()</code>（它们经 trigger 转发执行，其余事件响应可用）；</li>
+  <li>静态方法 <code class="inline">takes nothing</code> 时可作为 <code class="inline">code</code> 值传给 <code class="inline">TriggerAddAction</code> 等：<code class="inline">function something.bb</code>。</li>
+</ul>
+
+<h3 id="s6-5">6.5 静态成员与方法</h3>
+<div class="code-card"><div class="code-head"><span>static 成员</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct s
+    integer a
+    static integer b
+endstruct
+
+function test takes nothing returns nothing
+    local s Yours = s.create()
+    set Yours.a = 15   // 实例成员
+    set s.b     = 30   // 静态成员按类型访问
+    // set Yours.b = 30  // 错误：b 不是实例成员
+endfunction</code></pre></div>
+<p>静态成员等价于 struct 命名空间内的全局变量，可有静态数组（<code class="inline">static integer arr[10000]</code>）。静态方法就是类方法：不使用实例，但能访问本 struct 的 private 成员。</p>
+
+<h3 id="s6-6">6.6 封装与 readonly</h3>
+<p>struct 成员默认 public；<code class="inline">private</code> 成员仅 struct 声明内部可用；<code class="inline">readonly</code> 成员外部可读、内部可写（官方注明此为非标准特性）：</p>
+<div class="code-card"><div class="code-head"><span>encapsulation</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct encap
+    real a=0.0
+    private real b=0.0
+    public real c=4.5
+
+    private method dosomething takes nothing returns nothing
+        if (this.a==5) then
+            set this.a=56
+        endif
+    endmethod
+
+    static method altcreate takes real a, real b, real c returns encap
+        local encap r=encap.create()
+        set r.a=a
+        set r.b=b              // struct 内部可用 private
+        call r.dosomething()   // 同上
+        return r
+    endmethod
+endstruct</code></pre></div>
+
+<h3 id="s6-7">6.7 运算符重载 operator</h3>
+<p>vJASS 允许重载的运算符<b>仅限</b>：<code class="inline">&lt;</code>（自动派生 <code class="inline">&gt;</code>）、自定义 <code class="inline">==</code>、下标 <code class="inline">[]</code>/<code class="inline">[]=</code>、属性 getter/setter。全部以 <code class="inline">method operator</code> 形式声明：</p>
+<div class="code-card"><div class="code-head"><span>operator 全家福</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct operatortest
+    string str=""
+
+    method operator [] takes integer i returns string      // 读下标：1 个参数，必须有返回值
+        return SubString(.str,i,i+1)
+    endmethod
+
+    method operator[]= takes integer i, string ch returns nothing  // 写下标：2 个参数
+        set .str=SubString(.str,0,i)+ch+SubString(.str,i+1,StringLength(.str)-i)
+    endmethod
+
+    method operator&lt; takes operatortest b returns boolean   // &lt; 必须返回 boolean、参数同类型
+        return StringLength(this.str) &lt; StringLength(b.str)
+    endmethod                                               // 声明 &lt; 后 &gt; 自动可用
+
+    method operator size takes nothing returns integer      // 属性 getter：obj.size
+        return StringLength(this.str)
+    endmethod
+
+    method operator size= takes integer v returns nothing   // 属性 setter：obj.size = x
+        // 自定义赋值行为
+    endmethod
+endstruct</code></pre></div>
+<ul>
+  <li>自定义 <code class="inline">==</code> 后，<code class="inline">!=</code> 自动编译为 <code class="inline">not(你的方法)</code>；</li>
+  <li>要比较"是不是同一个对象"（指针相等），必须 <code class="inline">integer(a)==integer(b)</code>；</li>
+  <li><code class="inline">[]</code>/<code class="inline">[]=</code>/属性 setter 可声明为 <b>static</b> <span class="badge ver">0.9.Z.1+</span>，此时直接用类型名做下标；</li>
+  <li>setter 若返回 struct 自身类型，<code class="inline">set obj.x = f(obj)</code> 会编译成赋值链（少见但合法）；</li>
+  <li>成员变量不能与 operator 同名。</li>
+</ul>
+
+<h3 id="s6-8">6.8 onDestroy / onInit</h3>
+<p><code class="inline">onDestroy</code> 是<b>唯一</b>的析构钩子（没有 onCreate）：声明了它的 struct 在 <code class="inline">destroy()</code> 时自动调用：</p>
+<div class="code-card"><div class="code-head"><span>onDestroy 级联清理</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct sta
+    real a
+    real b
+endstruct
+
+struct stb
+    sta H=0
+    sta K=0
+
+    method onDestroy takes nothing returns nothing
+        if (H!=0) then
+            call sta.destroy(H)
+        endif
+        if (K!=0) then
+            call sta.destroy(K)
+        endif
+    endmethod
+endstruct</code></pre></div>
+<p>继承场景下，销毁 C 实例会依次调用 <code class="inline">C.onDestroy → B.onDestroy → A.onDestroy</code>（子→父）。</p>
+<p><code class="inline">static method onInit</code> 在地图初始化时自动执行：</p>
+<div class="code-card"><div class="code-head"><span>onInit</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct A
+    static integer array ko
+
+    private static method onInit takes nothing returns nothing  // 可 public 可 private
+        local integer i=1000
+        loop
+            exitwhen (i&lt;0)
+            set A.ko[i]=i*2
+            set i=i-1
+        endloop
+    endmethod
+endstruct</code></pre></div>
+<div class="callout info"><b>初始化时序</b>struct onInit 先于所有 library initializer 执行；struct 之间的相对顺序取决于脚本中的位置。0.A.2.A 起 module 的 initializer 先于 struct initializer 执行。</div>
+
+<h3 id="s6-9">6.9 索引空间扩展 struct Name[N]</h3>
+<p>默认 8190 实例不够用时可显式扩容：</p>
+<div class="code-card"><div class="code-head"><span>index space</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct X[10000]          // 请求 10000 个索引
+    integer a
+    integer b
+endstruct
+
+struct X2[10000]
+    integer a[2]
+    integer b[5]         // 数组成员消耗索引：实例数 ≈ 10000 / 5 = 2000
+endstruct</code></pre></div>
+<ul>
+  <li><code class="inline">[N]</code> 不能与 extends 其他 struct/interface 同时使用（<code class="inline">extends array [N]</code> 除外 <span class="badge ver">0.9.E.1+</span>）；</li>
+  <li>父 struct/interface 声明了 <code class="inline">[N]</code>，子类型自动继承同样的空间；</li>
+  <li>N &gt; 8191 时启用存储增强，读写变慢（见 5.4）。</li>
+</ul>
+
+<h3 id="s6-10">6.10 数组成员与数组 struct（extends array）</h3>
+<p><b>数组成员必须定长</b>——不定长的 <code class="inline">integer array v</code> 成员不合法：</p>
+<div class="code-card"><div class="code-head"><span>定长数组成员</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct stack
+   private integer array V[100]     // 必须给出长度
+   private integer N=0
+
+   method push takes integer i returns nothing
+      set .V[.N]=i
+      set .N=.N+1
+   endmethod
+
+   method full takes nothing returns boolean
+      return (.N==.V.size)          // 数组成员同样有 .size
+   endmethod
+endstruct</code></pre></div>
+<div class="callout warn"><b>实例数换算</b>数成员消耗索引空间：上限 = 索引空间 ÷ 最大数组成员长度。上例 8190 ÷ 100 → 约 80 个实例。多个数组成员时按<b>最大</b>的那个算。</div>
+<p><b>数组 struct</b>（<code class="inline">extends array</code>）是"只有成员语法的全局数组"，用于自管理索引的系统：</p>
+<div class="code-card"><div class="code-head"><span>array struct</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct playerdata extends array
+    integer a
+    integer b
+    integer c
+endstruct
+
+function init takes nothing returns nothing
+    set playerdata[3].a=12        // 按索引直接用
+    set playerdata[3].b=34
+endfunction</code></pre></div>
+<ul>
+  <li>无 <code class="inline">create/destroy/allocate</code>、无默认值声明、无 <code class="inline">onDestroy</code>、不能有数组成员；</li>
+  <li>所有索引"天然存在"，由使用者自行管理生命周期；</li>
+  <li>大型系统的推荐写法：避开 onDestroy/stub 的 trigger 开销。</li>
+</ul>
+
+<h3 id="s6-11">6.11 继承 extends / super / stub</h3>
+<div class="code-card"><div class="code-head"><span>struct 继承</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct A
+   integer x
+   integer y
+
+   method setxy takes integer cx, integer cy returns nothing
+       set this.x=cx
+       set this.y=cy
+   endmethod
+endstruct
+
+struct B extends A          // B 获得 A 的成员与方法
+   integer z
+   method setxyz takes integer cx, integer cy, integer cz returns nothing
+       call this.setxy(cx,cy)
+       set this.z=cz
+   endmethod
+endstruct
+
+struct C extends B          // 支持链式继承
+    ...
+endstruct</code></pre></div>
+<ul>
+  <li><code class="inline">allocate()</code> 会沿继承链调用父类构造；若父类自定义了带参 create，子类 allocate 必须传同样的参数；</li>
+  <li>父类 create 是 private → <b>禁止被继承</b>；子类无法访问父类 private 成员；</li>
+  <li>onDestroy 按子→父顺序级联。</li>
+</ul>
+<p><code class="inline">stub</code> 方法 = 允许子类覆盖的方法，经 trigger 动态分发实现多态：</p>
+<div class="code-card"><div class="code-head"><span>stub + super</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct Parent
+    stub method xx takes nothing returns nothing
+        call BJDebugMsg("Parent")
+    endmethod
+
+    method doSomething takes nothing returns nothing
+        call this.xx()      // 运行时分发到实际类型的 xx
+    endmethod
+endstruct
+
+struct ChildA extends Parent
+    method xx takes nothing returns nothing
+        call BJDebugMsg("- Child A -")
+        call super.xx()     // super 强制调用父类版本
+    endmethod
+endstruct
+
+function test takes nothing returns nothing
+    local Parent A = ChildA.create()   // 父类变量持有子类实例
+    call A.doSomething()
+endfunction</code></pre></div>
+
+<h3 id="s6-12">6.12 接口 interface</h3>
+<p>interface 是 struct 的"行为契约"，实现 vJASS 的多态：</p>
+<div class="code-card"><div class="code-head"><span>interface 基础</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">interface printable
+    method toString takes nothing returns string
+endinterface
+
+struct singleint extends printable
+    integer v
+    method toString takes nothing returns string
+        return I2S(this.v)
+    endmethod
+endstruct
+
+function printmany takes printable a, printable b returns nothing
+    call BJDebugMsg( a.toString()+" - "+b.toString() )   // 自动调用实际类型的方法
+endfunction</code></pre></div>
+<table>
+  <tr><th style="width:180px">特性</th><th>规则</th></tr>
+  <tr><td>方法实现</td><td>子 struct 必须<b>全部实现</b>接口方法，除非方法声明了 <code class="inline">defaults</code></td></tr>
+  <tr><td>defaults</td><td><code class="inline">method f(...) returns T defaults 常量值</code>——未实现时调用返回该常量（<code class="inline">nothing</code> 亦可）；仅支持常量</td></tr>
+  <tr><td>.exists</td><td>布尔字段：<code class="inline">if mi.myMethod1.exists then</code>，探测 defaults 方法是否被子类型实现；static if 中同样可用</td></tr>
+  <tr><td>变量成员</td><td>接口可声明变量，实现"伪继承"（子 struct 自动获得字段）</td></tr>
+  <tr><td>onDestroy</td><td><b>禁止</b>在 interface 中声明（自动拥有）；接口变量调用 <code class="inline">.destroy()</code> 会正确分发</td></tr>
+  <tr><td>运算符</td><td>接口中可声明 <code class="inline">method operator&lt;</code> 等，但<b>不带签名</b>；比较双方必须同类型，否则运行时中止（debug 编译会警告）</td></tr>
+  <tr><td>类型信息</td><td>实例 <code class="inline">.getType()</code>（运行时整数）；类型 <code class="inline">.typeid</code>（编译期常量）</td></tr>
+  <tr><td>动态构造</td><td><code class="inline">set a = myinterface.create(typeid)</code> 按 typeid 创建；无效值返回 0；仅 takes nothing 的自定义 create 参与该机制</td></tr>
+</table>
+<div class="code-card"><div class="code-head"><span>getType / typeid / 类型转换 / defaults</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">interface A
+    integer x
+endinterface
+
+struct B extends A
+    integer y
+endstruct
+
+struct C extends A
+    integer y
+    integer z
+endstruct
+
+function test takes A inst returns nothing
+   if (inst.getType()==C.typeid) then        // 运行时类型 == 编译期常量
+       set C(inst).z=5                        // 类型转换后再访问
+   endif
+   if (inst.getType()==B.typeid) then
+       call BJDebugMsg("It was of type B with value "+I2S( B(inst).y ) )
+   endif
+endfunction
+
+interface whattodo
+    method onStrike takes real x, real y returns boolean defaults false
+    method onFinish takes nothing returns nothing
+endinterface</code></pre></div>
+
+<h3 id="s6-13">6.13 delegate 委托</h3>
+<p>delegate 是<b>编译期</b>的成员查找回退：本 struct 找不到的成员/方法，会到 delegate 成员的类型里找：</p>
+<div class="code-card"><div class="code-head"><span>delegate</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">struct A
+    private real x
+    private real y
+
+    public method performAction takes nothing returns nothing
+        call DestroyEffect( AddSpecialEffect("path\\model.mdl", this.x, this.y) )
+    endmethod
+endstruct
+
+struct B
+    delegate A deleg                 // 声明委托成员
+
+    static method create takes nothing returns B
+     local B b = B.allocate()
+        set b.deleg = A.create()     // 必须自行初始化委托对象
+        return b
+    endmethod
+endstruct
+
+function testsomething takes nothing returns nothing
+    local B myB = B.create()
+    call myB.performAction()          // 编译为 myB.deleg.performAction()
+endfunction</code></pre></div>
+<ul>
+  <li>本 struct 成员优先于 delegate；多个 delegate 按声明顺序；</li>
+  <li>delegate 的方法<b>不能</b>用来满足 interface 的实现要求；</li>
+  <li>访问 delegate 的 private 成员报"找不到成员"（而非 private 提示）。</li>
+</ul>
+
+<h3 id="s6-14">6.14 module 模块</h3>
+<p>module 是"注入 struct 的代码包"——比文本宏高级：作用域感知、私有成员隔离、可调用宿主成员：</p>
+<div class="code-card"><div class="code-head"><span>module / implement</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">module MyRepeatModule
+    method repeat1000 takes nothing returns nothing
+     local integer i=0
+        loop
+            exitwhen i==1000
+            call this.sub()      // 调用宿主 struct 的方法（可以是 private）
+            set i=i+1
+        endloop
+    endmethod
+endmodule
+
+struct MyStruct
+    method sub takes nothing returns nothing
+        call BJDebugMsg("Hello world")
+    endmethod
+    implement MyRepeatModule     // 注入模块
+endstruct</code></pre></div>
+<ul>
+  <li><code class="inline">implement optional 模块名</code>：模块不存在时静默跳过；</li>
+  <li>重复 implement 同一模块会被<b>忽略</b>；</li>
+  <li>module 的 private 成员对宿主不可见、不与宿主成员冲突；<b>不允许 private operator</b>；</li>
+  <li>module 内的 <code class="inline">static method onInit</code>（可 private）<span class="badge ver">0.9.Z.1+</span>：每个 implement 它的 struct 执行一次，可与 struct 自身 onInit 共存；</li>
+  <li>module 遵循其声明处 scope/library 的 private/public 规则；</li>
+  <li>module 中可使用 <code class="inline">thistype</code>（模块被注入哪个 struct，thistype 就指哪个 struct）。</li>
+</ul>
+
+<h3 id="s6-15">6.15 类型信息与转换</h3>
+<div class="code-card"><div class="code-head"><span>typecast</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">interface wack
+endinterface
+
+struct wek extends wack
+   integer x
+endstruct
+
+function test takes wack W returns nothing
+    local wek jo = W                 // 直接赋值即可改变编译期类型
+    set wek(W).x=5                   // 就地类型转换：类型名(表达式)
+endfunction
+
+type anarrayofdata extends integer array [6]
+
+function setdata5 takes unit u, anarrayofdata x returns nothing
+    call SetUnitUserData(u,  integer(x))   // 反向转换：struct/dynamic array → integer
+endfunction</code></pre></div>
+<ul>
+  <li>同索引的 struct 之间赋值天然兼容（都是整数索引），转换只是告诉编译器如何看待；</li>
+  <li><code class="inline">integer(x)</code> 常用于把 struct 塞进 <code class="inline">SetUnitUserData</code>、 hashtable 等整数容器。</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="s7">7. 函数增强</h2>
+
+<h3 id="s7-1">7.1 函数即对象：.evaluate / .execute / .name</h3>
+<p>vJASS 函数拥有三个伪方法（静态方法同理）：</p>
+<table>
+  <tr><th style="width:120px">伪方法</th><th>作用</th><th>限制</th></tr>
+  <tr><td><code class="inline">.evaluate(args)</code></td><td>可从<b>声明处之上</b>调用函数；带参传递、有返回值</td><td>内部不能有 waits / 同步 native / <code class="inline">GetTriggeringTrigger()</code>；比普通调用慢</td></tr>
+  <tr><td><code class="inline">.execute(args)</code></td><td>在<b>新线程</b>中执行（比 ExecuteFunc 快，参数直接传）</td><td>同上；不返回值</td></tr>
+  <tr><td><code class="inline">.name</code></td><td>返回函数的<b>编译后名字</b>字符串，喂给 ExecuteFunc 等系统</td><td>—</td></tr>
+</table>
+<div class="code-card"><div class="code-head"><span>互相递归 + 新线程</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">function A takes real x returns real
+    if(GetRandomInt(0,1)==0) then
+        return B.evaluate(x*0.02)    // B 在下方声明，必须 evaluate
+    endif
+    return x
+endfunction
+
+function B takes real x returns real
+    if(GetRandomInt(0,1)==1) then
+        return A(x*1000.)
+    endif
+    return x
+endfunction
+
+function test takes nothing returns nothing
+    call DestroyEffectAfter.execute(f,3.0)   // 新线程，函数内可以有 wait
+endfunction
+
+scope test
+    public function xxx takes nothing returns nothing
+        call BJDebugMsg(xxx.name)            // 输出 "test_xxx"
+    endfunction
+endscope</code></pre></div>
+<div class="callout warn"><b>方法的自上引用</b><span class="badge ver">0.9.Z.1+</span> 从声明处之上调用<b>方法</b>必须写 <code class="inline">.evaluate()</code>，否则语法错误（可在 jasshelper.conf 加 <code class="inline">[automethodevaluate]</code> 恢复旧行为）。该特性不适用于 common.j / blizzard.j 的函数。</div>
+
+<h3 id="s7-2">7.2 函数接口 function interface</h3>
+<p>vJASS 的函数指针：</p>
+<div class="code-card"><div class="code-head"><span>function interface</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">function interface realfunc takes real x returns real
+
+function double takes real x returns real
+    return 2*x
+endfunction
+
+function repeater3 takes real x, realfunc F returns real
+    set x=F.evaluate(x)
+    set x=F.evaluate(x)
+    set x=F.evaluate(x)
+    return x
+endfunction
+
+function test takes nothing returns nothing
+    local real x = repeater3( 2.0, double)        // 裸函数名直接当值传
+    local realfunc fun = realfunc.double          // 或 接口名.函数名 取指针
+    call BJDebugMsg(R2S(repeater3(1.0, fun)))
+endfunction</code></pre></div>
+<ul>
+  <li>类型一致的<b>静态方法</b>也可当函数指针：<code class="inline">set mf = try.AAAA</code>；</li>
+  <li><b>非静态方法</b>也能转换：它被视为"多出一个首参 integer（实例）"的函数，调用时显式传入实例：<code class="inline">call mf.evaluate(ts)</code>；</li>
+  <li>函数指针可 <code class="inline">integer()</code> 转整数存储、再转回原接口类型。</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="s8">8. 编译期控制</h2>
+
+<h3 id="s8-1">8.1 static if</h3>
+<p>条件<b>只含常量布尔、and、not</b>（支持括号、elseif），编译期求值，不满足的分支直接从脚本中删除：</p>
+<div class="code-card"><div class="code-head"><span>static if</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">globals
+    constant boolean DO_KILL_LIB = true
+endglobals
+
+function fun takes nothing returns nothing
+    static if DO_KILL_LIB and LIBRARY_UnitKiller then
+        call UnitKiller(GetTriggerUnit())
+    else
+        call KillUnit(GetTriggerUnit())
+    endif
+endfunction</code></pre></div>
+<p>可用条件源：<code class="inline">LIBRARY_库名</code> 常量、struct 静态常量布尔、<code class="inline">thistype</code>、方法的 <code class="inline">.exists</code>。</p>
+
+<h3 id="s8-2">8.2 debug 与 DEBUG_MODE</h3>
+<p>JASS 隐藏特性：以 <code class="inline">debug</code> 开头的语句行，在<b>非 debug 模式</b>编译时被 jasshelper 整行移除：</p>
+<div class="code-card"><div class="code-head"><span>debug</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">function Something takes integer a returns nothing
+   debug call BJDebugMsg("a is "+I2S(a))
+   call KillNUnits(a)
+endfunction</code></pre></div>
+<p>同时提供编译期常量 <code class="inline">DEBUG_MODE</code>（true/false），可配合 static if 使用。</p>
+
+<h3 id="s8-3">8.3 hook 钩子</h3>
+<p>监听 native / blizzard.j 函数被调用（可捕获参数）：</p>
+<div class="code-card"><div class="code-head"><span>hook</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">function onRemoval takes unit u returns nothing
+    call BJDebugMsg("unit is being removed!")
+endfunction
+
+struct err
+    static method onrem takes unit u returns nothing
+       call BJDebugMsg("This also knows that a unit is being removed!")
+    endmethod
+endstruct
+
+hook RemoveUnit onRemoval
+hook RemoveUnit err.onrem</code></pre></div>
+<div class="callout warn"><b>限制</b>若某个 bj 函数在<b>内部</b>调用了被 hook 的函数，经由该 bj 函数的调用不会触发 hook。</div>
+
+<!-- ============================================================ -->
+<h2 id="s9">9. 文本宏 Text Macros</h2>
+<p>编译期文本复制替换：<code class="inline">//! textmacro</code> 定义、<code class="inline">//! endtextmacro</code> 结束、<code class="inline">//! runtextmacro</code> 展开：</p>
+<div class="code-card"><div class="code-head"><span>textmacro</span><button class="copy-btn">复制</button></div>
+<pre><code class="vj">//! textmacro Increase takes TYPEWORD
+function IncreaseStored$TYPEWORD$ takes gamecache g, string m, string l returns nothing
+    call Store$TYPEWORD$(g,m,l,GetStored$TYPEWORD$(g,m,l)+1)
+endfunction
+//! endtextmacro
+
+//! runtextmacro Increase("Integer")
+//! runtextmacro Increase("Real")
+// 展开得到 IncreaseStoredInteger / IncreaseStoredReal 两个函数</code></pre></div>
+<ul>
+  <li>参数占位符用 <code class="inline">$参数名$</code>（因为常要与其他符号相连）；</li>
+  <li><b>字符串与注释不豁免</b>——只要匹配 <code class="inline">$ARG$</code> 就会被替换；</li>
+  <li>无参数宏省略 takes；调用可写 <code class="inline">//! runtextmacro bye()</code> 或 <code class="inline">//! runtextmacro bye</code>；</li>
+  <li><code class="inline">textmacro_once</code>：同 <code class="inline">library_once</code>，重复定义忽略；</li>
+  <li><code class="inline">//! runtextmacro optional 名字(args)</code>：宏不存在时不报错；</li>
+  <li>宏常与 scope/library 组合生成"静态类"（宏里包 scope，展开成多个带前缀的模块）。</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="s10">10. 预处理指令</h2>
+<table>
+  <tr><th style="width:250px">指令</th><th>作用</th></tr>
+  <tr><td><code class="inline">//! import [vjass/zinc] "文件"</code></td><td>导入外部脚本文件；语言可省略（由上下文推断）</td></tr>
+  <tr><td><code class="inline">//! novjass ... //! endnovjass</code></td><td>让 vJASS 编译器完全忽略中间内容（纯 JASS 环境下则当注释被忽略）——常用于写"给旧工具看"的假代码</td></tr>
+  <tr><td><code class="inline">//! inject main|config ... //! endinject</code></td><td>接管地图的 main/config 函数；块内可用 <code class="inline">//! dovjassinit</code> 指定 vJASS 初始化插入点</td></tr>
+  <tr><td><code class="inline">//! external 工具名 [参数]</code></td><td>编译后调用外部工具；<code class="inline">//! externalblock ... //! endexternalblock</code> 可向其 stdin 喂数据（<code class="inline">//! i</code> 行、<code class="inline">$FILENAME$</code>、<code class="inline">extension=lua</code>）</td></tr>
+  <tr><td><code class="inline">//! loaddata "数据.slk"</code></td><td>把 SLK 表转成 struct 赋值代码；struct 需有 <code class="inline">static method getFromKey takes integer returns thistype</code></td></tr>
+  <tr><td><code class="inline">//! zinc ... //! endzinc</code></td><td>划定 Zinc 代码区（Zinc 与 vJASS 代码必须分区）</td></tr>
+</table>
+<div class="callout warn"><b>已废弃</b>旧式 <code class="inline">//! library</code> / <code class="inline">//! scope</code> 语法已废弃，现在会直接报语法错误——统一使用 <code class="inline">library</code> / <code class="inline">scope</code> 关键字。</div>
+
+<!-- ============================================================ -->
+<h2 id="s11">11. vJASS 与 Zinc 的边界</h2>
+<p>jasshelper 同时支持 Zinc（花括号风格、更简洁严格）。网上大量"vJASS 教程"把 Zinc 特性混进 vJASS，以下按官方手册目录<b>逐项区分</b>：</p>
+<table>
+  <tr><th>特性</th><th>vJASS</th><th>Zinc</th></tr>
+  <tr><td>块结构</td><td><code class="inline">if/endif</code>、<code class="inline">loop/endloop</code>（JASS 风格）</td><td><code class="inline">{ }</code> + <code class="inline">;</code></td></tr>
+  <tr><td>if / while / for / break</td><td>仅 JASS 原生形式（<b>无 for/break</b>）</td><td>全部支持（for 有 range 与 C 两种形式）</td></tr>
+  <tr><td>逻辑运算符</td><td><code class="inline">and / or / not</code></td><td>另有 <code class="inline">&amp;&amp; / || / !</code></td></tr>
+  <tr><td>复合赋值</td><td><b>无</b> <code class="inline">+= -= *= /=</code></td><td>有</td></tr>
+  <tr><td>匿名函数 / 匿名方法</td><td><b>无</b></td><td>有</td></tr>
+  <tr><td>函数指针</td><td><code class="inline">function interface</code></td><td><code class="inline">type X extends function(...)</code></td></tr>
+  <tr><td>static if / debug</td><td>✅ 都有</td><td>✅ 都有</td></tr>
+  <tr><td>struct / library / 文本宏</td><td>✅</td><td>有对应物（语法不同）</td></tr>
+</table>
+<div class="callout warn"><b>高频讹传澄清</b>（均经官方手册确认）：
+  <ul style="margin:6px 0 0;">
+    <li>vJASS <b>没有 onCreate</b> —— 构造逻辑写在自定义 <code class="inline">static method create</code> 里；</li>
+    <li>vJASS <b>没有</b> <code class="inline">&amp;&amp;</code>、<code class="inline">||</code>、<code class="inline">!</code>、<code class="inline">+=</code>、for、break；</li>
+    <li>struct 不定长数组成员非法，必须给长度（或改用动态数组类型成员）；</li>
+    <li>struct 实例上限是 <b>8190</b>（不是 8191）；数组上限是 8191。</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="s12">12. 限制与性能备忘</h2>
+<table>
+  <tr><th style="width:230px">项</th><th>数值 / 规则</th></tr>
+  <tr><td>JASS 数组索引上限</td><td>8191（struct 实例因保留索引 0 为 null，为 8190）</td></tr>
+  <tr><td>二维数组实际尺寸上限</td><td>≈ 40800（宽×高）</td></tr>
+  <tr><td>存储增强内部上限</td><td>单数组最多拆 8 份 ≈ 408000 索引；&gt;8191 后读写退化为函数调用</td></tr>
+  <tr><td>方法内禁用</td><td>waits、同步 native、<code class="inline">GetTriggeringTrigger()</code>（其余事件响应可用，但不推荐）</td></tr>
+  <tr><td>initializer 要求</td><td>必须 <code class="inline">takes nothing</code>；library 走 ExecuteFunc（独立线程），scope 走普通 call</td></tr>
+  <tr><td>初始化顺序</td><td>struct onInit → module initializer（每个 struct 一次）→ struct initializer → library initializer（按依赖序）</td></tr>
+  <tr><td>函数内联优化</td><td>0.9.A.0 起默认开启（单行函数、参数各求值一次）；debug 模式或 <code class="inline">--nooptimize</code> 关闭</td></tr>
+  <tr><td>标识符</td><td>避免连续双下划线 <code class="inline">__</code>（预处理器生成名专用）</td></tr>
+  <tr><td>销毁纪律</td><td>不再使用的实例必须 destroy；悬垂引用（用已销毁索引）与重复 destroy 是两大运行时隐患</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="s13">13. 参考来源</h2>
+<ul>
+  <li>JassHelper 官方手册（vJass 章节，WarRaft 维护镜像）：https://warraft.github.io/JassHelper-manual/jasshelper.html —— 本文主要依据；</li>
+  <li>手册源仓库：https://github.com/WarRaft/JassHelper-manual（Changelog 基准 0.A.2.A，文档更新于 2024-10-16）；</li>
+  <li>Hive Workshop：《Meet vJass - Extending structs》《vJASS Features Tutorial》等社区教程 —— 仅用于交叉核对；</li>
+  <li>TheHelper：《Basics of Structs》《Scopes and Libraries》教程 —— 同上。</li>
+</ul>
+
+<div class="foot-src">
+  vJASS 语法文档 · 依据 JassHelper 官方手册逐条核实整理 · 生成于 2026-09-29
+</div>
+
+</main>
+</div>
+
+<script>
+(function(){
+  /* ---------- vJASS 简易语法高亮 ---------- */
+  var KW = new Set(("if then elseif else endif loop exitwhen endloop function endfunction takes returns return native constant "+
+    "globals endglobals local set call type endtype struct endstruct method endmethod static readonly private public delegate "+
+    "module endmodule implement interface endinterface defaults extends stub operator array library endlibrary scope endscope "+
+    "keyword debug hook and or not null true false nothing this thistype super optional requires needs uses initializer").split(" "));
+  var TY = new Set("integer real boolean string handle code".split(" "));
+
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  var RE = /(\/\/![^\n]*)|(\/\*[\s\S]*?(?:\*\/|$))|(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*")|('(?:[^'\\\n]|\\.){1,4}')|(\b0[xX][0-9A-Fa-f]+\b|\b\d+(?:\.\d+)?(?:[eE][-+]?\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)/g;
+
+  function highlightBlock(code){
+    var src = code.textContent, out = "", last = 0, m;
+    RE.lastIndex = 0;
+    while((m = RE.exec(src)) !== null){
+      out += esc(src.slice(last, m.index));
+      if(m[1]){ // //! 指令行
+        var d = m[1];
+        var dm = d.match(/^(\/\/!\s*)([A-Za-z_]+)/);
+        if(dm){
+          out += '<span class="tok-dir">'+esc(dm[1])+'</span><span class="tok-dirname">'+esc(dm[2])+'</span>'+esc(d.slice(dm[0].length));
+        }else{
+          out += '<span class="tok-dir">'+esc(d)+'</span>';
+        }
+      }
+      else if(m[2] || m[3]) out += '<span class="tok-cmt">'+esc(m[0])+'</span>';
+      else if(m[4] || m[5]) out += '<span class="tok-str">'+esc(m[0])+'</span>';
+      else if(m[6]) out += '<span class="tok-num">'+esc(m[0])+'</span>';
+      else if(m[7]){
+        var w = m[7];
+        if(KW.has(w)) out += '<span class="tok-kw">'+esc(w)+'</span>';
+        else if(TY.has(w)) out += '<span class="tok-ty">'+esc(w)+'</span>';
+        else out += esc(w);
+      }
+      last = RE.lastIndex;
+    }
+    out += esc(src.slice(last));
+    code.innerHTML = out;
+  }
+
+  document.querySelectorAll("pre code.vj").forEach(highlightBlock);
+
+  /* ---------- 复制按钮 ---------- */
+  document.querySelectorAll(".copy-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var pre = btn.closest(".code-card").querySelector("pre");
+      var text = pre.textContent;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){ btn.textContent="已复制"; setTimeout(function(){btn.textContent="复制";},1200); });
+      }else{
+        var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta);
+        ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+        btn.textContent="已复制"; setTimeout(function(){btn.textContent="复制";},1200);
+      }
+    });
+  });
+
+  /* ---------- 侧边栏 scrollspy ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll("#toc a"));
+  var map = {};
+  links.forEach(function(a){ var id=a.getAttribute("href").slice(1); var el=document.getElementById(id); if(el) map[id]=a; });
+
+  function setActive(id){
+    links.forEach(function(a){ a.classList.remove("active"); });
+    var cur = map[id];
+    if(cur) cur.classList.add("active");
+  }
+
+  var ids = Object.keys(map);
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ setActive(e.target.id); }
+    });
+  }, {rootMargin:"-70px 0px -66% 0px", threshold:0});
+  ids.forEach(function(id){ obs.observe(document.getElementById(id)); });
+
+  // 初始：进入页面时激活第一个
+  if(ids.length) setActive(ids[0]);
+})();
+</script>
+</body>
+</html>

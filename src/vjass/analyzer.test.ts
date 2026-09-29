@@ -1,6 +1,8 @@
 import { Parser } from "./parser";
-import { analyzeSemantics, SemanticAnalyzerOptions } from "./analyzer";
+import { analyzeSemantics, SemanticAnalyzerOptions, extractAllSymbols, extractHandleTypeNames } from "./analyzer";
 import { ErrorCollection } from "./error";
+import * as fs from "fs";
+import * as path from "path";
 
 // SymbolType 是 analyzer.ts 中的私有枚举，我们需要通过其他方式获取
 // 为了测试，我们直接使用字符串值
@@ -73,6 +75,32 @@ export type AnalyzerTestOptions = {
     nameFilter?: (name: string) => boolean;
 };
 
+/**
+ * 从打包的 static/common.j 推导 handle 类型名集合。
+ * 用于在单文件测试（不加载标准库到 externalSymbols）时提供回退，
+ * 替代原先硬编码的 FALLBACK_HANDLE_TYPE_NAMES。
+ */
+function loadCommonJHandleTypeNames(): Set<string> {
+    const candidates = [
+        path.resolve(__dirname, "../../static/common.j"),
+        path.resolve(process.cwd(), "static/common.j")
+    ];
+    for (const p of candidates) {
+        if (fs.existsSync(p)) {
+            try {
+                const content = fs.readFileSync(p, "utf8");
+                const parser = new Parser(content);
+                const ast = parser.parse();
+                const symbols = extractAllSymbols(ast);
+                return extractHandleTypeNames(symbols);
+            } catch {
+                // 忽略解析失败，继续尝试下一个路径
+            }
+        }
+    }
+    return new Set();
+}
+
 export function runAnalyzerTests(runOptions?: AnalyzerTestOptions): void {
     const nameFilter = runOptions?.nameFilter;
     const debugType = typeof process !== "undefined" && process.env["DEBUG_TYPE"] === "1";
@@ -81,6 +109,15 @@ export function runAnalyzerTests(runOptions?: AnalyzerTestOptions): void {
 
     let totalPassed = 0;
     let totalFailed = 0;
+
+    // 懒加载：从打包 common.j 推导 handle 类型名集合，作为单文件测试的回退
+    let commonJHandleTypes: Set<string> | null = null;
+    const getCommonJHandleTypes = (): Set<string> => {
+        if (commonJHandleTypes === null) {
+            commonJHandleTypes = loadCommonJHandleTypeNames();
+        }
+        return commonJHandleTypes;
+    };
 
     /**
      * 测试辅助函数
@@ -92,6 +129,13 @@ export function runAnalyzerTests(runOptions?: AnalyzerTestOptions): void {
         options?: SemanticAnalyzerOptions
     ): boolean {
         if (nameFilter && !nameFilter(name)) return true; // 跳过不计入
+
+        // 若调用方未显式提供 handleTypeNames 且未提供 externalSymbols，
+        // 则注入由 common.j 推导的集合，保证单文件测试下 native handle 类型仍可识别。
+        let finalOptions = options;
+        if (!options?.handleTypeNames && !options?.externalSymbols) {
+            finalOptions = { ...options, handleTypeNames: getCommonJHandleTypes() };
+        }
 
         try {
             const parser = new Parser(code);
@@ -106,7 +150,7 @@ export function runAnalyzerTests(runOptions?: AnalyzerTestOptions): void {
                 return false;
             }
 
-            const result = analyzeSemantics(ast, options);
+            const result = analyzeSemantics(ast, finalOptions);
             const success = validator(result, parser);
 
             if (success) {
@@ -1935,8 +1979,8 @@ endfunction`,
     );
 
     // ========== 回归: return null 误报 ==========
-    // 无标准库（单文件分析）时，native handle 类型（player/unit 等）走 FALLBACK_HANDLE_TYPE_NAMES
-    // 回退集合，return null 必须放行，不应误报类型不匹配
+    // 无标准库（单文件分析）时，native handle 类型（player/unit 等）走由 common.j 推导的
+    // handleTypeNames 回退集合，return null 必须放行，不应误报类型不匹配
     testSemantic(
         "returns player 函数中 return null 不应误报类型不匹配",
         `function Controller takes integer i returns player
