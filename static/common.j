@@ -3899,6 +3899,72 @@ globals
 	constant abilityreallevelfield ABILITY_RLF_HALF_DAMAGE_FACTOR = ConvertAbilityRealLevelField('Nvc6')
 	// 技能随等级改变的实数域 增量间隔 ('Tau5')
 	constant abilityreallevelfield ABILITY_RLF_INTERVAL_BETWEEN_PULSES = ConvertAbilityRealLevelField('Tau5')
+	// 技能随等级改变的实数域 附近友方生命单位每秒治疗值 ('hcr1')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_HEALING_PER_SECOND = ConvertAbilityRealLevelField('hcr1')
+	// 技能随等级改变的实数域 附近敌方亡灵单位每秒伤害值 ('hcr2')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ENEMY_DAMAGE_PER_SECOND = ConvertAbilityRealLevelField('hcr2')
+	// 技能随等级改变的实数域 附近敌方亡灵单位受到治疗降低百分比 ('hcr3')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ENEMY_HEALING_REDUCTION_PERCENT = ConvertAbilityRealLevelField('hcr3')
+	// 技能随等级改变的实数域 友方单位治疗值 ('hcl1')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_HEALING_BASE = ConvertAbilityRealLevelField('hcl1')
+	// 技能随等级改变的实数域 每移除一个友方单位减益额外治疗值 ('hcl2')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_HEALING_PER_DEBUFF_REMOVED = ConvertAbilityRealLevelField('hcl2')
+	// 技能随等级改变的实数域 友方增益持续时间 ('hcl3')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_BUFF_DURATION = ConvertAbilityRealLevelField('hcl3')
+	// 技能随等级改变的实数域 友方单位减益额外增加的攻击力百分比 ('hcl4')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_DAMAGE_BONUS_PERCENT_BASE = ConvertAbilityRealLevelField('hcl4')
+	// 技能随等级改变的实数域 每移除一个友方单位减益额外增加的攻击力百分比 ('hcl5')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_DAMAGE_BONUS_PERCENT_PER_DEBUFF_REMOVED = ConvertAbilityRealLevelField('hcl5')
+	// 技能随等级改变的实数域 敌方单位昏迷时间(秒) ('hcl6')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ENEMY_STUN_DURATION = ConvertAbilityRealLevelField('hcl6')
+	// 技能随等级改变的实数域 对召唤物造成的伤害 ('hcl7')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_DAMAGE_TO_SUMMONS = ConvertAbilityRealLevelField('hcl7')
+	// 技能随等级改变的实数域 增加友方单位魔法抗性 ('hsa1')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_PERCENT_MAGIC_RESIST_INCREASE = ConvertAbilityRealLevelField('hsa1')
+	// 技能随等级改变的实数域 友方单位治疗效果加成值 ('hsa2')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_PERCENT_HEALING_INCREASE = ConvertAbilityRealLevelField('hsa2')
+	// 技能随等级改变的实数域 减少友方单位技能冷却时间 ('hsa3')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_PERCENT_COOLDOWN_DECREASE = ConvertAbilityRealLevelField('hsa3')
+	// 技能随等级改变的实数域 减少敌方单位魔法抗性 ('hsa4')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ENEMY_PERCENT_MAGIC_RESIST_DECREASE = ConvertAbilityRealLevelField('hsa4')
+	// 技能随等级改变的实数域 减少敌方单位治疗量 ('hsa5')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ENEMY_PERCENT_HEALING_DECREASE = ConvertAbilityRealLevelField('hsa5')
+	// 技能随等级改变的实数域 增加敌方单位技能冷却时间 ('hsa6')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ENEMY_PERCENT_COOLDOWN_INCREASE = ConvertAbilityRealLevelField('hsa6')
+	// 技能随等级改变的实数域 增加友方单位魔法值恢复速度 ('hsa7')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_ALLY_FLAT_MANA_REGEN = ConvertAbilityRealLevelField('hsa7')
+	// 技能随等级改变的实数域 冲锋距离 ('chr1')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_DASH_SPEED = ConvertAbilityRealLevelField('chr1')
+	// 技能随等级改变的实数域 冲锋伤害 ('chr2')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_DASH_DAMAGE = ConvertAbilityRealLevelField('chr2')
+	// 技能随等级改变的实数域 冲锋暴击伤害 ('chr3')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_BONUS_CRITICAL_STRIKE = ConvertAbilityRealLevelField('chr3')
+	// 技能随等级改变的实数域 冲锋暴击伤害持续时间(单位) ('chr4')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_NORMAL_BONUS_CRITICAL_STRIKE_DURATION = ConvertAbilityRealLevelField('chr4')
+	// 技能随等级改变的实数域 冲锋暴击伤害持续时间(英雄) ('chr5')
+	// @since 3.0.1
+	constant abilityreallevelfield ABILITY_RLF_HERO_BONUS_CRITICAL_STRIKE_DURATION = ConvertAbilityRealLevelField('chr5')
 
 	// 技能随等级改变的布尔值域 百分比奖励 ('Hab2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENT_BONUS_HAB2 = ConvertAbilityBooleanLevelField('Hab2')
@@ -4028,6 +4094,9 @@ globals
 	constant abilitybooleanlevelfield ABILITY_BLF_DISABLE_OTHER_ABILITIES = ConvertAbilityBooleanLevelField('Ncl5')
 	// 技能随等级改变的布尔值域 附加杀敌奖励 ('Ntm4')
 	constant abilitybooleanlevelfield ABILITY_BLF_ALLOW_BOUNTY = ConvertAbilityBooleanLevelField('Ntm4')
+	// 技能随等级改变的布尔值域 冲锋开始时移除增益 ('chr6')
+	// @since 3.0.1
+	constant abilitybooleanlevelfield ABILITY_BLF_REMOVE_BUFFS_ON_ABILITY_START = ConvertAbilityBooleanLevelField('chr6')
 
 	// 技能随等级改变的字符串域 美术 - 图标 - 普通 ('aart')
 	constant abilitystringlevelfield ABILITY_SLF_ICON_NORMAL = ConvertAbilityStringLevelField('aart')
@@ -5597,15 +5666,25 @@ constant native GetManipulatingUnit takes nothing returns unit
 constant native GetManipulatedItem takes nothing returns item
 
 // 事件响应 获取装备的物品(对应装备物品事件)
+// @deprecated 弃用，请改用 BlzGetEquippedItem
 // @since 3.0.0
 // EVENT_PLAYER_UNIT_EQUIP_ITEM
 constant native GetEquippedItem takes nothing returns item
+// 事件响应 获取装备的物品(对应装备物品事件)
+// @since 3.0.1
+// EVENT_PLAYER_UNIT_EQUIP_ITEM
+constant native BlzGetEquippedItem takes nothing returns item
+
 
 // 事件响应 获取卸下装备的物品(对应卸下装备物品事件)
+// @deprecated 弃用，请改用 BlzGetUnequippedItem
 // @since 3.0.0
 // EVENT_PLAYER_UNIT_UNEQUIP_ITEM
 constant native GetUnequippedItem takes nothing returns item
-
+// 事件响应 获取卸下装备的物品(对应卸下装备物品事件)
+// @since 3.0.1
+// EVENT_PLAYER_UNIT_UNEQUIP_ITEM
+constant native BlzGetUnequippedItem takes nothing returns item
 
 // 事件响应 获取被拾取的物品(对应拾取物品等事件)，如果拾取的是拾取时自动使用的物品则返回null
 // For EVENT_PLAYER_UNIT_PICKUP_ITEM, returns the item absorbing the picked up item in case it is stacking.
@@ -5980,8 +6059,12 @@ native GetItemY takes item i returns real
 // 移动指定物品到坐标(立即)(指定坐标) [R]
 native SetItemPosition takes item i, real x, real y returns nothing
 // 设置指定物品颜色
+// @deprecated 请改用 BlzSetItemColor
 // @since 3.0.0
 native SetItemColor takes item whichItem, playercolor whichColor returns nothing
+// 设置指定物品颜色
+// @since 3.0.1
+native BlzSetItemColor takes item whichItem, playercolor whichColor returns nothing
 // 允许/禁止 指定物品死亡时掉落
 native SetItemDropOnDeath takes item whichItem, boolean flag returns nothing
 // 允许/禁止 指定物品被丢弃
@@ -5995,11 +6078,19 @@ native SetItemInvulnerable takes item whichItem, boolean flag returns nothing
 // 查询指定物品是否无敌
 native IsItemInvulnerable takes item whichItem returns boolean
 // 查询指定物品是否被装备
+// @deprecated 请改用 BlzIsItemEquipped
 // @since 3.0.0
 native IsItemEquipped takes item whichItem returns boolean
 // 查询指定物品是否在扩展物品栏中
+// @deprecated 请改用 BlzIsItemInBag
 // @since 3.0.0
 native IsItemInBag takes item whichItem returns boolean
+// 查询指定物品是否被装备
+// @since 3.0.1
+native BlzIsItemEquipped takes item whichItem returns boolean
+// 查询指定物品是否在扩展物品栏中
+// @since 3.0.1
+native BlzIsItemInBag takes item whichItem returns boolean
 // 显示/隐藏 指定物品 [R]
 // 隐藏后反隐也看不到
 native SetItemVisible takes item whichItem, boolean show returns nothing
@@ -6041,12 +6132,19 @@ native GetItemUserData takes item whichItem returns integer
 // 设置指定物品自定义值
 native SetItemUserData takes item whichItem, integer data returns nothing
 // 获取物品装备类别
+// @deprecated 请改用 BlzGetItemEquipmentType
 // @since 3.0.0
 native GetItemEquipmentType takes item whichItem returns equipmentType
 // 获取物品标签
+// @deprecated 请改用 BlzGetItemTag
 // @since 3.0.0
 native GetItemTag takes item whichItem returns itemTag
-
+// 获取物品装备类别
+// @since 3.0.1
+native BlzGetItemEquipmentType takes item whichItem returns equipmentType
+// 获取物品标签
+// @since 3.0.1
+native BlzGetItemTag takes item whichItem returns itemTag
 
 // Unit API
 // Facing arguments are specified in degrees
@@ -6341,8 +6439,12 @@ native SetUnitPointValueByType takes integer unitType, integer newPointValue ret
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItem takes unit whichUnit, item whichItem returns boolean
 // 查询单位是否装备指定物品
+// @deprecated 请改用 BlzUnitEquipItem
 // @since 3.0.0
 native UnitEquipItem takes unit whichUnit, item whichItem returns boolean
+// 查询单位是否装备指定物品
+// @since 3.0.1
+native BlzUnitEquipItem takes unit whichUnit, item whichItem returns boolean
 // 创建物品(指定单位和物品类型)
 // 如果单位没有物品栏或物品栏已满，将会创建在单位位置
 native UnitAddItemById takes unit whichUnit, integer itemId returns item
@@ -6359,11 +6461,19 @@ native UnitRemoveItem takes unit whichUnit, item whichItem returns nothing
 // @param itemSlot 物品栏格数：0-5
 native UnitRemoveItemFromSlot takes unit whichUnit, integer itemSlot returns item
 // 卸下指定装备(指定单位和物品)
+// @deprecated 请改用 BlzUnitUnequipItem
 // @since 3.0.0
 native UnitUnequipItem takes unit whichUnit, item whichItem returns nothing
+// 卸下指定装备(指定单位和物品)
+// @since 3.0.1
+native BlzUnitUnequipItem takes unit whichUnit, item whichItem returns nothing
 // 卸下指定装备(指定单位和装备穿戴槽)
+// @deprecated 请改用 BlzUnitUnequipItemFromSlot
 // @since 3.0.0
 native UnitUnequipItemFromSlot takes unit whichUnit, loadoutslot slot returns item
+// 卸下指定装备(指定单位和装备穿戴槽)
+// @since 3.0.1
+native BlzUnitUnequipItemFromSlot takes unit whichUnit, loadoutslot slot returns item
 // 查询单位是否持有指定物品
 native UnitHasItem takes unit whichUnit, item whichItem returns boolean
 // 查询单位扩展物品栏中是否拥有装备(指定单位和物品)
@@ -6374,30 +6484,65 @@ native UnitHasItemBagged takes unit whichUnit, item whichItem returns boolean
 native UnitItemInSlot takes unit whichUnit, integer itemSlot returns item
 // 获取已存档物品的物品栏格数（指定单位）
 native UnitInventorySize takes unit whichUnit returns integer
+// 获取指定单位扩展物品栏物品数量
+// @deprecated 请改用 BlzUnitExtendedInventorySize
+// @since 3.0.0
 native UnitExtendedInventorySize takes unit whichUnit returns integer
+// 获取指定单位扩展物品栏物品数量
+// @since 3.0.1
+native BlzUnitExtendedInventorySize takes unit whichUnit returns integer
 
 // 获取指定单位持有的物品(指定扩展物品栏格数)
+// @deprecated 请改用 BlzUnitItemInBagSlot
 // @since 3.0.0
 native UnitItemInBagSlot takes unit whichUnit, integer itemSlot returns item
 // 获取指定单位持有的物品(指定装备穿戴槽)
+// @deprecated 请改用 BlzUnitItemInEquipmentSlot
 // @since 3.0.0
 native UnitItemInEquipmentSlot takes unit whichUnit, loadoutslot itemSlot returns item
 // 查询指定装备是否被指定单位装备
+// @deprecated 请改用 BlzUnitHasItemEquipped
 // @since 3.0.0
 native UnitHasItemEquipped takes unit whichUnit, item whichItem returns boolean
 // 查询指定单位指定装备穿戴槽是否为空
+// @deprecated 请改用 BlzUnitHasLoadoutSlotEmpty
 // @since 3.0.0
 native UnitHasLoadoutSlotEmpty takes unit whichUnit, loadoutslot itemSlot returns boolean
 // 查询指定单位任意装备穿戴槽是否有装备
+// @deprecated 请改用 BlzUnitHasAnyItemEquipped
 // @since 3.0.0
 native UnitHasAnyItemEquiped takes unit whichUnit returns boolean
 // 查询指定单位是否已装备指定类型的装备
+// @deprecated 请改用 BlzUnitHasItemEquipmentOfType
 // @since 3.0.0
 native UnitHasItemEquipmentOfType takes unit whichUnit, equipmentType equipmentId returns boolean
 // 查询指定单位是否可以装备指定类型的装备
 // 该装备类别的装备穿戴槽被占用时返回否
+// @deprecated 请改用 BlzUnitCanEquipItemOfEquipmentType
 // @since 3.0.0
 native UnitCanEquipItemOfEquipmentType takes unit whichUnit, equipmentType equipmentId returns boolean
+// 获取指定单位持有的物品(指定扩展物品栏格数)
+// @since 3.0.1
+native BlzUnitItemInBagSlot takes unit whichUnit, integer itemSlot returns item
+// 获取指定单位持有的物品(指定装备穿戴槽)
+// @since 3.0.1
+native BlzUnitItemInEquipmentSlot takes unit whichUnit, loadoutslot itemSlot returns item
+// 查询指定装备是否被指定单位装备
+// @since 3.0.1
+native BlzUnitHasItemEquipped takes unit whichUnit, item whichItem returns boolean
+// 查询指定单位指定装备穿戴槽是否为空
+// @since 3.0.1
+native BlzUnitHasLoadoutSlotEmpty takes unit whichUnit, loadoutslot itemSlot returns boolean
+// 查询指定单位任意装备穿戴槽是否有装备
+// @since 3.0.1
+native BlzUnitHasAnyItemEquipped takes unit whichUnit returns boolean
+// 查询指定单位是否已装备指定类型的装备
+// @since 3.0.1
+native BlzUnitHasItemEquipmentOfType takes unit whichUnit, equipmentType equipmentId returns boolean
+// 查询指定单位是否可以装备指定类型的装备
+// 该装备类别的装备穿戴槽被占用时返回否
+// @since 3.0.1
+native BlzUnitCanEquipItemOfEquipmentType takes unit whichUnit, equipmentType equipmentId returns boolean
 
 // 发布丢弃物品命令(指定坐标) [R]
 // 丢弃成功的前提是该物品允许丢弃
@@ -6618,6 +6763,14 @@ native UnitDamagePoint takes unit whichUnit, real delay, real radius, real x, re
 // @param damageType 伤害类型 [DAMAGE_TYPE_UNKNOWN,DAMAGE_TYPE_NORMAL,DAMAGE_TYPE_ENHANCED,DAMAGE_TYPE_FIRE,DAMAGE_TYPE_COLD,DAMAGE_TYPE_LIGHTNING,DAMAGE_TYPE_POISON,DAMAGE_TYPE_DISEASE,DAMAGE_TYPE_DIVINE,DAMAGE_TYPE_MAGIC,DAMAGE_TYPE_SONIC,DAMAGE_TYPE_ACID,DAMAGE_TYPE_FORCE,DAMAGE_TYPE_DEATH,DAMAGE_TYPE_MIND,DAMAGE_TYPE_PLANT,DAMAGE_TYPE_DEFENSIVE,DAMAGE_TYPE_DEMOLITION,DAMAGE_TYPE_SLOW_POISON,DAMAGE_TYPE_SPIRIT_LINK,DAMAGE_TYPE_SHADOW_STRIKE,DAMAGE_TYPE_UNIVERSAL]
 // @param weaponType 武器声音类型 [WEAPON_TYPE_WHOKNOWS,WEAPON_TYPE_METAL_LIGHT_CHOP,WEAPON_TYPE_METAL_MEDIUM_CHOP,WEAPON_TYPE_METAL_HEAVY_CHOP,WEAPON_TYPE_METAL_LIGHT_SLICE,WEAPON_TYPE_METAL_MEDIUM_SLICE,WEAPON_TYPE_METAL_HEAVY_SLICE,WEAPON_TYPE_METAL_MEDIUM_BASH,WEAPON_TYPE_METAL_HEAVY_BASH,WEAPON_TYPE_METAL_MEDIUM_STAB,WEAPON_TYPE_METAL_HEAVY_STAB,WEAPON_TYPE_WOOD_LIGHT_SLICE,WEAPON_TYPE_WOOD_MEDIUM_SLICE,WEAPON_TYPE_WOOD_HEAVY_SLICE,WEAPON_TYPE_WOOD_LIGHT_BASH,WEAPON_TYPE_WOOD_MEDIUM_BASH,WEAPON_TYPE_WOOD_HEAVY_BASH,WEAPON_TYPE_WOOD_LIGHT_STAB,WEAPON_TYPE_WOOD_MEDIUM_STAB,WEAPON_TYPE_CLAW_LIGHT_SLICE,WEAPON_TYPE_CLAW_MEDIUM_SLICE,WEAPON_TYPE_CLAW_HEAVY_SLICE,WEAPON_TYPE_AXE_MEDIUM_CHOP,WEAPON_TYPE_ROCK_HEAVY_BASH]
 native UnitDamageTarget takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
+// 立即治疗指定单位，返回恢复的生命值数量
+// @param whichUnit 指定单位
+// @param source 治疗量计入哪个单位，仅用于数据统计
+// @param life 治疗量，仅回复到最大生命值，超量数值不参与返回和统计
+// @param isItem 治疗量是否源自物品，仅用于数据统计
+// @param applyStatBonuses 回复的生命值是否计入统计，相当于造假奶妈数据
+// @since 3.0.1
+native BlzUnitHeal takes unit whichUnit, unit source, real life, boolean isItem, boolean applyStatBonuses returns real
 
 // 发布命令(无目标)
 // @param order 技能命令字符串可在 记录物编的文件 找到
@@ -6745,6 +6898,9 @@ native GetUnitUserData takes unit whichUnit returns integer
 // 设置指定单位自定义值
 native SetUnitUserData takes unit whichUnit, integer data returns nothing
 
+// 重置指定单位天赋
+// @since 3.0.1
+native BlzResetUnitTalents takes unit whichUnit returns nothing
 
 // Player API
 
@@ -7456,7 +7612,7 @@ native UnitPoolAddUnitType takes unitpool whichPool, integer unitId, real weight
 // 删除指定单位池的指定单位ID [R]
 native UnitPoolRemoveUnitType takes unitpool whichPool, integer unitId returns nothing
 // 随机创建单位池的单位(指定单位所属玩家)(指定坐标) [R]
-// 默认用于创建随机中立敌对单位
+// 默认用于创建随机中立敌对或中立被动单位
 native PlaceRandomUnit takes unitpool whichPool, player forWhichPlayer, real x, real y, real facing returns unit
 
 // 新建物品池 [R]
@@ -7494,6 +7650,15 @@ native ChooseRandomItemEx takes itemtype whichType, integer level returns intege
 // @param itemTag 物品标签
 // @since 3.0.0
 native ChooseRandomItemExWithFilter takes itemtype whichType, integer level, equipmentType whichEquipmentType, itemTag whichTag returns integer
+// 随机选择物品分类(指定过滤条件和包含)
+// @param itemtype 物品类型
+// @param level 物品等级
+// @param equipmentType 装备类别
+// @param itemTag 物品标签
+// @param includeInvalidMorphs 是否包含无效变形
+// @param includeNonPickRandom 是否包含非随机选择
+// @since 3.0.1
+native ChooseRandomItemExWithFilterAndIncludes takes itemtype whichType, integer level, equipmentType whichEquipmentType, itemTag whichTag, boolean includeInvalidMorphs, boolean includeNonPickRandom returns integer
 // 设置随机种子
 // 默认用于统一电影播放效果
 native SetRandomSeed takes integer seed returns nothing
@@ -7515,10 +7680,10 @@ native SetTerrainFogExV takes integer style, real zstart, real zend, real densit
 // 设置地形迷雾样式
 // @since 3.0.0
 native BlzSetTerrainFogStyle takes fogstyle style returns nothing
-// 设置地形迷雾Z轴初始值
+// 设置地形迷雾 Z 轴初始值
 // @since 3.0.0
 native BlzSetTerrainFogZStart takes real zStart returns nothing
-// 设置地形迷雾Z轴结束值
+// 设置地形迷雾 Z 轴结束值
 // @since 3.0.0
 native BlzSetTerrainFogZEnd takes real ZEnd returns nothing
 // 设置地形迷雾密度
@@ -8027,11 +8192,16 @@ native SetCameraFieldControlledByInput takes camerafield whichField, boolean con
 // 获取修改镜头属性是否允许修改
 // @since 3.0.0
 native GetCameraFieldControlledByInput takes camerafield whichField returns boolean
-
 // 锁定镜头到单位(所有玩家) [R]
 native SetCameraTargetController takes unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
 // 锁定镜头到单位(固定镜头源)(所有玩家) [R]
 native SetCameraOrientController takes unit whichUnit, real xoffset, real yoffset returns nothing
+// 查询镜头是否允许使用快捷键锁定
+// @since 3.0.1
+native BlzGetCameraAllowsHotkeyTargetLock takes nothing returns boolean
+// 允许/禁止 镜头使用快捷键锁定
+// @since 3.0.1
+native BlzSetCameraAllowsHotkeyTargetLock takes boolean allows returns nothing
 // 设置镜头类型(所有玩家)
 // @since 3.0.0
 native BlzCameraSetCameraType takes integer cameraType returns nothing
@@ -8258,8 +8428,12 @@ native SetMusicVolume takes integer volume returns nothing
 native SetMusicPlayPosition takes integer millisecs returns nothing
 // 设置主题音乐音量 [R]
 native SetThematicMusicVolume takes integer volume returns nothing
+// 设置主题音乐绝对音量
+// @since 3.0.1
+native BlzSetThematicMusicAbsoluteVolume takes integer volume returns nothing
 // 设置主题音乐播放时间点 [R]
 native SetThematicMusicPlayPosition takes integer millisecs returns nothing
+
 // 设置音效持续时间
 // other music and sound calls
 native SetSoundDuration takes sound soundHandle, integer duration returns nothing
@@ -8360,6 +8534,10 @@ native AddSpecialEffectLoc takes string modelName, location where returns effect
 native AddSpecialEffectTarget takes string modelName, widget targetWidget, string attachPointName returns effect
 // 销毁特效
 native DestroyEffect takes effect whichEffect returns nothing
+// 删除特效
+// @since 3.0.1
+native BlzRemoveEffect takes effect whichEffect returns nothing
+
 // 新建特效(按字符串指定技能，绑定到坐标)
 native AddSpellEffect takes string abilityString, effecttype t, real x, real y returns effect
 // 新建特效(按字符串指定技能，绑定到点)

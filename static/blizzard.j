@@ -293,10 +293,10 @@ globals
     constant integer bj_CAMPAIGN_INDEX_XU = 7
     // 战役过场电影索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_INDEX_XO = 8
-    // 战役过场电影索引 被遗忘者王国被人族战役（9）
+    // 战役过场电影索引 被遗忘者王国人族战役（9）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_INDEX_RH = 9
-    // 战役过场电影索引 被遗忘者王国被遗忘者战役（10）
+    // 战役过场电影索引 被遗忘者王国不死族(被遗忘者)战役（10）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_INDEX_RU = 10
 
@@ -320,10 +320,10 @@ globals
     constant integer bj_CAMPAIGN_OFFSET_XU = 7
     // 战役关卡索引 冰封王座兽族战役（8）
     constant integer bj_CAMPAIGN_OFFSET_XO = 8
-    // 战役过场电影索引 被遗忘者王国被人族战役（0）
+    // 战役关卡索引 被遗忘者王国人族战役（0）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_OFFSET_RH = 0
-    // 战役过场电影索引 被遗忘者王国被遗忘者战役（1）
+    // 战役关卡索引 被遗忘者王国不死族(被遗忘者)战役（1）
     // @since 3.0.0
     constant integer bj_CAMPAIGN_OFFSET_RU = 1
 
@@ -548,47 +548,47 @@ globals
 
     // Rebirth Undead
 
-    // 战役关卡 被遗忘者王国被遗忘者01（bj_CAMPAIGN_OFFSET_RU * 1000 + 0）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)01（bj_CAMPAIGN_OFFSET_RU * 1000 + 0）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU00 = bj_CAMPAIGN_OFFSET_RU * 1000 + 0
-    // 战役关卡 被遗忘者王国被遗忘者02（bj_CAMPAIGN_OFFSET_RU * 1000 + 1）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)02（bj_CAMPAIGN_OFFSET_RU * 1000 + 1）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU01 = bj_CAMPAIGN_OFFSET_RU * 1000 + 1
-    // 战役关卡 被遗忘者王国被遗忘者03（bj_CAMPAIGN_OFFSET_RU * 1000 + 2）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)03（bj_CAMPAIGN_OFFSET_RU * 1000 + 2）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU02 = bj_CAMPAIGN_OFFSET_RU * 1000 + 2
-    // 战役关卡 被遗忘者王国被遗忘者04（bj_CAMPAIGN_OFFSET_RU * 1000 + 3）
+    // 战役关卡 被遗忘者王国不死族(被遗忘者)04（bj_CAMPAIGN_OFFSET_RU * 1000 + 3）
     // @since 3.0.0
     constant integer bj_MISSION_INDEX_RU03 = bj_CAMPAIGN_OFFSET_RU * 1000 + 3
 
     // Cinematic indexing constants
 
-    // 战役过场电影名称 教程（0）
+    // 战役过场电影索引 教程（0）
     constant integer bj_CINEMATICINDEX_TOP = 0
-    // 战役过场电影名称 人族开场（1）
+    // 战役过场电影索引 人族开场（1）
     constant integer bj_CINEMATICINDEX_HOP = 1
-    // 战役过场电影名称 人族结尾（2）
+    // 战役过场电影索引 人族结尾（2）
     constant integer bj_CINEMATICINDEX_HED = 2
-    // 战役过场电影名称 兽族开场（3）
+    // 战役过场电影索引 兽族开场（3）
     constant integer bj_CINEMATICINDEX_OOP = 3
-    // 战役过场电影名称 兽族结尾（4）
+    // 战役过场电影索引 兽族结尾（4）
     constant integer bj_CINEMATICINDEX_OED = 4
-    // 战役过场电影名称 不死族开场（5）
+    // 战役过场电影索引 不死族开场（5）
     constant integer bj_CINEMATICINDEX_UOP = 5
-    // 战役过场电影名称 不死族结尾（6）
+    // 战役过场电影索引 不死族结尾（6）
     constant integer bj_CINEMATICINDEX_UED = 6
-    // 战役过场电影名称 暗夜精灵族开场（7）
+    // 战役过场电影索引 暗夜精灵族开场（7）
     constant integer bj_CINEMATICINDEX_NOP = 7
-    // 战役过场电影名称 暗夜精灵族结尾（8）
+    // 战役过场电影索引 暗夜精灵族结尾（8）
     constant integer bj_CINEMATICINDEX_NED = 8
-    // 战役过场电影名称 冰封王座开场（9）
+    // 战役过场电影索引 冰封王座开场（9）
     constant integer bj_CINEMATICINDEX_XOP = 9
-    // 战役过场电影名称 冰封王座结尾（10）
+    // 战役过场电影索引 冰封王座结尾（10）
     constant integer bj_CINEMATICINDEX_XED = 10
-    // 战役过场电影名称 被遗忘者王国人族开场（11）
+    // 战役过场电影索引 被遗忘者王国人族开场（11）
     // @since 3.0.0
     constant integer bj_CINEMATICINDEX_HFO = 11
-    // 战役过场电影名称 被遗忘者王国被遗忘者结尾（12）
+    // 战役过场电影索引 被遗忘者王国不死族(被遗忘者)结尾（12）
     // @since 3.0.0
     constant integer bj_CINEMATICINDEX_UFE = 12
 
@@ -620,15 +620,15 @@ globals
 
     // Keyboard Event Keys
 
-    // 键盘按键事件 方向键（左）
+    // 键盘按键 方向键（左）
     constant integer bj_KEYEVENTKEY_LEFT = 0
-    // 键盘按键事件 方向键（右）
+    // 键盘按键 方向键（右）
     constant integer bj_KEYEVENTKEY_RIGHT = 1
-    // 键盘按键事件 方向键（下）
+    // 键盘按键 方向键（下）
     constant integer bj_KEYEVENTKEY_DOWN = 2
-    // 键盘按键事件 方向键（上）
+    // 键盘按键 方向键（上）
     constant integer bj_KEYEVENTKEY_UP = 3
-    // 键盘按键事件 按键（A）
+    // 键盘按键 按键（A）
     // @since 3.0.0
     constant integer bj_KEYEVENTKEY_A = 4
 
@@ -643,11 +643,11 @@ globals
 
     // Transmission timing methods
 
-    // 消息持续时间类型 时间类型 - 增加
+    // 消息持续时间类型 增加
     constant integer bj_TIMETYPE_ADD = 0
-    // 消息持续时间类型 时间类型 - 设为（指定值）
+    // 消息持续时间类型 设为（指定值）
     constant integer bj_TIMETYPE_SET = 1
-    // 消息持续时间类型 时间类型 - 减少
+    // 消息持续时间类型 减少
     constant integer bj_TIMETYPE_SUB = 2
 
     // Camera bounds adjustment methods
@@ -699,11 +699,11 @@ globals
 
     // Leaderboard sorting methods
 
-    // 排行榜排序类型 按分值排序
+    // 排行榜排序方式 按分值排序
     constant integer bj_SORTTYPE_SORTBYVALUE = 0
-    // 排行榜排序类型 按玩家排序
+    // 排行榜排序方式 按玩家排序
     constant integer bj_SORTTYPE_SORTBYPLAYER = 1
-    // 排行榜排序类型 按文本排序
+    // 排行榜排序方式 按文本排序
     constant integer bj_SORTTYPE_SORTBYLABEL = 2
 
     // Cinematic fade filter methods
@@ -717,22 +717,22 @@ globals
 
     // Buff removal methods
 
-    // BUFF属性 按类别删除BUFF 肯定（正面BUFF）
+    // 按类别删除BUFF 肯定（正面BUFF）
     constant integer bj_REMOVEBUFFS_POSITIVE = 0
-    // BUFF属性 按类别删除BUFF 否定（负面BUFF）
+    // 按类别删除BUFF 否定（负面BUFF）
     constant integer bj_REMOVEBUFFS_NEGATIVE = 1
-    // BUFF属性 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
+    // 按类别删除BUFF 全部（正面BUFF 和 负面BUFF）
     constant integer bj_REMOVEBUFFS_ALL = 2
-    // BUFF属性 按类别删除BUFF 除生命计时器外的全部BUFF
+    // 按类别删除BUFF 除生命计时外的全部BUFF
     constant integer bj_REMOVEBUFFS_NONTLIFE = 3
 
     // Buff properties - polarity
 
-    // BUFF属性 极性 肯定（正面BUFF）
+    // BUFF极性 肯定（正面BUFF）
     constant integer bj_BUFF_POLARITY_POSITIVE = 0
-    // BUFF属性 极性 否定（负面BUFF）
+    // BUFF极性 否定（负面BUFF）
     constant integer bj_BUFF_POLARITY_NEGATIVE = 1
-    // BUFF属性 极性 肯定 或 否定（正面BUFF 或 负面BUFF）
+    // BUFF极性 肯定 或 否定（正面BUFF 或 负面BUFF）
     constant integer bj_BUFF_POLARITY_EITHER = 2
 
     // Buff properties - resist type
@@ -1335,15 +1335,24 @@ globals
     // 需要清理单位组标识，默认不需要（false）
     boolean bj_wantDestroyGroup = false
     // 需要异步销毁的特效
+    // @deprecated 请改用 bj_destroyOrRemoveEffectAsyncEffect
     // @since 3.0.0
     effect bj_destroyEffectAsyncEffect = null
     // 异步销毁特效的延迟时间
+    // @deprecated 请改用 bj_destroyOrRemoveEffectAsyncTime
     // @since 3.0.0
     real bj_destroyEffectAsyncTime = 0
+    // 需要异步销毁或删除的特效
+    // @since 3.0.1
+    effect bj_destroyOrRemoveEffectAsyncEffect = null
+    // 异步销毁或删除特效的延迟时间
+    // @since 3.0.1
+    real bj_destroyOrRemoveEffectAsyncTime = 0
+
 
     // Instanced Operation Results
 
-    // 最后的值域操作结果标识/实例函数调用结果标识，默认成功（true）
+    // 最后的 值域操作/实例函数调用 结果标识，默认成功（true）
     boolean bj_lastInstObjFuncSuccessful = true
 endglobals
 
@@ -2180,6 +2189,11 @@ function SetCameraTargetControllerNoZForPlayer takes player whichPlayer, unit wh
     if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraTargetController(whichUnit, xoffset, yoffset, inheritOrientation)
+        if (whichUnit == null) then
+            call BlzSetCameraAllowsHotkeyTargetLock(true)
+        else
+            call BlzSetCameraAllowsHotkeyTargetLock(false)
+        endif
     endif
 endfunction
 
@@ -2292,6 +2306,7 @@ function ResetToGameCameraForPlayer takes player whichPlayer, real duration retu
     if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call ResetToGameCamera(duration)
+        call BlzSetCameraAllowsHotkeyTargetLock(true)
     endif
 endfunction
 
@@ -2485,6 +2500,11 @@ function SetCameraOrientControllerForPlayerBJ takes player whichPlayer, unit whi
     if(GetLocalPlayer() == whichPlayer) then
         // Use only local code (no net traffic) within this block to avoid desyncs.
         call SetCameraOrientController(whichUnit, xoffset, yoffset)
+        if (whichUnit == null) then
+            call BlzSetCameraAllowsHotkeyTargetLock(true)
+        else
+            call BlzSetCameraAllowsHotkeyTargetLock(false)
+        endif
     endif
 endfunction
 
@@ -3263,8 +3283,8 @@ endfunction
 
 // 设置地形迷雾样式
 // @since 3.0.0
-function BlzSetTerrainFogStyleBJ takes fogstyle style returns nothing
-    call BlzSetTerrainFogStyle(style)
+function BlzSetTerrainFogStyleBJ takes integer style returns nothing
+    call BlzSetTerrainFogStyle(ConvertFogStyle(style))
 endfunction
 
 // 设置地形迷雾Z轴初始值
@@ -4068,6 +4088,11 @@ function DestroyEffectBJ takes effect whichEffect returns nothing
     call DestroyEffect(whichEffect)
 endfunction
 
+// 删除特效
+// @since 3.0.1
+function RemoveEffectBJ takes effect whichEffect returns nothing
+    call BlzRemoveEffect(whichEffect)
+endfunction
 
 // 获取最后创建的特效
 function GetLastCreatedEffectBJ takes nothing returns effect
@@ -4075,13 +4100,13 @@ function GetLastCreatedEffectBJ takes nothing returns effect
 endfunction
 
 
-// 摧毁 在等待实际时间(bj_destroyEffectAsyncTime)后需要异步销毁的特效(bj_destroyEffectAsyncEffect)
-// 实际时间使用 TriggerSleepAction 进行等待，bj_destroyEffectAsyncTime 和 bj_destroyEffectAsyncEffect 必须同时使用
+// 等待实际时间(bj_destroyEffectAsyncTime)结束后销毁需要异步的特效(bj_destroyOrRemoveEffectAsyncTime)
+// 实际时间使用 TriggerSleepAction 进行等待，bj_destroyOrRemoveEffectAsyncTime 和 bj_destroyOrRemoveEffectAsyncTime 必须同时使用
 // Note: this function should be used in conjunction with the one below, which is the only one that is really exposed in GUI
 // @since 3.0.0
 function DestroyEffectAsyncBJ takes nothing returns nothing
-	local effect localEffect = bj_destroyEffectAsyncEffect
-	local real localTime = bj_destroyEffectAsyncTime
+	local effect localEffect = bj_destroyOrRemoveEffectAsyncEffect
+	local real localTime = bj_destroyOrRemoveEffectAsyncTime
 	
 	call TriggerSleepAction(localTime)
 	call DestroyEffect(localEffect)
@@ -4092,12 +4117,37 @@ endfunction
 // @since 3.0.0
 function DestroyEffectAfterTimeBJ takes effect whichEffect, real time returns nothing
 	// Save arguments to globals
-	set bj_destroyEffectAsyncEffect = whichEffect
-	set bj_destroyEffectAsyncTime = time
+	set bj_destroyOrRemoveEffectAsyncEffect = whichEffect
+	set bj_destroyOrRemoveEffectAsyncTime = time
 	
 	// Externalize to an async thread
 	call ExecuteFunc("DestroyEffectAsyncBJ")
 endfunction
+
+// 等待实际时间(bj_destroyEffectAsyncTime)结束后删除需要异步的特效(bj_destroyOrRemoveEffectAsyncTime)
+// 实际时间使用 TriggerSleepAction 进行等待，bj_destroyOrRemoveEffectAsyncTime 和 bj_destroyOrRemoveEffectAsyncTime 必须同时使用
+// @since 3.0.1
+// Note: this function should be used in conjunction with the one below, which is the only one that is really exposed in GUI
+function RemoveEffectAsyncBJ takes nothing returns nothing
+	local effect localEffect = bj_destroyOrRemoveEffectAsyncEffect
+	local real localTime = bj_destroyOrRemoveEffectAsyncTime
+	
+	call TriggerSleepAction(localTime)
+	call BlzRemoveEffect(localEffect)
+endfunction
+
+// 删除指定特效(设置延迟时间)
+// 在 RemoveEffectAsyncBJ 执行
+// @since 3.0.1
+function RemoveEffectAfterTimeBJ takes effect whichEffect, real time returns nothing
+	// Save arguments to globals
+	set bj_destroyOrRemoveEffectAsyncEffect = whichEffect
+	set bj_destroyOrRemoveEffectAsyncTime = time
+	
+	// Externalize to an async thread
+	call ExecuteFunc("RemoveEffectAsyncBJ")
+endfunction
+
 
 //***************************************************************************
 //*
@@ -4277,7 +4327,7 @@ endfunction
 // 物品将被标记为 bj_lastEquippedItem
 // @since 3.0.0
 function UnitEquipItemSwapped takes item whichItem, unit whichHero returns boolean
-    local boolean success = UnitEquipItem(whichHero, whichItem)
+    local boolean success = BlzUnitEquipItem(whichHero, whichItem)
     if (success) then
         set bj_lastEquippedItem = whichItem
     endif
@@ -4296,7 +4346,7 @@ function UnitEquipItemByIdSwapped takes integer itemId, unit whichHero returns i
     local boolean success
     
     set bj_lastCreatedItem = CreateItem(itemId, GetUnitX(whichHero), GetUnitY(whichHero))
-    set success = UnitEquipItem(whichHero, bj_lastCreatedItem)
+    set success = BlzUnitEquipItem(whichHero, bj_lastCreatedItem)
     
     if (success) then
         set bj_lastEquippedItem = bj_lastCreatedItem
@@ -4320,14 +4370,14 @@ endfunction
 // @since 3.0.0
 function UnitUnequipItemSwapped takes unit whichHero, item whichItem returns nothing
     set bj_lastUnequippedItem = whichItem
-    call UnitUnequipItem(whichHero, whichItem)
+    call BlzUnitUnequipItem(whichHero, whichItem)
 endfunction
 
 // 卸下指定装备(指定单位和装备穿戴槽)
 // 卸下的装备会被标记为 bj_lastUnequippedItem
 // @since 3.0.0
 function UnitUnequipItemFromSlotSwapped takes unit whichHero, loadoutslot slot returns item
-    set bj_lastUnequippedItem = UnitUnequipItemFromSlot(whichHero, slot)
+    set bj_lastUnequippedItem = BlzUnitUnequipItemFromSlot(whichHero, slot)
     return bj_lastUnequippedItem
 endfunction
 
@@ -4542,13 +4592,13 @@ endfunction
 // 获取指定单位持有的物品(指定扩展物品栏格数)
 // @since 3.0.0
 function UnitItemInBagSlotBJ takes unit whichUnit, integer itemSlot returns item
-    return UnitItemInBagSlot(whichUnit, itemSlot-1)
+    return BlzUnitItemInBagSlot(whichUnit, itemSlot-1)
 endfunction
 
 // 获取指定单位持有的物品(指定装备穿戴槽)
 // @since 3.0.0
 function UnitItemInEquipmentSlotBJ takes unit whichUnit, loadoutslot slot returns item
-    return UnitItemInEquipmentSlot(whichUnit, slot)
+    return BlzUnitItemInEquipmentSlot(whichUnit, slot)
 endfunction
 
 
@@ -4596,7 +4646,7 @@ function GetInventoryBagIndexOfItemTypeBJ takes unit whichUnit, integer itemId r
 
     set index = 0
     loop
-        set indexItem = UnitItemInBagSlot(whichUnit, index)
+        set indexItem = BlzUnitItemInBagSlot(whichUnit, index)
         if (indexItem != null) and (GetItemTypeId(indexItem) == itemId) then
             return index + 1
         endif
@@ -4615,7 +4665,7 @@ function GetItemOfTypeFromUnitBagBJ takes unit whichUnit, integer itemId returns
     if (index == 0) then
         return null
     else
-        return UnitItemInBagSlot(whichUnit, index - 1)
+        return BlzUnitItemInBagSlot(whichUnit, index - 1)
     endif
 endfunction
 
@@ -4634,8 +4684,8 @@ function GetInventoryBagIndexOfEquipmentTypeBJ takes unit whichUnit, equipmentTy
 
     set index = 0
     loop
-        set indexItem = UnitItemInBagSlot(whichUnit, index)
-        if (indexItem != null) and (GetItemEquipmentType(indexItem) == whichEquipmentType) then
+        set indexItem = BlzUnitItemInBagSlot(whichUnit, index)
+        if (indexItem != null) and (BlzGetItemEquipmentType(indexItem) == whichEquipmentType) then
             return index + 1
         endif
 
@@ -4654,7 +4704,7 @@ function GetItemOfEquipmentTypeFromUnitBagBJ takes unit whichUnit, equipmentType
     if (index == 0) then
         return null
     else
-        return UnitItemInBagSlot(whichUnit, index - 1)
+        return BlzUnitItemInBagSlot(whichUnit, index - 1)
     endif
 endfunction
 
@@ -4667,7 +4717,7 @@ function GetEquipmentInventoryIndexOfItemTypeBJ takes unit whichUnit, integer it
 
     set index = 0
     loop
-        set indexItem = UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index))
+        set indexItem = BlzUnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index))
         if (indexItem != null) and (GetItemTypeId(indexItem) == itemId) then
             return index + 1
         endif
@@ -4687,8 +4737,8 @@ function GetEquipmentInventoryIndexOfEquipmentTypeBJ takes unit whichUnit, equip
 
     set index = 0
     loop
-        set indexItem = UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index))
-        if (indexItem != null) and (GetItemEquipmentType(indexItem) == whichEquipmentType) then
+        set indexItem = BlzUnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index))
+        if (indexItem != null) and (BlzGetItemEquipmentType(indexItem) == whichEquipmentType) then
             return index + 1
         endif
 
@@ -4706,7 +4756,7 @@ function GetItemEquippedByHeroOfTypeBJ takes unit whichUnit, integer itemId retu
     if (index == 0) then
         return null
     else
-        return UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index - 1))
+        return BlzUnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index - 1))
     endif
 endfunction
 
@@ -4718,7 +4768,7 @@ function GetItemEquippedByHeroOfEquipmentTypeBJ takes unit whichUnit, equipmentT
     if (index == 0) then
         return null
     else
-        return UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index - 1))
+        return BlzUnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index - 1))
     endif
 endfunction
 
@@ -4758,7 +4808,7 @@ function UnitExtendedInventoryCount takes unit whichUnit returns integer
     local integer count = 0
 
     loop
-        if (UnitItemInBagSlot(whichUnit, index) != null) then
+        if (BlzUnitItemInBagSlot(whichUnit, index) != null) then
             set count = count + 1
         endif
 
@@ -4772,7 +4822,7 @@ endfunction
 // 获取已存档物品的物品栏格数（指定单位）
 // @since 3.0.0
 function UnitExtendedInventorySizeBJ takes unit whichUnit returns integer
-    return UnitExtendedInventorySize(whichUnit)
+    return BlzUnitExtendedInventorySize(whichUnit)
 endfunction
 
 // 获取指定单位已装备的装备物品数量
@@ -4782,7 +4832,7 @@ function UnitEquipmentCount takes unit whichUnit returns integer
     local integer count = 0
 
     loop
-        if (UnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index)) != null) then
+        if (BlzUnitItemInEquipmentSlot(whichUnit, ConvertLoadoutSlot(index)) != null) then
             set count = count + 1
         endif
 
@@ -4848,6 +4898,18 @@ endfunction
 // @since 3.0.0
 function ChooseRandomItemExWithFilterBJ takes integer level, itemtype whichType, equipmentType whichEquipmentType, itemTag whichTag returns integer
     return ChooseRandomItemExWithFilter(whichType, level, whichEquipmentType, whichTag)
+endfunction
+
+// 随机选择物品分类(指定过滤条件和包含)
+// @param itemtype 物品类型
+// @param level 物品等级
+// @param equipmentType 装备类别
+// @param itemTag 物品标签
+// @param includeInvalidMorphs 是否包含无效变形
+// @param includeNonPickRandom 是否包含非随机选择
+// @since 3.0.1
+function ChooseRandomItemExWithFilterAndIncludesBJ takes integer level, itemtype whichType, equipmentType whichEquipmentType, itemTag whichTag, boolean includeInvalidMorphs, boolean includeNonPickRandom returns integer
+    return ChooseRandomItemExWithFilterAndIncludes(whichType, level, whichEquipmentType, whichTag, includeInvalidMorphs, includeNonPickRandom)
 endfunction
 
 // 获取随机中立建筑物类型，默认用于开始游戏时创建随机中立建筑
@@ -5992,7 +6054,20 @@ function UnitDamageTargetBJ takes unit whichUnit, unit target, real amount, atta
     return UnitDamageTarget(whichUnit, target, amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
 endfunction
 
+// 立即治疗指定单位(指定治疗量)
+// 仅回复到最大生命值，超量数值不参与返回和统计，相当于造假奶妈数据
+// @since 3.0.1
+function UnitHealBJ takes unit whichUnit, real life returns real
+    return BlzUnitHeal(whichUnit, whichUnit, life, false, true)
+endfunction
 
+// 立即治疗指定单位(指定治疗量，指定治疗源单位)
+// @param source 治疗量计入哪个单位，仅用于数据统计
+// 仅回复到最大生命值，超量数值不参与返回和统计，相当于造假奶妈数据
+// @since 3.0.1
+function UnitHealFromOtherBJ takes unit whichUnit, unit source, real life returns real
+    return BlzUnitHeal(whichUnit, source, life, false, true)
+endfunction
 
 //***************************************************************************
 //*
@@ -6131,7 +6206,8 @@ function SetDestructableMaxLifeBJ takes destructable d, real max returns nothing
 endfunction
 
 
-// 打开/关闭/破坏 门
+// 打开/关闭/破坏 门(指定可破坏物)
+// 关闭传 bj_GATEOPERATION_CLOSE，打开传 bj_GATEOPERATION_OPEN，摧毁传 bj_GATEOPERATION_DESTROY
 function ModifyGateBJ takes integer gateOperation, destructable d returns nothing
     if(gateOperation == bj_GATEOPERATION_CLOSE) then
         if(GetDestructableLife(d) <= 0) then
@@ -6155,6 +6231,7 @@ endfunction
 
 
 // 获取升降台高度
+// 根据遮挡高度确定升降台高度
 // Determine the elevator's height from its occlusion height.
 function GetElevatorHeight takes destructable d returns integer
     local integer height
@@ -6168,6 +6245,7 @@ endfunction
 
 
 // 设置升降台高度
+// 会根据目标高度和当前高度自动控制
 // To properly animate an elevator, we must know not only what height we
 // want to change to, but also what height we are currently at.  This code
 // determines the elevator's current height from its occlusion height.
@@ -6280,13 +6358,14 @@ function NearbyElevatorExists takes real x, real y returns boolean
     return bj_elevatorNeighbor != null
 endfunction
 
-// 获取升降台墙
+// 获取升降台墙(路径阻断器)
 function FindElevatorWallBlockerEnum takes nothing returns nothing
     set bj_elevatorWallBlocker = GetEnumDestructable()
 endfunction
 
 
-// 设置升降台墙
+// 设置升降台墙墙（路径阻断器）
+// 自动在适当位置摧毁或恢复路径阻断器来切换升降台一面墙路径打关（路径阻断器不存在时会自动创建）
 // This toggles pathing on or off for one wall of an elevator by killing
 // or reviving a pathing blocker at the appropriate location (and creating
 // the pathing blocker in the first place, if it does not yet exist).
@@ -6447,7 +6526,6 @@ endfunction
 //***************************************************************************
 
 // 选取单位组做指定动作
-// 最多12个单位响应
 function ForGroupBJ takes group whichGroup, code callback returns nothing
     // If the user wants the group destroyed, remember that fact and clear
     // the flag, in case it is used again in the callback.

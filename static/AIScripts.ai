@@ -809,7 +809,7 @@ globals
     constant integer assault_timer   = 0
     // 攻击波次
     // 官方演示AI脚本变量
-    constant integer assaultN        = 1   
+    constant integer assaultN        = 1
     // 当前攻击状态
     // 官方演示AI脚本变量
     constant integer assault_state   = CHECK_CREEPS
@@ -1282,6 +1282,315 @@ globals
     // 部分官方战役AI脚本的变量
     constant integer QUEEN          = 'ndqs'
 
+    // 单位名称 市场/市集
+    constant string marketplace
+    // 单位名称 地精飞艇
+    constant string goblinzeppelin
+    // 单位名称 金矿
+    constant string goldmine
+
+    // 灾厄散播者（'ublw'）
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer CULT_BLIGHTWEAVER = 'ublw'
+    // 刺客（'uass'）
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer CULT_ASSASSIN = 'uass'
+    // 蛮兵（'ucze'）
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer CULT_ZEALOT = 'ucze'
+
+    // 调试玩家
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    player adv_debug_player
+    // 调试模式标识，默认关
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_debug = false
+    // 自杀标识
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_suicide = false
+    // 战胜标识
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_defeated = false
+
+    // 攻击点 X 坐标
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant real ATTACK_WAVE_START_X = 0
+    // 攻击点 Y 坐标
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant real ATTACK_WAVE_START_Y = 0
+
+    // 允许攻击玩家标识
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean AttackUser = false
+    // 允许升级科技标识
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean Research = false
+
+    // 强度
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer Strength = 0
+    // 最小强度
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer STRENGTH_MIN = 0
+    // 最大强度
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer STRENGTH_MAX = 3
+
+    // 触发器命令 - 攻击
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer COMMAND_ATTACK = 1
+    // 触发器命令 - 攻击 - 启用
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer DATA_ATTACK_ENABLE = 1
+    // 触发器命令 - 攻击 - 禁用
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer DATA_ATTACK_DISABLE = 0
+
+    // 触发器命令 - 升级科技
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer COMMAND_RESEARCH = 2
+    // 触发器命令 - 升级科技 - 启用
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer DATA_RESEARCH_ENABLE = 1
+    // 触发器命令 - 升级科技 - 禁用
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer DATA_RESEARCH_DISABLE = 0
+
+    // 触发器命令 - 强度
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer COMMAND_STRENGTH = 3
+
+    // 触发器命令 - 失败
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer COMMAND_DEFEAT = -1
+    // 触发器命令 - 启用失败
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer DATA_DEFEAT_ENABLE = 1
+    // 触发器命令 - 禁用失败
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    constant integer DATA_DEFEAT_DISABLE = 0
+
+    // 进攻行军超时
+    // 超时仍未走到目的地时调整进攻
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_reach_goal_timeout_seconds = 300
+    // 战斗超时
+    // 超时仍在战斗时调整进攻
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_enter_combat_timeout_seconds = 5
+    // 打扫战场超时
+    // 超时仍在战斗时调整进攻
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_clear_goal_timeout_seconds = 60
+
+    // 进攻行军计时超时重置
+    // 计时超过此值后被重置
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_reach_goal_refresh_timeout_seconds = 60
+    // 战斗计时超时重置
+    // 计时超过此值后被重置
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_enter_combat_refresh_timeout_seconds = 1
+    // 打扫战场计时超时重置
+    // 计时超过此值后被重置
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_clear_goal_refresh_timeout_seconds = 12
+
+    // 到达/返回 攻击坐标超时计时
+    // 计时超过此值后被重置
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_reach_start_return_refresh_timeout_seconds = 30
+    // 攻击扩散范围
+    // 以攻击目标点为圆心按此半径取附近随机点
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_wave_attack_scatter_range = 125.0
+    // 变更攻击目标点范围
+    // 继续攻击更远的地点
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_continue_far_away_radius = 960.0
+    // 首选攻击点半径
+    // 以攻击目标点为圆心按此半径获取敌方单位
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_preferred_locations_radius = 640.0
+
+    // 进攻行军计时
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_reach_goal_sleep_seconds
+    // 战斗计时
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_enter_combat_sleep_seconds
+    // 打扫战场计时
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_clear_goal_sleep_seconds
+
+    // 进攻行军计时超时的计时
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_reach_goal_refresh_sleep_seconds
+    // 战斗计时超时的计时
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_enter_combat_refresh_sleep_seconds
+    // 打扫战场计时超时的计时
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_clear_goal_refresh_sleep_seconds
+
+    // 到达/返回 攻击坐标计时
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_wave_reach_start_return_refresh_sleep_seconds
+
+    // 防御组的防御 X 坐标
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_defense_captain_home_x
+    // 防御组的防御 Y 坐标
+    real adv_defense_captain_home_y
+    // 需要防御组回防标识
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_defense_captain_home_set = false
+
+    // 攻击组进攻 X 坐标
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_attack_wave_gather_return_x
+    // 攻击组进攻 X 坐标
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_attack_wave_gather_return_y
+    // 需要攻击组进攻标识
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_attack_wave_gather_return_set = false
+
+    // 敌人的首选坐标(历史记录)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    location array adv_preferred_locations
+    // 敌人最大数量(历史记录)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_preferred_locations_count = 0
+
+    // 敌人的首选坐标(当前使用)
+    // 以坐标为圆心获取敌方单位和建筑
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    location array adv_preferred_locations_current
+    // 敌人单位和建筑最大数量(当前使用)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_preferred_locations_count_current = 0
+
+    // 攻击组保留采木工人标识
+    // 仅类似亡灵的种族需要
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_wood_peons_warriors = false
+    // 防止AI慢速采矿标识，默认值为关
+    // 开启时在初始化会启用慢速采矿
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_prevent_slow_chopping = false
+
+    // 允许在首选坐标搜索敌方单位和建筑标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_search_preferred_locations = true
+    // 允许在搜索任何敌方单位和建筑标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_search_everywhere = true
+
+    // 允许搜索敌方单位标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_can_search_units = true
+    // 允许搜索敌方无敌单位和建筑标识，默认为关
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_can_search_invulnerable = false
+
+    // 允许优先搜索主基地标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_prioritize_town_halls = true
+    // 允许优先搜索主要建筑物标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_prioritize_main_buildings = true
+    // 允许优先搜索攻击坐标最近目标标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_prioritize_nearest = true
+
+    // 允许搜索行军超时标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_reach_goal_timeout = true
+    // 允许战斗超时标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_enter_combat_timeout = true
+    // 允许打扫战场超时标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_clear_goal_timeout = true
+
+    // 允许搜索行军超时后刷新标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_reach_goal_refresh_timeout = true
+    // 允许战斗超时后刷新标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_enter_combat_refresh_timeout = true
+    // 允许打扫战场超时后刷新标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_clear_goal_refresh_timeout = true
+
+    // 允许 到达 攻击坐标超时标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_reach_start_refresh_timeout = true
+    // 允许 返回 攻击坐标超时标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_reach_return_refresh_timeout = true
+
+    // 允许攻击扩散标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_attack_scatter = true
+    // 变更攻击目标点范围概率，默认100%
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_continue_attack_percentage = 100
+    // 允许新攻击目标点过远时衰退变更概率标识，默认为开
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    boolean adv_continue_attack_reduce_percentage_if_far_away = true
+    // 新攻击目标点过远时衰退概率百分比
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_continue_attack_reduce_percentage = 25
+
+    // 敌方主要建筑(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    unit array adv_targetable_town_halls_main_buildings
+    // 敌方主要建筑计数(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_targetable_town_halls_main_buildings_count = 0
+
+    // 目标主要建筑类型(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer array adv_targetable_main_buildings_types
+    // 目标主要建筑类型计数(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_targetable_main_buildings_types_count = 0
+
+    // 敌方主要建筑(当前使用)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer array adv_targetable_main_buildings_types_current
+    // 目标主要建筑类型计数(当前使用)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_targetable_main_buildings_types_count_current = 0
+
+    // 敌方建筑(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    unit array adv_targetable_buildings
+    // 敌方建筑计数(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_targetable_buildings_count = 0
+
+    // 敌方单位(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    unit array adv_targetable_units
+    // 敌方单位计数(已登记)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_targetable_units_count = 0
+
+    // 最后记录的攻击目标 X 坐标
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_last_target_x
+    // 最后记录的攻击目标 X 坐标
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    real adv_last_target_y
+    // 搜索目标最大循环次数(默认)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_search_target_max_cycles_default = 100
+    // 搜索目标最大循环次数(当前目标为最后攻击目标时)
+    // 官方战役洛丹伦的终焉之日第三关AI脚本变量
+    integer adv_search_target_max_cycles_last_target = 10
 
     // 物编别名补充
 
@@ -1309,13 +1618,13 @@ globals
     // 英雄 炼金术士
     // 补充内容，未声明变量，不可直接使用
     constant integer ALCHEMIST
-    // 英雄 炼金术士(变形 1级）
+    // 英雄 炼金术士(变形 1级)
     // 补充内容，未声明变量，不可直接使用
     constant integer ALCHEMIST_M1
-    // 英雄 炼金术士(变形 2级）
+    // 英雄 炼金术士(变形 2级)
     // 补充内容，未声明变量，不可直接使用
     constant integer ALCHEMIST_M2
-    // 英雄 炼金术士(变形 3级）
+    // 英雄 炼金术士(变形 3级)
     // 补充内容，未声明变量，不可直接使用
     constant integer ALCHEMIST_M3
     // 单位 腐尸甲虫（1级）
@@ -1529,13 +1838,6 @@ globals
     // 补充内容，未声明变量，不可直接使用
     constant integer TRANSMUTE
 
-    // 单位名称 市场/市集
-    constant string marketplace
-    // 单位名称 地精飞艇
-    constant string goblinzeppelin
-    // 单位名称 金矿
-    constant string goldmine
-
 endglobals
 
 
@@ -1634,6 +1936,41 @@ endfunction
 // 睡眠（指定时长）
 // 部分官方战役AI脚本的功能
 function send_sleep takes integer seconds returns nothing
+endfunction
+
+// 获取触发器命令并执行
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function CommandFetch takes nothing returns nothing
+endfunction
+
+// 循环运行获取触发器命令
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function CommandLoop takes nothing returns nothing
+endfunction
+
+// 获取两点距离(平方根)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvDistance takes real x1, real y1, real x2, real y2 returns real
+endfunction
+
+// 判断单位是否存活
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvIsUnitAlive takes unit u returns boolean
+endfunction
+
+// 对调试玩家发送调试信息
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvDebugDisplayToPlayer takes string message returns nothing
+endfunction
+
+// 开启/关闭 AI慢速采矿
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetPreventSlowChopping takes boolean flag returns nothing
+endfunction
+
+// 调试设置
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetDebug takes player debugPlayer, boolean flag returns nothing
 endfunction
 
 // --------------------------------------------------------------------------------------------------
@@ -1941,6 +2278,349 @@ endfunction
 // 部分官方战役AI脚本的功能
 function wave_loop takes nothing returns nothing
 endfunction
+
+// 设置行军超时的时间
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveReachGoalTimeoutSeconds takes integer seconds returns nothing
+endfunction
+
+// 设置战斗超时的时间
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveEnterCombatTimeoutSeconds takes integer seconds returns nothing
+endfunction
+
+// 设置打扫战场超时的时间
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveClearGoalTimeoutSeconds takes integer seconds returns nothing
+endfunction
+
+// 设置进攻行军计时超时重置的时间
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveReachGoalRefreshSeconds takes integer seconds returns nothing
+endfunction
+
+// 设置战斗计时超时重置的时间
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveEnterCombatRefreshSeconds takes integer seconds returns nothing
+endfunction
+
+// 设置打扫战场计时超时重置的时间
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveClearGoalRefreshSeconds takes integer seconds returns nothing
+endfunction
+
+// 设置 到达/返回 攻击坐标超时计时的时间
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveReachStartReturnRefreshSeconds takes integer seconds returns nothing
+endfunction
+
+// 设置 攻击扩散范围
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWaveAttackScatterRange takes real range returns nothing
+endfunction
+
+// 设置变更攻击目标点范围
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetContinueFarAwayRadius takes real radius returns nothing
+endfunction
+
+// 设置首选攻击点半径
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetPreferredLocationsRadius takes real radius returns nothing
+endfunction
+
+// 允许/禁止 攻击组保留采木工人
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetWoodPeonsWarriors takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 在首选坐标搜索敌方单位和建筑
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetSearchPreferredLocations takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 在搜索任何敌方单位和建筑
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetSearchEverywhere takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 搜索敌方单位
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetCanSearchUnit takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 搜索敌方无敌单位和建筑
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetCanSearchInvulnerable takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 优先搜索主基地
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetPrioritizeTownHalls takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 优先搜索主要建筑物
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetPrioritizeMainBuildings takes boolean flag returns nothing
+endfunction
+
+// 优先搜索攻击坐标最近目标
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetPrioritizeNearest takes boolean flag returns nothing
+endfunction
+
+// 设置搜索目标最大循环次数(默认)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetSearchTargetMaxCyclesDefault takes integer value returns nothing
+endfunction
+
+// 设置搜索目标最大循环次数(当前目标为最后攻击目标时)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetSearchTargetMaxCyclesLastTarget takes integer value returns nothing
+endfunction
+
+// 允许/禁止 搜索行军超时
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseReachGoalTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 战斗超时
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseEnterCombatTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 打扫战场超时
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseClearGoalTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 搜索行军超时后刷新
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseReachGoalRefreshTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 战斗超时后刷新
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseEnterCombatRefreshTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 打扫战场超时后刷新
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseClearGoalRefreshTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 到达 攻击坐标超时
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseReachStartRefreshTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 返回 攻击坐标超时
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseReachReturnRefreshTimeout takes boolean flag returns nothing
+endfunction
+
+// 允许/禁止 攻击扩散
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetUseAttackScatter takes boolean flag returns nothing
+endfunction
+
+// 设置变更攻击目标点范围概率
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetContinueAttackPercentage takes integer percentage returns nothing
+endfunction
+
+// 允许/禁止 新攻击目标点过远时衰退变更概率
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetContinueAttackReducePercentageIfFarAway takes boolean flag returns nothing
+endfunction
+
+// 设置新攻击目标点过远时衰退概率百分比
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetContinueAttackReducePercentage takes integer percentage returns nothing
+endfunction
+
+// 设置攻击组进攻 X / Y 坐标，启用 需要攻击组进攻
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetAttackWaveGatherReturnXY takes real x, real y returns nothing
+endfunction
+
+// 设置防御组进攻 X / Y 坐标，启用 需要防御组回防
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetDefenseCaptainHomeXY takes real x, real y returns nothing
+endfunction
+
+// 设置攻击组/防御组的家坐标
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetCaptainHome takes integer whichCaptain returns nothing
+endfunction
+
+// 增加敌人的首选坐标(历史记录)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvAddPreferredLocation takes real x, real y returns integer
+endfunction
+
+// 变更敌人的首选坐标(历史记录)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetPreferredLocationXY takes integer index, real x, real y returns nothing
+endfunction
+
+// 移除敌人的首选坐标(历史记录)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvRemovePreferredLocation takes integer index returns nothing
+endfunction
+
+// 增加目标主要建筑类型(已登记)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvAddMainBuildingType takes integer unitId returns integer
+endfunction
+
+// 变更目标主要建筑类型(已登记)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetMainBuildingTypeId takes integer index, integer unitId returns nothing
+endfunction
+
+// 移除目标主要建筑类型(已登记)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvRemoveMainBuildingType takes integer index returns nothing
+endfunction
+
+// 启用/禁用 自杀
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetSuicide takes boolean flag returns nothing
+endfunction
+
+// 启用/禁用 战胜
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSetDefeated takes boolean flag returns nothing
+endfunction
+
+// 判断单位是否主要建筑
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvIsUnitMainBuilding takes unit u returns boolean
+endfunction
+
+
+// 随机获取敌方主要建筑(已登记)
+// 获取失败时返回null
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvGetRandomTargetableTownHallMainBuilding takes nothing returns unit
+endfunction
+
+// 获取离攻击点最近的敌方主要建筑(已登记)
+// 获取失败时返回null
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvGetNearestTargetableTownHallMainBuilding takes real x, real y returns unit
+endfunction
+
+// 随机获取敌方建筑(已登记)
+// 获取失败时返回null
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvGetRandomTargetableBuilding takes nothing returns unit
+endfunction
+
+// 获取离攻击点最近的敌方建筑(已登记)
+// 获取失败时返回null
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvGetNearestTargetableBuilding takes real x, real y returns unit
+endfunction
+
+// 随机获取敌方单位(已登记)
+// 获取失败时返回null
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvGetRandomTargetableUnit takes nothing returns unit
+endfunction
+
+// 获取离攻击点最近的敌方单位(已登记)
+// 获取失败时返回null
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvGetNearestTargetableUnit takes real x, real y returns unit
+endfunction
+
+// 判断指定玩家是否存在符合指定条件的建筑
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+// @param targetPlayer 指定玩家
+// @param preferredLocations 首选坐标
+// @param prioritizeTownHalls 优先获取基地
+// @param prioritizeMainBuildings 优先获取主要建筑
+function AdvAssignTargetableTownHallsMainBuildings takes player targetPlayer, boolean preferredLocations, boolean prioritizeTownHalls, boolean prioritizeMainBuildings returns boolean
+endfunction
+
+
+// 判断指定玩家是否存在符合指定条件的建筑
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+// @param targetPlayer 指定玩家
+// @param preferredLocations 首选坐标
+function AdvAssignTargetableBuildings takes player targetPlayer, boolean preferredLocations returns boolean
+endfunction
+
+// 判断指定玩家是否存在符合指定条件的单位
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+// @param targetPlayer 指定玩家
+// @param preferredLocations 首选坐标
+function AdvAssignTargetableUnits takes player targetPlayer, boolean preferredLocations returns boolean
+endfunction
+
+// 判断是否可以执行自杀式攻击
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSuicideWaveLaunch takes player targetPlayer, real startX, real startY, boolean attackScatter, real attackScatterRange, boolean searchPreferredLocations, boolean searchEverywhere, boolean canSearchUnits, boolean prioritizeTownHalls, boolean prioritizeMainBuildings, boolean prioritizeNearest, boolean useLastTarget returns boolean
+endfunction
+
+// 进攻行军计时睡眠
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvWaveReachGoalSleep takes integer seconds returns nothing
+endfunction
+
+// 战斗计时睡眠
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvWaveEnterCombatSleep takes integer seconds returns nothing
+endfunction
+
+// 打扫战场计时睡眠
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvWaveClearGoalSleep takes integer seconds returns nothing
+endfunction
+
+// 自杀式攻击进攻行军
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSuicideWaveRoutineReachGoal takes boolean timeout, boolean timeoutRefresh, real targetX, real targetY, boolean attackScatter, real attackScatterRange returns integer
+endfunction
+
+// 自杀式攻击战斗
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSuicideWaveRoutineEnterCombat takes boolean timeout, boolean timeoutRefresh, real targetX, real targetY, boolean attackScatter, real attackScatterRange returns integer
+endfunction
+
+
+// 自杀式攻击打扫战场
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSuicideWaveRoutineClearGoal takes boolean timeout, boolean timeoutRefresh, real targetX, real targetY, boolean attackScatter, real attackScatterRange returns integer
+endfunction
+
+// 进行自杀式攻击(常规)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSuicideWaveRoutine takes player targetPlayer, real startX, real startY, boolean reachGoalTimeout, boolean reachGoalRefreshTimeout, boolean enterCombatTimeout, boolean enterCombatRefreshTimeout, boolean clearGoalTimeout, boolean clearGoalRefreshTimeout, boolean attackScatter, real attackScatterRange, integer continuePercentage returns nothing
+endfunction
+
+// 进行自杀式攻击(指定玩家)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSuicideOnPlayer takes integer seconds, player targetPlayer, real startX, real startY returns nothing
+endfunction
+
+// 按AI难度进行自杀式攻击(指定玩家)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AdvSuicideOnPlayerEx takes integer easy, integer med, integer hard, player targetPlayer, real startX, real startY returns nothing
+endfunction
+
+// 设置攻击组单位(单位类型及数量)
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AttackWavesAttack takes nothing returns nothing
+endfunction
+
+// 攻击循环
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function AttackLoop takes nothing returns nothing
+endfunction
+
 // --------------------------------------------------------------------------------------------------
 //  force_level
 // --------------------------------------------------------------------------------------------------
@@ -2012,6 +2692,16 @@ endfunction
 // 升级科技序列
 // 部分官方战役AI脚本的功能
 function more_upgrades takes nothing returns nothing
+endfunction
+
+// 升级科技
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function ResearchUpgrades takes nothing returns nothing
+endfunction
+
+// 升级科技循环
+// 官方战役洛丹伦的终焉之日第三关AI脚本变量
+function ResearchLoop takes nothing returns nothing
 endfunction
 
 // --------------------------------------------------------------------------------------------------
@@ -2255,5 +2945,3 @@ endfunction
 // 可用于参数赋值，如设置AI名字、设置各选项等
 function main takes nothing returns nothing
 endfunction
-
-
