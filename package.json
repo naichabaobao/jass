@@ -69,13 +69,23 @@
         "jass.diagnostics.severity.errors": {
           "type": "string",
           "default": "error",
-          "enum": ["error", "warning", "information", "hint"],
+          "enum": [
+            "error",
+            "warning",
+            "information",
+            "hint"
+          ],
           "description": "错误级别的诊断显示严重程度。此设置优先于 jass.config.json。"
         },
         "jass.diagnostics.severity.warnings": {
           "type": "string",
           "default": "warning",
-          "enum": ["error", "warning", "information", "hint"],
+          "enum": [
+            "error",
+            "warning",
+            "information",
+            "hint"
+          ],
           "description": "警告级别的诊断显示严重程度。此设置优先于 jass.config.json。"
         },
         "jass.literal.completion": {
