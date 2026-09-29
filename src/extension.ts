@@ -10,7 +10,6 @@ import { SignatureHelpProvider } from './provider/signature-help-provider';
 import { OutlineProvider } from './provider/outline-provider';
 import { HoverProvider } from './provider/hover-provider';
 import { DefinitionProvider } from './provider/definition-provider';
-import { KeywordDefinitionProvider } from './provider/keyword-definition-provider';
 import { TypeDefinitionProvider } from './provider/type-definition-provider';
 import { ReferenceProvider } from './provider/reference-provider';
 import { InlayHintsProvider } from './provider/inlay-hints-provider';
@@ -215,150 +214,6 @@ async function showSupportPrompt(context: vscode.ExtensionContext): Promise<void
     }
 }
 
-async function openKeywordDocWebview(context: vscode.ExtensionContext, docFileName?: string): Promise<void> {
-    if (!docFileName || typeof docFileName !== 'string') {
-        vscode.window.showWarningMessage('Keyword document is empty');
-        return;
-    }
-
-    const safeName = path.basename(docFileName);
-    const htmlPath = path.join(context.extensionPath, 'static', 'html', safeName);
-    const keywordName = safeName.replace('.html', '');
-    const htmlContent = fs.existsSync(htmlPath)
-        ? fs.readFileSync(htmlPath, 'utf-8')
-        : buildFallbackKeywordDocHtml(keywordName);
-    const enhancedHtmlContent = enhanceKeywordDocHtml(htmlContent);
-    const panel = vscode.window.createWebviewPanel(
-        'jassKeywordDoc',
-        `JASS Keyword: ${keywordName}`,
-        vscode.ViewColumn.Beside,
-        {
-            enableScripts: true,
-            localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'static', 'html')]
-        }
-    );
-    panel.webview.html = enhancedHtmlContent;
-}
-
-function enhanceKeywordDocHtml(html: string): string {
-    const highlightStyle = `
-<style id="jass-keyword-highlight-style">
-  .jass-kw { color: #c586c0; font-weight: 600; }
-  .jass-ty { color: #4ec9b0; font-weight: 600; }
-  .jass-num { color: #b5cea8; }
-  .jass-comment { color: #6a9955; }
-</style>`;
-
-    const highlightScript = `
-<script id="jass-keyword-highlight-script">
-(function () {
-  const keywords = [
-    'endfunction','endglobals','endloop','exitwhen','function','constant','native','local','type','set','call',
-    'takes','returns','extends','array','elseif','endif','then','loop','return','globals','if','else','and','or','not',
-    'library','initializer','needs','uses','requires','endlibrary','scope','endscope','private','public','static',
-    'interface','endinterface','implement','struct','endstruct','method','endmethod','this','delegate','operator',
-    'debug','module','endmodule','optional','stub','key','thistype','oninit','ondestroy','hook','defaults','execute',
-    'create','destroy','size','name','allocate','deallocate'
-  ];
-  const typeWords = ['integer','real','boolean','string','handle','code','nothing','true','false','null'];
-  const kwPattern = new RegExp('\\\b(' + keywords.join('|') + ')\\\b', 'g');
-  const tyPattern = new RegExp('\\\b(' + typeWords.join('|') + ')\\\b', 'g');
-  const numPattern = /\\\b\\d+(?:\\.\\d+)?\\b/g;
-
-  function escapeHtml(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
-  function highlightCode(raw) {
-    const lines = raw.split('\n');
-    return lines.map((line) => {
-      const commentIndex = line.indexOf('//');
-      let codePart = line;
-      let commentPart = '';
-      if (commentIndex >= 0) {
-        codePart = line.slice(0, commentIndex);
-        commentPart = line.slice(commentIndex);
-      }
-
-      let out = escapeHtml(codePart);
-      out = out.replace(kwPattern, '<span class="jass-kw">$1</span>');
-      out = out.replace(tyPattern, '<span class="jass-ty">$1</span>');
-      out = out.replace(numPattern, '<span class="jass-num">$&</span>');
-
-      if (commentPart) {
-        out += '<span class="jass-comment">' + escapeHtml(commentPart) + '</span>';
-      }
-      return out;
-    }).join('\n');
-  }
-
-  document.querySelectorAll('pre code').forEach((node) => {
-    const text = node.textContent || '';
-    node.innerHTML = highlightCode(text);
-  });
-})();
-</script>`;
-
-    const withStyle = html.includes('</head>')
-        ? html.replace('</head>', `${highlightStyle}\n</head>`)
-        : `${highlightStyle}\n${html}`;
-    const withScript = withStyle.includes('</body>')
-        ? withStyle.replace('</body>', `${highlightScript}\n</body>`)
-        : `${withStyle}\n${highlightScript}`;
-    return withScript;
-}
-
-function buildFallbackKeywordDocHtml(keyword: string): string {
-    const shownKeyword = keyword || 'keyword';
-    return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${shownKeyword} - JASS/vJass 文档</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #1e1e1e; color: #d4d4d4; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 28px 24px; }
-    h1 { margin: 0 0 12px; color: #4ec9b0; font-size: 30px; }
-    .tip { margin: 0 0 18px; color: #9cdcfe; }
-    .card { background: #252526; border: 1px solid #333; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
-    h2 { margin: 0 0 10px; color: #c586c0; font-size: 18px; }
-    p { margin: 0 0 10px; line-height: 1.7; }
-    pre { margin: 0; background: #1b1b1c; border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
-    code { font-family: Consolas, "Courier New", monospace; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>${shownKeyword}</h1>
-    <p class="tip">该关键字已支持文档跳转；当前显示的是内置通用文档模板。</p>
-    <section class="card">
-      <h2>用途</h2>
-      <p>用于 vJass/JASS 语法结构中的关键语义节点。请结合上下文（函数、结构、模块、库）理解该关键字的作用域与执行时机。</p>
-    </section>
-    <section class="card">
-      <h2>示例</h2>
-      <pre><code>// 示例（按上下文调整）
-library Demo initializer init
-    private static method init takes nothing returns nothing
-        // keyword: ${shownKeyword}
-    endmethod
-endlibrary</code></pre>
-    </section>
-    <section class="card">
-      <h2>注意事项</h2>
-      <p>1) 保持关键字与语法块成对出现（如 library/endlibrary、struct/endstruct）。</p>
-      <p>2) 避免与标识符重名（如变量名、方法名）。</p>
-      <p>3) 关注可见性（public/private）与静态语义（static）。</p>
-    </section>
-  </div>
-</body>
-</html>`;
-}
-
 export async function activate(context: vscode.ExtensionContext) {
     console.log('JASS Extension is activating...');
 
@@ -518,7 +373,6 @@ export async function activate(context: vscode.ExtensionContext) {
         },
 
         // 跳转定义：vJASS + 特殊文件 + Zinc
-        // （关键字文档跳转是独立开关 jass.keywordDefinition，属常驻特性，见下方）
         definition: () => {
             const definitionProvider = new DefinitionProvider(manager);
             const specialDefinitionProvider = new SpecialDefinitionProvider();
@@ -693,15 +547,6 @@ export async function activate(context: vscode.ExtensionContext) {
     // 按当前配置决定每个特性由谁负责
     await lspModeController.apply();
 
-    // 关键字文档跳转（独立 Provider，由 jass.keywordDefinition 控制，默认关闭）
-    const keywordDefinitionProvider = new KeywordDefinitionProvider(dataEnterManager);
-    context.subscriptions.push(
-        vscode.languages.registerDefinitionProvider(
-            jassSelector,
-            keywordDefinitionProvider
-        )
-    );
-
     // 创建并注册 TypeDefinitionProvider（跳转到类型定义支持）
     const typeDefinitionProvider = new TypeDefinitionProvider(dataEnterManager);
     context.subscriptions.push(
@@ -827,13 +672,6 @@ export async function activate(context: vscode.ExtensionContext) {
         });
     }
 
-    // 注册命令：打开关键字文档 Webview（供 KeywordDefinitionProvider 在启用 jass.keywordDefinition 时调用）
-    context.subscriptions.push(
-        vscode.commands.registerCommand('jass.openKeywordDocWebview', async (docFileName?: string) => {
-            await openKeywordDocWebview(context, docFileName);
-        })
-    );
-
     // 注册调试命令：测试 special 解析器（使用测试数据）
     context.subscriptions.push(
         vscode.commands.registerCommand('jass.testSpecialParsers', async () => {
@@ -919,12 +757,6 @@ export async function activate(context: vscode.ExtensionContext) {
                     "**/*.ai",
                     "**/*.zn"
                 ],
-                "parsing": {
-                    "enableTextMacro": true,
-                    "enablePreprocessor": true,
-                    "enableLuaBlocks": false,
-                    "strictMode": false
-                },
                 "standardLibraries": {
                     "common.j": "./libs/common.j",
                     "common.ai": "./libs/common.ai",
@@ -944,8 +776,7 @@ export async function activate(context: vscode.ExtensionContext) {
                     "checkTypes": true,
                     "checkUndefined": true,
                     "checkUnused": false,
-                    "checkArrayBounds": true,
-                    "checkHandleLeaks": true
+                    "checkArrayBounds": true
                 }
             };
 

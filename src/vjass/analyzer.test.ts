@@ -2354,55 +2354,6 @@ endfunction`,
         }
     );
 
-    // ========== 测试 49: 句柄泄漏检测 ==========
-    console.log("\n【测试 49】句柄泄漏检测");
-
-    testSemantic(
-        "未销毁 timer 应该产生 warning 级检查",
-        `function LeakTimer takes nothing returns nothing
-    local timer t = CreateTimer()
-endfunction`,
-        (errors) => {
-            const checks = errors.checkValidationErrors || [];
-            return checks.some((e) =>
-                e.severity === "warning" &&
-                e.message.includes("Potential handle leak") &&
-                e.message.includes("timer")
-            );
-        }
-    );
-
-    testSemantic(
-        "赋值到全局后未销毁应降级为 hint",
-        `globals
-    timer g_timer = null
-endglobals
-
-function TransferTimer takes nothing returns nothing
-    local timer t = CreateTimer()
-    set g_timer = t
-endfunction`,
-        (errors) => {
-            const checks = errors.checkValidationErrors || [];
-            return checks.some((e) =>
-                e.severity === "hint" &&
-                e.message.includes("assigned outside local scope")
-            );
-        }
-    );
-
-    testSemantic(
-        "正常销毁不应触发句柄泄漏告警",
-        `function CleanGroup takes nothing returns nothing
-    local group g = CreateGroup()
-    call DestroyGroup(g)
-endfunction`,
-        (errors) => {
-            const checks = errors.checkValidationErrors || [];
-            return !checks.some((e) => e.message.includes("Potential handle leak"));
-        }
-    );
-
     // ========== 输出测试结果 ==========
     console.log("\n========== 测试结果 ==========");
     console.log(`总计: ${totalPassed + totalFailed} 个测试`);
@@ -2426,3 +2377,1179 @@ export function runAnalyzerTypeTests(): void {
 if (typeof require !== "undefined" && require.main === module) {
     runAnalyzerTests();
 }
+
+/**
+ * 语义分析器测试函数
+ * 测试各种语义检查场景
+ */
+export function testSemanticAnalyzer(): void {
+    console.log("\n========== vJass 语义分析器测试 ==========\n");
+
+    let totalPassed = 0;
+    let totalFailed = 0;
+
+    /**
+     * 测试辅助函数
+     */
+    function testSemantic(
+        name: string,
+        code: string,
+        validator: (errors: ErrorCollection, parser: Parser) => boolean
+    ): boolean {
+        const parser = new Parser(code);
+        const ast = parser.parse();
+
+        const result = analyzeSemantics(ast);
+        const success = validator(result, parser);
+
+        if (success) {
+            console.log(`✓ ${name}`);
+            totalPassed++;
+        } else {
+            console.log(`✗ ${name}`);
+            if (result.errors.length > 0) {
+                console.log(`  错误: ${result.errors.map(e => e.message).join(", ")}`);
+            }
+            if (result.warnings.length > 0) {
+                console.log(`  警告: ${result.warnings.map(w => w.message).join(", ")}`);
+            }
+            totalFailed++;
+        }
+        return success;
+    }
+
+    // 测试 1: 库的循环依赖检测
+    console.log("测试 1: 库的循环依赖检测");
+    testSemantic(
+        "检测库的循环依赖",
+        `library A requires B
+endlibrary
+library B requires A
+endlibrary`,
+        (errors) => {
+            return errors.errors.some(e => 
+                e.message.toLowerCase().includes("circular") || 
+                e.message.includes("循环依赖") ||
+                e.message.includes("Circular dependency")
+            );
+        }
+    );
+
+    // 测试 2: 库的依赖检查
+    console.log("\n测试 2: 库的依赖检查");
+    testSemantic(
+        "检测未声明的库依赖",
+        `library A requires NonExistentLib
+endlibrary`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("not found") || e.message.includes("未找到"));
+        }
+    );
+
+    testSemantic(
+        "optional 依赖不报错",
+        `library A requires optional OptionalLib
+endlibrary`,
+        (errors) => {
+            // optional 依赖不存在不应该报错
+            return !errors.errors.some(e => e.message.includes("OptionalLib"));
+        }
+    );
+
+    // 测试 3: 结构继承检查
+    console.log("\n测试 3: 结构继承检查");
+    testSemantic(
+        "检测未声明的父结构",
+        `struct Child extends Parent
+integer x
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("not found") || e.message.includes("未找到"));
+        }
+    );
+
+    testSemantic(
+        "正确的结构继承",
+        `struct Parent
+integer x
+endstruct
+struct Child extends Parent
+integer y
+endstruct`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    // 测试 4: 结构索引空间增强限制
+    console.log("\n测试 4: 结构索引空间增强限制");
+    testSemantic(
+        "继承的结构不能使用索引空间增强",
+        `struct Parent
+integer x
+endstruct
+struct Child[10000] extends Parent
+integer y
+endstruct`,
+        (errors, parser) => {
+            // 解析器可能在解析阶段就检查了这个限制
+            // 或者语义分析器会检查
+            const parserError = parser.errors.errors.some(e => 
+                e.message.includes("index size enhancement") || 
+                e.message.includes("index space enhancement") ||
+                e.message.includes("索引空间增强")
+            );
+            const semanticError = errors.errors.some(e => 
+                e.message.includes("index space enhancement") || 
+                e.message.includes("索引空间增强") ||
+                e.message.includes("extend") && e.message.includes("index")
+            );
+            return parserError || semanticError;
+        }
+    );
+
+    // 测试 5: 接口实现检查
+    console.log("\n测试 5: 接口实现检查");
+    testSemantic(
+        "结构必须实现接口的所有方法",
+        `interface Printable
+method toString takes nothing returns string
+endinterface
+struct MyStruct extends Printable
+integer value
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("must implement") || e.message.includes("必须实现"));
+        }
+    );
+
+    testSemantic(
+        "正确的接口实现",
+        `interface Printable
+method toString takes nothing returns string
+endinterface
+struct MyStruct extends Printable
+integer value
+method toString takes nothing returns string
+return I2S(this.value)
+endmethod
+endstruct`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    // 测试 6: 接口 defaults 关键字
+    console.log("\n测试 6: 接口 defaults 关键字");
+    testSemantic(
+        "有 defaults 的方法可以不实现",
+        `interface TestInterface
+method optionalMethod takes nothing returns boolean defaults false
+method requiredMethod takes nothing returns nothing
+endinterface
+struct MyStruct extends TestInterface
+method requiredMethod takes nothing returns nothing
+call BJDebugMsg("test")
+endmethod
+endstruct`,
+        (errors) => {
+            // optionalMethod 有 defaults，可以不实现，不应该报错
+            return !errors.errors.some(e => e.message.includes("optionalMethod"));
+        }
+    );
+
+    // 测试 7: 接口不能声明 onDestroy
+    console.log("\n测试 7: 接口不能声明 onDestroy");
+    testSemantic(
+        "接口不能声明 onDestroy 方法",
+        `interface TestInterface
+method onDestroy takes nothing returns nothing
+endinterface`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("onDestroy"));
+        }
+    );
+
+    // 测试 8: 方法签名匹配检查
+    console.log("\n测试 8: 方法签名匹配检查");
+    testSemantic(
+        "方法返回类型必须匹配",
+        `interface TestInterface
+method test takes nothing returns integer
+endinterface
+struct MyStruct extends TestInterface
+method test takes nothing returns string
+return "test"
+endmethod
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("Return type") || e.message.includes("返回类型"));
+        }
+    );
+
+    testSemantic(
+        "方法参数数量必须匹配",
+        `interface TestInterface
+method test takes integer x, integer y returns nothing
+endinterface
+struct MyStruct extends TestInterface
+method test takes integer x returns nothing
+endmethod
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("Parameter count") || e.message.includes("参数数量"));
+        }
+    );
+
+    // 测试 9: 数组结构限制
+    console.log("\n测试 9: 数组结构限制");
+    testSemantic(
+        "数组结构不能有默认值",
+        `struct MyArrayStruct extends array
+integer value = 0
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => 
+                e.message.includes("默认值") ||
+                e.message.toLowerCase().includes("default") ||
+                e.message.toLowerCase().includes("array struct") && e.message.toLowerCase().includes("default")
+            );
+        }
+    );
+
+    testSemantic(
+        "数组结构不能有数组成员",
+        `struct MyArrayStruct extends array
+integer array values[10]
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => 
+                e.message.includes("数组成员") ||
+                e.message.toLowerCase().includes("array member") ||
+                e.message.toLowerCase().includes("array struct") && e.message.toLowerCase().includes("array")
+            );
+        }
+    );
+
+    testSemantic(
+        "数组结构不能声明 onDestroy",
+        `struct MyArrayStruct extends array
+method onDestroy takes nothing returns nothing
+endmethod
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("onDestroy"));
+        }
+    );
+
+    // 测试 10: 结构实例上限检查
+    console.log("\n测试 10: 结构实例上限检查");
+    testSemantic(
+        "数组成员过大导致无法创建实例",
+        `struct BigStruct
+integer array data[10000]
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("preventing any instances") || e.message.includes("无法创建任何实例"));
+        }
+    );
+
+    // 测试 11: 静态 if 检查
+    console.log("\n测试 11: 静态 if 检查");
+    testSemantic(
+        "静态 if 条件必须是常量布尔值（非常量变量）",
+        `globals
+integer x = 5
+endglobals
+function test takes nothing returns nothing
+static if x then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("static if") || e.message.includes("Static if") || e.message.includes("not a constant") || e.message.includes("不是常量"));
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用布尔字面量（true）",
+        `function test takes nothing returns nothing
+static if true then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用布尔字面量（false）",
+        `function test takes nothing returns nothing
+static if false then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用常量布尔变量",
+        `globals
+constant boolean DO_TEST = true
+endglobals
+function test takes nothing returns nothing
+static if DO_TEST then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用非布尔常量变量",
+        `globals
+constant integer VALUE = 5
+endglobals
+function test takes nothing returns nothing
+static if VALUE then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            // 根据文档和代码逻辑，整数常量应该被允许（非零为真，零为假）
+            // 所以这个测试应该通过，不应该报错
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用 and 操作符",
+        `globals
+constant boolean A = true
+constant boolean B = false
+endglobals
+function test takes nothing returns nothing
+static if A and B then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用 or 操作符",
+        `globals
+constant boolean A = true
+constant boolean B = false
+endglobals
+function test takes nothing returns nothing
+static if A or B then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用 not 操作符",
+        `globals
+constant boolean A = true
+endglobals
+function test takes nothing returns nothing
+static if not A then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用复杂的布尔表达式",
+        `globals
+constant boolean A = true
+constant boolean B = false
+endglobals
+function test takes nothing returns nothing
+static if A and not B then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用 LIBRARY_ 库常量",
+        `library MyLib
+endlibrary
+function test takes nothing returns nothing
+static if LIBRARY_MyLib then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用不存在的 LIBRARY_ 库常量",
+        `function test takes nothing returns nothing
+static if LIBRARY_NonExistentLib then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            // 不存在的库常量应该返回 false，但仍然是有效的常量表达式
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态 if 使用不允许的操作符（+）",
+        `globals
+constant boolean A = true
+constant boolean B = false
+endglobals
+function test takes nothing returns nothing
+static if A + B then
+call BJDebugMsg("test")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("and/or/not") || e.message.includes("操作符"));
+        }
+    );
+
+    // 测试 12: 函数调用参数检查
+    console.log("\n测试 12: 函数调用参数检查");
+    testSemantic(
+        "函数调用参数数量不匹配",
+        `function test takes integer x, integer y returns nothing
+endfunction
+function caller takes nothing returns nothing
+call test(1)
+endfunction`,
+        (errors) => {
+            // 检查错误消息中是否包含"参数"相关的内容
+            return errors.errors.some(e =>
+                e.message.includes("parameter") || e.message.includes("参数") ||
+                (e.message.includes("expects") && e.message.includes("provided")) ||
+                (e.message.includes("期望") && e.message.includes("提供"))
+            );
+        }
+    );
+
+    // 测试 21: 方法调用检查
+    console.log("\n测试 21: 方法调用检查");
+    testSemantic(
+        "实例方法调用 - 正确的方法",
+        `struct TestStruct
+method testMethod takes integer x returns nothing
+call BJDebugMsg(I2S(x))
+endmethod
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+call ts.testMethod(5)
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "实例方法调用 - 方法不存在",
+        `struct TestStruct
+integer value
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+call ts.nonExistentMethod()
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("not found") && e.message.includes("Method") || e.message.includes("未找到方法"));
+        }
+    );
+
+    testSemantic(
+        "静态方法调用 - 正确的方法",
+        `struct TestStruct
+static method createInstance takes integer x returns TestStruct
+local TestStruct ts = TestStruct.allocate()
+set ts.value = x
+return ts
+endmethod
+integer value
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.createInstance(10)
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "方法调用参数数量不匹配",
+        `struct TestStruct
+method testMethod takes integer x, integer y returns nothing
+endmethod
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+call ts.testMethod(5)
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => 
+                e.message.includes("参数数量") || 
+                e.message.includes("期望") ||
+                e.message.toLowerCase().includes("parameter") ||
+                e.message.toLowerCase().includes("expects") ||
+                e.message.toLowerCase().includes("provided")
+            );
+        }
+    );
+
+    testSemantic(
+        "接口方法调用",
+        `interface TestInterface
+method doSomething takes nothing returns nothing
+endinterface
+struct TestStruct extends TestInterface
+method doSomething takes nothing returns nothing
+call BJDebugMsg("test")
+endmethod
+endstruct
+function test takes nothing returns nothing
+local TestInterface ti = TestStruct.create()
+call ti.doSomething()
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "通过委托调用方法",
+        `struct A
+method performAction takes nothing returns nothing
+call BJDebugMsg("action")
+endmethod
+endstruct
+struct B
+delegate A deleg
+static method create takes nothing returns B
+local B b = B.allocate()
+set b.deleg = A.create()
+return b
+endmethod
+endstruct
+function test takes nothing returns nothing
+local B b = B.create()
+call b.performAction()
+endfunction`,
+        (errors) => {
+            // 委托的方法调用应该能找到
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "继承结构的方法调用",
+        `struct Parent
+method parentMethod takes nothing returns nothing
+call BJDebugMsg("parent")
+endmethod
+endstruct
+struct Child extends Parent
+method childMethod takes nothing returns nothing
+call this.parentMethod()
+endmethod
+endstruct
+function test takes nothing returns nothing
+local Child c = Child.create()
+call c.parentMethod()
+call c.childMethod()
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    // 测试 13: 重复声明检查
+    console.log("\n测试 13: 重复声明检查");
+    testSemantic(
+        "检测重复的结构声明",
+        `struct Test
+integer x
+endstruct
+struct Test
+integer y
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("already declared") || e.message.includes("已声明"));
+        }
+    );
+
+    testSemantic(
+        "检测重复的库声明",
+        `library Test
+endlibrary
+library Test
+endlibrary`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("already declared") || e.message.includes("已声明"));
+        }
+    );
+
+    // 测试 14: 结构继承链循环检测
+    console.log("\n测试 14: 结构继承链循环检测");
+    testSemantic(
+        "检测结构继承链中的循环",
+        `struct A extends B
+endstruct
+struct B extends C
+endstruct
+struct C extends A
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => 
+                e.message.includes("循环继承") ||
+                e.message.toLowerCase().includes("circular") ||
+                e.message.includes("Circular inheritance")
+            );
+        }
+    );
+
+    // 测试 15: 模块检查
+    console.log("\n测试 15: 模块检查");
+    testSemantic(
+        "检测未声明的模块",
+        `struct MyStruct
+implement NonExistentModule
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("not found") || e.message.includes("未找到"));
+        }
+    );
+
+    testSemantic(
+        "optional 模块不报错",
+        `struct MyStruct
+implement optional OptionalModule
+endstruct`,
+        (errors) => {
+            return !errors.errors.some(e => e.message.includes("OptionalModule"));
+        }
+    );
+
+    // 测试 16: 作用域检查
+    console.log("\n测试 16: 作用域检查");
+    testSemantic(
+        "检测重复的作用域声明",
+        `scope Test
+endscope
+scope Test
+endscope`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("already declared") || e.message.includes("已声明"));
+        }
+    );
+
+    // 测试 17: 结构成员检查
+    console.log("\n测试 17: 结构成员检查");
+    testSemantic(
+        "检测重复的结构成员",
+        `struct Test
+integer x
+integer x
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("already declared") || e.message.includes("已声明"));
+        }
+    );
+
+    // 测试 18: 函数声明检查
+    console.log("\n测试 18: 函数声明检查");
+    testSemantic(
+        "检测重复的函数声明",
+        `function test takes nothing returns nothing
+endfunction
+function test takes nothing returns nothing
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("already declared") || e.message.includes("已声明"));
+        }
+    );
+
+    // 测试 19: 类型声明检查
+    console.log("\n测试 19: 类型声明检查");
+    testSemantic(
+        "检测重复的类型声明",
+        `type MyType extends integer
+type MyType extends integer`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("already declared") || e.message.includes("已声明"));
+        }
+    );
+
+    // 测试 20: 接口方法参数类型检查
+    console.log("\n测试 20: 接口方法参数类型检查");
+    testSemantic(
+        "方法参数类型必须匹配",
+        `interface TestInterface
+method test takes integer x returns nothing
+endinterface
+struct MyStruct extends TestInterface
+method test takes string x returns nothing
+endmethod
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("Parameter") && e.message.includes("type") || e.message.includes("参数类型"));
+        }
+    );
+
+    // 测试 22: 常量变量在 static if 中的使用
+    console.log("\n测试 22: 常量变量在 static if 中的使用");
+    testSemantic(
+        "static if 使用常量整数变量",
+        `globals
+constant integer DEBUG_MODE = 1
+endglobals
+function test takes nothing returns nothing
+static if DEBUG_MODE then
+call BJDebugMsg("debug")
+endif
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "static if 使用常量实数变量",
+        `globals
+constant real PI = 3.14159
+endglobals
+function test takes nothing returns nothing
+static if PI > 3.0 then
+call BJDebugMsg("pi is large")
+endif
+endfunction`,
+        (errors) => {
+            // 实数常量在 static if 中应该报错（只支持布尔值）
+            return errors.errors.some(e => e.message.includes("boolean") || e.message.includes("布尔值") || e.message.includes("constant") || e.message.includes("常量"));
+        }
+    );
+
+    testSemantic(
+        "static if 使用常量字符串变量",
+        `globals
+constant string MODE = "debug"
+endglobals
+function test takes nothing returns nothing
+static if MODE == "debug" then
+call BJDebugMsg("debug mode")
+endif
+endfunction`,
+        (errors) => {
+            // 字符串常量在 static if 中应该报错（只支持布尔值）
+            return errors.errors.some(e => e.message.includes("boolean") || e.message.includes("布尔值") || e.message.includes("constant") || e.message.includes("常量"));
+        }
+    );
+
+    // 测试 23: 类型兼容性测试
+    console.log("\n测试 23: 类型兼容性测试");
+    testSemantic(
+        "integer 和 real 类型兼容",
+        `function test takes real x returns nothing
+endfunction
+function main takes nothing returns nothing
+local integer i = 5
+call test(i)
+endfunction`,
+        (errors) => {
+            // integer 可以传递给 real 参数
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "real 和 integer 类型兼容",
+        `function test takes integer x returns nothing
+endfunction
+function main takes nothing returns nothing
+local real r = 5.0
+call test(r)
+endfunction`,
+        (errors) => {
+            // real 可以传递给 integer 参数
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "子结构可以赋值给父结构",
+        `struct Parent
+integer x
+endstruct
+struct Child extends Parent
+integer y
+endstruct
+function test takes Parent p returns nothing
+endfunction
+function main takes nothing returns nothing
+local Child c = Child.create()
+call test(c)
+endfunction`,
+        (errors) => {
+            // 子结构可以赋值给父结构
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "结构可以赋值给实现的接口",
+        `interface Printable
+method toString takes nothing returns string
+endinterface
+struct MyStruct extends Printable
+method toString takes nothing returns string
+return "test"
+endmethod
+endstruct
+function test takes Printable p returns nothing
+endfunction
+function main takes nothing returns nothing
+local MyStruct s = MyStruct.create()
+call test(s)
+endfunction`,
+        (errors) => {
+            // 结构可以赋值给实现的接口
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "thistype 类型兼容性",
+        `struct Node
+thistype next
+static method create takes nothing returns thistype
+local thistype n = thistype.allocate()
+return n
+endmethod
+endstruct`,
+        (errors) => {
+            // thistype 应该能正确解析
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "类型不兼容应该报错",
+        `function test takes integer x returns nothing
+endfunction
+function main takes nothing returns nothing
+local string s = "test"
+call test(s)
+endfunction`,
+        (errors) => {
+            // string 不能传递给 integer 参数
+            return errors.warnings.some(w => w.message.includes("incompatible") || w.message.includes("不兼容")) ||
+                errors.errors.some(e => e.message.includes("incompatible") || e.message.includes("不兼容"));
+        }
+    );
+
+    // 测试 24: 赋值语句测试
+    console.log("\n测试 24: 赋值语句测试");
+    testSemantic(
+        "常量变量不能被赋值",
+        `globals
+constant integer MAX_VALUE = 100
+endglobals
+function test takes nothing returns nothing
+set MAX_VALUE = 200
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => 
+                (e.message.includes("常量") && e.message.includes("不能被赋值")) ||
+                (e.message.toLowerCase().includes("constant") && e.message.toLowerCase().includes("assign")) ||
+                (e.message.toLowerCase().includes("constant") && e.message.toLowerCase().includes("cannot"))
+            );
+        }
+    );
+
+    testSemantic(
+        "只读成员不能被赋值",
+        `struct TestStruct
+readonly integer value = 10
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+set ts.value = 20
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => 
+                (e.message.includes("只读") && e.message.includes("不能被赋值")) ||
+                (e.message.toLowerCase().includes("readonly") && e.message.toLowerCase().includes("assign")) ||
+                (e.message.toLowerCase().includes("readonly") && e.message.toLowerCase().includes("cannot"))
+            );
+        }
+    );
+
+    testSemantic(
+        "只读静态成员不能被赋值",
+        `struct TestStruct
+readonly static integer count = 0
+endstruct
+function test takes nothing returns nothing
+set TestStruct.count = 10
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => 
+                (e.message.includes("只读") && e.message.includes("不能被赋值")) ||
+                (e.message.toLowerCase().includes("readonly") && e.message.toLowerCase().includes("assign")) ||
+                (e.message.toLowerCase().includes("readonly") && e.message.toLowerCase().includes("cannot"))
+            );
+        }
+    );
+
+    testSemantic(
+        "只读成员访问赋值",
+        `struct TestStruct
+readonly integer value = 10
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+set ts.value = 20
+endfunction`,
+        (errors) => {
+            return errors.errors.some(e => 
+                (e.message.includes("只读成员") && e.message.includes("不能被赋值")) ||
+                (e.message.includes("只读") && e.message.includes("不能被赋值")) ||
+                (e.message.toLowerCase().includes("readonly") && e.message.toLowerCase().includes("assign")) ||
+                (e.message.toLowerCase().includes("readonly") && e.message.toLowerCase().includes("cannot"))
+            );
+        }
+    );
+
+    testSemantic(
+        "正常变量可以赋值",
+        `globals
+integer counter = 0
+endglobals
+function test takes nothing returns nothing
+set counter = 10
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "结构成员可以赋值",
+        `struct TestStruct
+integer value
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+set ts.value = 20
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    // 测试 25: 更多方法调用测试
+    console.log("\n测试 25: 更多方法调用测试");
+    testSemantic(
+        "静态方法调用 - allocate",
+        `struct TestStruct
+integer value
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.allocate()
+set ts.value = 10
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "实例方法调用 - destroy",
+        `struct TestStruct
+integer value
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+call ts.destroy()
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "静态方法调用 - destroy",
+        `struct TestStruct
+integer value
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+call TestStruct.destroy(ts)
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "方法调用参数类型兼容",
+        `struct TestStruct
+method test takes real x returns nothing
+endmethod
+endstruct
+function main takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+local integer i = 5
+call ts.test(i)
+endfunction`,
+        (errors) => {
+            // integer 可以传递给 real 参数
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "方法调用返回类型使用",
+        `struct TestStruct
+static method create takes nothing returns TestStruct
+local TestStruct ts = TestStruct.allocate()
+return ts
+endmethod
+endstruct
+function test takes nothing returns nothing
+local TestStruct ts = TestStruct.create()
+endfunction`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    // 测试 26: 委托检查
+    console.log("\n测试 26: 委托检查");
+    testSemantic(
+        "委托类型必须存在",
+        `struct A
+integer x
+endstruct
+struct B
+delegate NonExistentStruct deleg
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("Delegate type") && e.message.includes("not found"));
+        }
+    );
+
+    testSemantic(
+        "委托类型必须是结构类型",
+        `interface I
+endinterface
+struct A
+delegate I deleg
+endstruct`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("Delegate type") && e.message.includes("must be a struct type"));
+        }
+    );
+
+    testSemantic(
+        "正确的委托声明",
+        `struct A
+integer x
+endstruct
+struct B
+delegate A deleg
+endstruct`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    // 测试 27: Hook 语句检查
+    console.log("\n测试 27: Hook 语句检查");
+    testSemantic(
+        "钩子函数必须存在",
+        `function MyFunction takes nothing returns nothing
+endfunction
+hook NonExistentFunction NonExistentHookFunction`,
+        (errors) => {
+            // 被钩住的函数可能是 native 函数，所以这里只检查钩子函数
+            return errors.errors.some(e => e.message.includes("Hook function") && e.message.includes("not found")) ||
+                   errors.warnings.some(w => w.message.includes("Target function"));
+        }
+    );
+
+    testSemantic(
+        "钩子方法必须存在",
+        `struct MyStruct
+method myMethod takes nothing returns nothing
+endmethod
+endstruct
+function TargetFunc takes nothing returns nothing
+endfunction
+hook TargetFunc MyStruct.NonExistentMethod`,
+        (errors) => {
+            return errors.errors.some(e => e.message.includes("Hook method") && e.message.includes("not found"));
+        }
+    );
+
+    testSemantic(
+        "正确的 Hook 语句（函数）",
+        `function TargetFunc takes nothing returns nothing
+endfunction
+function HookFunc takes nothing returns nothing
+endfunction
+hook TargetFunc HookFunc`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    testSemantic(
+        "正确的 Hook 语句（方法）",
+        `struct MyStruct
+method myMethod takes nothing returns nothing
+endmethod
+endstruct
+function TargetFunc takes nothing returns nothing
+endfunction
+hook TargetFunc MyStruct.myMethod`,
+        (errors) => {
+            return errors.errors.length === 0;
+        }
+    );
+
+    // 输出测试结果
+    console.log("\n========== 测试结果 ==========");
+    console.log(`总计: ${totalPassed + totalFailed} 个测试`);
+    console.log(`通过: ${totalPassed} 个`);
+    console.log(`失败: ${totalFailed} 个`);
+    console.log(`成功率: ${totalPassed + totalFailed > 0 ? ((totalPassed / (totalPassed + totalFailed)) * 100).toFixed(2) : 0}%`);
+    console.log("=============================\n");
+}
+

@@ -392,7 +392,6 @@ function run(): void {
                 checkTypes: true,
                 checkUnused: true,
                 checkArrayBounds: true,
-                checkHandleLeaks: true,
                 returnBehaviorMode: "adaptive"
             }
         );

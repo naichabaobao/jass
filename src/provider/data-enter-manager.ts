@@ -16,6 +16,7 @@ import { InnerZincParser } from '../vjass/inner-zinc-parser';
 import { ZincProgram } from '../vjass/zinc-ast';
 import { analyzeSemantics, analyzeSemanticsWithAllFiles, extractHandleTypeNames, extractAllSymbols, SemanticAnalyzerOptions } from '../vjass/analyzer';
 import { CheckErrorType } from '../vjass/error';
+import { isStrictLegacyApiVersion } from './version-gate';
 import { JumpCache, JumpCacheItem } from './jump-cache';
 import { HoverCache } from './hover-cache';
 
@@ -49,20 +50,6 @@ interface FileCacheItem {
     content: string;
     /** 解析错误集合 */
     errors?: ErrorCollection;
-}
-
-/**
- * 解析选项配置
- */
-interface ParsingConfig {
-    /** 是否启用 textmacro */
-    enableTextMacro?: boolean;
-    /** 是否启用预处理器 */
-    enablePreprocessor?: boolean;
-    /** 是否启用 Lua 块 */
-    enableLuaBlocks?: boolean;
-    /** 是否启用严格模式 */
-    strictMode?: boolean;
 }
 
 /**
@@ -108,8 +95,6 @@ interface DiagnosticsConfig {
     checkUnused?: boolean;
     /** 是否检查数组越界（默认开启） */
     checkArrayBounds?: boolean;
-    /** 是否检查句柄泄漏（timer/group/force/location，默认开启） */
-    checkHandleLeaks?: boolean;
 }
 
 /**
@@ -120,8 +105,6 @@ interface JassConfig {
     excludes?: string[];
     /** 包含的文件/目录模式（glob 模式，优先级高于 excludes） */
     includes?: string[];
-    /** 解析选项 */
-    parsing?: ParsingConfig;
     /** 标准库路径配置 */
     standardLibraries?: StandardLibrariesConfig;
     /** 诊断选项 */
@@ -445,11 +428,10 @@ export class DataEnterManager {
             errors = zincParser.errors;
         } else {
             // 对于非 Zinc 文件，使用原有的流程
-            // 获取解析配置
-            const parsingConfig = this.config?.parsing || {};
-            const enableTextMacro = parsingConfig.enableTextMacro !== false; // 默认启用
-            const enablePreprocessor = parsingConfig.enablePreprocessor !== false; // 默认启用
-            const enableLuaBlocks = parsingConfig.enableLuaBlocks !== false; // 默认启用
+            // 解析选项始终启用（parsing 配置已移除，默认全量解析）
+            const enableTextMacro = true;
+            const enablePreprocessor = true;
+            const enableLuaBlocks = true;
             
             // 1. 如果启用 textmacro，先更新 textmacro 注册表（收集阶段）
             if (enableTextMacro) {
@@ -493,7 +475,6 @@ export class DataEnterManager {
                     const checkTypes = diagnosticsConfig.checkTypes !== false; // 默认启用
                     const checkUnused = diagnosticsConfig.checkUnused !== false; // 默认启用（仅显式 false 才关闭）
                     const checkArrayBounds = diagnosticsConfig.checkArrayBounds !== false; // 默认启用
-                    const checkHandleLeaks = diagnosticsConfig.checkHandleLeaks !== false; // 默认启用
                     const returnBehaviorMode = this.getReturnBehaviorMode();
                     
                     if (checkUndefined) {
@@ -516,7 +497,6 @@ export class DataEnterManager {
                                 checkTypes: checkTypes,
                                 checkUnused: checkUnused,
                                 checkArrayBounds: checkArrayBounds,
-                                checkHandleLeaks: checkHandleLeaks,
                                 returnBehaviorMode: returnBehaviorMode,
                                 handleTypeNames: handleTypeNames
                             }
@@ -832,10 +812,8 @@ export class DataEnterManager {
             }
             // 注意：如果缓存项不存在，错误信息将在 handleFileUpdate 中通过 parseFile 的返回值存储
 
-            // 注册 #define 宏到注册表
-            const parsingConfig = this.config?.parsing || {};
-            const enablePreprocessor = parsingConfig.enablePreprocessor !== false; // 默认启用
-            if (enablePreprocessor && result.preprocessCollection.defines.length > 0) {
+            // 注册 #define 宏到注册表（预处理器始终启用）
+            if (result.preprocessCollection.defines.length > 0) {
                 this.defineRegistry.updateFile(filePath, result.preprocessCollection.defines);
             }
 
@@ -958,6 +936,62 @@ export class DataEnterManager {
     }
 
     /**
+     * 合并 VS Code 诊断配置（优先级）与 jass.config.json 诊断配置（回退）
+     * 对于每个诊断选项，如果 VS Code 中有显式设置则使用 VS Code 值，否则回退到配置文件值
+     */
+    private mergeDiagnosticsConfig(fileDiagnostics: DiagnosticsConfig | undefined): DiagnosticsConfig {
+        const vsConfig = vscode.workspace.getConfiguration('jass');
+        const result: DiagnosticsConfig = { ...(fileDiagnostics || {}) };
+
+        // 辅助函数：检查 VS Code 配置项是否被显式设置（非默认值）
+        const isExplicitlySet = (key: string): boolean => {
+            const inspect = vsConfig.inspect(key);
+            return inspect?.globalValue !== undefined
+                || inspect?.workspaceValue !== undefined
+                || inspect?.workspaceFolderValue !== undefined;
+        };
+
+        // enable：VS Code jass.diagnostic 优先
+        if (isExplicitlySet('diagnostic')) {
+            result.enable = vsConfig.get<boolean>('diagnostic', true);
+        }
+
+        // checkTypes
+        if (isExplicitlySet('diagnostics.checkTypes')) {
+            result.checkTypes = vsConfig.get<boolean>('diagnostics.checkTypes', true);
+        }
+
+        // checkUndefined
+        if (isExplicitlySet('diagnostics.checkUndefined')) {
+            result.checkUndefined = vsConfig.get<boolean>('diagnostics.checkUndefined', true);
+        }
+
+        // checkUnused
+        if (isExplicitlySet('diagnostics.checkUnused')) {
+            result.checkUnused = vsConfig.get<boolean>('diagnostics.checkUnused', false);
+        }
+
+        // checkArrayBounds
+        if (isExplicitlySet('diagnostics.checkArrayBounds')) {
+            result.checkArrayBounds = vsConfig.get<boolean>('diagnostics.checkArrayBounds', true);
+        }
+
+        // severity.errors
+        if (isExplicitlySet('diagnostics.severity.errors')) {
+            const sev = vsConfig.get<string>('diagnostics.severity.errors', 'error') as DiagnosticsConfig['severity'] extends { errors?: infer E } ? E : never;
+            result.severity = { ...(result.severity || {}), errors: sev };
+        }
+
+        // severity.warnings
+        if (isExplicitlySet('diagnostics.severity.warnings')) {
+            const sev = vsConfig.get<string>('diagnostics.severity.warnings', 'warning') as DiagnosticsConfig['severity'] extends { warnings?: infer W } ? W : never;
+            result.severity = { ...(result.severity || {}), warnings: sev };
+        }
+
+        return result;
+    }
+
+    /**
      * 加载 jass.config.json 配置文件
      */
     private loadConfig(): void {
@@ -966,37 +1000,45 @@ export class DataEnterManager {
         }
 
         this.configPath = path.join(this.workspaceRoot, 'jass.config.json');
-        
-        if (!fs.existsSync(this.configPath)) {
-            this.config = null;
-            return;
+
+        let fileConfig: JassConfig = {
+            excludes: [],
+            includes: [],
+            standardLibraries: {},
+            diagnostics: {}
+        };
+
+        if (fs.existsSync(this.configPath)) {
+            try {
+                const configContent = fs.readFileSync(this.configPath, 'utf-8');
+                const configJson = JSON.parse(configContent);
+
+                fileConfig = {
+                    excludes: configJson.excludes || [],
+                    includes: configJson.includes || [],
+                    standardLibraries: configJson.standardLibraries || {},
+                    diagnostics: configJson.diagnostics || {}
+                };
+            } catch (error) {
+                console.warn(`Failed to parse jass.config.json: ${error}`);
+            }
         }
 
-        try {
-            const configContent = fs.readFileSync(this.configPath, 'utf-8');
-            const configJson = JSON.parse(configContent);
-            
-            // 加载所有配置项
-            this.config = {
-                excludes: configJson.excludes || [],
-                includes: configJson.includes || [],
-                parsing: configJson.parsing || {},
-                standardLibraries: configJson.standardLibraries || {},
-                diagnostics: configJson.diagnostics || {}
-            };
-            
-            const excludesCount = this.config.excludes?.length || 0;
-            const includesCount = this.config.includes?.length || 0;
-            const hasParsing = Object.keys(this.config.parsing || {}).length > 0;
-            const hasStandardLibraries = Object.keys(this.config.standardLibraries || {}).length > 0;
-            const hasDiagnostics = Object.keys(this.config.diagnostics || {}).length > 0;
-            
-            console.log(`📋 Loaded jass.config.json: ${excludesCount} excludes, ${includesCount} includes, ` +
-                       `parsing: ${hasParsing}, standardLibraries: ${hasStandardLibraries}, diagnostics: ${hasDiagnostics}`);
-        } catch (error) {
-            console.warn(`Failed to parse jass.config.json: ${error}`);
-            this.config = null;
-        }
+        // 合并 VS Code 诊断配置（优先级）与 jass.config.json（回退）
+        this.config = {
+            excludes: fileConfig.excludes,
+            includes: fileConfig.includes,
+            standardLibraries: fileConfig.standardLibraries,
+            diagnostics: this.mergeDiagnosticsConfig(fileConfig.diagnostics)
+        };
+
+        const excludesCount = this.config.excludes?.length || 0;
+        const includesCount = this.config.includes?.length || 0;
+        const hasStandardLibraries = Object.keys(this.config.standardLibraries || {}).length > 0;
+        const hasDiagnostics = Object.keys(this.config.diagnostics || {}).length > 0;
+
+        console.log(`📋 Loaded jass.config.json: ${excludesCount} excludes, ${includesCount} includes, ` +
+                   `standardLibraries: ${hasStandardLibraries}, diagnostics: ${hasDiagnostics}`);
     }
 
     /**
@@ -1047,13 +1089,16 @@ export class DataEnterManager {
      */
     private matchGlobPatternSync(filePath: string, pattern: string): boolean {
         // 将模式转换为正则表达式
-        // 处理 ** (匹配任意路径，包括 /)
         let regexPattern = pattern
             .replace(/\\/g, '/')
-            // 先处理 **，避免被 * 替换
+            // 先处理 **/（globstar 后跟斜杠）：匹配零个或多个路径段
+            .replace(/\*\*\//g, '___GLOBSTAR_SLASH___')
+            // 处理剩余的 **（独立 globstar）：匹配任意路径包括 /
             .replace(/\*\*/g, '___GLOBSTAR___')
             // 转义特殊字符
             .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+            // 恢复 **/ 并替换为 (?:.*/)?（零或多个路径段）
+            .replace(/___GLOBSTAR_SLASH___/g, '(?:.*/)?')
             // 恢复 ** 并替换为匹配任意字符（包括 /）
             .replace(/___GLOBSTAR___/g, '.*')
             // * 匹配除 / 外的任意字符
@@ -1534,15 +1579,30 @@ export class DataEnterManager {
 
         // 监听配置文件删除
         this.configWatcher.onDidDelete((uri) => {
-            console.log('📋 jass.config.json deleted, clearing config...');
-            this.config = null;
+            console.log('📋 jass.config.json deleted, reloading config (VS Code settings still apply)...');
+            this.loadConfig();
             this.configPath = undefined;
             // 配置删除后，重新评估已缓存的文件（现在应该都包含）
             this.revalidateCachedFiles();
+            // 触发配置重新加载回调
+            this.triggerConfigReloadCallbacks();
         });
 
         this.disposables.push(this.configWatcher);
         this.disposables.push(saveDisposable);
+
+        // 监听 VS Code 配置变化（jass.diagnostics.* 优先级高于 jass.config.json）
+        this.disposables.push(
+            vscode.workspace.onDidChangeConfiguration((e) => {
+                if (e.affectsConfiguration('jass.diagnostic') ||
+                    e.affectsConfiguration('jass.diagnostics')) {
+                    console.log('📋 VS Code diagnostics settings changed, re-merging config...');
+                    this.loadConfig();
+                    this.revalidateCachedFiles();
+                    this.triggerConfigReloadCallbacks();
+                }
+            })
+        );
     }
 
     /**
@@ -1847,8 +1907,7 @@ export class DataEnterManager {
         let notFoundCount = 0;
         let parsedFromSourceCount = 0;
         const apiVersion = vscode.workspace.getConfiguration('jass').get<string>('apiVersion', 'off');
-        const legacyApiVersions = new Set(['1.20', '1.24', '1.26a', '1.27', '1.27a']);
-        const strictLegacyMode = legacyApiVersions.has((apiVersion || '').toLowerCase());
+        const strictLegacyMode = isStrictLegacyApiVersion(apiVersion || '');
 
         // 扩展 static 目录候选路径（兼容不同编译/运行目录）
         const extensionStaticDir = this.resolveExtensionStaticDir();
@@ -1931,8 +1990,7 @@ export class DataEnterManager {
         let totalFiles = 0;
         let parsedFromSourceCount = 0;
         const apiVersion = vscode.workspace.getConfiguration('jass').get<string>('apiVersion', 'off');
-        const legacyApiVersions = new Set(['1.20', '1.24', '1.26a', '1.27', '1.27a']);
-        const strictLegacyMode = legacyApiVersions.has((apiVersion || '').toLowerCase());
+        const strictLegacyMode = isStrictLegacyApiVersion(apiVersion || '');
 
         // 扩展的 static 目录路径（相对于扩展安装目录）
         // 尝试多个可能的路径（因为编译后的 __dirname 位置可能不同）

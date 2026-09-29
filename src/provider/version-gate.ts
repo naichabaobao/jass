@@ -24,7 +24,7 @@ export interface VersionInfo {
 
 /**
  * 解析版本字符串。
- * 支持格式：1.20 / 1.26a / 1.33 / 2.04 / 3.00 等。
+ * 支持格式：1.20 / 1.26a / 1.33 / 2.04 / 3.00 / 3.01 等。
  */
 export function parseVersion(input: string): VersionInfo | null {
     const match = input.toLowerCase().match(/^(\d+)\.(\d+)(?:\.(\d+))?([a-z])?$/);

@@ -22,7 +22,6 @@ interface DiagnosticsConfig {
     checkUndefined?: boolean;
     checkUnused?: boolean;
     checkArrayBounds?: boolean;
-    checkHandleLeaks?: boolean;
 }
 
 /**
@@ -61,7 +60,8 @@ export class DiagnosticProvider {
         this.updateConfiguration();
         this.disposables.push(
             vscode.workspace.onDidChangeConfiguration((e) => {
-                if (e.affectsConfiguration('jass.diagnostic')) {
+                if (e.affectsConfiguration('jass.diagnostic') ||
+                    e.affectsConfiguration('jass.diagnostics')) {
                     this.updateConfiguration();
                     this.refreshAllDiagnostics();
                 }
@@ -198,22 +198,18 @@ export class DiagnosticProvider {
 
     /**
      * 更新配置
+     * 诊断配置已由 DataEnterManager 合并：VS Code 设置优先，jass.config.json 回退
      */
     private updateConfiguration(): void {
-        const config = vscode.workspace.getConfiguration('jass');
-        const vsCodeDiagnosticEnabled = config.get<boolean>('diagnostic', true);
-
         const managerConfig = this.dataEnterManager.getConfig()?.diagnostics;
         if (managerConfig) {
-            this.diagnosticsConfig = {
-                ...this.diagnosticsConfig,
-                ...managerConfig
-            };
+            this.diagnosticsConfig = { ...managerConfig };
             this.isEnabled = typeof managerConfig.enable === 'boolean'
                 ? managerConfig.enable
-                : vsCodeDiagnosticEnabled;
+                : true;
         } else {
-            this.isEnabled = vsCodeDiagnosticEnabled;
+            this.diagnosticsConfig = {};
+            this.isEnabled = vscode.workspace.getConfiguration('jass').get<boolean>('diagnostic', true);
         }
 
         if (!this.isEnabled) {
@@ -222,26 +218,11 @@ export class DiagnosticProvider {
     }
 
     /**
-     * 更新诊断配置（从 jass.config.json）
+     * 更新诊断配置（配置重载时调用）
+     * 直接从 DataEnterManager 读取已合并的诊断配置
      */
-    public updateDiagnosticsConfig(config: DiagnosticsConfig | undefined): void {
-        if (config) {
-            this.diagnosticsConfig = {
-                enable: config.enable,
-                severity: config.severity,
-                checkTypes: config.checkTypes,
-                checkUndefined: config.checkUndefined,
-                checkUnused: config.checkUnused,
-                checkArrayBounds: config.checkArrayBounds,
-                checkHandleLeaks: config.checkHandleLeaks
-            };
-            // 如果配置中明确设置了 enable，使用配置值；否则保持当前状态
-            if (typeof config.enable === 'boolean') {
-                this.isEnabled = config.enable;
-            }
-        } else {
-            this.diagnosticsConfig = {};
-        }
+    public updateDiagnosticsConfig(_config?: DiagnosticsConfig): void {
+        this.updateConfiguration();
         this.refreshAllDiagnostics();
     }
 

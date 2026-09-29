@@ -1495,6 +1495,29 @@ export class Parser {
     }
 
     /**
+     * 解析数组大小值：支持整数字面量（如 [100]）或常量标识符（如 [Q]）。
+     * 返回 { numericValue, expression }：
+     * - 整数字面量：numericValue = 数字，expression = null
+     * - 标识符：numericValue = null，expression = Identifier（分析器后续解析常量值）
+     */
+    private parseArraySizeValue(): { numericValue: number | null; expression: Expression | null } | null {
+        const sizeToken = this.lexer.current();
+        if (!sizeToken) return null;
+
+        if (sizeToken.type === TokenType.IntegerLiteral) {
+            const numericValue = parseInt(sizeToken.value, 10);
+            this.lexer.next();
+            return { numericValue, expression: null };
+        } else if (sizeToken.type === TokenType.Identifier) {
+            // 常量标识符，如 [Q]，由分析器解析其常量值
+            const expr = new Identifier(sizeToken.value, sizeToken.start, sizeToken.end);
+            this.lexer.next();
+            return { numericValue: null, expression: expr };
+        }
+        return null;
+    }
+
+    /**
      * 解析结构声明
      * 支持语法：
      * - struct Name
@@ -1513,8 +1536,10 @@ export class Parser {
         let name: Identifier | null = null;
         let extendsType: Identifier | null = null;
         let indexSize: number | null = null; // 索引空间增强，如 struct X[10000]
+        let indexSizeExpr: Expression | null = null; // 索引空间表达式（常量标识符等）
         let isArrayStruct = false; // 是否是数组结构
         let arraySize: number | null = null; // 数组结构的大小
+        let arraySizeExpr: Expression | null = null; // 数组结构大小表达式
 
         if (nameToken && nameToken.type === TokenType.Identifier) {
             name = new Identifier(nameToken.value, nameToken.start, nameToken.end);
@@ -1522,20 +1547,20 @@ export class Parser {
             this.checkDuplicateDeclaration(nameToken.value, "struct", nameToken.start);
             this.lexer.next();
 
-            // 检查是否有索引空间增强语法：struct X[10000]
+            // 检查是否有索引空间增强语法：struct X[10000] 或 struct X[Q]
             if (this.check(TokenType.LeftBracket)) {
                 this.lexer.next(); // 消费 [
-                const sizeToken = this.lexer.current();
-                if (sizeToken && sizeToken.type === TokenType.IntegerLiteral) {
-                    indexSize = parseInt(sizeToken.value, 10);
-                    this.lexer.next();
+                const sizeResult = this.parseArraySizeValue();
+                if (sizeResult) {
+                    indexSize = sizeResult.numericValue;
+                    indexSizeExpr = sizeResult.expression;
                     if (!this.check(TokenType.RightBracket)) {
                         this.error("Expected ']' after index size");
                         return null;
                     }
                     this.lexer.next(); // 消费 ]
                 } else {
-                    this.error("Expected integer literal for index size");
+                    this.error("Expected integer literal or constant identifier for index size");
                     return null;
                 }
             }
@@ -1544,7 +1569,7 @@ export class Parser {
             if (this.checkValue("extends")) {
                 this.lexer.next();
                 
-                // 检查是否是数组结构：extends array [20000]
+                // 检查是否是数组结构：extends array [20000] 或 extends array [Q]
                 if (this.checkValue("array")) {
                     isArrayStruct = true;
                     this.lexer.next();
@@ -1552,17 +1577,17 @@ export class Parser {
                     // 检查是否有数组大小
                     if (this.check(TokenType.LeftBracket)) {
                         this.lexer.next(); // 消费 [
-                        const sizeToken = this.lexer.current();
-                        if (sizeToken && sizeToken.type === TokenType.IntegerLiteral) {
-                            arraySize = parseInt(sizeToken.value, 10);
-                            this.lexer.next();
+                        const sizeResult = this.parseArraySizeValue();
+                        if (sizeResult) {
+                            arraySize = sizeResult.numericValue;
+                            arraySizeExpr = sizeResult.expression;
                             if (!this.check(TokenType.RightBracket)) {
                                 this.error("Expected ']' after array size");
                                 return null;
                             }
                             this.lexer.next(); // 消费 ]
                         } else {
-                            this.error("Expected integer literal for array size");
+                            this.error("Expected integer literal or constant identifier for array size");
                             return null;
                         }
                     }
@@ -1889,8 +1914,10 @@ export class Parser {
             members,
             extendsType,
             indexSize,
+            indexSizeExpr,
             isArrayStruct,
             arraySize,
+            arraySizeExpr,
             start: startPos,
             end: endPos
         });
@@ -3431,19 +3458,23 @@ export class Parser {
         this.lexer.next();
 
         // 检查是否有数组大小：name[100]（一维数组）或 name[10][20]（二维数组）
+        // 支持整数字面量和常量标识符（如 [Q]）
         let arraySize: number | null = null;
         let arrayWidth: number | null = null;
         let arrayHeight: number | null = null;
+        let arraySizeExpr: Expression | null = null;
+        let arrayWidthExpr: Expression | null = null;
+        let arrayHeightExpr: Expression | null = null;
         if (this.check(TokenType.LeftBracket)) {
             if (!isArray) {
                 // 如果不是 array 关键字，可能是数组索引访问，这里只处理数组成员声明
                 // 数组成员必须在 array 关键字后使用 [size] 语法
             } else {
                 this.lexer.next(); // 消费 [
-                const sizeToken = this.lexer.current();
-                if (sizeToken && sizeToken.type === TokenType.IntegerLiteral) {
-                    const firstSize = parseInt(sizeToken.value, 10);
-                    this.lexer.next();
+                const firstResult = this.parseArraySizeValue();
+                if (firstResult) {
+                    const firstNumeric = firstResult.numericValue;
+                    const firstExpr = firstResult.expression;
                     if (!this.check(TokenType.RightBracket)) {
                         this.error("Expected ']' after array size");
                         return null;
@@ -3454,26 +3485,28 @@ export class Parser {
                     if (this.check(TokenType.LeftBracket)) {
                         // 这是二维数组
                         this.lexer.next(); // 消费第二个 [
-                        const heightToken = this.lexer.current();
-                        if (heightToken && heightToken.type === TokenType.IntegerLiteral) {
-                            arrayWidth = firstSize;
-                            arrayHeight = parseInt(heightToken.value, 10);
-                            this.lexer.next();
+                        const secondResult = this.parseArraySizeValue();
+                        if (secondResult) {
+                            arrayWidth = firstNumeric;
+                            arrayHeight = secondResult.numericValue;
+                            arrayWidthExpr = firstExpr;
+                            arrayHeightExpr = secondResult.expression;
                             if (!this.check(TokenType.RightBracket)) {
                                 this.error("Expected ']' after second array dimension");
                                 return null;
                             }
                             this.lexer.next(); // 消费第二个 ]
                         } else {
-                            this.error("Expected integer literal for second array dimension");
+                            this.error("Expected integer literal or constant identifier for second array dimension");
                             return null;
                         }
                     } else {
                         // 这是一维数组
-                        arraySize = firstSize;
+                        arraySize = firstNumeric;
+                        arraySizeExpr = firstExpr;
                     }
                 } else {
-                    this.error("Expected integer literal for array size");
+                    this.error("Expected integer literal or constant identifier for array size");
                     return null;
                 }
             }
@@ -3536,7 +3569,10 @@ export class Parser {
             startPos,
             endPos,
             isPrivate,
-            isPublic
+            isPublic,
+            arraySizeExpr,
+            arrayWidthExpr,
+            arrayHeightExpr
         );
     }
 

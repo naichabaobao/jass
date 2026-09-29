@@ -762,6 +762,9 @@ class VariableDeclaration extends Statement {
     public readonly arraySize: number | null = null; // 数组大小，如 integer array V[100] 中的 100（一维数组）
     public readonly arrayWidth: number | null = null; // 二维数组的宽度，如 integer array mat1 [10][20] 中的 10
     public readonly arrayHeight: number | null = null; // 二维数组的高度，如 integer array mat1 [10][20] 中的 20
+    public readonly arraySizeExpr: Expression | null = null; // 数组大小表达式（常量标识符等，如 [Q]），供分析器解析
+    public readonly arrayWidthExpr: Expression | null = null; // 二维数组宽度表达式
+    public readonly arrayHeightExpr: Expression | null = null; // 二维数组高度表达式
     public readonly isStatic: boolean = false; // 是否是静态成员（用于 struct）
     public readonly isReadonly: boolean = false; // 是否是只读成员（用于 struct，允许外部读取但不能赋值）
     public readonly isPrivate: boolean = false; // 是否是私有成员（用于 struct）
@@ -782,7 +785,10 @@ class VariableDeclaration extends Statement {
         start?: { line: number, position: number }, 
         end?: { line: number, position: number },
         isPrivate: boolean = false,
-        isPublic: boolean = false
+        isPublic: boolean = false,
+        arraySizeExpr: Expression | null = null,
+        arrayWidthExpr: Expression | null = null,
+        arrayHeightExpr: Expression | null = null
     ) {
         super(start, end);
         this.name = name;
@@ -794,6 +800,9 @@ class VariableDeclaration extends Statement {
         this.arraySize = arraySize;
         this.arrayWidth = arrayWidth;
         this.arrayHeight = arrayHeight;
+        this.arraySizeExpr = arraySizeExpr;
+        this.arrayWidthExpr = arrayWidthExpr;
+        this.arrayHeightExpr = arrayHeightExpr;
         this.isStatic = isStatic;
         this.isReadonly = isReadonly;
         this.isPrivate = isPrivate;
@@ -820,6 +829,10 @@ class VariableDeclaration extends Statement {
             sizeStr = `[${this.arrayWidth}][${this.arrayHeight}]`;
         } else if (this.arraySize !== null) {
             sizeStr = `[${this.arraySize}]`;
+        } else if (this.arrayWidthExpr !== null && this.arrayHeightExpr !== null) {
+            sizeStr = `[${this.arrayWidthExpr.toString()}][${this.arrayHeightExpr.toString()}]`;
+        } else if (this.arraySizeExpr !== null) {
+            sizeStr = `[${this.arraySizeExpr.toString()}]`;
         }
         const initStr = this.initializer ? ` = ${this.initializer.toString()}` : "";
         
@@ -1429,6 +1442,8 @@ class StructDeclaration extends Statement {
     public indexSize: number | null = null; // 索引空间增强，如 struct X[10000]
     public isArrayStruct: boolean = false; // 是否是数组结构（extends array）
     public arraySize: number | null = null; // 数组结构的大小，如 struct X extends array [20000]
+    public indexSizeExpr: Expression | null = null; // 索引空间表达式（常量标识符等）
+    public arraySizeExpr: Expression | null = null; // 数组结构大小表达式
     
     constructor(options?: {
         name?: Identifier | null;
@@ -1437,6 +1452,8 @@ class StructDeclaration extends Statement {
         indexSize?: number | null;
         isArrayStruct?: boolean;
         arraySize?: number | null;
+        indexSizeExpr?: Expression | null;
+        arraySizeExpr?: Expression | null;
         start?: { line: number, position: number };
         end?: { line: number, position: number };
     }) {
@@ -1447,6 +1464,8 @@ class StructDeclaration extends Statement {
             indexSize = null,
             isArrayStruct = false,
             arraySize = null,
+            indexSizeExpr = null,
+            arraySizeExpr = null,
             start,
             end
         } = options || {};
@@ -1458,6 +1477,8 @@ class StructDeclaration extends Statement {
         this.indexSize = indexSize;
         this.isArrayStruct = isArrayStruct;
         this.arraySize = arraySize;
+        this.indexSizeExpr = indexSizeExpr;
+        this.arraySizeExpr = arraySizeExpr;
         
         if (name) this.addChild(name);
         if (extendsType) this.addChild(extendsType);
@@ -1466,10 +1487,20 @@ class StructDeclaration extends Statement {
     
     public toString(): string {
         const nameStr = this.name ? this.name.toString() : "";
-        const indexStr = this.indexSize !== null ? `[${this.indexSize}]` : "";
+        let indexStr = "";
+        if (this.indexSize !== null) {
+            indexStr = `[${this.indexSize}]`;
+        } else if (this.indexSizeExpr !== null) {
+            indexStr = `[${this.indexSizeExpr.toString()}]`;
+        }
         let extendsStr = "";
         if (this.isArrayStruct) {
-            const arraySizeStr = this.arraySize !== null ? ` [${this.arraySize}]` : "";
+            let arraySizeStr = "";
+            if (this.arraySize !== null) {
+                arraySizeStr = ` [${this.arraySize}]`;
+            } else if (this.arraySizeExpr !== null) {
+                arraySizeStr = ` [${this.arraySizeExpr.toString()}]`;
+            }
             extendsStr = ` extends array${arraySizeStr}`;
         } else if (this.extendsType) {
             extendsStr = ` extends ${this.extendsType.toString()}`;

@@ -1,10 +1,10 @@
-{
+﻿{
   "name": "jass",
   "displayName": "JASS/vJass/Zinc Language Tools",
   "description": "完整的 JASS/vJass/Zinc 语言支持，包括语法高亮、代码补全、跳转定义、悬停提示、错误诊断、代码格式化等功能。支持 vJass 的库、结构、接口、模块、委托等特性，以及 Zinc 的 C-like 语法。QQ群:786204376",
   "publisher": "jass",
   "icon": "static/jass.png",
-  "version": "1.9.22",
+  "version": "1.9.23",
   "keywords": [
     "jass",
     "vjass",
@@ -44,7 +44,39 @@
         "jass.diagnostic": {
           "type": "boolean",
           "default": true,
-          "description": "（测试）诊断支持，不支持包含 Lua 和预处理代码的文件"
+          "description": "启用诊断支持。此设置优先于 jass.config.json 中的 diagnostics.enable。"
+        },
+        "jass.diagnostics.checkTypes": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用类型检查。此设置优先于 jass.config.json 中的 diagnostics.checkTypes。"
+        },
+        "jass.diagnostics.checkUndefined": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用未定义符号检查。此设置优先于 jass.config.json 中的 diagnostics.checkUndefined。"
+        },
+        "jass.diagnostics.checkUnused": {
+          "type": "boolean",
+          "default": false,
+          "description": "启用未使用符号检查。此设置优先于 jass.config.json 中的 diagnostics.checkUnused。"
+        },
+        "jass.diagnostics.checkArrayBounds": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用数组越界检查。此设置优先于 jass.config.json 中的 diagnostics.checkArrayBounds。"
+        },
+        "jass.diagnostics.severity.errors": {
+          "type": "string",
+          "default": "error",
+          "enum": ["error", "warning", "information", "hint"],
+          "description": "错误级别的诊断显示严重程度。此设置优先于 jass.config.json。"
+        },
+        "jass.diagnostics.severity.warnings": {
+          "type": "string",
+          "default": "warning",
+          "enum": ["error", "warning", "information", "hint"],
+          "description": "警告级别的诊断显示严重程度。此设置优先于 jass.config.json。"
         },
         "jass.literal.completion": {
           "type": "boolean",
@@ -55,11 +87,6 @@
           "type": "boolean",
           "default": true,
           "description": "启用字面值悬停提示和定义跳转（API、函数、变量、字符串、数字、四字码）。默认：开启。"
-        },
-        "jass.keywordDefinition": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "启用后，在 JASS/vJass **关键字**上执行**转到定义**（例如 Ctrl+点击）会在内置 Webview 中打开关键字文档。禁用（默认）时，关键字点击不会走此路径，因此不影响正常符号跳转。修改此选项后需重新加载窗口。"
         },
         "jass.hint": {
           "type": "boolean",
@@ -87,7 +114,8 @@
             "2.02",
             "2.03",
             "2.04",
-            "3.00"
+            "3.00",
+            "3.01"
           ],
           "markdownDescription": "用于补全行为的魔兽争霸 III API 版本偏好。在旧版本（`1.20/1.24/1.26a/1.27/1.27a`）中，`@since` 标记晚于所选版本的 API 将被过滤掉。在其他版本中，较新的 API 将降低优先级。没有版本标记的项目保持不变。"
         },

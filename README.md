@@ -40,7 +40,7 @@ npm install
 
 - 当设置为 legacy 版本（`1.20`、`1.24`、`1.26a`、`1.27`、`1.27a`）时：
   - 会根据注释中的 `@since` 信息（兼容 `@version`）直接过滤“高于目标版本”的 API。
-- 当设置为其他版本（如 `1.28f`、`1.33`、`1.36`、`2.00`、`2.02`、`2.03`、`2.04`、`3.00`）时：
+- 当设置为其他版本（如 `1.28f`、`1.33`、`1.36`、`2.00`、`2.02`、`2.03`、`2.04`、`3.00`、`3.01`）时：
   - 会根据 `@since` 对“高于目标版本”的 API 降权排序。
 - 没有版本标注的条目不处理（保持原样）。
 
@@ -255,8 +255,7 @@ npm install
     "checkTypes": true,          // 检查类型兼容性（默认启用）
     "checkUndefined": true,      // 检查未定义的变量和函数（默认启用）
     "checkUnused": false,        // 检查未使用的变量（默认关闭）
-    "checkArrayBounds": true,    // 检查数组越界（默认启用）
-    "checkHandleLeaks": true     // 检查句柄泄漏（timer/group/force/location，默认启用）
+    "checkArrayBounds": true     // 检查数组越界（默认启用）
   }
 }
 ```
@@ -269,7 +268,6 @@ npm install
 - `checkUndefined`: `true`
 - `checkUnused`: `false`
 - `checkArrayBounds`: `true`
-- `checkHandleLeaks`: `true`
 
 #### 配置文件自动重载
 
