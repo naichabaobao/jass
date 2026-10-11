@@ -631,12 +631,24 @@ endstruct
 
 ## 📝 版本信息
 
-- **当前版本**: 1.9.22
+- **当前版本**: 1.9.24
 - **VS Code 版本要求**: 1.67+
 - **common.j 版本**: 3.01
 - **物编数据版本**: 3.01
 
-### 近期重要更新（最近 5 次）
+### 近期重要更新
+
+#### v1.9.24
+- 合入 PR #65，重新补齐此前合并冲突中丢失的 3.01 API 数据（`@since 3.01`）：
+  - `common.j` 新增 26 个原生函数——装备系统（`BlzUnitEquipItem` / `BlzUnitUnequipItem` / `BlzUnitItemInBagSlot` / `BlzUnitHasItemEquipped` 等）、物品属性（`BlzGetItemEquipmentType` / `BlzGetItemTag` / `BlzSetItemColor`）、`BlzUnitHeal` / `BlzResetUnitTalents` / `BlzRemoveEffect`、镜头与音频（`BlzGet/SetCameraAllowsHotkeyTargetLock` / `BlzSetThematicMusicAbsoluteVolume` / `BlzGetHUDScale`）、`ChooseRandomItemExWithFilterAndIncludes`，以及 23 个技能等级字段（`ABILITY_RLF_*` / `ABILITY_BLF_REMOVE_BUFFS_ON_ABILITY_START`）。
+  - `blizzard.j` 新增 6 个 BJ 函数——`RemoveEffectBJ` / `RemoveEffectAsyncBJ` / `RemoveEffectAfterTimeBJ` / `UnitHealBJ` / `UnitHealFromOtherBJ` / `ChooseRandomItemExWithFilterAndIncludesBJ`，配套新增全局 `bj_destroyOrRemoveEffectAsyncEffect` / `bj_destroyOrRemoveEffectAsyncTime`。
+  - `presets.jass` 新增 26 个物编条目（`ATar` / `AHRg` / `AIst` / `Btlf` 及 `hcr1`–`chr6`），并修正魔法效果 rawcode 大小写错误 `'BTLF` → `'Btlf`。
+  - 修正 `BlzSetTerrainFogStyleBJ` 签名（`fogstyle` → `integer` + `ConvertFogStyle` 包装），原签名与 3.00+ native 实际类型不符。
+- 新增扩展自动更新工具（`updater/` + GitHub Actions 工作流）。
+
+#### v1.9.23
+- 统一 API 版本号为 `3.00` / `3.01` 两位小数格式（此前 `3.0.0` 不符合魔兽版本号规范）。
+- 移除关键字跳转 html 功能与 `parsing` 配置；handle 类型名改由 `common.j` 动态推导，删除代码中的硬编码。
 
 #### v1.9.19 (pre-release)
 - 实验性接入 `ydwe-compiler` 语言服务器：新增 `jass.lsp` 配置（默认关闭），开启后 hover 与错误诊断由内置 Rust 编译器（`--lsp` 模式）接管，失败自动回落内置实现。

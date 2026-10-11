@@ -1,3 +1,18 @@
+#### 1.9.24
+- 合入 PR #65「找回丢失的 3.0.1 数据，支持 3.0.1 正式版的 CJ/BJ」。此前 PR #64 的标准库新增内容在合并冲突中被整文件回退而丢失，本版由上游重新补齐：
+  - `common.j` 新增 26 个原生函数（`@since 3.01`）：
+    - 装备系统：`BlzUnitEquipItem` / `BlzUnitUnequipItem` / `BlzUnitUnequipItemFromSlot` / `BlzUnitItemInBagSlot` / `BlzUnitItemInEquipmentSlot` / `BlzUnitHasItemEquipped` / `BlzUnitHasAnyItemEquipped` / `BlzUnitHasLoadoutSlotEmpty` / `BlzUnitHasItemEquipmentOfType` / `BlzUnitCanEquipItemOfEquipmentType` / `BlzUnitExtendedInventorySize`
+    - 物品属性：`BlzGetItemEquipmentType` / `BlzGetItemTag` / `BlzSetItemColor` / `BlzIsItemEquipped` / `BlzIsItemInBag` / `BlzGetEquippedItem` / `BlzGetUnequippedItem`
+    - 单位与特效：`BlzUnitHeal` / `BlzResetUnitTalents` / `BlzRemoveEffect`
+    - 镜头与音频：`BlzGetCameraAllowsHotkeyTargetLock` / `BlzSetCameraAllowsHotkeyTargetLock` / `BlzSetThematicMusicAbsoluteVolume` / `BlzGetHUDScale`
+    - 随机物品：`ChooseRandomItemExWithFilterAndIncludes`
+    - 技能等级字段 23 个：`ABILITY_RLF_*`（`hcr1`–`hsa7` / `chr1`–`chr5`）与 `ABILITY_BLF_REMOVE_BUFFS_ON_ABILITY_START`（`chr6`）
+  - `blizzard.j` 新增 6 个 BJ 函数：`RemoveEffectBJ` / `RemoveEffectAsyncBJ` / `RemoveEffectAfterTimeBJ` / `UnitHealBJ` / `UnitHealFromOtherBJ` / `ChooseRandomItemExWithFilterAndIncludesBJ`；配套新增全局 `bj_destroyOrRemoveEffectAsyncEffect` / `bj_destroyOrRemoveEffectAsyncTime`，旧的 `bj_destroyEffectAsync*` 标注 `@deprecated`。
+  - `presets.jass` 新增 26 个物编条目（`ATar` / `AHRg` / `AIst` / `Btlf` 及 `hcr1`–`chr6`）；修正魔法效果 rawcode 大小写错误 `'BTLF` → `'Btlf`。
+  - 修正 `BlzSetTerrainFogStyleBJ` 签名（`fogstyle` → `integer` + `ConvertFogStyle` 包装），原签名与 3.00+ native 实际类型不符。
+- 新增扩展自动更新工具：`updater/src/main.c` + `.github/workflows/build-updater.yml`（CI 构建更新器产物）。
+- 同步版本号：common.j / 物编数据版本由 `3.00` 更新为 `3.01`，README「版本信息」区块与 `package.json` 更新为 `1.9.24`。
+
 #### 1.9.23
 - 统一版本号 3.00 或 3.01，之前3.0.0不太符合魔兽的版本号规范
 - 删除类型硬编码在代码中问题
