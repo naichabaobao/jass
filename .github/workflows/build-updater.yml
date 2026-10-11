@@ -1,0 +1,56 @@
+name: Build Jass Updater
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "updater/**"
+      - ".github/workflows/build-updater.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        config: [release, debug]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MinGW toolchain (32-bit)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-i686
+
+      - name: Set compile variables
+        id: vars
+        run: |
+          if [ "${{ matrix.config }}" = "debug" ]; then
+            echo "DEFINE=-DJASS_DEBUG" >> $GITHUB_OUTPUT
+            echo "OUTNAME=JassUpdater_debug.exe" >> $GITHUB_OUTPUT
+          else
+            echo "DEFINE=" >> $GITHUB_OUTPUT
+            echo "OUTNAME=JassUpdater.exe" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Compile (32-bit)
+        run: |
+          mkdir -p output
+          i686-w64-mingw32-gcc updater/src/main.c \
+            -o output/${{ steps.vars.outputs.OUTNAME }} \
+            -mwindows -static -static-libgcc \
+            ${{ steps.vars.outputs.DEFINE }} \
+            -lwinhttp -lkernel32 -luser32 -lshell32
+
+      - name: Verify PE
+        run: |
+          file output/*.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JassUpdater_${{ matrix.config }}
+          path: output/*.exe
