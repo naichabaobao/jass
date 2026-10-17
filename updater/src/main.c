@@ -50,7 +50,7 @@ static const int g_fileCount = (int)(sizeof(g_files) / sizeof(g_files[0]));
 #define GITHUB_REPO   L"jass"
 #define GITHUB_BRANCH L"master"
 #define GITHUB_SUBDIR L"static"
-#define GITHUB_REPO_URL L"https://github.com/jzy-chitong56/jass"
+#define GITHUB_REPO_URL L"https://github.com/jzy-chitong56/jass-updater"
 
 /* ---------- 错误原因 ---------- */
 typedef enum {
@@ -309,7 +309,7 @@ static void ShowCustomMsgBox(const wchar_t *title, const wchar_t *message, const
         20, 15, dlgW - 40, 30, dlg, NULL, hInst, NULL);
 
     /* 日志标签 */
-    CreateWindowExW(0, L"STATIC", L"运行日志（可选中复制反馈）：",
+    CreateWindowExW(0, L"STATIC", L"运行日志（异常时可复制到源码仓库反馈）：",
         WS_CHILD | WS_VISIBLE | SS_LEFT,
         20, 50, dlgW - 40, 20, dlg, NULL, hInst, NULL);
 
@@ -391,7 +391,7 @@ static BYTE *DownloadFile(const wchar_t *fileName, DWORD *outSize)
     WBUF_APPEND(fullUrl, 512, urlPath);
     Log(L"[下载] 请求: %ls", fullUrl);
 
-    hSession = WinHttpOpen(L"JassUpdater/1.0",
+    hSession = WinHttpOpen(L"家猫Jass更新工具",
         WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
         WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
     if (!hSession) { Log(L"[下载] WinHttpOpen 失败"); goto done; }
@@ -681,10 +681,36 @@ static int FindPluginStaticDirs(wchar_t outList[][MAX_PATH], int maxCount)
 }
 
 /* ---------- 执行更新 ---------- */
-static UpdateError DoUpdate(void)
+static UpdateError DoUpdate(BOOL doBackup)
 {
     ClearLog();
     Log(L"==== Jass 更新工具 调试日志 ====");
+    Log(L"[配置] 备份原文件: %ls", doBackup ? L"是" : L"否");
+
+    /* 生成时间戳后缀: _back_YYYY-MM-DD_HH-MM-SS */
+    wchar_t tsSuffix[40];
+    if (doBackup) {
+        SYSTEMTIME st;
+        GetLocalTime(&st);
+        wchar_t datePart[16], timePart[16];
+        WStrFromInt(st.wYear, tsSuffix, 5);
+        wcscat_s(tsSuffix, 40, L"-");
+        WStrFromInt(st.wMonth, datePart, 16);
+        wcscat_s(tsSuffix, 40, datePart);
+        wcscat_s(tsSuffix, 40, L"-");
+        WStrFromInt(st.wDay, datePart, 16);
+        wcscat_s(tsSuffix, 40, datePart);
+        wcscat_s(tsSuffix, 40, L"_");
+        WStrFromInt(st.wHour, datePart, 16);
+        wcscat_s(tsSuffix, 40, datePart);
+        wcscat_s(tsSuffix, 40, L"-");
+        WStrFromInt(st.wMinute, datePart, 16);
+        wcscat_s(tsSuffix, 40, datePart);
+        wcscat_s(tsSuffix, 40, L"-");
+        WStrFromInt(st.wSecond, datePart, 16);
+        wcscat_s(tsSuffix, 40, datePart);
+        Log(L"[配置] 备份后缀: _back_%ls", tsSuffix);
+    }
 
     wchar_t dirs[64][MAX_PATH];
     int dirCount = FindPluginStaticDirs(dirs, 64);
@@ -696,6 +722,30 @@ static UpdateError DoUpdate(void)
     for (int d = 0; d < dirCount; d++) {
         Log(L"[更新] 处理目录: %ls", dirs[d]);
         for (int f = 0; f < g_fileCount; f++) {
+            wchar_t fullPath[MAX_PATH];
+            WBUF_INIT(fullPath, MAX_PATH);
+            WBUF_APPEND(fullPath, MAX_PATH, dirs[d]);
+            WBUF_APPEND(fullPath, MAX_PATH, L"\\");
+            WBUF_APPEND(fullPath, MAX_PATH, g_files[f]);
+
+            /* 勾选备份时，先将原文件重命名 */
+            if (doBackup) {
+                DWORD attr = GetFileAttributesW(fullPath);
+                if (attr != INVALID_FILE_ATTRIBUTES && !(attr & FILE_ATTRIBUTE_DIRECTORY)) {
+                    wchar_t backupPath[MAX_PATH];
+                    WBUF_INIT(backupPath, MAX_PATH);
+                    WBUF_APPEND(backupPath, MAX_PATH, fullPath);
+                    WBUF_APPEND(backupPath, MAX_PATH, L"_back_");
+                    WBUF_APPEND(backupPath, MAX_PATH, tsSuffix);
+
+                    if (MoveFileW(fullPath, backupPath)) {
+                        Log(L"[备份] %ls -> %ls", g_files[f], backupPath);
+                    } else {
+                        Log(L"[备份] 重命名失败 %ls, err=%lu", fullPath, GetLastError());
+                    }
+                }
+            }
+
             DWORD dataSize = 0;
             BYTE *data = DownloadFile(g_files[f], &dataSize);
             if (!data || dataSize == 0) {
@@ -703,12 +753,6 @@ static UpdateError DoUpdate(void)
                 Log(L"[错误] 下载失败: %ls", g_files[f]);
                 return ERR_DOWNLOAD_FAILED;
             }
-
-            wchar_t fullPath[MAX_PATH];
-            WBUF_INIT(fullPath, MAX_PATH);
-            WBUF_APPEND(fullPath, MAX_PATH, dirs[d]);
-            WBUF_APPEND(fullPath, MAX_PATH, L"\\");
-            WBUF_APPEND(fullPath, MAX_PATH, g_files[f]);
 
             HANDLE hFile = CreateFileW(fullPath, GENERIC_WRITE, 0, NULL,
                 CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -743,7 +787,152 @@ static UpdateError DoUpdate(void)
 /* ---------- 主窗口 ---------- */
 static HWND g_hBtn = NULL;
 static HWND g_hLink = NULL;
+static HWND g_hChkBackup = NULL;
+static HWND g_hHelpIcon = NULL;
 static HBRUSH g_hLinkBrush = NULL;
+
+/* 更新线程与进度框 */
+#define WM_UPDATE_DONE  (WM_USER + 100)
+static HWND g_hProgress = NULL;
+static HANDLE g_hThread = NULL;
+static volatile BOOL g_updateRunning = FALSE;
+static UpdateError g_updateResult = ERR_NONE;
+
+static DWORD WINAPI UpdateThreadProc(LPVOID param)
+{
+    BOOL doBackup = (BOOL)(param ? 1 : 0);
+    g_updateResult = DoUpdate(doBackup);
+    /* 通知主线程更新完成 */
+    PostMessageW(g_hProgress ? GetWindow(g_hProgress, GW_OWNER) : NULL,
+                 WM_UPDATE_DONE, 0, 0);
+    return 0;
+}
+
+/* 进度提示框（非模态，不阻塞 UI） */
+static void ShowProgressDialog(HWND hwndOwner)
+{
+    HINSTANCE hInst = (HINSTANCE)GetWindowLongPtrW(hwndOwner, GWLP_HINSTANCE);
+
+    static BOOL classRegistered = FALSE;
+    if (!classRegistered) {
+        WNDCLASSW wc = {0};
+        wc.lpfnWndProc = DefWindowProcW;
+        wc.hInstance = hInst;
+        wc.lpszClassName = L"JassProgress";
+        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+        wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+        RegisterClassW(&wc);
+        classRegistered = TRUE;
+    }
+
+    int dlgW = 420, dlgH = 160;
+    g_hProgress = CreateWindowExW(
+        WS_EX_DLGMODALFRAME | WS_EX_TOPMOST,
+        L"JassProgress", L"正在更新",
+        WS_POPUP | WS_CAPTION,
+        CW_USEDEFAULT, CW_USEDEFAULT, dlgW, dlgH,
+        hwndOwner, NULL, hInst, NULL);
+    if (!g_hProgress) return;
+
+    /* 提示文本 */
+    CreateWindowExW(0, L"STATIC",
+        L"正在更新中，请稍候...\n\n如果等待过久，可手动关闭程序。",
+        WS_CHILD | WS_VISIBLE | SS_LEFT | SS_CENTERIMAGE,
+        20, 15, dlgW - 40, dlgH - 30, g_hProgress, NULL, hInst, NULL);
+
+    HFONT hFont = CreateFontW(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
+        DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+        DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, L"Microsoft YaHei");
+    HWND hStatic = GetWindow(g_hProgress, GW_CHILD);
+    SendMessageW(hStatic, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+    /* 居中 */
+    RECT rcOwner, rcDlg;
+    GetWindowRect(hwndOwner, &rcOwner);
+    GetWindowRect(g_hProgress, &rcDlg);
+    int x = rcOwner.left + ((rcOwner.right - rcOwner.left) - (rcDlg.right - rcDlg.left)) / 2;
+    int y = rcOwner.top + ((rcOwner.bottom - rcOwner.top) - (rcDlg.bottom - rcDlg.top)) / 2;
+    SetWindowPos(g_hProgress, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+
+    ShowWindow(g_hProgress, SW_SHOW);
+    UpdateWindow(g_hProgress);
+}
+
+/* 控件尺寸（按钮/链接固定，复选框与问号图标运行时按文字自适应） */
+#define BTN_W       180
+#define BTN_H       45
+#define LINK_W      80
+#define LINK_H      20
+#define HELP_GAP    6
+
+/* 运行时测量得到的自适应尺寸 */
+static int g_chkW = 0, g_chkH = 0;
+static int g_helpW = 0, g_helpH = 0;
+
+/* 测量 STATIC 文本控件在当前字体下的尺寸，加上内边距 */
+static void MeasureTextCtrl(HWND hCtrl, int padX, int padY, int *outW, int *outH)
+{
+    wchar_t txt[256];
+    int n = GetWindowTextW(hCtrl, txt, 256);
+    HDC hdc = GetDC(hCtrl);
+    HFONT hf = (HFONT)SendMessageW(hCtrl, WM_GETFONT, 0, 0);
+    HFONT old = (HFONT)SelectObject(hdc, hf ? hf : (HFONT)GetStockObject(DEFAULT_GUI_FONT));
+    SIZE sz = {0};
+    if (n > 0) GetTextExtentPoint32W(hdc, txt, n, &sz);
+    SelectObject(hdc, old);
+    ReleaseDC(hCtrl, hdc);
+    *outW = sz.cx + padX;
+    *outH = sz.cy + padY;
+}
+
+/* 测量按钮控件理想尺寸：优先 BCM_GETIDEALSIZE，失败则降级到文字测量 */
+static void MeasureButtonCtrl(HWND hCtrl, int *outW, int *outH)
+{
+    SIZE sz = {0};
+    /* BCM_GETIDEALSIZE = 0x1649，返回 TRUE 时 sz 被填充 */
+    if (SendMessageW(hCtrl, 0x00001649, 0, (LPARAM)&sz) && sz.cx > 0) {
+        *outW = sz.cx;
+        *outH = sz.cy;
+        return;
+    }
+    MeasureTextCtrl(hCtrl, 22, 6, outW, outH); /* 22=复选框勾选框+间距 */
+}
+
+/* 根据窗口客户区尺寸，自动居中摆放控件 */
+static void LayoutChildren(HWND hwnd)
+{
+    RECT rc;
+    GetClientRect(hwnd, &rc);
+    int w = rc.right - rc.left;
+    int h = rc.bottom - rc.top;
+
+    /* 整体内容高度 = 按钮 + 间距1 + 复选框行 + 间距2 + 链接 */
+    int gap1 = 15;
+    int gap2 = 10;
+    int chkH = g_chkH > 0 ? g_chkH : 25;
+    int totalH = BTN_H + gap1 + chkH + gap2 + LINK_H;
+    int startY = (h - totalH) / 2;
+
+    int btnX = (w - BTN_W) / 2;
+    int btnY = startY;
+
+    /* 复选框 + 问号图标作为一组居中 */
+    int chkW = g_chkW > 0 ? g_chkW : 70;
+    int helpW = g_helpW > 0 ? g_helpW : 20;
+    int groupW = chkW + HELP_GAP + helpW;
+    int chkX = (w - groupW) / 2;
+    int chkY = startY + BTN_H + gap1;
+    int helpX = chkX + chkW + HELP_GAP;
+    int helpY = chkY;
+
+    int linkX = (w - LINK_W) / 2;
+    int linkY = startY + BTN_H + gap1 + chkH + gap2;
+
+    MoveWindow(g_hBtn, btnX, btnY, BTN_W, BTN_H, TRUE);
+    MoveWindow(g_hChkBackup, chkX, chkY, chkW, chkH, TRUE);
+    MoveWindow(g_hHelpIcon, helpX, helpY, helpW, g_helpH > 0 ? g_helpH : 25, TRUE);
+    MoveWindow(g_hLink, linkX, linkY, LINK_W, LINK_H, TRUE);
+}
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -751,60 +940,127 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
     case WM_CREATE: {
         g_hBtn = CreateWindowExW(0, L"BUTTON", L"开始更新",
             WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-            60, 25, 160, 40, hwnd, (HMENU)100, NULL, NULL);
-        HFONT hFont = CreateFontW(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE,
+            0, 0, BTN_W, BTN_H, hwnd, (HMENU)100, NULL, NULL);
+        HFONT hFont = CreateFontW(24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE,
             DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
             DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, L"Microsoft YaHei");
         SendMessageW(g_hBtn, WM_SETFONT, (WPARAM)hFont, TRUE);
 
+        /* "备份" 复选框（默认勾选） */
+        g_hChkBackup = CreateWindowExW(0, L"BUTTON", L"备份",
+            WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
+            0, 0, 10, 10, hwnd, (HMENU)300, NULL, NULL);
+        SendMessageW(g_hChkBackup, WM_SETFONT, (WPARAM)hFont, TRUE);
+        SendMessageW(g_hChkBackup, BM_SETCHECK, BST_CHECKED, 0);
+
+        /* 问号帮助图标（点击显示文件列表） */
+        g_hHelpIcon = CreateWindowExW(0, L"STATIC", L"?",
+            WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_CENTER,
+            0, 0, 10, 10, hwnd, (HMENU)400, NULL, NULL);
+        HFONT hHelpFont = CreateFontW(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE,
+            DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+            DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, L"Microsoft YaHei");
+        SendMessageW(g_hHelpIcon, WM_SETFONT, (WPARAM)hHelpFont, TRUE);
+
         /* "查看源码" 文本链接（非按钮样式） */
         g_hLink = CreateWindowExW(0, L"STATIC", L"查看源码",
             WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_CENTER,
-            100, 80, 80, 20, hwnd, (HMENU)200, NULL, NULL);
-        HFONT hLinkFont = CreateFontW(14, 0, 0, 0, FW_NORMAL, FALSE, TRUE, FALSE,
+            0, 0, LINK_W, LINK_H, hwnd, (HMENU)200, NULL, NULL);
+        HFONT hLinkFont = CreateFontW(20, 0, 0, 0, FW_NORMAL, FALSE, TRUE, FALSE,
             DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
             DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, L"Microsoft YaHei");
         SendMessageW(g_hLink, WM_SETFONT, (WPARAM)hLinkFont, TRUE);
 
         g_hLinkBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
+
+        /* 按文字自适应测量复选框与问号图标的尺寸 */
+        MeasureButtonCtrl(g_hChkBackup, &g_chkW, &g_chkH);
+        MeasureTextCtrl(g_hHelpIcon, 8, 4, &g_helpW, &g_helpH);
+
+        LayoutChildren(hwnd);
         break;
     }
+    case WM_SIZE:
+        LayoutChildren(hwnd);
+        break;
     case WM_COMMAND:
         if (LOWORD(wParam) == 100 && HIWORD(wParam) == BN_CLICKED) {
-            EnableWindow(g_hBtn, FALSE);
-            UpdateError err = DoUpdate();
-            EnableWindow(g_hBtn, TRUE);
+            if (g_updateRunning) return 0; /* 防止重复点击 */
 
-            if (err == ERR_NONE) {
-                ShowCustomMsgBox(L"更新成功", L"所有插件静态文件已更新完毕！", L"请关闭程序");
-            } else {
-                const wchar_t *reason = L"未知错误";
-                switch (err) {
-                case ERR_PLUGIN_NOT_FOUND:
-                    reason = L"找不到插件，可能未安装";
-                    break;
-                case ERR_DOWNLOAD_FAILED:
-                    reason = L"下载文件失败，请检查网络后重试";
-                    break;
-                case ERR_WRITE_FAILED:
-                    reason = L"文件写入失败，请检查插件目录是否受到系统文件保护，请关闭保护后重试";
-                    break;
-                case ERR_REPLACE_FAILED:
-                    reason = L"替换文件失败";
-                    break;
-                default:
-                    break;
-                }
-                ShowCustomMsgBox(L"更新失败", reason, L"确定");
-            }
+            BOOL doBackup = (SendMessageW(g_hChkBackup, BM_GETCHECK, 0, 0) == BST_CHECKED);
+            g_updateRunning = TRUE;
+            EnableWindow(g_hBtn, FALSE);
+
+            /* 显示进度提示框 */
+            ShowProgressDialog(hwnd);
+
+            /* 在后台线程执行更新，不阻塞 UI */
+            g_hThread = CreateThread(NULL, 0, UpdateThreadProc,
+                (LPVOID)(doBackup ? 1 : 0), 0, NULL);
         } else if (LOWORD(wParam) == 200 && HIWORD(wParam) == STN_CLICKED) {
             /* 点击"查看源码"，打开 GitHub 仓库 */
             ShellExecuteW(NULL, L"open", GITHUB_REPO_URL, NULL, NULL, SW_SHOWNORMAL);
+        } else if (LOWORD(wParam) == 400 && HIWORD(wParam) == STN_CLICKED) {
+            /* 点击问号图标，显示更新/备份的文件列表 */
+            wchar_t msg[1024];
+            WBUF_INIT(msg, 1024);
+            WBUF_APPEND(msg, 1024, L"本工具旨在为不更新家猫插件的用户获取家猫最新版暴雪库\r\n");
+            WBUF_APPEND(msg, 1024, L"更新后可解析新增API，但新增句柄类型无法高亮\r\n\r\n");
+            WBUF_APPEND(msg, 1024, L"将更新和备份以下文件：\r\n\r\n");
+            for (int i = 0; i < g_fileCount; i++) {
+                WBUF_APPEND(msg, 1024, L"  ");
+                WBUF_APPEND(msg, 1024, g_files[i]);
+                WBUF_APPEND(msg, 1024, L"\r\n");
+            }
+            WBUF_APPEND(msg, 1024, L"\r\n备份文件会保留在原目录，命名格式为 原名_back_日期_时间。\r\n备份过多时请自行手动删除旧备份文件。");
+            MessageBoxW(hwnd, msg, L"说明", MB_OK | MB_ICONINFORMATION);
         }
         break;
+    case WM_UPDATE_DONE: {
+        /* 更新线程完成 */
+        if (g_hThread) {
+            WaitForSingleObject(g_hThread, INFINITE);
+            CloseHandle(g_hThread);
+            g_hThread = NULL;
+        }
+        g_updateRunning = FALSE;
+
+        /* 关闭进度框 */
+        if (g_hProgress) {
+            DestroyWindow(g_hProgress);
+            g_hProgress = NULL;
+        }
+
+        EnableWindow(g_hBtn, TRUE);
+
+        UpdateError err = g_updateResult;
+        if (err == ERR_NONE) {
+            ShowCustomMsgBox(L"更新成功", L"所有插件静态文件已更新完毕！", L"请关闭程序");
+        } else {
+            const wchar_t *reason = L"未知错误";
+            switch (err) {
+            case ERR_PLUGIN_NOT_FOUND:
+                reason = L"找不到插件，可能未安装";
+                break;
+            case ERR_DOWNLOAD_FAILED:
+                reason = L"下载文件失败，请检查网络后重试";
+                break;
+            case ERR_WRITE_FAILED:
+                reason = L"文件写入失败，请检查插件目录是否受到系统文件保护，请关闭保护后重试";
+                break;
+            case ERR_REPLACE_FAILED:
+                reason = L"替换文件失败";
+                break;
+            default:
+                break;
+            }
+            ShowCustomMsgBox(L"更新失败", reason, L"确定");
+        }
+        break;
+    }
     case WM_CTLCOLORSTATIC: {
         HDC hdc = (HDC)wParam;
-        if ((HWND)lParam == g_hLink) {
+        if ((HWND)lParam == g_hLink || (HWND)lParam == g_hHelpIcon) {
             SetTextColor(hdc, RGB(0, 102, 204));
             SetBkMode(hdc, TRANSPARENT);
             return (LRESULT)g_hLinkBrush;
@@ -812,7 +1068,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
         break;
     }
     case WM_SETCURSOR:
-        if ((HWND)wParam == g_hLink) {
+        if ((HWND)wParam == g_hLink || (HWND)wParam == g_hHelpIcon) {
             SetCursor(LoadCursor(NULL, IDC_HAND));
             return TRUE;
         }
@@ -838,9 +1094,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR lpCmd, int nShow)
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     RegisterClassW(&wc);
 
-    HWND hwnd = CreateWindowExW(0, L"JassUpdaterWnd", L"家猫 Jass 插件函数库更新工具 V1.0",
+    HWND hwnd = CreateWindowExW(0, L"JassUpdaterWnd", L"家猫Jass插件函数库更新工具 V1.1",
         WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
-        CW_USEDEFAULT, CW_USEDEFAULT, 300, 155,
+        CW_USEDEFAULT, CW_USEDEFAULT, 460, 260,
         NULL, NULL, hInst, NULL);
 
     ShowWindow(hwnd, nShow);
