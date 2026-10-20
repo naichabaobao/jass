@@ -3070,6 +3070,24 @@ globals
 	constant abilityintegerlevelfield ABILITY_ILF_DESTRUCTIBLE_ID = ConvertAbilityIntegerLevelField('Nvcu')
 	 // 技能随等级改变的整数域 科技类型 ('Iglu')
 	constant abilityintegerlevelfield ABILITY_ILF_UPGRADE_TYPE = ConvertAbilityIntegerLevelField('Iglu')
+    constant abilityintegerlevelfield ABILITY_ILF_MIND_CONTROLLED_UNIT_LIMIT = ConvertAbilityIntegerLevelField('hmc3')
+    constant abilityintegerlevelfield ABILITY_ILF_DAMAGE_STRENGTH_MODIFIER_PERCENT = ConvertAbilityIntegerLevelField('swp5')
+    constant abilityintegerlevelfield ABILITY_ILF_MAX_TARGETS_HIT = ConvertAbilityIntegerLevelField('swp7')
+    constant abilityintegerlevelfield ABILITY_ILF_ATTACK_SPEED_REDUCTION_PERCENT_SWP9 = ConvertAbilityIntegerLevelField('swp9')
+    constant abilityintegerlevelfield ABILITY_ILF_ALLY_PASSIVE_STAT_AMPLIFY_PERCENT = ConvertAbilityIntegerLevelField('sol6')
+    constant abilityintegerlevelfield ABILITY_ILF_ATTACK_SPEED_GAIN_PERCENT = ConvertAbilityIntegerLevelField('sol7')
+    constant abilityintegerlevelfield ABILITY_ILF_MOVEMENT_SPEED_GAIN_PERCENT = ConvertAbilityIntegerLevelField('sol8')
+    constant abilityintegerlevelfield ABILITY_ILF_HEALTH_COST_PERCENT = ConvertAbilityIntegerLevelField('uvg1')
+    constant abilityintegerlevelfield ABILITY_ILF_BONUS_STRENGTH_UVG2 = ConvertAbilityIntegerLevelField('uvg2')
+    constant abilityintegerlevelfield ABILITY_ILF_BONUS_RESOLVE_PERCENT = ConvertAbilityIntegerLevelField('uvg3')
+    constant abilityintegerlevelfield ABILITY_ILF_BONUS_LIFE_STEAL_PERCENT = ConvertAbilityIntegerLevelField('uvg4')
+    constant abilityintegerlevelfield ABILITY_ILF_BONUS_SPELL_VAMP_PERCENT = ConvertAbilityIntegerLevelField('uvg5')
+    constant abilityintegerlevelfield ABILITY_ILF_DOUBLE_BONUS_BELOW_HEALTH_PERCENT = ConvertAbilityIntegerLevelField('uvg6')
+    constant abilityintegerlevelfield ABILITY_ILF_MAX_CHARGES_UBR3 = ConvertAbilityIntegerLevelField('ubr3')
+    constant abilityintegerlevelfield ABILITY_ILF_STACKS_REQUIRED = ConvertAbilityIntegerLevelField('udb3')
+    constant abilityintegerlevelfield ABILITY_ILF_MAX_ATTACK_SPEED_STACKS = ConvertAbilityIntegerLevelField('udb5')
+    constant abilityintegerlevelfield ABILITY_ILF_MAX_CHARGES_UWF1 = ConvertAbilityIntegerLevelField('uwf1')
+    constant abilityintegerlevelfield ABILITY_ILF_TARGET_ARMOR_REDUCTION = ConvertAbilityIntegerLevelField('uwf4')
 
 	// 技能随等级改变的实数域 魔法释放时间 ('acas')
 	constant abilityreallevelfield ABILITY_RLF_CASTING_TIME = ConvertAbilityRealLevelField('acas')
@@ -3965,6 +3983,91 @@ globals
 	// 技能随等级改变的实数域 冲锋暴击伤害持续时间(英雄) ('chr5')
 	// @since 3.01
 	constant abilityreallevelfield ABILITY_RLF_HERO_BONUS_CRITICAL_STRIKE_DURATION = ConvertAbilityRealLevelField('chr5')
+    constant abilityreallevelfield ABILITY_RLF_STUN_DURATION_ENS4 = ConvertAbilityRealLevelField('Ens4')
+    constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_ENS5 = ConvertAbilityRealLevelField('Ens5')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_TAKEN_PERCENT_ENS6 = ConvertAbilityRealLevelField('Ens6')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_SWP1 = ConvertAbilityRealLevelField('swp1')
+    constant abilityreallevelfield ABILITY_RLF_ATTACK_DISTANCE_SWP2 = ConvertAbilityRealLevelField('swp2')
+    constant abilityreallevelfield ABILITY_RLF_ATTACK_ANGLE_SWP3 = ConvertAbilityRealLevelField('swp3')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_DELAY_SWP4 = ConvertAbilityRealLevelField('swp4')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_HSL1 = ConvertAbilityRealLevelField('hsl1')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_PERCENT_AGAINST_DEBUFFED = ConvertAbilityRealLevelField('hsl2')
+    constant abilityreallevelfield ABILITY_RLF_HEAL_PERCENT_ON_DAMAGE_DEALT = ConvertAbilityRealLevelField('hsl4')
+    constant abilityreallevelfield ABILITY_RLF_TARGET_INTERSECT_RADIUS = ConvertAbilityRealLevelField('chra')
+    constant abilityreallevelfield ABILITY_RLF_BURN_DAMAGE = ConvertAbilityRealLevelField('hsf1')
+    constant abilityreallevelfield ABILITY_RLF_BURN_DAMAGE_PULSE_FREQUENCY = ConvertAbilityRealLevelField('hsf2')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_TO_SUMMONS = ConvertAbilityRealLevelField('hsf3')
+    constant abilityreallevelfield ABILITY_RLF_HEAL_AMOUNT_TO_ALLY_UNITS = ConvertAbilityRealLevelField('hsf4')
+    constant abilityreallevelfield ABILITY_RLF_DEFENSE_HIC1 = ConvertAbilityRealLevelField('hic1')
+    constant abilityreallevelfield ABILITY_RLF_SPELL_DAMAGE_RESISTANCE = ConvertAbilityRealLevelField('hic2')
+    constant abilityreallevelfield ABILITY_RLF_HEALING_HIC4 = ConvertAbilityRealLevelField('hic4')
+    constant abilityreallevelfield ABILITY_RLF_EXPLOSION_DAMAGE = ConvertAbilityRealLevelField('hmc2')
+    constant abilityreallevelfield ABILITY_RLF_HEALING_PER_TARGET_HIT = ConvertAbilityRealLevelField('swp6')
+    constant abilityreallevelfield ABILITY_RLF_ARMOR_REDUCTION_SWP8 = ConvertAbilityRealLevelField('swp8')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_PERCENT_OF_TARGET_MAX_HEALTH = ConvertAbilityRealLevelField('swpa')
+    constant abilityreallevelfield ABILITY_RLF_COOLDOWN_REDUCTION_ON_HIT = ConvertAbilityRealLevelField('swpb')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_BONUS_HHR1 = ConvertAbilityRealLevelField('hhr1')
+    constant abilityreallevelfield ABILITY_RLF_STUN_DURATION_NORMAL = ConvertAbilityRealLevelField('hhr2')
+    constant abilityreallevelfield ABILITY_RLF_STUN_DURATION_HERO = ConvertAbilityRealLevelField('hhr3')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_DEBUFF_DURATION_NORMAL = ConvertAbilityRealLevelField('hhr4')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_DEBUFF_DURATION_HERO = ConvertAbilityRealLevelField('hhr5')
+    constant abilityreallevelfield ABILITY_RLF_DEBUFF_BONUS_DAMAGE_RECEIVED_PERCENT = ConvertAbilityRealLevelField('hhr6')
+    constant abilityreallevelfield ABILITY_RLF_DEFENSE_INCREASE = ConvertAbilityRealLevelField('hgr1')
+    constant abilityreallevelfield ABILITY_RLF_DEFENSE_CAP = ConvertAbilityRealLevelField('hgr2')
+    constant abilityreallevelfield ABILITY_RLF_MAGIC_RESISTANCE_AT_CAP = ConvertAbilityRealLevelField('hgr3')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_ATTACK_DAMAGE_PERCENT_AT_CAP = ConvertAbilityRealLevelField('hgr4')
+    constant abilityreallevelfield ABILITY_RLF_ARMOR_REDUCTION_DURATION_NORMAL = ConvertAbilityRealLevelField('swpc')
+    constant abilityreallevelfield ABILITY_RLF_ARMOR_REDUCTION_DURATION_HERO = ConvertAbilityRealLevelField('swpd')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_INSTANT_HEAL = ConvertAbilityRealLevelField('sol1')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_HEAL_PER_SECOND = ConvertAbilityRealLevelField('sol2')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_MANA_RESTORE = ConvertAbilityRealLevelField('sol3')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_PASSIVE_COOLDOWN = ConvertAbilityRealLevelField('sol4')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_PASSIVE_DURATION = ConvertAbilityRealLevelField('sol5')
+    constant abilityreallevelfield ABILITY_RLF_PASSIVE_RADIUS = ConvertAbilityRealLevelField('slrd')
+    constant abilityreallevelfield ABILITY_RLF_MIND_CONTROL_DURATION_NORMAL = ConvertAbilityRealLevelField('mcdr')
+    constant abilityreallevelfield ABILITY_RLF_EXPLOSION_RADIUS_MCRD = ConvertAbilityRealLevelField('mcrd')
+    constant abilityreallevelfield ABILITY_RLF_EXPLOSION_RADIUS_SFRD = ConvertAbilityRealLevelField('sfrd')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_REDUCTION_PERCENT_BLD1 = ConvertAbilityRealLevelField('bld1')
+    constant abilityreallevelfield ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_BLD2 = ConvertAbilityRealLevelField('bld2')
+    constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_INCREASE_PERCENT_BLD3 = ConvertAbilityRealLevelField('bld3')
+    constant abilityreallevelfield ABILITY_RLF_ON_DAMAGE_TAKEN_BONUS_DURATION = ConvertAbilityRealLevelField('bld4')
+    constant abilityreallevelfield ABILITY_RLF_SWEEP_COOLDOWN_REDUCTION_ON_HIT = ConvertAbilityRealLevelField('bld5')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_REFLECTION_PERCENT = ConvertAbilityRealLevelField('bld6')
+    constant abilityreallevelfield ABILITY_RLF_FLAT_DAMAGE_REFLECTION = ConvertAbilityRealLevelField('bld7')
+    constant abilityreallevelfield ABILITY_RLF_ABILITY_SPEED_INCREASE_PERCENT = ConvertAbilityRealLevelField('bld8')
+    constant abilityreallevelfield ABILITY_RLF_SHIELD_HEALTH = ConvertAbilityRealLevelField('hhc1')
+    constant abilityreallevelfield ABILITY_RLF_SHIELD_REFLECT_PERCENT = ConvertAbilityRealLevelField('hhc2')
+    constant abilityreallevelfield ABILITY_RLF_SHIELD_DURATION = ConvertAbilityRealLevelField('hhc3')
+    constant abilityreallevelfield ABILITY_RLF_TAUNTED_DEFENSE_REDUCTION = ConvertAbilityRealLevelField('hhc4')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_ATTACK_SPEED_PERCENT_HGH1 = ConvertAbilityRealLevelField('hgh1')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_MOVE_SPEED_PERCENT_HGH2 = ConvertAbilityRealLevelField('hgh2')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_CRITICAL_HIT_PERCENT = ConvertAbilityRealLevelField('hgh3')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_CRITICAL_DAMAGE_PERCENT = ConvertAbilityRealLevelField('hgh4')
+    constant abilityreallevelfield ABILITY_RLF_MANA_PER_SECOND_HGH6 = ConvertAbilityRealLevelField('hgh6')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_COOLDOWN_REDUCTION_PERCENT = ConvertAbilityRealLevelField('hgh7')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_UBR1 = ConvertAbilityRealLevelField('ubr1')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_DAMAGE_DURATION_UBR2 = ConvertAbilityRealLevelField('ubr2')
+    constant abilityreallevelfield ABILITY_RLF_CHARGE_REGEN_TIME_UBR4 = ConvertAbilityRealLevelField('ubr4')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_MANA_PER_SECOND = ConvertAbilityRealLevelField('ula1')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_HEALING_PER_SECOND_ULA2 = ConvertAbilityRealLevelField('ula2')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_SPELL_RESIST_PERCENT = ConvertAbilityRealLevelField('ula3')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_SPELL_AMP_PERCENT = ConvertAbilityRealLevelField('ula4')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_SPELL_CRIT_HIT_PERCENT = ConvertAbilityRealLevelField('ula5')
+    constant abilityreallevelfield ABILITY_RLF_ALLY_MOVEMENT_SPEED_PERCENT = ConvertAbilityRealLevelField('ula6')
+    constant abilityreallevelfield ABILITY_RLF_ENEMY_MANA_PER_SECOND = ConvertAbilityRealLevelField('ula7')
+    constant abilityreallevelfield ABILITY_RLF_ENEMY_DAMAGE_PER_SECOND_ULA8 = ConvertAbilityRealLevelField('ula8')
+    constant abilityreallevelfield ABILITY_RLF_FLAT_MANA_GAIN = ConvertAbilityRealLevelField('bns6')
+    constant abilityreallevelfield ABILITY_RLF_HEALING_RADIUS = ConvertAbilityRealLevelField('bns7')
+    constant abilityreallevelfield ABILITY_RLF_FLAT_DAMAGE_UDB1 = ConvertAbilityRealLevelField('udb1')
+    constant abilityreallevelfield ABILITY_RLF_PERCENT_DAMAGE_UDB2 = ConvertAbilityRealLevelField('udb2')
+    constant abilityreallevelfield ABILITY_RLF_BONUS_ATTACK_SPEED_PER_ATTACK = ConvertAbilityRealLevelField('udb4')
+    constant abilityreallevelfield ABILITY_RLF_CHARGE_REGEN_TIME_UWF2 = ConvertAbilityRealLevelField('uwf2')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_UWF3 = ConvertAbilityRealLevelField('uwf3')
+    constant abilityreallevelfield ABILITY_RLF_COOLDOWN_REDUCTION_ON_AUTO_ATTACK = ConvertAbilityRealLevelField('uwf5')
+    constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_DURATION_NORMAL = ConvertAbilityRealLevelField('swpe')
+    constant abilityreallevelfield ABILITY_RLF_ATTACK_SPEED_REDUCTION_DURATION_HERO = ConvertAbilityRealLevelField('swpf')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_BY_TARGET_MAX_HEALTH_DURATION_NORMAL = ConvertAbilityRealLevelField('swpg')
+    constant abilityreallevelfield ABILITY_RLF_DAMAGE_BY_TARGET_MAX_HEALTH_DURATION_HERO = ConvertAbilityRealLevelField('swph')
 
 	// 技能随等级改变的布尔值域 百分比奖励 ('Hab2')
 	constant abilitybooleanlevelfield ABILITY_BLF_PERCENT_BONUS_HAB2 = ConvertAbilityBooleanLevelField('Hab2')
@@ -4097,6 +4200,13 @@ globals
 	// 技能随等级改变的布尔值域 冲锋开始时移除增益 ('chr6')
 	// @since 3.01
 	constant abilitybooleanlevelfield ABILITY_BLF_REMOVE_BUFFS_ON_ABILITY_START = ConvertAbilityBooleanLevelField('chr6')
+    constant abilitybooleanlevelfield ABILITY_BLF_SILENCES_WHEN_ENSNARED = ConvertAbilityBooleanLevelField('Ens7')
+    constant abilitybooleanlevelfield ABILITY_BLF_REFRESH_COOLDOWN_ON_KILL_HSL3 = ConvertAbilityBooleanLevelField('hsl3')
+    constant abilitybooleanlevelfield ABILITY_BLF_ENABLE_CHAIN_EXPLOSION = ConvertAbilityBooleanLevelField('hsf5')
+    constant abilitybooleanlevelfield ABILITY_BLF_DISPEL_MAGIC_BONUS_DAMAGE_TO_SUMMONS = ConvertAbilityBooleanLevelField('hsf6')
+    constant abilitybooleanlevelfield ABILITY_BLF_REMOVES_NEGATIVE_DEBUFFS = ConvertAbilityBooleanLevelField('hic3')
+    constant abilitybooleanlevelfield ABILITY_BLF_REFRESH_COOLDOWN_ON_KILL_HHR7 = ConvertAbilityBooleanLevelField('hhr7')
+    constant abilitybooleanlevelfield ABILITY_BLF_MAKES_UNITS_UNDYING = ConvertAbilityBooleanLevelField('hgh5')
 
 	// 技能随等级改变的字符串域 美术 - 图标 - 普通 ('aart')
 	constant abilitystringlevelfield ABILITY_SLF_ICON_NORMAL = ConvertAbilityStringLevelField('aart')
@@ -6724,6 +6834,9 @@ native UnitAddSleepPerm takes unit whichUnit, boolean add returns nothing
 native UnitCanSleepPerm takes unit whichUnit returns boolean
 // 查询单位是否正在睡眠
 native UnitIsSleeping takes unit whichUnit returns boolean
+// 查询单位是否存活
+// @since 3.01
+native BlzUnitIsAlive takes unit whichUnit returns boolean
 // 查询单位是否清醒，可用于判断本身不眠的野外生物，如石头人，或被编入中立敌对的非野外生物单位，如正常的四族单位
 native UnitWakeUp takes unit whichUnit returns nothing
 // 设置指定单位限时生命 [R]
@@ -7875,6 +7988,15 @@ native EnableSelect takes boolean state, boolean ui returns nothing
 // 获取HUD缩放值
 // @since 3.01
 native BlzGetHUDScale takes nothing returns real
+// 设置HUD缩放值
+// @since 3.01
+native BlzSetHUDScale takes integer percentage returns nothing
+// 锁定HUD缩放
+// @since 3.01
+native BlzLockHUDScale takes nothing returns nothing
+// 解锁HUD缩放
+// @since 3.01
+native BlzUnlockHUDScale takes nothing returns nothing
 
 // Trackable API
 
