@@ -1827,9 +1827,25 @@ globals
     // 装备穿戴槽 副手武器
     // @since 3.00
     constant loadoutslot EQUIPMENT_LOADOUT_SLOT_OFFHAND = ConvertLoadoutSlot(7)
-    // 装备穿戴槽 饰品
+    // 装备穿戴槽 耳环
     // @since 3.00
     constant loadoutslot EQUIPMENT_LOADOUT_SLOT_TRINKET = ConvertLoadoutSlot(8)
+    // 【弃用】装备穿戴槽 护腿‌
+    // @since 3.00
+    // @deprecated 弃用函数
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_LEGS = ConvertLoadoutSlot(未知)
+    // 【弃用】装备穿戴槽 护肩
+    // @since 3.00
+    // @deprecated 弃用函数
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_SHOULDER = ConvertLoadoutSlot(未知)
+    // 【弃用】装备穿戴槽 腰带
+    // @since 3.00
+    // @deprecated 弃用函数
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_WAIST = ConvertLoadoutSlot(未知)
+    // 【弃用】装备穿戴槽 项链
+    // @since 3.00
+    // @deprecated 弃用函数
+    constant loadoutslot EQUIPMENT_LOADOUT_SLOT_NECK = ConvertLoadoutSlot(未知)
 
 	// Animatable Camera Fields
 	
