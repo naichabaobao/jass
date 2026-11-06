@@ -5387,6 +5387,18 @@ function IsUnitAliveBJ takes unit whichUnit returns boolean
     return not IsUnitDeadBJ(whichUnit)
 endfunction
 
+// 查询单位是否死亡
+// @since 3.01
+function UnitIsDeadBJ takes unit whichUnit returns boolean
+    return not BlzUnitIsAlive(whichUnit)
+endfunction
+
+// 查询单位是否存活
+// @since 3.01
+function UnitIsAliveBJ takes unit whichUnit returns boolean
+    return BlzUnitIsAlive(whichUnit)
+endfunction
+
 
 // 查询单位组的单位是否已死亡触发器动作
 function IsUnitGroupDeadBJEnum takes nothing returns nothing
